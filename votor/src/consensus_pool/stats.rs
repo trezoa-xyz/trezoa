@@ -1,6 +1,6 @@
 use {
-    agave_votor_messages::{consensus_message::CertificateType, vote::Vote},
-    solana_metrics::datapoint_info,
+    trezoa_votor_messages::{consensus_message::CertificateType, vote::Vote},
+    trezoa_metrics::datapoint_info,
     std::time::{Duration, Instant},
 };
 

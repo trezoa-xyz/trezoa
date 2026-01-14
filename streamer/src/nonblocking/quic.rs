@@ -14,15 +14,15 @@ use {
     quinn::{Accept, Connecting, Connection, Endpoint, EndpointConfig, TokioRuntime},
     rand::{rng, Rng},
     smallvec::SmallVec,
-    solana_keypair::Keypair,
-    solana_measure::measure::Measure,
-    solana_net_utils::token_bucket::TokenBucket,
-    solana_packet::{Meta, PACKET_DATA_SIZE},
-    solana_perf::packet::{BytesPacket, PacketBatch},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_tls_utils::get_pubkey_from_tls_certificate,
-    solana_transaction_metrics_tracker::signature_if_should_track_packet,
+    trezoa_keypair::Keypair,
+    trezoa_measure::measure::Measure,
+    trezoa_net_utils::token_bucket::TokenBucket,
+    trezoa_packet::{Meta, PACKET_DATA_SIZE},
+    trezoa_perf::packet::{BytesPacket, PacketBatch},
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_tls_utils::get_pubkey_from_tls_certificate,
+    trezoa_transaction_metrics_tracker::signature_if_should_track_packet,
     std::{
         array, fmt,
         iter::repeat_with,
@@ -53,7 +53,7 @@ use {
 
 pub const DEFAULT_WAIT_FOR_CHUNK_TIMEOUT: Duration = Duration::from_secs(2);
 
-pub const ALPN_TPU_PROTOCOL_ID: &[u8] = b"solana-tpu";
+pub const ALPN_TPU_PROTOCOL_ID: &[u8] = b"trezoa-tpu";
 
 const CONNECTION_CLOSE_CODE_DROPPED_ENTRY: u32 = 1;
 const CONNECTION_CLOSE_REASON_DROPPED_ENTRY: &[u8] = b"dropped";
@@ -1127,9 +1127,9 @@ pub mod test {
         assert_matches::assert_matches,
         crossbeam_channel::{unbounded, Receiver},
         quinn::{ApplicationClose, ConnectionError},
-        solana_keypair::Keypair,
-        solana_net_utils::sockets::bind_to_localhost_unique,
-        solana_signer::Signer,
+        trezoa_keypair::Keypair,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_signer::Signer,
         std::collections::HashMap,
         tokio::time::sleep,
     };
@@ -1285,7 +1285,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_timeout() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let SpawnTestServerResult {
             join_handle,
             receiver,
@@ -1305,7 +1305,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_stream_timeout() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let SpawnTestServerResult {
             join_handle,
             receiver,
@@ -1345,7 +1345,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_block_multiple_connections() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let SpawnTestServerResult {
             join_handle,
             receiver,
@@ -1365,7 +1365,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_multiple_connections_on_single_client_endpoint() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let SpawnTestServerResult {
             join_handle,
@@ -1451,7 +1451,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_multiple_writes() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let SpawnTestServerResult {
             join_handle,
             receiver,
@@ -1470,7 +1470,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_staked_connection_removal() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let client_keypair = Keypair::new();
         let stakes = HashMap::from([(client_keypair.pubkey(), 100_000)]);
@@ -1506,7 +1506,7 @@ pub mod test {
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_zero_staked_connection_removal() {
         // In this test, the client has a pubkey, but is not in stake table.
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let client_keypair = Keypair::new();
         let stakes = HashMap::from([(client_keypair.pubkey(), 0)]);
@@ -1541,7 +1541,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_unstaked_connection_removal() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let SpawnTestServerResult {
             join_handle,
             receiver,
@@ -1569,7 +1569,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_unstaked_node_connect_failure() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let s = bind_to_localhost_unique().expect("should bind");
         let (sender, _) = unbounded();
         let keypair = Keypair::new();
@@ -1605,7 +1605,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_quic_server_multiple_streams() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let s = bind_to_localhost_unique().expect("should bind");
         let (sender, receiver) = unbounded();
         let keypair = Keypair::new();
@@ -1649,7 +1649,7 @@ pub mod test {
     #[test]
     fn test_prune_table_with_ip() {
         use std::net::Ipv4Addr;
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cancel = CancellationToken::new();
         let mut table = ConnectionTable::new(ConnectionTableType::Unstaked, cancel);
         let mut num_entries = 5;
@@ -1705,7 +1705,7 @@ pub mod test {
 
     #[test]
     fn test_prune_table_with_unique_pubkeys() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cancel = CancellationToken::new();
         let mut table = ConnectionTable::new(ConnectionTableType::Unstaked, cancel);
 
@@ -1745,7 +1745,7 @@ pub mod test {
 
     #[test]
     fn test_prune_table_with_non_unique_pubkeys() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cancel = CancellationToken::new();
         let mut table = ConnectionTable::new(ConnectionTableType::Unstaked, cancel);
 
@@ -1815,7 +1815,7 @@ pub mod test {
     #[test]
     fn test_prune_table_random() {
         use std::net::Ipv4Addr;
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cancel = CancellationToken::new();
         let mut table = ConnectionTable::new(ConnectionTableType::Unstaked, cancel);
 
@@ -1860,7 +1860,7 @@ pub mod test {
     #[test]
     fn test_remove_connections() {
         use std::net::Ipv4Addr;
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cancel = CancellationToken::new();
         let mut table = ConnectionTable::new(ConnectionTableType::Unstaked, cancel);
 
@@ -1929,7 +1929,7 @@ pub mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_throttling_check_no_packet_drop() {
-        agave_logger::setup_with_default_filter();
+        trezoa_logger::setup_with_default_filter();
 
         let SpawnTestServerResult {
             join_handle,

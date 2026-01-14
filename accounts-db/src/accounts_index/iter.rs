@@ -1,6 +1,6 @@
 use {
     super::{in_mem_accounts_index::InMemAccountsIndex, AccountsIndex, DiskIndexValue, IndexValue},
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
     std::{
         ops::{Bound, RangeBounds},
         sync::Arc,
@@ -106,7 +106,7 @@ mod tests {
             *,
         },
         crate::accounts_index::ReclaimsSlotList,
-        solana_account::AccountSharedData,
+        trezoa_account::AccountSharedData,
         std::ops::Range,
     };
 
@@ -166,7 +166,7 @@ mod tests {
         index.upsert(
             0,
             0,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &AccountSharedData::default(),
             &AccountSecondaryIndexes::default(),
             true,

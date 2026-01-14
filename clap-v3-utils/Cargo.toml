@@ -1,7 +1,7 @@
 [package]
-name = "solana-clap-v3-utils"
-description = "Solana utilities for the clap v3"
-documentation = "https://docs.rs/solana-clap-utils"
+name = "trezoa-clap-v3-utils"
+description = "Trezoa utilities for the clap v3"
+documentation = "https://docs.rs/trezoa-clap-utils"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -13,33 +13,33 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
-name = "solana_clap_v3_utils"
+name = "trezoa_clap_v3_utils"
 
 [features]
-agave-unstable-api = []
-elgamal = ["dep:solana-zk-sdk"]
+trezoa-unstable-api = []
+elgamal = ["dep:trezoa-zk-sdk"]
 
 [dependencies]
 chrono = { workspace = true, features = ["default"] }
 clap = { version = "3.2.23", features = ["cargo"] }
 rpassword = { workspace = true }
-solana-clock = { workspace = true }
-solana-cluster-type = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-derivation-path = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-cluster-type = { workspace = true }
+trezoa-commitment-config = { workspace = true }
+trezoa-derivation-path = { workspace = true }
 # the borsh feature is required to use the value_parser macro
-solana-hash = { workspace = true, features = ["borsh"] }
-solana-keypair = { workspace = true, features = ["seed-derivable"] }
-solana-message = { workspace = true }
-solana-native-token = { workspace = true }
-solana-presigner = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-remote-wallet = { workspace = true }
-solana-seed-derivable = { workspace = true }
-solana-seed-phrase = { workspace = true }
-solana-signature = { workspace = true }
-solana-signer = { workspace = true }
-solana-zk-sdk = { workspace = true, optional = true }
+trezoa-hash = { workspace = true, features = ["borsh"] }
+trezoa-keypair = { workspace = true, features = ["seed-derivable"] }
+trezoa-message = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-presigner = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-remote-wallet = { workspace = true }
+trezoa-seed-derivable = { workspace = true }
+trezoa-seed-phrase = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-zk-sdk = { workspace = true, optional = true }
 thiserror = { workspace = true }
 tiny-bip39 = { workspace = true }
 uriparse = { workspace = true }
@@ -47,7 +47,7 @@ url = { workspace = true }
 
 [dev-dependencies]
 assert_matches = { workspace = true }
-solana-clap-v3-utils = { path = ".", features = ["agave-unstable-api"] }
-solana-pubkey = { workspace = true, features = ["rand"] }
-solana-system-interface = { workspace = true, features = ["bincode"] }
+trezoa-clap-v3-utils = { path = ".", features = ["trezoa-unstable-api"] }
+trezoa-pubkey = { workspace = true, features = ["rand"] }
+trezoa-system-interface = { workspace = true, features = ["bincode"] }
 tempfile = { workspace = true }

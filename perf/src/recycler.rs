@@ -58,8 +58,8 @@ impl<T: Default> Default for RecyclerX<T> {
 }
 
 #[cfg(feature = "frozen-abi")]
-impl solana_frozen_abi::abi_example::AbiExample
-    for RecyclerX<crate::recycled_vec::RecycledVec<solana_packet::Packet>>
+impl trezoa_frozen_abi::abi_example::AbiExample
+    for RecyclerX<crate::recycled_vec::RecycledVec<trezoa_packet::Packet>>
 {
     fn example() -> Self {
         Self::default()

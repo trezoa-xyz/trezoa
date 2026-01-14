@@ -1,7 +1,7 @@
 [package]
-name = "agave-install"
-description = "The solana cluster software installer"
-documentation = "https://docs.rs/agave-install"
+name = "trezoa-install"
+description = "The trezoa cluster software installer"
+documentation = "https://docs.rs/trezoa-install"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -13,10 +13,10 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-logger = { workspace = true }
+trezoa-logger = { workspace = true }
 atty = { workspace = true }
 bincode = { workspace = true }
 bzip2 = { workspace = true }
@@ -34,18 +34,18 @@ semver = { workspace = true }
 serde = { workspace = true }
 serde_yaml = { workspace = true }
 serde_yaml_08 = { package = "serde_yaml", version = "0.8.26" }
-solana-clap-utils = { workspace = true }
-solana-config-interface = { version = "=2.0.0", features = ["bincode"] }
-solana-hash = "=3.1.0"
-solana-keypair = "=3.1.0"
-solana-message = "=3.0.1"
-solana-pubkey = { version = "=4.0.0", default-features = false }
-solana-rpc-client = { workspace = true }
-solana-sha256-hasher = { workspace = true }
-solana-signature = { version = "=3.1.0", default-features = false }
-solana-signer = "=3.0.0"
-solana-transaction = "=3.0.2"
-solana-version = { workspace = true }
+trezoa-clap-utils = { workspace = true }
+trezoa-config-interface = { version = "=2.0.0", features = ["bincode"] }
+trezoa-hash = "=3.1.0"
+trezoa-keypair = "=3.1.0"
+trezoa-message = "=3.0.1"
+trezoa-pubkey = { version = "=4.0.0", default-features = false }
+trezoa-rpc-client = { workspace = true }
+trezoa-sha256-hasher = { workspace = true }
+trezoa-signature = { version = "=3.1.0", default-features = false }
+trezoa-signer = "=3.0.0"
+trezoa-transaction = "=3.0.2"
+trezoa-version = { workspace = true }
 tar = { workspace = true }
 tempfile = { workspace = true }
 url = { workspace = true }

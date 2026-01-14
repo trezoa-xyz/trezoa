@@ -8,7 +8,7 @@ here=$(dirname "$0")
 # shellcheck source=multinode-demo/common.sh
 source "$here"/common.sh
 
-program=$agave_validator
+program=$trezoa_validator
 
 no_restart=0
 maybeRequireTower=true
@@ -122,10 +122,10 @@ while [[ -n $1 ]]; do
 done
 
 # These keypairs are created by ./setup.sh and included in the genesis config
-identity=$SOLANA_CONFIG_DIR/bootstrap-validator/identity.json
-vote_account="$SOLANA_CONFIG_DIR"/bootstrap-validator/vote-account.json
+identity=$TREZOA_CONFIG_DIR/bootstrap-validator/identity.json
+vote_account="$TREZOA_CONFIG_DIR"/bootstrap-validator/vote-account.json
 
-ledger_dir="$SOLANA_CONFIG_DIR"/bootstrap-validator
+ledger_dir="$TREZOA_CONFIG_DIR"/bootstrap-validator
 [[ -d "$ledger_dir" ]] || {
   echo "$ledger_dir does not exist"
   echo

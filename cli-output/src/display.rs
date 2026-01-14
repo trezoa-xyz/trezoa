@@ -1,23 +1,23 @@
 use {
     crate::cli_output::CliSignatureVerificationStatus,
-    agave_reserved_account_keys::ReservedAccountKeys,
+    trezoa_reserved_account_keys::ReservedAccountKeys,
     base64::{prelude::BASE64_STANDARD, Engine},
     chrono::{DateTime, Local, SecondsFormat, TimeZone, Utc},
     console::style,
     indicatif::{ProgressBar, ProgressStyle},
-    solana_bincode::limited_deserialize,
-    solana_cli_config::SettingType,
-    solana_clock::UnixTimestamp,
-    solana_hash::Hash,
-    solana_message::{compiled_instruction::CompiledInstruction, v0::MessageAddressTableLookup},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_stake_interface as stake,
-    solana_transaction::versioned::{TransactionVersion, VersionedTransaction},
-    solana_transaction_status::{
+    trezoa_bincode::limited_deserialize,
+    trezoa_cli_config::SettingType,
+    trezoa_clock::UnixTimestamp,
+    trezoa_hash::Hash,
+    trezoa_message::{compiled_instruction::CompiledInstruction, v0::MessageAddressTableLookup},
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_stake_interface as stake,
+    trezoa_transaction::versioned::{TransactionVersion, VersionedTransaction},
+    trezoa_transaction_status::{
         Rewards, UiReturnDataEncoding, UiTransactionReturnData, UiTransactionStatusMeta,
     },
-    solana_transaction_status_client_types::UiTransactionError,
+    trezoa_transaction_status_client_types::UiTransactionError,
     spl_memo_interface::{v1::id as spl_memo_v1_id, v3::id as spl_memo_v3_id},
     std::{collections::HashMap, fmt, io, time::Duration},
 };
@@ -67,7 +67,7 @@ pub fn build_balance_message_with_config(
             let ess = if lamports == 1 { "" } else { "s" };
             format!(" lamport{ess}")
         } else {
-            " SOL".to_string()
+            " TRZ".to_string()
         }
     } else {
         "".to_string()
@@ -438,11 +438,11 @@ fn write_instruction<'a, W: io::Write>(
 
     let mut raw = true;
     if let AccountKeyType::Known(program_pubkey) = program_pubkey {
-        if program_pubkey == &solana_vote_program::id() {
+        if program_pubkey == &trezoa_vote_program::id() {
             if let Ok(vote_instruction) =
-                limited_deserialize::<solana_vote_program::vote_instruction::VoteInstruction>(
+                limited_deserialize::<trezoa_vote_program::vote_instruction::VoteInstruction>(
                     &instruction.data,
-                    solana_packet::PACKET_DATA_SIZE as u64,
+                    trezoa_packet::PACKET_DATA_SIZE as u64,
                 )
             {
                 writeln!(w, "{prefix}  {vote_instruction:?}")?;
@@ -451,16 +451,16 @@ fn write_instruction<'a, W: io::Write>(
         } else if program_pubkey == &stake::program::id() {
             if let Ok(stake_instruction) = limited_deserialize::<stake::instruction::StakeInstruction>(
                 &instruction.data,
-                solana_packet::PACKET_DATA_SIZE as u64,
+                trezoa_packet::PACKET_DATA_SIZE as u64,
             ) {
                 writeln!(w, "{prefix}  {stake_instruction:?}")?;
                 raw = false;
             }
-        } else if program_pubkey == &solana_sdk_ids::system_program::id() {
+        } else if program_pubkey == &trezoa_sdk_ids::system_program::id() {
             if let Ok(system_instruction) =
-                limited_deserialize::<solana_system_interface::instruction::SystemInstruction>(
+                limited_deserialize::<trezoa_system_interface::instruction::SystemInstruction>(
                     &instruction.data,
-                    solana_packet::PACKET_DATA_SIZE as u64,
+                    trezoa_packet::PACKET_DATA_SIZE as u64,
                 )
             {
                 writeln!(w, "{prefix}  {system_instruction:?}")?;
@@ -729,16 +729,16 @@ pub fn unix_timestamp_to_string(unix_timestamp: UnixTimestamp) -> String {
 mod test {
     use {
         super::*,
-        solana_keypair::Keypair,
-        solana_message::{
+        trezoa_keypair::Keypair,
+        trezoa_message::{
             v0::{self, LoadedAddresses},
             Message as LegacyMessage, MessageHeader, VersionedMessage,
         },
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
-        solana_transaction::Transaction,
-        solana_transaction_context::TransactionReturnData,
-        solana_transaction_status::{Reward, RewardType, TransactionStatusMeta},
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
+        trezoa_transaction::Transaction,
+        trezoa_transaction_context::TransactionReturnData,
+        trezoa_transaction_status::{Reward, RewardType, TransactionStatusMeta},
         std::io::BufWriter,
     };
 

@@ -1,13 +1,13 @@
 use {
-    solana_borsh::v1::try_from_slice_unchecked,
-    solana_clap_utils::compute_budget::ComputeUnitLimit,
-    solana_compute_budget_interface::{self as compute_budget, ComputeBudgetInstruction},
-    solana_instruction::Instruction,
-    solana_message::Message,
-    solana_program_runtime::execution_budget::MAX_COMPUTE_UNIT_LIMIT,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::config::RpcSimulateTransactionConfig,
-    solana_transaction::Transaction,
+    trezoa_borsh::v1::try_from_slice_unchecked,
+    trezoa_clap_utils::compute_budget::ComputeUnitLimit,
+    trezoa_compute_budget_interface::{self as compute_budget, ComputeBudgetInstruction},
+    trezoa_instruction::Instruction,
+    trezoa_message::Message,
+    trezoa_program_runtime::execution_budget::MAX_COMPUTE_UNIT_LIMIT,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::config::RpcSimulateTransactionConfig,
+    trezoa_transaction::Transaction,
 };
 
 /// Enum capturing the possible results of updating a message based on the

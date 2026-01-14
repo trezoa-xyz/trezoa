@@ -1,4 +1,4 @@
-use {solana_pubkey::Pubkey, std::collections::HashMap};
+use {trezoa_pubkey::Pubkey, std::collections::HashMap};
 
 /// Trait to help with post-analysis of a given block
 pub trait CostTrackerPostAnalysis {

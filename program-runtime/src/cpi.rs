@@ -6,18 +6,18 @@ use {
         memory::{translate_slice, translate_type, translate_type_mut_for_cpi, translate_vm_slice},
         serialization::{create_memory_region_of_account, modify_memory_region_of_account},
     },
-    solana_account_info::AccountInfo,
-    solana_instruction::{error::InstructionError, AccountMeta, Instruction},
-    solana_loader_v3_interface::instruction as bpf_loader_upgradeable,
-    solana_program_entrypoint::MAX_PERMITTED_DATA_INCREASE,
-    solana_pubkey::{Pubkey, PubkeyError, MAX_SEEDS},
-    solana_sbpf::{ebpf, memory_region::MemoryMapping},
-    solana_sdk_ids::{bpf_loader, bpf_loader_deprecated, native_loader},
-    solana_stable_layout::stable_instruction::StableInstruction,
-    solana_svm_log_collector::ic_msg,
-    solana_svm_measure::measure::Measure,
-    solana_svm_timings::ExecuteTimings,
-    solana_transaction_context::{
+    trezoa_account_info::AccountInfo,
+    trezoa_instruction::{error::InstructionError, AccountMeta, Instruction},
+    trezoa_loader_v3_interface::instruction as bpf_loader_upgradeable,
+    trezoa_program_entrypoint::MAX_PERMITTED_DATA_INCREASE,
+    trezoa_pubkey::{Pubkey, PubkeyError, MAX_SEEDS},
+    trezoa_sbpf::{ebpf, memory_region::MemoryMapping},
+    trezoa_sdk_ids::{bpf_loader, bpf_loader_deprecated, native_loader},
+    trezoa_stable_layout::stable_instruction::StableInstruction,
+    trezoa_svm_log_collector::ic_msg,
+    trezoa_svm_measure::measure::Measure,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_transaction_context::{
         instruction_accounts::BorrowedInstructionAccount, vm_slice::VmSlice, IndexOfAccount,
         MAX_ACCOUNTS_PER_INSTRUCTION, MAX_INSTRUCTION_DATA_LEN,
     },
@@ -198,7 +198,7 @@ fn check_authorized_program(
     if native_loader::check_id(program_id)
         || bpf_loader::check_id(program_id)
         || bpf_loader_deprecated::check_id(program_id)
-        || (solana_sdk_ids::bpf_loader_upgradeable::check_id(program_id)
+        || (trezoa_sdk_ids::bpf_loader_upgradeable::check_id(program_id)
             && !(bpf_loader_upgradeable::is_upgrade_instruction(instruction_data)
                 || bpf_loader_upgradeable::is_set_authority_instruction(instruction_data)
                 || (invoke_context
@@ -247,7 +247,7 @@ pub struct CallerAccount<'a> {
 
 impl<'a> CallerAccount<'a> {
     pub fn get_serialized_data(
-        memory_mapping: &solana_sbpf::memory_region::MemoryMapping<'_>,
+        memory_mapping: &trezoa_sbpf::memory_region::MemoryMapping<'_>,
         vm_addr: u64,
         len: u64,
         stricter_abi_and_runtime_constraints: bool,
@@ -261,7 +261,7 @@ impl<'a> CallerAccount<'a> {
             // Workaround the memory permissions (as these are from the PoV of being inside the VM)
             let serialization_ptr = translate_slice_mut_for_cpi::<u8>(
                 memory_mapping,
-                solana_sbpf::ebpf::MM_INPUT_START,
+                trezoa_sbpf::ebpf::MM_INPUT_START,
                 1,
                 false, // Don't care since it is byte aligned
             )?
@@ -269,7 +269,7 @@ impl<'a> CallerAccount<'a> {
             unsafe {
                 Ok(std::slice::from_raw_parts_mut(
                     serialization_ptr
-                        .add(vm_addr.saturating_sub(solana_sbpf::ebpf::MM_INPUT_START) as usize),
+                        .add(vm_addr.saturating_sub(trezoa_sbpf::ebpf::MM_INPUT_START) as usize),
                     len as usize,
                 ))
             }
@@ -286,10 +286,10 @@ impl<'a> CallerAccount<'a> {
     // Create a CallerAccount given an AccountInfo.
     pub fn from_account_info(
         invoke_context: &InvokeContext,
-        memory_mapping: &solana_sbpf::memory_region::MemoryMapping<'_>,
+        memory_mapping: &trezoa_sbpf::memory_region::MemoryMapping<'_>,
         check_aligned: bool,
         _vm_addr: u64,
-        account_info: &solana_account_info::AccountInfo,
+        account_info: &trezoa_account_info::AccountInfo,
         account_metadata: &crate::invoke_context::SerializedAccountMetadata,
     ) -> Result<CallerAccount<'a>, Error> {
         use crate::memory::{translate_type, translate_type_mut_for_cpi};
@@ -325,7 +325,7 @@ impl<'a> CallerAccount<'a> {
                 check_aligned,
             )?;
             if stricter_abi_and_runtime_constraints {
-                if account_info.lamports.as_ptr() as u64 >= solana_sbpf::ebpf::MM_INPUT_START {
+                if account_info.lamports.as_ptr() as u64 >= trezoa_sbpf::ebpf::MM_INPUT_START {
                     return Err(Box::new(CpiError::InvalidPointer));
                 }
 
@@ -347,7 +347,7 @@ impl<'a> CallerAccount<'a> {
 
         let (serialized_data, vm_data_addr, ref_to_len_in_vm) = {
             if stricter_abi_and_runtime_constraints
-                && account_info.data.as_ptr() as u64 >= solana_sbpf::ebpf::MM_INPUT_START
+                && account_info.data.as_ptr() as u64 >= trezoa_sbpf::ebpf::MM_INPUT_START
             {
                 return Err(Box::new(CpiError::InvalidPointer));
             }
@@ -379,7 +379,7 @@ impl<'a> CallerAccount<'a> {
                 // In the same vein as the other check_account_info_pointer() checks, we don't lock
                 // this pointer to a specific address but we don't want it to be inside accounts, or
                 // callees might be able to write to the pointed memory.
-                if vm_len_addr >= solana_sbpf::ebpf::MM_INPUT_START {
+                if vm_len_addr >= trezoa_sbpf::ebpf::MM_INPUT_START {
                     return Err(Box::new(CpiError::InvalidPointer));
                 }
             }
@@ -409,7 +409,7 @@ impl<'a> CallerAccount<'a> {
     // Create a CallerAccount given a SolAccountInfo.
     fn from_sol_account_info(
         invoke_context: &InvokeContext,
-        memory_mapping: &solana_sbpf::memory_region::MemoryMapping<'_>,
+        memory_mapping: &trezoa_sbpf::memory_region::MemoryMapping<'_>,
         check_aligned: bool,
         vm_addr: u64,
         account_info: &SolAccountInfo,
@@ -1363,14 +1363,14 @@ mod tests {
             with_mock_invoke_context_with_feature_set,
         },
         assert_matches::assert_matches,
-        solana_account::{Account, AccountSharedData, ReadableAccount},
-        solana_account_info::AccountInfo,
-        solana_sbpf::{
+        trezoa_account::{Account, AccountSharedData, ReadableAccount},
+        trezoa_account_info::AccountInfo,
+        trezoa_sbpf::{
             ebpf::MM_INPUT_START, memory_region::MemoryRegion, program::SBPFVersion, vm::Config,
         },
-        solana_sdk_ids::{bpf_loader, system_program},
-        solana_svm_feature_set::SVMFeatureSet,
-        solana_transaction_context::{
+        trezoa_sdk_ids::{bpf_loader, system_program},
+        trezoa_svm_feature_set::SVMFeatureSet,
+        trezoa_transaction_context::{
             instruction_accounts::InstructionAccount, transaction_accounts::KeyedAccountSharedData,
             IndexOfAccount,
         },
@@ -1924,7 +1924,7 @@ mod tests {
 
         invoke_context
             .set_syscall_context(SyscallContext {
-                allocator: BpfAllocator::new(solana_program_entrypoint::HEAP_LENGTH as u64),
+                allocator: BpfAllocator::new(trezoa_program_entrypoint::HEAP_LENGTH as u64),
                 accounts_metadata: vec![account_metadata],
             })
             .unwrap();

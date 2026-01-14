@@ -1,12 +1,12 @@
 //! [`wincode`] type definitions for types that comprise [`crate::entry::Entry`].
 //!
-//! These definitions should eventually be upstreamed to the solana sdk repository.
+//! These definitions should eventually be upstreamed to the trezoa sdk repository.
 use {
-    solana_address::Address,
-    solana_hash::Hash,
-    solana_message::{self, legacy, v0, MESSAGE_VERSION_PREFIX},
-    solana_signature::Signature,
-    solana_transaction::versioned,
+    trezoa_address::Address,
+    trezoa_hash::Hash,
+    trezoa_message::{self, legacy, v0, MESSAGE_VERSION_PREFIX},
+    trezoa_signature::Signature,
+    trezoa_transaction::versioned,
     std::mem::MaybeUninit,
     wincode::{
         containers::{self, Pod},
@@ -18,7 +18,7 @@ use {
 };
 
 #[derive(SchemaWrite, SchemaRead)]
-#[wincode(from = "solana_message::MessageHeader", struct_extensions)]
+#[wincode(from = "trezoa_message::MessageHeader", struct_extensions)]
 struct MessageHeader {
     num_required_signatures: u8,
     num_readonly_signed_accounts: u8,
@@ -26,7 +26,7 @@ struct MessageHeader {
 }
 
 #[derive(SchemaWrite, SchemaRead)]
-#[wincode(from = "solana_transaction::CompiledInstruction")]
+#[wincode(from = "trezoa_transaction::CompiledInstruction")]
 struct CompiledInstruction {
     program_id_index: u8,
     accounts: containers::Vec<u8, ShortU16Len>,
@@ -70,24 +70,24 @@ pub(crate) struct VersionedTransaction {
 struct VersionedMsg;
 
 impl SchemaWrite for VersionedMsg {
-    type Src = solana_message::VersionedMessage;
+    type Src = trezoa_message::VersionedMessage;
 
     #[inline(always)]
     fn size_of(src: &Self::Src) -> WriteResult<usize> {
         match src {
-            solana_message::VersionedMessage::Legacy(message) => LegacyMessage::size_of(message),
+            trezoa_message::VersionedMessage::Legacy(message) => LegacyMessage::size_of(message),
             // +1 for message version prefix
-            solana_message::VersionedMessage::V0(message) => Ok(1 + V0Message::size_of(message)?),
+            trezoa_message::VersionedMessage::V0(message) => Ok(1 + V0Message::size_of(message)?),
         }
     }
 
     #[inline(always)]
     fn write(writer: &mut impl Writer, src: &Self::Src) -> WriteResult<()> {
         match src {
-            solana_message::VersionedMessage::Legacy(message) => {
+            trezoa_message::VersionedMessage::Legacy(message) => {
                 LegacyMessage::write(writer, message)
             }
-            solana_message::VersionedMessage::V0(message) => {
+            trezoa_message::VersionedMessage::V0(message) => {
                 u8::write(writer, &MESSAGE_VERSION_PREFIX)?;
                 V0Message::write(writer, message)
             }
@@ -96,10 +96,10 @@ impl SchemaWrite for VersionedMsg {
 }
 
 impl<'de> SchemaRead<'de> for VersionedMsg {
-    type Dst = solana_message::VersionedMessage;
+    type Dst = trezoa_message::VersionedMessage;
 
     fn read(reader: &mut impl Reader<'de>, dst: &mut MaybeUninit<Self::Dst>) -> ReadResult<()> {
-        // From `solana_message`:
+        // From `trezoa_message`:
         //
         // If the first bit is set, the remaining 7 bits will be used to determine
         // which message version is serialized starting from version `0`. If the first
@@ -112,7 +112,7 @@ impl<'de> SchemaRead<'de> for VersionedMsg {
             return match version {
                 0 => {
                     let msg = V0Message::get(reader)?;
-                    dst.write(solana_message::VersionedMessage::V0(msg));
+                    dst.write(trezoa_message::VersionedMessage::V0(msg));
                     Ok(())
                 }
                 _ => Err(invalid_tag_encoding(version as usize)),
@@ -146,7 +146,7 @@ impl<'de> SchemaRead<'de> for VersionedMsg {
         // SAFETY: All fields are initialized, safe to close the builder and assume initialized.
         msg_builder.finish();
         let msg = unsafe { msg.assume_init() };
-        dst.write(solana_message::VersionedMessage::Legacy(msg));
+        dst.write(trezoa_message::VersionedMessage::Legacy(msg));
 
         Ok(())
     }
@@ -157,15 +157,15 @@ mod tests {
     use {
         crate::entry::Entry,
         proptest::prelude::*,
-        solana_address::{Address, ADDRESS_BYTES},
-        solana_hash::{Hash, HASH_BYTES},
-        solana_message::{
+        trezoa_address::{Address, ADDRESS_BYTES},
+        trezoa_hash::{Hash, HASH_BYTES},
+        trezoa_message::{
             legacy::Message as LegacyMessage,
             v0::{self, MessageAddressTableLookup},
             MessageHeader, VersionedMessage,
         },
-        solana_signature::{Signature, SIGNATURE_BYTES},
-        solana_transaction::{versioned::VersionedTransaction, CompiledInstruction},
+        trezoa_signature::{Signature, SIGNATURE_BYTES},
+        trezoa_transaction::{versioned::VersionedTransaction, CompiledInstruction},
         wincode::Deserialize,
     };
 

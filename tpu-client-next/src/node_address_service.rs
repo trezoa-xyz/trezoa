@@ -76,7 +76,7 @@ use {
     },
     async_trait::async_trait,
     futures::StreamExt,
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::{net::SocketAddr, sync::Arc},
     thiserror::Error,
     tokio::join,

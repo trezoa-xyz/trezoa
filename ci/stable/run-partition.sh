@@ -30,7 +30,7 @@ ARGS=(
   --jobs "$JOBS"
   --partition hash:"$CURRENT/$TOTAL"
   --verbose
-  --exclude solana-local-cluster
+  --exclude trezoa-local-cluster
   --no-tests=warn
 )
 

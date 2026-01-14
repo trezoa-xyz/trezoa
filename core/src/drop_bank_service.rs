@@ -1,7 +1,7 @@
 use {
     crossbeam_channel::Receiver,
-    solana_measure::measure::Measure,
-    solana_runtime::installed_scheduler_pool::BankWithScheduler,
+    trezoa_measure::measure::Measure,
+    trezoa_runtime::installed_scheduler_pool::BankWithScheduler,
     std::thread::{self, Builder, JoinHandle},
 };
 

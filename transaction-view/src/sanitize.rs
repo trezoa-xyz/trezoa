@@ -61,7 +61,7 @@ fn sanitize_instructions(
     // SIMD-160: transaction can not have more than 64 top level instructions
     if enable_static_instruction_limit
         && usize::from(view.num_instructions())
-            > solana_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH
+            > trezoa_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH
     {
         return Err(TransactionViewError::SanitizeError);
     }
@@ -119,16 +119,16 @@ mod tests {
     use {
         super::*,
         crate::transaction_view::TransactionView,
-        solana_hash::Hash,
-        solana_message::{
+        trezoa_hash::Hash,
+        trezoa_message::{
             Message, MessageHeader, VersionedMessage,
             compiled_instruction::CompiledInstruction,
             v0::{self, MessageAddressTableLookup},
         },
-        solana_pubkey::Pubkey,
-        solana_signature::Signature,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::versioned::VersionedTransaction,
+        trezoa_pubkey::Pubkey,
+        trezoa_signature::Signature,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::versioned::VersionedTransaction,
     };
 
     fn create_legacy_transaction(

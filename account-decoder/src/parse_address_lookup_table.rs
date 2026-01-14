@@ -1,8 +1,8 @@
 use {
     crate::parse_account_data::{ParsableAccount, ParseAccountError},
     serde::{Deserialize, Serialize},
-    solana_address_lookup_table_interface::state::AddressLookupTable,
-    solana_instruction::error::InstructionError,
+    trezoa_address_lookup_table_interface::state::AddressLookupTable,
+    trezoa_instruction::error::InstructionError,
 };
 
 pub fn parse_address_lookup_table(
@@ -63,8 +63,8 @@ impl From<AddressLookupTable<'_>> for UiLookupTable {
 mod test {
     use {
         super::*,
-        solana_address_lookup_table_interface::state::{LookupTableMeta, LOOKUP_TABLE_META_SIZE},
-        solana_pubkey::Pubkey,
+        trezoa_address_lookup_table_interface::state::{LookupTableMeta, LOOKUP_TABLE_META_SIZE},
+        trezoa_pubkey::Pubkey,
         std::borrow::Cow,
     };
 

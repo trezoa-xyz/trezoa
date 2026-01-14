@@ -14,12 +14,12 @@ use {
         snapshot_controller::SnapshotController,
         snapshot_package::SnapshotPackage,
     },
-    agave_snapshots::{error::SnapshotError, SnapshotArchiveKind, SnapshotKind},
+    trezoa_snapshots::{error::SnapshotError, SnapshotArchiveKind, SnapshotKind},
     crossbeam_channel::{Receiver, SendError, Sender},
     log::*,
     rayon::iter::{IntoParallelIterator, ParallelIterator},
-    solana_clock::{BankId, Slot},
-    solana_measure::{measure::Measure, measure_us},
+    trezoa_clock::{BankId, Slot},
+    trezoa_measure::{measure::Measure, measure_us},
     stats::StatsManager,
     std::{
         boxed::Box,
@@ -58,7 +58,7 @@ struct PrunedBankQueueLenReporter {
 
 impl PrunedBankQueueLenReporter {
     fn report(&self, q_len: usize) {
-        let now = solana_time_utils::timestamp();
+        let now = trezoa_time_utils::timestamp();
         let last_report_time = self.last_report_time.load(Ordering::Acquire);
         if q_len > MAX_DROP_BANK_SIGNAL_QUEUE_SIZE
             && now.saturating_sub(last_report_time) > BANK_DROP_SIGNAL_CHANNEL_REPORT_INTERVAL
@@ -721,9 +721,9 @@ fn cmp_snapshot_request_kinds_by_priority(
 mod test {
     use {
         super::*, crate::genesis_utils::create_genesis_config,
-        agave_snapshots::snapshot_config::SnapshotConfig, crossbeam_channel::unbounded,
-        solana_account::AccountSharedData, solana_epoch_schedule::EpochSchedule,
-        solana_pubkey::Pubkey,
+        trezoa_snapshots::snapshot_config::SnapshotConfig, crossbeam_channel::unbounded,
+        trezoa_account::AccountSharedData, trezoa_epoch_schedule::EpochSchedule,
+        trezoa_pubkey::Pubkey,
     };
 
     #[test]

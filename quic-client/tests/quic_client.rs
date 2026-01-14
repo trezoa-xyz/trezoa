@@ -3,20 +3,20 @@ mod tests {
     use {
         crossbeam_channel::{unbounded, Receiver},
         log::*,
-        solana_connection_cache::{
+        trezoa_connection_cache::{
             client_connection::ClientStats, connection_cache_stats::ConnectionCacheStats,
         },
-        solana_keypair::Keypair,
-        solana_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
-        solana_packet::PACKET_DATA_SIZE,
-        solana_perf::packet::PacketBatch,
-        solana_quic_client::nonblocking::quic_client::{QuicClient, QuicLazyInitializedEndpoint},
-        solana_streamer::{
+        trezoa_keypair::Keypair,
+        trezoa_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
+        trezoa_packet::PACKET_DATA_SIZE,
+        trezoa_perf::packet::PacketBatch,
+        trezoa_quic_client::nonblocking::quic_client::{QuicClient, QuicLazyInitializedEndpoint},
+        trezoa_streamer::{
             nonblocking::{quic::SpawnNonBlockingServerResult, swqos::SwQosConfig},
             quic::{QuicStreamerConfig, SpawnServerResult},
             streamer::StakedNodes,
         },
-        solana_tls_utils::{new_dummy_x509_certificate, QuicClientCertificate},
+        trezoa_tls_utils::{new_dummy_x509_certificate, QuicClientCertificate},
         std::{
             net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket},
             sync::{Arc, RwLock},
@@ -63,10 +63,10 @@ mod tests {
     #[test]
     fn test_quic_client_multiple_writes() {
         use {
-            solana_connection_cache::client_connection::ClientConnection,
-            solana_quic_client::quic_client::QuicClientConnection,
+            trezoa_connection_cache::client_connection::ClientConnection,
+            trezoa_quic_client::quic_client::QuicClientConnection,
         };
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (sender, receiver) = unbounded();
         let staked_nodes = Arc::new(RwLock::new(StakedNodes::default()));
         let (s, cancel, keypair) = server_args();
@@ -74,7 +74,7 @@ mod tests {
             endpoints: _,
             thread: t,
             key_updater: _,
-        } = solana_streamer::quic::spawn_stake_wighted_qos_server(
+        } = trezoa_streamer::quic::spawn_stake_wighted_qos_server(
             "solQuicTest",
             "quic_streamer_test",
             vec![s.try_clone().unwrap()],
@@ -144,10 +144,10 @@ mod tests {
     #[tokio::test]
     async fn test_nonblocking_quic_client_multiple_writes() {
         use {
-            solana_connection_cache::nonblocking::client_connection::ClientConnection,
-            solana_quic_client::nonblocking::quic_client::QuicClientConnection,
+            trezoa_connection_cache::nonblocking::client_connection::ClientConnection,
+            trezoa_quic_client::nonblocking::quic_client::QuicClientConnection,
         };
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (sender, receiver) = unbounded();
         let staked_nodes = Arc::new(RwLock::new(StakedNodes::default()));
         let (s, cancel, keypair) = server_args();
@@ -156,7 +156,7 @@ mod tests {
             stats: _,
             thread: t,
             max_concurrent_connections: _,
-        } = solana_streamer::nonblocking::testing_utilities::spawn_stake_weighted_qos_server(
+        } = trezoa_streamer::nonblocking::testing_utilities::spawn_stake_weighted_qos_server(
             "quic_streamer_test",
             vec![s.try_clone().unwrap()],
             &keypair,
@@ -201,10 +201,10 @@ mod tests {
         /// In this we demonstrate that the request sender and the response receiver use the
         /// same quic Endpoint, and the same UDP socket.
         use {
-            solana_connection_cache::client_connection::ClientConnection,
-            solana_quic_client::quic_client::QuicClientConnection,
+            trezoa_connection_cache::client_connection::ClientConnection,
+            trezoa_quic_client::quic_client::QuicClientConnection,
         };
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // Request Receiver
         let (sender, receiver) = unbounded();
@@ -214,7 +214,7 @@ mod tests {
             endpoints: request_recv_endpoints,
             thread: request_recv_thread,
             key_updater: _,
-        } = solana_streamer::quic::spawn_stake_wighted_qos_server(
+        } = trezoa_streamer::quic::spawn_stake_wighted_qos_server(
             "solQuicTest",
             "quic_streamer_test",
             [request_recv_socket.try_clone().unwrap()],
@@ -239,7 +239,7 @@ mod tests {
             endpoints: mut response_recv_endpoints,
             thread: response_recv_thread,
             key_updater: _,
-        } = solana_streamer::quic::spawn_stake_wighted_qos_server(
+        } = trezoa_streamer::quic::spawn_stake_wighted_qos_server(
             "solQuicTest",
             "quic_streamer_test",
             [response_recv_socket],
@@ -318,16 +318,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_connection_close() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (sender, receiver) = unbounded();
         let staked_nodes = Arc::new(RwLock::new(StakedNodes::default()));
         let (s, cancel, keypair) = server_args();
-        let solana_streamer::nonblocking::quic::SpawnNonBlockingServerResult {
+        let trezoa_streamer::nonblocking::quic::SpawnNonBlockingServerResult {
             endpoints: _,
             stats: _,
             thread: t,
             max_concurrent_connections: _,
-        } = solana_streamer::nonblocking::testing_utilities::spawn_stake_weighted_qos_server(
+        } = trezoa_streamer::nonblocking::testing_utilities::spawn_stake_weighted_qos_server(
             "quic_streamer_test",
             vec![s.try_clone().unwrap()],
             &keypair,

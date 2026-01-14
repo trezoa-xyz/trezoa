@@ -1,9 +1,9 @@
 use {
-    solana_clock::NUM_CONSECUTIVE_LEADER_SLOTS,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::Protocol},
-    solana_poh::poh_recorder::PohRecorder,
-    solana_pubkey::Pubkey,
-    solana_send_transaction_service::tpu_info::TpuInfo,
+    trezoa_clock::NUM_CONSECUTIVE_LEADER_SLOTS,
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::Protocol},
+    trezoa_poh::poh_recorder::PohRecorder,
+    trezoa_pubkey::Pubkey,
+    trezoa_send_transaction_service::tpu_info::TpuInfo,
     std::{
         collections::HashMap,
         iter::once,
@@ -74,22 +74,22 @@ impl TpuInfo for ClusterTpuInfo {
 mod test {
     use {
         super::*,
-        solana_gossip::contact_info::ContactInfo,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_gossip::contact_info::ContactInfo,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::Blockstore, get_tmp_ledger_path_auto_delete,
             leader_schedule_cache::LeaderScheduleCache,
         },
-        solana_net_utils::SocketAddrSpace,
-        solana_poh_config::PohConfig,
-        solana_runtime::{
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_poh_config::PohConfig,
+        trezoa_runtime::{
             bank::Bank,
             genesis_utils::{
                 create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
         std::{net::Ipv4Addr, sync::atomic::AtomicBool},
     };
 
@@ -228,7 +228,7 @@ mod test {
 
         let slot = bank.slot();
         let first_leader =
-            solana_ledger::leader_schedule_utils::slot_leader_at(slot, &bank).unwrap();
+            trezoa_ledger::leader_schedule_utils::slot_leader_at(slot, &bank).unwrap();
         assert_eq!(
             leader_info.get_leader_tpus(1),
             vec![recent_peers.get(&first_leader).unwrap()]
@@ -238,7 +238,7 @@ mod test {
             vec![recent_peers.get(&first_leader).unwrap()]
         );
 
-        let second_leader = solana_ledger::leader_schedule_utils::slot_leader_at(
+        let second_leader = trezoa_ledger::leader_schedule_utils::slot_leader_at(
             slot + NUM_CONSECUTIVE_LEADER_SLOTS,
             &bank,
         )
@@ -254,7 +254,7 @@ mod test {
             expected_leader_sockets
         );
 
-        let third_leader = solana_ledger::leader_schedule_utils::slot_leader_at(
+        let third_leader = trezoa_ledger::leader_schedule_utils::slot_leader_at(
             slot + (2 * NUM_CONSECUTIVE_LEADER_SLOTS),
             &bank,
         )

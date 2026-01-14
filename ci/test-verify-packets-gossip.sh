@@ -8,6 +8,6 @@ if ! git lfs --version &>/dev/null; then
   exit 1
 fi
 
-rm -rf "$here"/solana-packets
-git clone https://github.com/anza-xyz/solana-packets.git "$here"/solana-packets
-GOSSIP_WIRE_FORMAT_PACKETS="$here/solana-packets/GOSSIP_PACKETS" cargo test --package solana-gossip -- wire_format_tests::tests::test_gossip_wire_format --exact --show-output
+rm -rf "$here"/trezoa-packets
+git clone https://github.com/trezoa-xyz/trezoa-packets.git "$here"/trezoa-packets
+GOSSIP_WIRE_FORMAT_PACKETS="$here/trezoa-packets/GOSSIP_PACKETS" cargo test --package trezoa-gossip -- wire_format_tests::tests::test_gossip_wire_format --exact --show-output

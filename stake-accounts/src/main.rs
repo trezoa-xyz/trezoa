@@ -10,17 +10,17 @@ use {
             resolve_command, AuthorizeArgs, Command, MoveArgs, NewArgs, RebaseArgs, SetLockupArgs,
         },
     },
-    solana_cli_config::Config,
-    solana_cli_output::display::build_balance_message,
-    solana_commitment_config::CommitmentConfig,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::client_error::Error as ClientError,
-    solana_signature::Signature,
-    solana_signer::{signers::Signers, unique_signers, Signer},
-    solana_stake_interface::{instruction::LockupArgs, state::Lockup},
-    solana_transaction::Transaction,
+    trezoa_cli_config::Config,
+    trezoa_cli_output::display::build_balance_message,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::client_error::Error as ClientError,
+    trezoa_signature::Signature,
+    trezoa_signer::{signers::Signers, unique_signers, Signer},
+    trezoa_stake_interface::{instruction::LockupArgs, state::Lockup},
+    trezoa_transaction::Transaction,
     std::{env, error::Error, str::FromStr},
 };
 
@@ -270,7 +270,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let balances = get_balances(&client, addresses)?;
             let lamports: u64 = balances.into_iter().map(|(_, bal)| bal).sum();
             let sol = build_balance_message(lamports, false, false);
-            println!("{sol} SOL");
+            println!("{sol} TRZ");
         }
         Command::Authorize(args) => {
             process_authorize_stake_accounts(&client, &args)?;

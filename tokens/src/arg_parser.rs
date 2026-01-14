@@ -6,14 +6,14 @@ use {
     clap::{
         crate_description, crate_name, value_t, value_t_or_exit, App, Arg, ArgMatches, SubCommand,
     },
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         input_parsers::{pubkey_of_signer, value_of},
         input_validators::{is_amount, is_url_or_moniker, is_valid_pubkey, is_valid_signer},
         keypair::{pubkey_from_path, signer_from_path},
     },
-    solana_cli_config::CONFIG_FILE,
-    solana_native_token::sol_str_to_lamports,
-    solana_remote_wallet::remote_wallet::maybe_wallet_manager,
+    trezoa_cli_config::CONFIG_FILE,
+    trezoa_native_token::sol_str_to_lamports,
+    trezoa_remote_wallet::remote_wallet::maybe_wallet_manager,
     std::{error::Error, ffi::OsString, process::exit},
 };
 
@@ -25,7 +25,7 @@ where
     let default_config_file = CONFIG_FILE.as_ref().unwrap();
     App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::with_name("config_file")
                 .short("C")
@@ -44,13 +44,13 @@ where
                 .global(true)
                 .validator(is_url_or_moniker)
                 .help(
-                    "URL for Solana's JSON RPC or moniker (or their first letter): [mainnet-beta, \
+                    "URL for Trezoa's JSON RPC or moniker (or their first letter): [mainnet-beta, \
                      testnet, devnet, localhost]",
                 ),
         )
         .subcommand(
             SubCommand::with_name("distribute-tokens")
-                .about("Distribute SOL")
+                .about("Distribute TRZ")
                 .arg(
                     Arg::with_name("db_path")
                         .long("db-path")
@@ -77,7 +77,7 @@ where
                         .takes_value(true)
                         .value_name("AMOUNT")
                         .validator(is_amount)
-                        .help("The amount to send to each recipient, in SOL"),
+                        .help("The amount to send to each recipient, in TRZ"),
                 )
                 .arg(
                     Arg::with_name("dry_run")
@@ -162,7 +162,7 @@ where
                         .long("unlocked-sol")
                         .takes_value(true)
                         .value_name("SOL_AMOUNT")
-                        .help("Amount of SOL to put in system account to pay for fees"),
+                        .help("Amount of TRZ to put in system account to pay for fees"),
                 )
                 .arg(
                     Arg::with_name("lockup_authority")
@@ -242,7 +242,7 @@ where
                         .long("unlocked-sol")
                         .takes_value(true)
                         .value_name("SOL_AMOUNT")
-                        .help("Amount of SOL to put in system account to pay for fees"),
+                        .help("Amount of TRZ to put in system account to pay for fees"),
                 )
                 .arg(
                     Arg::with_name("stake_authority")
@@ -281,8 +281,8 @@ where
                 ),
         )
         .subcommand(
-            SubCommand::with_name("distribute-spl-tokens")
-                .about("Distribute SPL tokens")
+            SubCommand::with_name("distribute-tpl-tokens")
+                .about("Distribute TRZ tokens")
                 .arg(
                     Arg::with_name("db_path")
                         .long("db-path")
@@ -314,7 +314,7 @@ where
                         .takes_value(true)
                         .value_name("AMOUNT")
                         .validator(is_amount)
-                        .help("The amount of SPL tokens to send to each recipient"),
+                        .help("The amount of TRZ tokens to send to each recipient"),
                 )
                 .arg(
                     Arg::with_name("output_path")
@@ -365,7 +365,7 @@ where
                 ),
         )
         .subcommand(
-            SubCommand::with_name("spl-token-balances")
+            SubCommand::with_name("tpl-token-balances")
                 .about("Balance of SPL token associated accounts")
                 .arg(
                     Arg::with_name("input_csv")
@@ -438,7 +438,7 @@ fn parse_distribute_tokens_args(
         sender_keypair,
         fee_payer,
         stake_args: None,
-        spl_token_args: None,
+        tpl_token_args: None,
         transfer_amount: matches
             .value_of("transfer_amount")
             .and_then(sol_str_to_lamports),
@@ -495,7 +495,7 @@ fn parse_create_stake_args(
         sender_keypair,
         fee_payer,
         stake_args: Some(stake_args),
-        spl_token_args: None,
+        tpl_token_args: None,
         transfer_amount: None,
     })
 }
@@ -582,12 +582,12 @@ fn parse_distribute_stake_args(
         sender_keypair,
         fee_payer,
         stake_args: Some(stake_args),
-        spl_token_args: None,
+        tpl_token_args: None,
         transfer_amount: None,
     })
 }
 
-fn parse_distribute_spl_tokens_args(
+fn parse_distribute_tpl_tokens_args(
     matches: &ArgMatches<'_>,
 ) -> Result<DistributeTokensArgs, Box<dyn Error>> {
     let mut wallet_manager = maybe_wallet_manager()?;
@@ -625,7 +625,7 @@ fn parse_distribute_spl_tokens_args(
         sender_keypair: token_owner,
         fee_payer,
         stake_args: None,
-        spl_token_args: Some(SplTokenArgs {
+        tpl_token_args: Some(SplTokenArgs {
             token_account_address,
             ..SplTokenArgs::default()
         }),
@@ -635,14 +635,14 @@ fn parse_distribute_spl_tokens_args(
 
 fn parse_balances_args(matches: &ArgMatches<'_>) -> Result<BalancesArgs, Box<dyn Error>> {
     let mut wallet_manager = maybe_wallet_manager()?;
-    let spl_token_args =
+    let tpl_token_args =
         pubkey_of_signer(matches, "mint_address", &mut wallet_manager)?.map(|mint| SplTokenArgs {
             mint,
             ..SplTokenArgs::default()
         });
     Ok(BalancesArgs {
         input_csv: value_t_or_exit!(matches, "input_csv", String),
-        spl_token_args,
+        tpl_token_args,
     })
 }
 
@@ -672,11 +672,11 @@ where
         ("distribute-stake", Some(matches)) => {
             Command::DistributeTokens(parse_distribute_stake_args(matches)?)
         }
-        ("distribute-spl-tokens", Some(matches)) => {
-            Command::DistributeTokens(parse_distribute_spl_tokens_args(matches)?)
+        ("distribute-tpl-tokens", Some(matches)) => {
+            Command::DistributeTokens(parse_distribute_tpl_tokens_args(matches)?)
         }
         ("balances", Some(matches)) => Command::Balances(parse_balances_args(matches)?),
-        ("spl-token-balances", Some(matches)) => Command::Balances(parse_balances_args(matches)?),
+        ("tpl-token-balances", Some(matches)) => Command::Balances(parse_balances_args(matches)?),
         ("transaction-log", Some(matches)) => {
             Command::TransactionLog(parse_transaction_log_args(matches))
         }

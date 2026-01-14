@@ -10,7 +10,7 @@ use {
 /// the concrete implementation of QosController.
 pub(crate) trait ConnectionContext: Clone + Send + Sync {
     fn peer_type(&self) -> ConnectionPeerType;
-    fn remote_pubkey(&self) -> Option<solana_pubkey::Pubkey>;
+    fn remote_pubkey(&self) -> Option<trezoa_pubkey::Pubkey>;
 }
 
 /// A trait to manage QoS for connections. This includes

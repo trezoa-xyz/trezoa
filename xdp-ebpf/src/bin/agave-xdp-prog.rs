@@ -13,10 +13,10 @@ use {
 
 #[no_mangle]
 // Set to 1 from user space at load time to control whether we must drop multi-frags packets
-static AGAVE_XDP_DROP_MULTI_FRAGS: u8 = 0;
+static TREZOA_XDP_DROP_MULTI_FRAGS: u8 = 0;
 
 #[xdp]
-pub fn agave_xdp(ctx: XdpContext) -> u32 {
+pub fn trezoa_xdp(ctx: XdpContext) -> u32 {
     if drop_frags() && has_frags(&ctx) {
         // We're not actually dropping any valid frames here. See
         // https://lore.kernel.org/netdev/20251021173200.7908-2-alessandro.d@gmail.com
@@ -31,7 +31,7 @@ pub fn agave_xdp(ctx: XdpContext) -> u32 {
 fn drop_frags() -> bool {
     // SAFETY: This variable is only ever modified at load time, we need the volatile read to
     // prevent the compiler from optimizing it away.
-    unsafe { ptr::read_volatile(&AGAVE_XDP_DROP_MULTI_FRAGS) == 1 }
+    unsafe { ptr::read_volatile(&TREZOA_XDP_DROP_MULTI_FRAGS) == 1 }
 }
 
 #[inline]

@@ -1,6 +1,6 @@
 use {
     crossbeam_channel::{Sender, TrySendError},
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     thiserror::Error,
 };
 

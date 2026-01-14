@@ -1,8 +1,8 @@
 use {
-    agave_fs::file_io::{self, FileCreator},
+    trezoa_fs::file_io::{self, FileCreator},
     log::*,
     rand::{rng, Rng},
-    solana_genesis_config::DEFAULT_GENESIS_FILE,
+    trezoa_genesis_config::DEFAULT_GENESIS_FILE,
     std::{
         fs::{self, File},
         io::{self, Read},
@@ -455,7 +455,7 @@ fn is_valid_genesis_archive_entry<'a>(
 mod tests {
     use {
         super::*,
-        agave_fs::{file_io::file_creator, io_setup::IoSetupState},
+        trezoa_fs::{file_io::file_creator, io_setup::IoSetupState},
         assert_matches::assert_matches,
         std::io::BufReader,
         tar::{Builder, Header},
@@ -522,7 +522,7 @@ mod tests {
 
     #[test]
     fn test_valid_snapshot_accounts() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         assert!(is_valid_snapshot_archive_entry(
             &["accounts", "0.0"],
             tar::EntryType::Regular

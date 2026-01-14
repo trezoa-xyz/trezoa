@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -13,7 +13,7 @@ pub mod nonblocking;
 pub mod quic_client;
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate trezoa_metrics;
 
 use {
     crate::{
@@ -28,18 +28,18 @@ use {
     log::debug,
     quic_client::get_runtime,
     quinn::{Endpoint, EndpointConfig, TokioRuntime},
-    solana_connection_cache::{
+    trezoa_connection_cache::{
         connection_cache::{
             BaseClientConnection, ClientError, ConnectionCache, ConnectionManager, ConnectionPool,
             ConnectionPoolError, NewConnectionConfig, Protocol,
         },
         connection_cache_stats::ConnectionCacheStats,
     },
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_streamer::streamer::StakedNodes,
-    solana_tls_utils::{new_dummy_x509_certificate, QuicClientCertificate},
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_streamer::streamer::StakedNodes,
+    trezoa_tls_utils::{new_dummy_x509_certificate, QuicClientCertificate},
     std::{
         net::{IpAddr, SocketAddr, UdpSocket},
         sync::{Arc, RwLock},

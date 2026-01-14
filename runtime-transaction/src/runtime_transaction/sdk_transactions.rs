@@ -5,15 +5,15 @@ use {
         transaction_meta::{StaticMeta, TransactionMeta},
         transaction_with_meta::TransactionWithMeta,
     },
-    solana_message::{AddressLoader, TransactionSignatureDetails},
-    solana_pubkey::Pubkey,
-    solana_svm_transaction::instruction::SVMInstruction,
-    solana_transaction::{
+    trezoa_message::{AddressLoader, TransactionSignatureDetails},
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_transaction::instruction::SVMInstruction,
+    trezoa_transaction::{
         sanitized::{MessageHash, SanitizedTransaction},
         simple_vote_transaction_checker::is_simple_vote_transaction,
         versioned::{VersionedTransaction, sanitized::SanitizedVersionedTransaction},
     },
-    solana_transaction_error::TransactionResult as Result,
+    trezoa_transaction_error::TransactionResult as Result,
     std::{borrow::Cow, collections::HashSet},
 };
 
@@ -84,9 +84,9 @@ impl RuntimeTransaction<SanitizedTransaction> {
     ) -> Result<Self> {
         if enable_static_instruction_limit
             && tx.message.instructions().len()
-                > solana_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH
+                > trezoa_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH
         {
-            return Err(solana_transaction_error::TransactionError::SanitizeFailure);
+            return Err(trezoa_transaction_error::TransactionError::SanitizeFailure);
         }
         let statically_loaded_runtime_tx =
             RuntimeTransaction::<SanitizedVersionedTransaction>::try_from(
@@ -147,14 +147,14 @@ impl TransactionWithMeta for RuntimeTransaction<SanitizedTransaction> {
 
 #[cfg(feature = "dev-context-only-utils")]
 impl RuntimeTransaction<SanitizedTransaction> {
-    pub fn from_transaction_for_tests(transaction: solana_transaction::Transaction) -> Self {
+    pub fn from_transaction_for_tests(transaction: trezoa_transaction::Transaction) -> Self {
         let versioned_transaction = VersionedTransaction::from(transaction);
         let enable_static_instruction_limit = true;
         Self::try_create(
             versioned_transaction,
             MessageHash::Compute,
             None,
-            solana_message::SimpleAddressLoader::Disabled,
+            trezoa_message::SimpleAddressLoader::Disabled,
             &HashSet::new(),
             enable_static_instruction_limit,
         )
@@ -166,17 +166,17 @@ impl RuntimeTransaction<SanitizedTransaction> {
 mod tests {
     use {
         super::*,
-        agave_feature_set::FeatureSet,
-        agave_reserved_account_keys::ReservedAccountKeys,
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_hash::Hash,
-        solana_instruction::Instruction,
-        solana_keypair::Keypair,
-        solana_message::{Message, SimpleAddressLoader},
-        solana_signer::Signer,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::{Transaction, versioned::VersionedTransaction},
-        solana_vote_interface::{self as vote, state::Vote},
+        trezoa_feature_set::FeatureSet,
+        trezoa_reserved_account_keys::ReservedAccountKeys,
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_hash::Hash,
+        trezoa_instruction::Instruction,
+        trezoa_keypair::Keypair,
+        trezoa_message::{Message, SimpleAddressLoader},
+        trezoa_signer::Signer,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::{Transaction, versioned::VersionedTransaction},
+        trezoa_vote_interface::{self as vote, state::Vote},
     };
 
     fn vote_sanitized_versioned_transaction() -> SanitizedVersionedTransaction {
@@ -212,7 +212,7 @@ mod tests {
             let from_keypair = Keypair::new();
             let instructions = vec![system_instruction::transfer(
                 &from_keypair.pubkey(),
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 1,
             )];
             TestTransaction {

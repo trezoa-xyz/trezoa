@@ -6,7 +6,7 @@ on:
 
 jobs:
   main:
-    if: github.repository == 'anza-xyz/agave'
+    if: github.repository == 'trezoa-xyz/trezoa'
     strategy:
       fail-fast: false
       matrix:

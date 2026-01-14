@@ -396,7 +396,7 @@ pub fn large_file_buf_reader(
 ) -> io::Result<impl BufRead + use<>> {
     #[cfg(target_os = "linux")]
     {
-        assert!(agave_io_uring::io_uring_supported());
+        assert!(trezoa_io_uring::io_uring_supported());
         use crate::io_uring::sequential_file_reader::SequentialFileReaderBuilder;
 
         SequentialFileReaderBuilder::new()

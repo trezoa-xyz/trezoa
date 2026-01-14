@@ -1,8 +1,8 @@
 use {
-    agave_scheduler_bindings::{
+    trezoa_scheduler_bindings::{
         SharableTransactionBatchRegion, SharableTransactionRegion, MAX_TRANSACTIONS_PER_MESSAGE,
     },
-    agave_transaction_view::transaction_data::TransactionData,
+    trezoa_transaction_view::transaction_data::TransactionData,
     core::ptr::NonNull,
     rts_alloc::Allocator,
     std::marker::PhantomData,
@@ -36,7 +36,7 @@ impl TransactionPtr {
     ///
     /// # Note
     ///
-    /// If you are trying to construct a pointer for use by Agave, you almost certainly want to use
+    /// If you are trying to construct a pointer for use by Trezoa-team, you almost certainly want to use
     /// [`Self::from_sharable_transaction_region`].
     #[cfg(feature = "dev-context-only-utils")]
     pub unsafe fn from_raw_parts(ptr: NonNull<u8>, count: usize) -> Self {

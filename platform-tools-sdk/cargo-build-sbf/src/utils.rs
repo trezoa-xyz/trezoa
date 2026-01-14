@@ -1,7 +1,7 @@
 use {
     itertools::Itertools,
     log::{error, info},
-    solana_keypair::{write_keypair_file, Keypair},
+    trezoa_keypair::{write_keypair_file, Keypair},
     std::{
         env,
         ffi::OsStr,

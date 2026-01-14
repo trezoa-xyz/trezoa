@@ -1,5 +1,5 @@
 use {
-    agave_io_uring::{Completion, Ring, RingOp},
+    trezoa_io_uring::{Completion, Ring, RingOp},
     io_uring::{opcode, squeue, types, IoUring},
     slab::Slab,
     std::{

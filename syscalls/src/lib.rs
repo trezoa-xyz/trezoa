@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -19,40 +19,40 @@ pub use self::{
         SyscallGetSysvar,
     },
 };
-use solana_program_runtime::memory::translate_vm_slice;
+use trezoa_program_runtime::memory::translate_vm_slice;
 #[allow(deprecated)]
 use {
     crate::mem_ops::is_nonoverlapping,
-    solana_big_mod_exp::{big_mod_exp, BigModExpParams},
-    solana_blake3_hasher as blake3,
-    solana_cpi::MAX_RETURN_DATA,
-    solana_hash::Hash,
-    solana_instruction::{error::InstructionError, AccountMeta, ProcessedSiblingInstruction},
-    solana_keccak_hasher as keccak, solana_poseidon as poseidon,
-    solana_program_entrypoint::{BPF_ALIGN_OF_U128, SUCCESS},
-    solana_program_runtime::{
+    trezoa_big_mod_exp::{big_mod_exp, BigModExpParams},
+    trezoa_blake3_hasher as blake3,
+    trezoa_cpi::MAX_RETURN_DATA,
+    trezoa_hash::Hash,
+    trezoa_instruction::{error::InstructionError, AccountMeta, ProcessedSiblingInstruction},
+    trezoa_keccak_hasher as keccak, trezoa_poseidon as poseidon,
+    trezoa_program_entrypoint::{BPF_ALIGN_OF_U128, SUCCESS},
+    trezoa_program_runtime::{
         cpi::CpiError,
         execution_budget::{SVMTransactionExecutionBudget, SVMTransactionExecutionCost},
         invoke_context::InvokeContext,
         memory::MemoryTranslationError,
         stable_log, translate_inner, translate_slice_inner, translate_type_inner,
     },
-    solana_pubkey::{Pubkey, PubkeyError, MAX_SEEDS, MAX_SEED_LEN, PUBKEY_BYTES},
-    solana_sbpf::{
+    trezoa_pubkey::{Pubkey, PubkeyError, MAX_SEEDS, MAX_SEED_LEN, PUBKEY_BYTES},
+    trezoa_sbpf::{
         declare_builtin_function,
         memory_region::{AccessType, MemoryMapping},
         program::{BuiltinProgram, SBPFVersion},
         vm::Config,
     },
-    solana_secp256k1_recover::{
+    trezoa_secp256k1_recover::{
         Secp256k1RecoverError, SECP256K1_PUBLIC_KEY_LENGTH, SECP256K1_SIGNATURE_LENGTH,
     },
-    solana_sha256_hasher::Hasher,
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_log_collector::{ic_logger_msg, ic_msg},
-    solana_svm_type_overrides::sync::Arc,
-    solana_sysvar::SysvarSerialize,
-    solana_transaction_context::vm_slice::VmSlice,
+    trezoa_sha256_hasher::Hasher,
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_log_collector::{ic_logger_msg, ic_msg},
+    trezoa_svm_type_overrides::sync::Arc,
+    trezoa_sysvar::SysvarSerialize,
+    trezoa_transaction_context::vm_slice::VmSlice,
     std::{
         alloc::Layout,
         mem::{align_of, size_of},
@@ -966,7 +966,7 @@ declare_builtin_function!(
         _arg5: u64,
         memory_mapping: &mut MemoryMapping,
     ) -> Result<u64, Error> {
-        use solana_curve25519::{curve_syscall_traits::*, edwards, ristretto};
+        use trezoa_curve25519::{curve_syscall_traits::*, edwards, ristretto};
         match curve_id {
             CURVE25519_EDWARDS => {
                 let cost = invoke_context
@@ -1029,7 +1029,7 @@ declare_builtin_function!(
         result_point_addr: u64,
         memory_mapping: &mut MemoryMapping,
     ) -> Result<u64, Error> {
-        use solana_curve25519::{
+        use trezoa_curve25519::{
             curve_syscall_traits::*,
             edwards::{self, PodEdwardsPoint},
             ristretto::{self, PodRistrettoPoint},
@@ -1257,7 +1257,7 @@ declare_builtin_function!(
         result_point_addr: u64,
         memory_mapping: &mut MemoryMapping,
     ) -> Result<u64, Error> {
-        use solana_curve25519::{
+        use trezoa_curve25519::{
             curve_syscall_traits::*,
             edwards::{self, PodEdwardsPoint},
             ristretto::{self, PodRistrettoPoint},
@@ -1576,7 +1576,7 @@ declare_builtin_function!(
         _arg5: u64,
         memory_mapping: &mut MemoryMapping,
     ) -> Result<u64, Error> {
-        use solana_bn254::versioned::{
+        use trezoa_bn254::versioned::{
             alt_bn128_versioned_g1_addition, alt_bn128_versioned_g1_multiplication,
             alt_bn128_versioned_pairing, Endianness, VersionedG1Addition,
             VersionedG1Multiplication, VersionedPairing, ALT_BN128_ADDITION_OUTPUT_SIZE,
@@ -1850,7 +1850,7 @@ declare_builtin_function!(
         let execution_cost = invoke_context.get_execution_cost();
         consume_compute_meter(invoke_context, execution_cost.syscall_base_cost)?;
 
-        use solana_sbpf::vm::ContextObject;
+        use trezoa_sbpf::vm::ContextObject;
         Ok(invoke_context.get_remaining())
     }
 );
@@ -1867,7 +1867,7 @@ declare_builtin_function!(
         _arg5: u64,
         memory_mapping: &mut MemoryMapping,
     ) -> Result<u64, Error> {
-        use solana_bn254::{
+        use trezoa_bn254::{
             prelude::{ALT_BN128_G1_POINT_SIZE, ALT_BN128_G2_POINT_SIZE},
             compression::prelude::{
                 alt_bn128_g1_compress, alt_bn128_g1_decompress,
@@ -2124,28 +2124,28 @@ declare_builtin_function!(
 #[allow(clippy::indexing_slicing)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sysvar::fees::Fees;
+    use trezoa_sysvar::fees::Fees;
     use {
         super::*,
         assert_matches::assert_matches,
         core::slice,
-        solana_account::{create_account_shared_data_for_test, AccountSharedData},
-        solana_account_info::AccountInfo,
-        solana_clock::Clock,
-        solana_epoch_rewards::EpochRewards,
-        solana_epoch_schedule::EpochSchedule,
-        solana_fee_calculator::FeeCalculator,
-        solana_hash::HASH_BYTES,
-        solana_instruction::Instruction,
-        solana_last_restart_slot::LastRestartSlot,
-        solana_program::program::check_type_assumptions,
-        solana_program_runtime::{
+        trezoa_account::{create_account_shared_data_for_test, AccountSharedData},
+        trezoa_account_info::AccountInfo,
+        trezoa_clock::Clock,
+        trezoa_epoch_rewards::EpochRewards,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_fee_calculator::FeeCalculator,
+        trezoa_hash::HASH_BYTES,
+        trezoa_instruction::Instruction,
+        trezoa_last_restart_slot::LastRestartSlot,
+        trezoa_program::program::check_type_assumptions,
+        trezoa_program_runtime::{
             execution_budget::MAX_HEAP_FRAME_BYTES,
             invoke_context::{BpfAllocator, InvokeContext, SyscallContext},
             memory::address_is_aligned,
             with_mock_invoke_context,
         },
-        solana_sbpf::{
+        trezoa_sbpf::{
             aligned_memory::AlignedMemory,
             ebpf::{self, HOST_ALIGN},
             error::EbpfError,
@@ -2153,15 +2153,15 @@ mod tests {
             program::SBPFVersion,
             vm::Config,
         },
-        solana_sdk_ids::{
+        trezoa_sdk_ids::{
             bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, native_loader, sysvar,
         },
-        solana_sha256_hasher::hashv,
-        solana_slot_hashes::{self as slot_hashes, SlotHashes},
-        solana_stable_layout::stable_instruction::StableInstruction,
-        solana_stake_interface::stake_history::{self, StakeHistory, StakeHistoryEntry},
-        solana_sysvar_id::SysvarId,
-        solana_transaction_context::{instruction_accounts::InstructionAccount, IndexOfAccount},
+        trezoa_sha256_hasher::hashv,
+        trezoa_slot_hashes::{self as slot_hashes, SlotHashes},
+        trezoa_stable_layout::stable_instruction::StableInstruction,
+        trezoa_stake_interface::stake_history::{self, StakeHistory, StakeHistoryEntry},
+        trezoa_sysvar_id::SysvarId,
+        trezoa_transaction_context::{instruction_accounts::InstructionAccount, IndexOfAccount},
         std::{
             hash::{DefaultHasher, Hash, Hasher},
             mem,
@@ -2259,7 +2259,7 @@ mod tests {
         let config = Config::default();
 
         // Pubkey
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let memory_mapping = MemoryMapping::new(
             vec![MemoryRegion::new_readonly(bytes_of(&pubkey), 0x100000000)],
             &config,
@@ -2272,9 +2272,9 @@ mod tests {
 
         // Instruction
         let instruction = Instruction::new_with_bincode(
-            solana_pubkey::new_rand(),
+            trezoa_pubkey::new_rand(),
             &"foobar",
-            vec![AccountMeta::new(solana_pubkey::new_rand(), false)],
+            vec![AccountMeta::new(trezoa_pubkey::new_rand(), false)],
         );
         let instruction = StableInstruction::from(instruction);
         let memory_region = MemoryRegion::new_readonly(bytes_of(&instruction), 0x100000000);
@@ -2350,7 +2350,7 @@ mod tests {
         assert!(translate_slice::<u64>(&memory_mapping, 0x100000000, u64::MAX, true).is_err());
 
         // Pubkeys
-        let mut data = vec![solana_pubkey::new_rand(); 5];
+        let mut data = vec![trezoa_pubkey::new_rand(); 5];
         let memory_mapping = MemoryMapping::new(
             vec![MemoryRegion::new_readonly(
                 unsafe {
@@ -2366,7 +2366,7 @@ mod tests {
             translate_slice::<Pubkey>(&memory_mapping, 0x100000000, data.len() as u64, true)
                 .unwrap();
         assert_eq!(data, translated_data);
-        *data.first_mut().unwrap() = solana_pubkey::new_rand(); // Both should point to same place
+        *data.first_mut().unwrap() = trezoa_pubkey::new_rand(); // Both should point to same place
         assert_eq!(data, translated_data);
     }
 
@@ -2598,7 +2598,7 @@ mod tests {
             prepare_mockup!($invoke_context, program_id, bpf_loader::id());
             $invoke_context
                 .set_syscall_context(SyscallContext {
-                    allocator: BpfAllocator::new(solana_program_entrypoint::HEAP_LENGTH as u64),
+                    allocator: BpfAllocator::new(trezoa_program_entrypoint::HEAP_LENGTH as u64),
                     accounts_metadata: Vec::new(),
                 })
                 .unwrap();
@@ -2624,7 +2624,7 @@ mod tests {
             setup_alloc_test!(invoke_context, memory_mapping, heap);
             let result = SyscallAllocFree::rust(
                 &mut invoke_context,
-                solana_program_entrypoint::HEAP_LENGTH as u64,
+                trezoa_program_entrypoint::HEAP_LENGTH as u64,
                 0,
                 0,
                 0,
@@ -2634,7 +2634,7 @@ mod tests {
             assert_ne!(result.unwrap(), 0);
             let result = SyscallAllocFree::rust(
                 &mut invoke_context,
-                solana_program_entrypoint::HEAP_LENGTH as u64,
+                trezoa_program_entrypoint::HEAP_LENGTH as u64,
                 0,
                 0,
                 0,
@@ -2664,7 +2664,7 @@ mod tests {
             }
             let result = SyscallAllocFree::rust(
                 &mut invoke_context,
-                solana_program_entrypoint::HEAP_LENGTH as u64,
+                trezoa_program_entrypoint::HEAP_LENGTH as u64,
                 0,
                 0,
                 0,
@@ -2684,7 +2684,7 @@ mod tests {
             }
             let result = SyscallAllocFree::rust(
                 &mut invoke_context,
-                solana_program_entrypoint::HEAP_LENGTH as u64,
+                trezoa_program_entrypoint::HEAP_LENGTH as u64,
                 0,
                 0,
                 0,
@@ -2822,7 +2822,7 @@ mod tests {
 
     #[test]
     fn test_syscall_edwards_curve_point_validation() {
-        use solana_curve25519::curve_syscall_traits::CURVE25519_EDWARDS;
+        use trezoa_curve25519::curve_syscall_traits::CURVE25519_EDWARDS;
 
         let config = Config::default();
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
@@ -2895,7 +2895,7 @@ mod tests {
 
     #[test]
     fn test_syscall_ristretto_curve_point_validation() {
-        use solana_curve25519::curve_syscall_traits::CURVE25519_RISTRETTO;
+        use trezoa_curve25519::curve_syscall_traits::CURVE25519_RISTRETTO;
 
         let config = Config::default();
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
@@ -2968,7 +2968,7 @@ mod tests {
 
     #[test]
     fn test_syscall_edwards_curve_group_ops() {
-        use solana_curve25519::curve_syscall_traits::{ADD, CURVE25519_EDWARDS, MUL, SUB};
+        use trezoa_curve25519::curve_syscall_traits::{ADD, CURVE25519_EDWARDS, MUL, SUB};
 
         let config = Config::default();
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
@@ -3123,7 +3123,7 @@ mod tests {
 
     #[test]
     fn test_syscall_ristretto_curve_group_ops() {
-        use solana_curve25519::curve_syscall_traits::{ADD, CURVE25519_RISTRETTO, MUL, SUB};
+        use trezoa_curve25519::curve_syscall_traits::{ADD, CURVE25519_RISTRETTO, MUL, SUB};
 
         let config = Config::default();
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
@@ -3280,7 +3280,7 @@ mod tests {
 
     #[test]
     fn test_syscall_multiscalar_multiplication() {
-        use solana_curve25519::curve_syscall_traits::{CURVE25519_EDWARDS, CURVE25519_RISTRETTO};
+        use trezoa_curve25519::curve_syscall_traits::{CURVE25519_EDWARDS, CURVE25519_RISTRETTO};
 
         let config = Config::default();
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
@@ -3386,7 +3386,7 @@ mod tests {
 
     #[test]
     fn test_syscall_multiscalar_multiplication_maximum_length_exceeded() {
-        use solana_curve25519::curve_syscall_traits::{CURVE25519_EDWARDS, CURVE25519_RISTRETTO};
+        use trezoa_curve25519::curve_syscall_traits::{CURVE25519_EDWARDS, CURVE25519_RISTRETTO};
 
         let config = Config::default();
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
@@ -4537,7 +4537,7 @@ mod tests {
 
     #[test]
     fn test_create_program_address() {
-        // These tests duplicate the direct tests in solana_pubkey
+        // These tests duplicate the direct tests in trezoa_pubkey
 
         prepare_mockup!(invoke_context, program_id, bpf_loader::id());
         let address = bpf_loader_upgradeable::id();

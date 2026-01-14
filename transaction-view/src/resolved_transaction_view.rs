@@ -9,12 +9,12 @@ use {
         fmt::{Debug, Formatter},
         ops::Deref,
     },
-    solana_hash::Hash,
-    solana_message::{AccountKeys, v0::LoadedAddresses},
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader_upgradeable,
-    solana_signature::Signature,
-    solana_svm_transaction::{
+    trezoa_hash::Hash,
+    trezoa_message::{AccountKeys, v0::LoadedAddresses},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader_upgradeable,
+    trezoa_signature::Signature,
+    trezoa_svm_transaction::{
         instruction::SVMInstruction,
         message_address_table_lookup::SVMMessageAddressTableLookup,
         svm_message::{SVMMessage, SVMStaticMessage},
@@ -182,8 +182,8 @@ impl<D: TransactionData> SVMStaticMessage for ResolvedTransactionView<D> {
         &self,
     ) -> impl Iterator<
         Item = (
-            &solana_pubkey::Pubkey,
-            solana_svm_transaction::instruction::SVMInstruction<'_>,
+            &trezoa_pubkey::Pubkey,
+            trezoa_svm_transaction::instruction::SVMInstruction<'_>,
         ),
     > + Clone {
         self.view.program_instructions_iter()
@@ -257,14 +257,14 @@ mod tests {
     use {
         super::*,
         crate::transaction_view::SanitizedTransactionView,
-        solana_message::{
+        trezoa_message::{
             MessageHeader, VersionedMessage,
             compiled_instruction::CompiledInstruction,
             v0::{self, MessageAddressTableLookup},
         },
-        solana_sdk_ids::{system_program, sysvar},
-        solana_signature::Signature,
-        solana_transaction::versioned::VersionedTransaction,
+        trezoa_sdk_ids::{system_program, sysvar},
+        trezoa_signature::Signature,
+        trezoa_transaction::versioned::VersionedTransaction,
     };
 
     #[test]

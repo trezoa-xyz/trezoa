@@ -1,4 +1,4 @@
-# Agave Style Guidelines
+# Trezoa-team Style Guidelines
 
 The goal of these guidelines is to improve developer productivity by allowing
 developers to jump into any file in the codebase and not need to adapt to
@@ -13,7 +13,7 @@ conventions. These guidelines also outline the PR process etiquette.
 First time contributors should read through this guide in its entirety before
 opening a pull request. Additionally, pull requests from external (and
 especially first time) contributors that make inconsequential changes may be
-closed without merging at the discretion of Agave maintainers. Pull requests
+closed without merging at the discretion of Trezoa-team maintainers. Pull requests
 will be deemed consequential or not on a case by case basis. As an example,
 spelling and/or grammar fixes will almost always be considered inconsequential,
 unless they materially correct the message.
@@ -215,13 +215,13 @@ matches the logical flow in your PR description.
 ### The PR / Issue Labels
 
 Labels make it easier to manage and track PRs / issues.  Below some common labels
-that we use in Anza.  For the complete list of labels, please refer to the
-[label page](https://github.com/anza-xyz/agave/issues/labels):
+that we use in Trezoa-team.  For the complete list of labels, please refer to the
+[label page](https://github.com/trezoa-xyz/trezoa/issues/labels):
 
 * "feature-gate": when you add a new feature gate or modify the behavior of
 an existing feature gate, please add the "feature-gate" label to your PR.
 New feature gates should also always have a corresponding tracking issue
-(go to "New Issue" -> "Feature Gate Tracker [Get Started](https://github.com/anza-xyz/agave/issues/new?template=2-feature-gate.yml)")
+(go to "New Issue" -> "Feature Gate Tracker [Get Started](https://github.com/trezoa-xyz/trezoa/issues/new?template=2-feature-gate.yml)")
 and should be updated each time the feature is activated on a cluster.
 
 * "automerge": When a PR is labelled with "automerge", the PR will be
@@ -359,15 +359,15 @@ struct A {}
 3. When using the functionality, make sure to enable the feature:
 ```toml
 [dev-dependencies]
-solana-genesis = { workspace = true,  features = ["dev-context-only-utils"] }
+trezoa-genesis = { workspace = true,  features = ["dev-context-only-utils"] }
 ```
 
 ### Public API
 
-While most Agave crates get pushed on crates.io, their API is not always guaranteed to be
-stable. Unstable API is gated behind `agave-unstable-api` feature. Breaking public API
-is acceptable only if it is gated behind `agave-unstable-api`. However, you should generally
-avoid doing so where practical, as some external teams use agave crates anyway.
+While most Trezoa-team crates get pushed on crates.io, their API is not always guaranteed to be
+stable. Unstable API is gated behind `trezoa-unstable-api` feature. Breaking public API
+is acceptable only if it is gated behind `trezoa-unstable-api`. However, you should generally
+avoid doing so where practical, as some external teams use trezoa crates anyway.
 
 ### Allocator usage
 
@@ -384,17 +384,17 @@ Inventing new terms is allowed, but should only be done when the term is widely
 used and understood. Avoid introducing new 3-letter terms, which can be
 confused with 3-letter acronyms.
 
-[Terms currently in use](https://solana.com/docs/terminology)
+[Terms currently in use](https://trezoa.com/docs/terminology)
 
 
 ## Design Proposals
 
-This Agave validator client's architecture is described by docs generated from markdown files in the `docs/src/`
-directory and viewable on the official [Agave Validator Client](https://docs.anza.xyz) documentation website.
+This Trezoa-team validator client's architecture is described by docs generated from markdown files in the `docs/src/`
+directory and viewable on the official [Trezoa-team Validator Client](https://docs.trezoa.xyz) documentation website.
 
 Current design proposals may be viewed on the docs site:
 
-1. [Accepted Proposals](https://docs.anza.xyz/proposals/accepted-design-proposals)
-2. [Implemented Proposals](https://docs.anza.xyz/implemented-proposals/implemented-proposals)
+1. [Accepted Proposals](https://docs.trezoa.xyz/proposals/accepted-design-proposals)
+2. [Implemented Proposals](https://docs.trezoa.xyz/implemented-proposals/implemented-proposals)
 
 New design proposals should follow this guide on [how to submit a design proposal](./docs/src/proposals.md#submit-a-design-proposal).

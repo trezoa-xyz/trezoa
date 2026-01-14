@@ -82,7 +82,7 @@ pub fn are_snapshot_archive_kinds_the_same_kind(
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_clock::Slot};
+    use {super::*, trezoa_clock::Slot};
 
     fn new(snapshot_kind: SnapshotKind, slot: Slot) -> SnapshotPackage {
         SnapshotPackage {

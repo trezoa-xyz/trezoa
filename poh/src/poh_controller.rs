@@ -1,7 +1,7 @@
 use {
     crossbeam_channel::{Receiver, SendError, Sender, TryRecvError},
-    solana_clock::Slot,
-    solana_runtime::{bank::Bank, installed_scheduler_pool::BankWithScheduler},
+    trezoa_clock::Slot,
+    trezoa_runtime::{bank::Bank, installed_scheduler_pool::BankWithScheduler},
     std::sync::{
         atomic::{AtomicUsize, Ordering},
         Arc,

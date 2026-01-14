@@ -8,12 +8,12 @@ use {
         stable_log,
         sysvar_cache::SysvarCache,
     },
-    solana_account::{create_account_shared_data_for_test, AccountSharedData},
-    solana_epoch_schedule::EpochSchedule,
-    solana_hash::Hash,
-    solana_instruction::{error::InstructionError, AccountMeta, Instruction},
-    solana_pubkey::Pubkey,
-    solana_sbpf::{
+    trezoa_account::{create_account_shared_data_for_test, AccountSharedData},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_hash::Hash,
+    trezoa_instruction::{error::InstructionError, AccountMeta, Instruction},
+    trezoa_pubkey::Pubkey,
+    trezoa_sbpf::{
         ebpf::MM_HEAP_START,
         elf::Executable as GenericExecutable,
         error::{EbpfError, ProgramResult},
@@ -21,17 +21,17 @@ use {
         program::{BuiltinFunction, SBPFVersion},
         vm::{Config, ContextObject, EbpfVm},
     },
-    solana_sdk_ids::{
+    trezoa_sdk_ids::{
         bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, loader_v4, native_loader, sysvar,
     },
-    solana_svm_callback::InvokeContextCallback,
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_log_collector::{ic_msg, LogCollector},
-    solana_svm_measure::measure::Measure,
-    solana_svm_timings::{ExecuteDetailsTimings, ExecuteTimings},
-    solana_svm_transaction::{instruction::SVMInstruction, svm_message::SVMMessage},
-    solana_svm_type_overrides::sync::Arc,
-    solana_transaction_context::{
+    trezoa_svm_callback::InvokeContextCallback,
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_log_collector::{ic_msg, LogCollector},
+    trezoa_svm_measure::measure::Measure,
+    trezoa_svm_timings::{ExecuteDetailsTimings, ExecuteTimings},
+    trezoa_svm_transaction::{instruction::SVMInstruction, svm_message::SVMMessage},
+    trezoa_svm_type_overrides::sync::Arc,
+    trezoa_transaction_context::{
         instruction::InstructionContext, instruction_accounts::InstructionAccount,
         transaction_accounts::KeyedAccountSharedData, IndexOfAccount, TransactionContext,
         MAX_ACCOUNTS_PER_TRANSACTION,
@@ -53,7 +53,7 @@ pub type RegisterTrace<'a> = &'a [[u64; 12]];
 #[macro_export]
 macro_rules! declare_process_instruction {
     ($process_instruction:ident, $cu_to_consume:expr, |$invoke_context:ident| $inner:tt) => {
-        $crate::solana_sbpf::declare_builtin_function!(
+        $crate::trezoa_sbpf::declare_builtin_function!(
             $process_instruction,
             fn rust(
                 invoke_context: &mut $crate::invoke_context::InvokeContext,
@@ -62,7 +62,7 @@ macro_rules! declare_process_instruction {
                 _arg2: u64,
                 _arg3: u64,
                 _arg4: u64,
-                _memory_mapping: &mut $crate::solana_sbpf::memory_region::MemoryMapping,
+                _memory_mapping: &mut $crate::trezoa_sbpf::memory_region::MemoryMapping,
             ) -> std::result::Result<u64, Box<dyn std::error::Error>> {
                 fn process_instruction_inner(
                     $invoke_context: &mut $crate::invoke_context::InvokeContext,
@@ -272,7 +272,7 @@ impl<'a, 'ix_data> InvokeContext<'a, 'ix_data> {
     }
 
     /// Current height of the invocation stack, top level instructions are height
-    /// `solana_instruction::TRANSACTION_LEVEL_STACK_HEIGHT`
+    /// `trezoa_instruction::TRANSACTION_LEVEL_STACK_HEIGHT`
     pub fn get_stack_height(&self) -> usize {
         self.transaction_context.get_instruction_stack_height()
     }
@@ -776,8 +776,8 @@ macro_rules! with_mock_invoke_context_with_feature_set {
         $transaction_accounts:expr $(,)?
     ) => {
         use {
-            solana_svm_callback::InvokeContextCallback,
-            solana_svm_log_collector::LogCollector,
+            trezoa_svm_callback::InvokeContextCallback,
+            trezoa_svm_log_collector::LogCollector,
             $crate::{
                 __private::{Hash, ReadableAccount, Rent, TransactionContext},
                 execution_budget::{SVMTransactionExecutionBudget, SVMTransactionExecutionCost},
@@ -850,7 +850,7 @@ macro_rules! with_mock_invoke_context {
         $transaction_accounts:expr $(,)?
     ) => {
         use $crate::with_mock_invoke_context_with_feature_set;
-        let feature_set = &solana_svm_feature_set::SVMFeatureSet::default();
+        let feature_set = &trezoa_svm_feature_set::SVMFeatureSet::default();
         with_mock_invoke_context_with_feature_set!(
             $invoke_context,
             $transaction_context,
@@ -980,13 +980,13 @@ mod tests {
         super::*,
         crate::execution_budget::DEFAULT_INSTRUCTION_COMPUTE_UNIT_LIMIT,
         serde::{Deserialize, Serialize},
-        solana_account::WritableAccount,
-        solana_instruction::Instruction,
-        solana_keypair::Keypair,
-        solana_rent::Rent,
-        solana_signer::Signer,
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
-        solana_transaction_context::MAX_ACCOUNTS_PER_INSTRUCTION,
+        trezoa_account::WritableAccount,
+        trezoa_instruction::Instruction,
+        trezoa_keypair::Keypair,
+        trezoa_rent::Rent,
+        trezoa_signer::Signer,
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_transaction_context::MAX_ACCOUNTS_PER_INSTRUCTION,
         std::collections::HashSet,
         test_case::test_case,
     };
@@ -1115,9 +1115,9 @@ mod tests {
         let mut transaction_accounts = vec![];
         let mut instruction_accounts = vec![];
         for index in 0..one_more_than_max_depth {
-            invoke_stack.push(solana_pubkey::new_rand());
+            invoke_stack.push(trezoa_pubkey::new_rand());
             transaction_accounts.push((
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
                 AccountSharedData::new(index as u64, 1, invoke_stack.get(index).unwrap()),
             ));
             instruction_accounts.push(InstructionAccount::new(
@@ -1129,7 +1129,7 @@ mod tests {
         for (index, program_id) in invoke_stack.iter().enumerate() {
             transaction_accounts.push((
                 *program_id,
-                AccountSharedData::new(1, 1, &solana_pubkey::Pubkey::default()),
+                AccountSharedData::new(1, 1, &trezoa_pubkey::Pubkey::default()),
             ));
             instruction_accounts.push(InstructionAccount::new(
                 index as IndexOfAccount,
@@ -1200,19 +1200,19 @@ mod tests {
         instruction: MockInstruction,
         expected_result: Result<(), InstructionError>,
     ) {
-        let callee_program_id = solana_pubkey::new_rand();
+        let callee_program_id = trezoa_pubkey::new_rand();
         let owned_account = AccountSharedData::new(42, 1, &callee_program_id);
-        let not_owned_account = AccountSharedData::new(84, 1, &solana_pubkey::new_rand());
-        let readonly_account = AccountSharedData::new(168, 1, &solana_pubkey::new_rand());
+        let not_owned_account = AccountSharedData::new(84, 1, &trezoa_pubkey::new_rand());
+        let readonly_account = AccountSharedData::new(168, 1, &trezoa_pubkey::new_rand());
         let loader_account = AccountSharedData::new(0, 1, &native_loader::id());
         let mut program_account = AccountSharedData::new(1, 1, &native_loader::id());
         program_account.set_executable(true);
         let transaction_accounts = vec![
-            (solana_pubkey::new_rand(), owned_account),
-            (solana_pubkey::new_rand(), not_owned_account),
-            (solana_pubkey::new_rand(), readonly_account),
+            (trezoa_pubkey::new_rand(), owned_account),
+            (trezoa_pubkey::new_rand(), not_owned_account),
+            (trezoa_pubkey::new_rand(), readonly_account),
             (callee_program_id, program_account),
-            (solana_pubkey::new_rand(), loader_account),
+            (trezoa_pubkey::new_rand(), loader_account),
         ];
         let metas = vec![
             AccountMeta::new(transaction_accounts.first().unwrap().0, false),
@@ -1255,19 +1255,19 @@ mod tests {
     fn test_process_instruction_compute_unit_consumption(
         expected_result: Result<(), InstructionError>,
     ) {
-        let callee_program_id = solana_pubkey::new_rand();
+        let callee_program_id = trezoa_pubkey::new_rand();
         let owned_account = AccountSharedData::new(42, 1, &callee_program_id);
-        let not_owned_account = AccountSharedData::new(84, 1, &solana_pubkey::new_rand());
-        let readonly_account = AccountSharedData::new(168, 1, &solana_pubkey::new_rand());
+        let not_owned_account = AccountSharedData::new(84, 1, &trezoa_pubkey::new_rand());
+        let readonly_account = AccountSharedData::new(168, 1, &trezoa_pubkey::new_rand());
         let loader_account = AccountSharedData::new(0, 1, &native_loader::id());
         let mut program_account = AccountSharedData::new(1, 1, &native_loader::id());
         program_account.set_executable(true);
         let transaction_accounts = vec![
-            (solana_pubkey::new_rand(), owned_account),
-            (solana_pubkey::new_rand(), not_owned_account),
-            (solana_pubkey::new_rand(), readonly_account),
+            (trezoa_pubkey::new_rand(), owned_account),
+            (trezoa_pubkey::new_rand(), not_owned_account),
+            (trezoa_pubkey::new_rand(), readonly_account),
             (callee_program_id, program_account),
-            (solana_pubkey::new_rand(), loader_account),
+            (trezoa_pubkey::new_rand(), loader_account),
         ];
         let metas = vec![
             AccountMeta::new(transaction_accounts.first().unwrap().0, false),
@@ -1329,7 +1329,7 @@ mod tests {
 
     #[test]
     fn test_invoke_context_compute_budget() {
-        let transaction_accounts = vec![(solana_pubkey::new_rand(), AccountSharedData::default())];
+        let transaction_accounts = vec![(trezoa_pubkey::new_rand(), AccountSharedData::default())];
         let execution_budget = SVMTransactionExecutionBudget {
             compute_unit_limit: u64::from(DEFAULT_INSTRUCTION_COMPUTE_UNIT_LIMIT),
             ..SVMTransactionExecutionBudget::default()

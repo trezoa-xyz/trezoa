@@ -2,9 +2,9 @@
 use {
     crate::vote::Vote,
     serde::{Deserialize, Serialize},
-    solana_bls_signatures::Signature as BLSSignature,
-    solana_clock::Slot,
-    solana_hash::Hash,
+    trezoa_bls_signatures::Signature as BLSSignature,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
 };
 
 /// The seed used to derive the BLS keypair
@@ -90,7 +90,7 @@ pub struct Certificate {
     /// The aggregate signature.
     pub signature: BLSSignature,
     /// A rank bitmap for validators' signatures included in the aggregate.
-    /// See solana-signer-store for encoding format.
+    /// See trezoa-signer-store for encoding format.
     pub bitmap: Vec<u8>,
 }
 

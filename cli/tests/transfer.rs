@@ -1,29 +1,29 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    solana_cli::{
+    trezoa_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
         spend_utils::SpendAmount,
         test_utils::check_ready,
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_client::nonblocking::blockhash_query::Source,
-    solana_commitment_config::CommitmentConfig,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_fee_structure::FeeStructure,
-    solana_keypair::{keypair_from_seed, Keypair},
-    solana_message::Message,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_nonce::state::State as NonceState,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_signer::{null_signer::NullSigner, Signer},
-    solana_stake_interface as stake,
-    solana_system_interface::instruction as system_instruction,
-    solana_test_validator::TestValidator,
+    trezoa_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    trezoa_client::nonblocking::blockhash_query::Source,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_fee_structure::FeeStructure,
+    trezoa_keypair::{keypair_from_seed, Keypair},
+    trezoa_message::Message,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_nonce::state::State as NonceState,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_signer::{null_signer::NullSigner, Signer},
+    trezoa_stake_interface as stake,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_test_validator::TestValidator,
     test_case::test_case,
 };
 
@@ -31,7 +31,7 @@ use {
 #[test_case(true; "Skip Preflight")]
 #[test_case(false; "Don`t skip Preflight")]
 async fn test_transfer(skip_preflight: bool) {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let fee_one_sig = FeeStructure::default().get_max_fee(1, 0);
     let fee_two_sig = FeeStructure::default().get_max_fee(2, 0);
     let mint_keypair = Keypair::new();
@@ -204,13 +204,13 @@ async fn test_transfer(skip_preflight: bool) {
     );
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -243,13 +243,13 @@ async fn test_transfer(skip_preflight: bool) {
         &sender_pubkey,
     );
     check_balance!(2_500_000_000, &rpc_client, &recipient_pubkey);
-    let new_nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let new_nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
     assert_ne!(nonce_hash, new_nonce_hash);
@@ -271,13 +271,13 @@ async fn test_transfer(skip_preflight: bool) {
     );
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -336,7 +336,7 @@ async fn test_transfer(skip_preflight: bool) {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_transfer_multisession_signing() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let fee_one_sig = FeeStructure::default().get_max_fee(1, 0);
     let fee_two_sig = FeeStructure::default().get_max_fee(2, 0);
     let mint_keypair = Keypair::new();
@@ -489,7 +489,7 @@ async fn test_transfer_multisession_signing() {
 #[test_case(None; "default")]
 #[test_case(Some(100_000); "with_compute_unit_price")]
 async fn test_transfer_all(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let lamports_per_signature = FeeStructure::default().get_max_fee(1, 0);
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -517,8 +517,8 @@ async fn test_transfer_all(compute_unit_price: Option<u64>) {
             // This is brittle and will need to be updated if the compute unit
             // limit for the system program or compute budget program are changed,
             // or if they're converted to BPF.
-            // See `solana_system_program::system_processor::DEFAULT_COMPUTE_UNITS`
-            // and `solana_compute_budget_program::DEFAULT_COMPUTE_UNITS`
+            // See `trezoa_system_program::system_processor::DEFAULT_COMPUTE_UNITS`
+            // and `trezoa_compute_budget_program::DEFAULT_COMPUTE_UNITS`
             instructions.push(ComputeBudgetInstruction::set_compute_unit_limit(450));
             instructions.push(ComputeBudgetInstruction::set_compute_unit_price(
                 compute_unit_price,
@@ -572,7 +572,7 @@ async fn test_transfer_all(compute_unit_price: Option<u64>) {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_transfer_unfunded_recipient() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
     let test_validator = TestValidator::async_with_custom_fees(
@@ -629,7 +629,7 @@ async fn test_transfer_unfunded_recipient() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_transfer_with_seed() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let fee = FeeStructure::default().get_max_fee(1, 0);
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());

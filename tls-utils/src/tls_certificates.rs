@@ -1,7 +1,7 @@
 use {
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
     std::net::SocketAddr,
     x509_parser::{prelude::*, public_key::PublicKey},
 };
@@ -65,7 +65,7 @@ pub fn new_dummy_x509_certificate(
     //          RelativeDistinguishedName SET (1 elem)
     //            AttributeTypeAndValue SEQUENCE (2 elem)
     //              type AttributeType OBJECT IDENTIFIER 2.5.4.3 commonName (X.520 DN component)
-    //              value AttributeValue [?] UTF8String Solana
+    //              value AttributeValue [?] UTF8String Trezoa
     //        validity Validity SEQUENCE (2 elem)
     //          notBefore Time UTCTime 1970-01-01 00:00:00 UTC
     //          notAfter Time GeneralizedTime 4096-01-01 00:00:00 UTC
@@ -130,7 +130,7 @@ pub fn get_pubkey_from_tls_certificate(
 /// Translate a SocketAddr into a valid SNI for the purposes of QUIC connection
 ///
 /// We do not actually check if the server holds a cert for this server_name
-/// since Solana does not rely on DNS names, but we need to provide a unique
+/// since Trezoa does not rely on DNS names, but we need to provide a unique
 /// one to ensure that we present correct QUIC tokens to the correct server.
 pub fn socket_addr_to_quic_server_name(peer: SocketAddr) -> String {
     format!("{}.{}.sol", peer.ip(), peer.port())
@@ -140,7 +140,7 @@ pub fn socket_addr_to_quic_server_name(peer: SocketAddr) -> String {
 mod tests {
     use {
         super::*,
-        solana_signer::Signer,
+        trezoa_signer::Signer,
         std::net::{IpAddr, Ipv4Addr},
     };
 

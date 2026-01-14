@@ -2,9 +2,9 @@ use {
     crate::repair::{quic_endpoint::RemoteRequest, serve_repair::ServeRepair},
     bytes::Bytes,
     crossbeam_channel::{unbounded, Receiver, Sender},
-    solana_net_utils::SocketAddrSpace,
-    solana_perf::{packet::PacketBatch, recycler::Recycler},
-    solana_streamer::streamer::{self, StreamerReceiveStats},
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_perf::{packet::PacketBatch, recycler::Recycler},
+    trezoa_streamer::streamer::{self, StreamerReceiveStats},
     std::{
         net::{SocketAddr, UdpSocket},
         sync::{atomic::AtomicBool, Arc},

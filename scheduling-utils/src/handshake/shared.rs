@@ -10,7 +10,7 @@ pub(crate) const GLOBAL_ALLOCATORS: usize = 1;
 #[derive(Debug, Default, Clone, Copy)]
 #[repr(C)]
 pub struct ClientLogon {
-    /// The number of Agave worker threads that will be spawned to handle packing requests.
+    /// The number of Trezoa-team worker threads that will be spawned to handle packing requests.
     pub worker_count: usize,
     /// The minimum allocator file size in bytes, this is shared by all allocator handles.
     pub allocator_size: usize,

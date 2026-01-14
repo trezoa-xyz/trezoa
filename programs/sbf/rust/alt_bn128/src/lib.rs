@@ -1,12 +1,12 @@
 //! Alt_bn128 Syscalls tests
 
 use {
-    solana_bn254::prelude::{
+    trezoa_bn254::prelude::{
         alt_bn128_g1_addition_be, alt_bn128_g1_addition_le, alt_bn128_g1_multiplication_be,
         alt_bn128_g1_multiplication_le, alt_bn128_pairing_be, alt_bn128_pairing_le,
     },
-    solana_msg::msg,
-    solana_program_entrypoint::{custom_heap_default, custom_panic_default},
+    trezoa_msg::msg,
+    trezoa_program_entrypoint::{custom_heap_default, custom_panic_default},
 };
 
 fn alt_bn128_addition_be_test() {

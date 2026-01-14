@@ -1,9 +1,9 @@
 use {
-    solana_builtins_default_costs::{
+    trezoa_builtins_default_costs::{
         BuiltinMigrationFeatureIndex, MAYBE_BUILTIN_KEY, get_builtin_migration_feature_index,
     },
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
 };
 
 // The maximum number of pubkeys that a packet can contain.
@@ -65,7 +65,7 @@ impl BuiltinProgramsFilter {
 mod test {
     use {
         super::*,
-        solana_builtins_default_costs::{
+        trezoa_builtins_default_costs::{
             BuiltinCost, MIGRATING_BUILTINS_COSTS, MigratingBuiltinCost, get_migration_feature_id,
         },
     };
@@ -93,21 +93,21 @@ mod test {
         // lookup same `index` will return cached data, will not lookup `program_id`
         // again
         assert_eq!(
-            test_store.get_program_kind(index, &solana_sdk_ids::loader_v4::id()),
+            test_store.get_program_kind(index, &trezoa_sdk_ids::loader_v4::id()),
             ProgramKind::NotBuiltin
         );
 
         // not-migrating builtin
         index += 1;
         assert_eq!(
-            test_store.get_program_kind(index, &solana_sdk_ids::loader_v4::id()),
+            test_store.get_program_kind(index, &trezoa_sdk_ids::loader_v4::id()),
             ProgramKind::Builtin,
         );
 
         // compute-budget
         index += 1;
         assert_eq!(
-            test_store.get_program_kind(index, &solana_sdk_ids::compute_budget::id()),
+            test_store.get_program_kind(index, &trezoa_sdk_ids::compute_budget::id()),
             ProgramKind::Builtin,
         );
 

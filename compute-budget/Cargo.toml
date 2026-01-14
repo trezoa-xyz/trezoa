@@ -1,7 +1,7 @@
 [package]
-name = "solana-compute-budget"
-description = "Solana compute budget"
-documentation = "https://docs.rs/solana-compute-budget"
+name = "trezoa-compute-budget"
+description = "Trezoa compute budget"
+documentation = "https://docs.rs/trezoa-compute-budget"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,20 +10,20 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = [
     "dep:qualifier_attr",
-    "solana-program-runtime/dev-context-only-utils",
+    "trezoa-program-runtime/dev-context-only-utils",
 ]
-frozen-abi = ["dep:solana-frozen-abi", "solana-fee-structure/frozen-abi"]
+frozen-abi = ["dep:trezoa-frozen-abi", "trezoa-fee-structure/frozen-abi"]
 
 [dependencies]
 qualifier_attr = { workspace = true, optional = true }
-solana-fee-structure = { workspace = true }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-fee-structure = { workspace = true }
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-program-runtime = { workspace = true }
+trezoa-program-runtime = { workspace = true }
 
 [lints]
 workspace = true

@@ -1,12 +1,12 @@
 //! Loading signers and keypairs from the command line.
 //!
 //! This module contains utilities for loading [Signer]s and [Keypair]s from
-//! standard signing sources, from the command line, as in the Solana CLI.
+//! standard signing sources, from the command line, as in the Trezoa CLI.
 //!
 //! The key function here is [`signer_from_path`], which loads a `Signer` from
 //! one of several possible sources by interpreting a "path" command line
 //! argument. Its documentation includes a description of all possible signing
-//! sources supported by the Solana CLI. Many other functions here are
+//! sources supported by the Trezoa CLI. Many other functions here are
 //! variations on, or delegate to, `signer_from_path`.
 
 use {
@@ -18,23 +18,23 @@ use {
     bip39::{Language, Mnemonic, Seed},
     clap::ArgMatches,
     rpassword::prompt_password,
-    solana_derivation_path::{DerivationPath, DerivationPathError},
-    solana_hash::Hash,
-    solana_keypair::{
+    trezoa_derivation_path::{DerivationPath, DerivationPathError},
+    trezoa_hash::Hash,
+    trezoa_keypair::{
         keypair_from_seed, keypair_from_seed_phrase_and_passphrase, read_keypair,
         read_keypair_file, seed_derivable::keypair_from_seed_and_derivation_path, Keypair,
     },
-    solana_message::Message,
-    solana_presigner::Presigner,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::{
+    trezoa_message::Message,
+    trezoa_presigner::Presigner,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::{
         locator::{Locator as RemoteWalletLocator, LocatorError as RemoteWalletLocatorError},
         remote_keypair::generate_remote_keypair,
         remote_wallet::{maybe_wallet_manager, RemoteWalletError, RemoteWalletManager},
     },
-    solana_seed_phrase::generate_seed_from_seed_phrase_and_passphrase,
-    solana_signature::Signature,
-    solana_signer::{null_signer::NullSigner, Signer},
+    trezoa_seed_phrase::generate_seed_from_seed_phrase_and_passphrase,
+    trezoa_signature::Signature,
+    trezoa_signer::{null_signer::NullSigner, Signer},
     std::{
         cell::RefCell,
         convert::TryFrom,
@@ -136,8 +136,8 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{App, Arg, value_t_or_exit};
-    /// use solana_clap_utils::keypair::DefaultSigner;
-    /// use solana_clap_utils::offline::OfflineArgs;
+    /// use trezoa_clap_utils::keypair::DefaultSigner;
+    /// use trezoa_clap_utils::offline::OfflineArgs;
     ///
     /// let clap_app = App::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -176,7 +176,7 @@ impl DefaultSigner {
                 })
                 .map_err(|_| {
                     std::io::Error::other(format!(
-                        "No default signer found, run \"solana-keygen new -o {}\" to create a new \
+                        "No default signer found, run \"trezoa-keygen new -o {}\" to create a new \
                          one",
                         self.path
                     ))
@@ -204,9 +204,9 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{App, Arg, value_t_or_exit};
-    /// use solana_clap_utils::keypair::{DefaultSigner, signer_from_path};
-    /// use solana_clap_utils::offline::OfflineArgs;
-    /// use solana_signer::Signer;
+    /// use trezoa_clap_utils::keypair::{DefaultSigner, signer_from_path};
+    /// use trezoa_clap_utils::offline::OfflineArgs;
+    /// use trezoa_signer::Signer;
     ///
     /// let clap_app = App::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -279,8 +279,8 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{App, Arg, value_t_or_exit};
-    /// use solana_clap_utils::keypair::DefaultSigner;
-    /// use solana_clap_utils::offline::OfflineArgs;
+    /// use trezoa_clap_utils::keypair::DefaultSigner;
+    /// use trezoa_clap_utils::offline::OfflineArgs;
     ///
     /// let clap_app = App::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -326,8 +326,8 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{App, Arg, value_t_or_exit};
-    /// use solana_clap_utils::keypair::{SignerFromPathConfig, DefaultSigner};
-    /// use solana_clap_utils::offline::OfflineArgs;
+    /// use trezoa_clap_utils::keypair::{SignerFromPathConfig, DefaultSigner};
+    /// use trezoa_clap_utils::offline::OfflineArgs;
     ///
     /// let clap_app = App::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -661,8 +661,8 @@ pub struct SignerFromPathConfig {
 ///
 /// ```no_run
 /// use clap::{App, Arg, value_t_or_exit};
-/// use solana_clap_utils::keypair::signer_from_path;
-/// use solana_clap_utils::offline::OfflineArgs;
+/// use trezoa_clap_utils::keypair::signer_from_path;
+/// use trezoa_clap_utils::offline::OfflineArgs;
 ///
 /// let clap_app = App::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -721,8 +721,8 @@ pub fn signer_from_path(
 ///
 /// ```no_run
 /// use clap::{App, Arg, value_t_or_exit};
-/// use solana_clap_utils::keypair::{signer_from_path_with_config, SignerFromPathConfig};
-/// use solana_clap_utils::offline::OfflineArgs;
+/// use trezoa_clap_utils::keypair::{signer_from_path_with_config, SignerFromPathConfig};
+/// use trezoa_clap_utils::offline::OfflineArgs;
 ///
 /// let clap_app = App::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -774,7 +774,7 @@ pub fn signer_from_path_with_config(
         }
         SignerSourceKind::Filepath(path) => match read_keypair_file(&path) {
             Err(e) => Err(std::io::Error::other(format!(
-                "could not read keypair file \"{path}\". Run \"solana-keygen new\" to create a \
+                "could not read keypair file \"{path}\". Run \"trezoa-keygen new\" to create a \
                  keypair file: {e}"
             ))
             .into()),
@@ -836,7 +836,7 @@ pub fn signer_from_path_with_config(
 ///
 /// ```no_run
 /// use clap::{App, Arg, value_t_or_exit};
-/// use solana_clap_utils::keypair::pubkey_from_path;
+/// use trezoa_clap_utils::keypair::pubkey_from_path;
 ///
 /// let clap_app = App::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -895,7 +895,7 @@ pub fn resolve_signer_from_path(
         }
         SignerSourceKind::Filepath(path) => match read_keypair_file(&path) {
             Err(e) => Err(std::io::Error::other(format!(
-                "could not read keypair file \"{path}\". Run \"solana-keygen new\" to create a \
+                "could not read keypair file \"{path}\". Run \"trezoa-keygen new\" to create a \
                  keypair file: {e}"
             ))
             .into()),
@@ -972,7 +972,7 @@ pub fn prompt_passphrase(prompt: &str) -> Result<String, Box<dyn error::Error>> 
 ///
 /// ```no_run
 /// use clap::{App, Arg, value_t_or_exit};
-/// use solana_clap_utils::keypair::keypair_from_path;
+/// use trezoa_clap_utils::keypair::keypair_from_path;
 ///
 /// let clap_app = App::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -1015,7 +1015,7 @@ pub fn keypair_from_path(
         }
         SignerSourceKind::Filepath(path) => match read_keypair_file(&path) {
             Err(e) => Err(std::io::Error::other(format!(
-                "could not read keypair file \"{path}\". Run \"solana-keygen new\" to create a \
+                "could not read keypair file \"{path}\". Run \"trezoa-keygen new\" to create a \
                  keypair file: {e}"
             ))
             .into()),
@@ -1116,9 +1116,9 @@ mod tests {
         crate::offline::OfflineArgs,
         assert_matches::assert_matches,
         clap::{value_t_or_exit, App, Arg},
-        solana_keypair::write_keypair_file,
-        solana_remote_wallet::{locator::Manufacturer, remote_wallet::initialize_wallet_manager},
-        solana_system_interface::instruction::transfer,
+        trezoa_keypair::write_keypair_file,
+        trezoa_remote_wallet::{locator::Manufacturer, remote_wallet::initialize_wallet_manager},
+        trezoa_system_interface::instruction::transfer,
         tempfile::{NamedTempFile, TempDir},
     };
 

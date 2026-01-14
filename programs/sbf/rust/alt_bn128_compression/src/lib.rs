@@ -1,13 +1,13 @@
 //! Alt_bn128 compression Syscalls tests
 
 use {
-    solana_bn254::compression::prelude::{
+    trezoa_bn254::compression::prelude::{
         alt_bn128_g1_compress, alt_bn128_g1_compress_le, alt_bn128_g1_decompress,
         alt_bn128_g1_decompress_le, alt_bn128_g2_compress, alt_bn128_g2_compress_le,
         alt_bn128_g2_decompress, alt_bn128_g2_decompress_le,
     },
-    solana_msg::msg,
-    solana_program_entrypoint::{custom_heap_default, custom_panic_default},
+    trezoa_msg::msg,
+    trezoa_program_entrypoint::{custom_heap_default, custom_panic_default},
 };
 
 fn alt_bn128_compression_g1_be() {

@@ -1,5 +1,5 @@
 use {
-    solana_account::AccountSharedData, solana_pubkey::Pubkey, solana_sdk_ids::sysvar,
+    trezoa_account::AccountSharedData, trezoa_pubkey::Pubkey, trezoa_sdk_ids::sysvar,
     std::collections::HashMap,
 };
 
@@ -36,8 +36,8 @@ impl AccountOverrides {
 #[cfg(test)]
 mod test {
     use {
-        crate::account_overrides::AccountOverrides, solana_account::AccountSharedData,
-        solana_pubkey::Pubkey, solana_sdk_ids::sysvar,
+        crate::account_overrides::AccountOverrides, trezoa_account::AccountSharedData,
+        trezoa_pubkey::Pubkey, trezoa_sdk_ids::sysvar,
     };
 
     #[test]

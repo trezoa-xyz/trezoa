@@ -4,14 +4,14 @@ use {
         address_generator::AddressGenerator,
         unlocks::{UnlockInfo, Unlocks},
     },
-    solana_account::Account,
-    solana_clock::Slot,
-    solana_genesis_config::GenesisConfig,
-    solana_pubkey::Pubkey,
-    solana_runtime::genesis_utils::create_lockup_stake_account,
-    solana_sdk_ids::{stake as stake_program, system_program},
-    solana_stake_interface::state::{Authorized, Lockup, StakeStateV2},
-    solana_time_utils::years_as_slots,
+    trezoa_account::Account,
+    trezoa_clock::Slot,
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::genesis_utils::create_lockup_stake_account,
+    trezoa_sdk_ids::{stake as stake_program, system_program},
+    trezoa_stake_interface::state::{Authorized, Lockup, StakeStateV2},
+    trezoa_time_utils::years_as_slots,
 };
 
 #[derive(Debug)]
@@ -160,7 +160,7 @@ pub fn create_and_add_stakes(
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_rent::Rent};
+    use {super::*, trezoa_rent::Rent};
 
     fn create_and_check_stakes(
         genesis_config: &mut GenesisConfig,

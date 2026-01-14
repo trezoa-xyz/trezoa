@@ -1,5 +1,5 @@
 use {
-    solana_clock::UnixTimestamp, solana_runtime::bank::KeyedRewardsAndNumPartitions, std::sync::Arc,
+    trezoa_clock::UnixTimestamp, trezoa_runtime::bank::KeyedRewardsAndNumPartitions, std::sync::Arc,
 };
 
 /// Interface for notifying block metadata changes

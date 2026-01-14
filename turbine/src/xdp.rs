@@ -1,8 +1,8 @@
 // re-export since this is needed at validator startup
-pub use agave_xdp::set_cpu_affinity;
+pub use trezoa_xdp::set_cpu_affinity;
 #[cfg(target_os = "linux")]
 use {
-    agave_xdp::{
+    trezoa_xdp::{
         device::{NetworkDevice, QueueId},
         load_xdp_program,
         route::Router,
@@ -15,7 +15,7 @@ use {
 };
 use {
     crossbeam_channel::{Sender, TrySendError},
-    solana_ledger::shred,
+    trezoa_ledger::shred,
     std::{
         error::Error,
         net::{Ipv4Addr, SocketAddr},

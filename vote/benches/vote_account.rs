@@ -1,10 +1,10 @@
 use {
     bencher::{benchmark_group, benchmark_main, Bencher},
     rand::Rng,
-    solana_account::AccountSharedData,
-    solana_pubkey::Pubkey,
-    solana_vote::vote_account::{VoteAccount, VoteAccounts},
-    solana_vote_interface::state::{VoteInit, VoteStateV4, VoteStateVersions},
+    trezoa_account::AccountSharedData,
+    trezoa_pubkey::Pubkey,
+    trezoa_vote::vote_account::{VoteAccount, VoteAccounts},
+    trezoa_vote_interface::state::{VoteInit, VoteStateV4, VoteStateVersions},
     std::{collections::HashMap, sync::Arc},
 };
 
@@ -19,7 +19,7 @@ fn new_rand_vote_account<R: Rng>(
         authorized_withdrawer: Pubkey::new_unique(),
         commission: rng.random(),
     };
-    let clock = solana_clock::Clock {
+    let clock = trezoa_clock::Clock {
         slot: rng.random(),
         epoch_start_timestamp: rng.random(),
         epoch: rng.random(),
@@ -30,7 +30,7 @@ fn new_rand_vote_account<R: Rng>(
     let account = AccountSharedData::new_data(
         rng.random(), // lamports
         &VoteStateVersions::new_v4(vote_state.clone()),
-        &solana_sdk_ids::vote::id(), // owner
+        &trezoa_sdk_ids::vote::id(), // owner
     )
     .unwrap();
     (account, vote_state)

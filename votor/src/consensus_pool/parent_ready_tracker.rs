@@ -14,9 +14,9 @@
 
 use {
     crate::{common::MAX_ENTRIES_PER_PUBKEY_FOR_NOTARIZE_LITE, event::VotorEvent},
-    agave_votor_messages::consensus_message::Block,
-    solana_clock::{Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
-    solana_gossip::cluster_info::ClusterInfo,
+    trezoa_votor_messages::consensus_message::Block,
+    trezoa_clock::{Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
+    trezoa_gossip::cluster_info::ClusterInfo,
     std::{collections::HashMap, sync::Arc},
 };
 
@@ -236,9 +236,9 @@ impl ParentReadyTracker {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, itertools::Itertools, solana_clock::NUM_CONSECUTIVE_LEADER_SLOTS,
-        solana_gossip::contact_info::ContactInfo, solana_hash::Hash, solana_keypair::Keypair,
-        solana_net_utils::SocketAddrSpace, solana_signer::Signer,
+        super::*, itertools::Itertools, trezoa_clock::NUM_CONSECUTIVE_LEADER_SLOTS,
+        trezoa_gossip::contact_info::ContactInfo, trezoa_hash::Hash, trezoa_keypair::Keypair,
+        trezoa_net_utils::SocketAddrSpace, trezoa_signer::Signer,
     };
 
     fn new_cluster_info() -> Arc<ClusterInfo> {

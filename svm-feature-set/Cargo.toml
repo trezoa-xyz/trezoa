@@ -1,6 +1,6 @@
 [package]
-name = "solana-svm-feature-set"
-description = "Solana SVM Feature Set"
+name = "trezoa-svm-feature-set"
+description = "Trezoa SVM Feature Set"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,7 +10,7 @@ edition = { workspace = true }
 readme = false
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 

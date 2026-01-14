@@ -1,7 +1,7 @@
 [package]
-name = "agave-scheduler-bindings"
-description = "Agave scheduler-binding message types for external pack process integration"
-documentation = "https://docs.rs/agave-scheduler-bindings"
+name = "trezoa-scheduler-bindings"
+description = "Trezoa-team scheduler-binding message types for external pack process integration"
+documentation = "https://docs.rs/trezoa-scheduler-bindings"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,7 +10,7 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 
 [dependencies]

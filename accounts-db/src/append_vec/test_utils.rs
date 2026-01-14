@@ -2,8 +2,8 @@
 #![cfg(feature = "dev-context-only-utils")]
 use {
     rand::{distr::Alphanumeric, Rng},
-    solana_account::AccountSharedData,
-    solana_pubkey::Pubkey,
+    trezoa_account::AccountSharedData,
+    trezoa_pubkey::Pubkey,
     std::path::PathBuf,
 };
 

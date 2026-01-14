@@ -1,7 +1,7 @@
 SBF_SDK_PATH := ../../platform-tools-sdk/sbf
 SRC_DIR := c/src
 OUT_DIR := target/deploy
-TOOLCHAIN := 1.89.0-sbpf-solana-v1.52
+TOOLCHAIN := 1.89.0-sbpf-trezoa-v1.52
 
 test-v2:
 	VER=v2 $(MAKE) test-version
@@ -26,12 +26,12 @@ test-version:
 	$(MAKE) test-all
 
 rust-v0:
-	cargo +$(TOOLCHAIN) build --release --target sbpf-solana-solana --workspace ; \
-	cp -r target/sbpf-solana-solana/release/* target/deploy
+	cargo +$(TOOLCHAIN) build --release --target sbpf-trezoa-trezoa --workspace ; \
+	cp -r target/sbpf-trezoa-trezoa/release/* target/deploy
 
 rust-new:
-	RUSTFLAGS="-C instrument-coverage=no" cargo +$(TOOLCHAIN) build --release --target sbpf$(VER)-solana-solana --workspace ; \
-	cp -r target/sbpf$(VER)-solana-solana/release/* target/deploy
+	RUSTFLAGS="-C instrument-coverage=no" cargo +$(TOOLCHAIN) build --release --target sbpf$(VER)-trezoa-trezoa --workspace ; \
+	cp -r target/sbpf$(VER)-trezoa-trezoa/release/* target/deploy
 
 .PHONY: test-v0
 

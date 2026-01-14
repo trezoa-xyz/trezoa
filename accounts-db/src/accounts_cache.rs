@@ -1,9 +1,9 @@
 use {
     dashmap::DashMap,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_clock::Slot,
-    solana_nohash_hasher::BuildNoHashHasher,
-    solana_pubkey::{Pubkey, PubkeyHasherBuilder},
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_clock::Slot,
+    trezoa_nohash_hasher::BuildNoHashHasher,
+    trezoa_pubkey::{Pubkey, PubkeyHasherBuilder},
     std::{
         collections::BTreeSet,
         ops::Deref,

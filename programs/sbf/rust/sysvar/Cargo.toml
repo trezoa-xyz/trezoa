@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-sysvar"
+name = "trezoa-sbf-rust-sysvar"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -13,17 +13,17 @@ crate-type = ["cdylib"]
 
 [dependencies]
 bincode = { workspace = true }
-solana-account-info = { workspace = true }
-solana-define-syscall = { workspace = true }
-solana-instruction = { workspace = true }
-solana-instructions-sysvar = { workspace = true }
-solana-msg = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-error = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-stake-interface = { workspace = true, features = ["sysvar"] }
-solana-sysvar = { workspace = true, features = ["bincode"] }
+trezoa-account-info = { workspace = true }
+trezoa-define-syscall = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-instructions-sysvar = { workspace = true }
+trezoa-msg = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-stake-interface = { workspace = true, features = ["sysvar"] }
+trezoa-sysvar = { workspace = true, features = ["bincode"] }
 
 [lints]
 workspace = true

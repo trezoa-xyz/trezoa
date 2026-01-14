@@ -2,12 +2,12 @@
 //!
 
 use {
-    agave_banking_stage_ingress_types::BankingPacketReceiver,
-    agave_scheduler_bindings::{tpu_message_flags, SharableTransactionRegion, TpuToPackMessage},
-    agave_scheduling_utils::handshake::server::AgaveTpuToPackSession,
+    trezoa_banking_stage_ingress_types::BankingPacketReceiver,
+    trezoa_scheduler_bindings::{tpu_message_flags, SharableTransactionRegion, TpuToPackMessage},
+    trezoa_scheduling_utils::handshake::server::Trezoa-teamTpuToPackSession,
     rts_alloc::Allocator,
-    solana_packet::PacketFlags,
-    solana_perf::packet::PacketBatch,
+    trezoa_packet::PacketFlags,
+    trezoa_perf::packet::PacketBatch,
     std::{
         net::IpAddr,
         ptr::NonNull,
@@ -30,10 +30,10 @@ pub struct BankingPacketReceivers {
 pub fn spawn(
     exit: Arc<AtomicBool>,
     receivers: BankingPacketReceivers,
-    AgaveTpuToPackSession {
+    Trezoa-teamTpuToPackSession {
         allocator,
         producer,
-    }: AgaveTpuToPackSession,
+    }: Trezoa-teamTpuToPackSession,
 ) -> JoinHandle<()> {
     std::thread::Builder::new()
         .name("solTpu2Pack".to_string())
@@ -133,7 +133,7 @@ fn handle_packet_batches(
 /// - `allocated_ptr` must be valid for `packet_bytes.len()` bytes.
 unsafe fn copy_packet_and_populate_message(
     packet_bytes: &[u8],
-    packet_meta: &solana_packet::Meta,
+    packet_meta: &trezoa_packet::Meta,
     allocated_ptr: NonNull<u8>,
     allocated_ptr_offset_in_allocator: usize,
 ) -> TpuToPackMessage {
@@ -199,7 +199,7 @@ mod tests {
     fn test_copy_packet_and_populate_message() {
         let packet_bytes = vec![1, 2, 3, 4, 5];
         let src_ip = Ipv4Addr::new(192, 168, 1, 1);
-        let mut packet_meta = solana_packet::Meta::default();
+        let mut packet_meta = trezoa_packet::Meta::default();
         packet_meta.size = packet_bytes.len();
         packet_meta.addr = IpAddr::V4(src_ip);
         packet_meta.port = 1;

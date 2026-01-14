@@ -38,18 +38,18 @@ const XDP_PROG: &[u8] = &[
 ];
 
 // the string table
-const STRTAB: &[u8] = b"\0xdp\0.symtab\0.strtab\0agave_xdp\0";
+const STRTAB: &[u8] = b"\0xdp\0.symtab\0.strtab\0trezoa_xdp\0";
 
 pub fn load_xdp_program(dev: &NetworkDevice) -> Result<Ebpf, Box<dyn std::error::Error>> {
     let mut loader = EbpfLoader::new();
     let broken_frags = dev.driver()? == "i40e";
     let mut ebpf = if broken_frags {
-        loader.set_global("AGAVE_XDP_DROP_MULTI_FRAGS", &1u8, true);
-        loader.load(&agave_xdp_ebpf::AGAVE_XDP_EBPF_PROGRAM)
+        loader.set_global("TREZOA_XDP_DROP_MULTI_FRAGS", &1u8, true);
+        loader.load(&trezoa_xdp_ebpf::TREZOA_XDP_EBPF_PROGRAM)
     } else {
         loader.load(&generate_xdp_elf())
     }?;
-    let p: &mut Xdp = ebpf.program_mut("agave_xdp").unwrap().try_into().unwrap();
+    let p: &mut Xdp = ebpf.program_mut("trezoa_xdp").unwrap().try_into().unwrap();
     p.load()?;
 
     p.attach_to_if_index(dev.if_index(), aya::programs::xdp::XdpFlags::DRV_MODE)?;

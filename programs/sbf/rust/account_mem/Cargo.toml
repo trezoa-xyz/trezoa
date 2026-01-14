@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-account-mem"
+name = "trezoa-sbf-rust-account-mem"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -12,11 +12,11 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-solana-account-info = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-error = { workspace = true }
-solana-program-memory = { workspace = true }
-solana-pubkey = { workspace = true }
+trezoa-account-info = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-program-memory = { workspace = true }
+trezoa-pubkey = { workspace = true }
 
 [lints]
 workspace = true

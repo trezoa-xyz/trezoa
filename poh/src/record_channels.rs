@@ -11,7 +11,7 @@ use std::sync::{
 use {
     crate::poh_recorder::Record,
     crossbeam_channel::{bounded, Receiver, RecvTimeoutError, Sender, TryRecvError},
-    solana_clock::BankId,
+    trezoa_clock::BankId,
     std::time::Duration,
 };
 
@@ -349,7 +349,7 @@ impl BankIdAllowedInsertions {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_hash::Hash, solana_transaction::versioned::VersionedTransaction};
+    use {super::*, trezoa_hash::Hash, trezoa_transaction::versioned::VersionedTransaction};
 
     pub(super) fn test_record(bank_id: BankId, num_batches: usize) -> Record {
         Record {

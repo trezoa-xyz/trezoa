@@ -7,14 +7,14 @@ use {
             LastVotedForkSlotsAggregate, LastVotedForkSlotsAggregateResult,
             LastVotedForkSlotsEpochInfo, LastVotedForkSlotsFinalResult,
         },
-        solana::wen_restart_proto::{
+        trezoa::wen_restart_proto::{
             self, ConflictMessage, GenerateSnapshotRecord, HeaviestForkAggregateRecord,
             HeaviestForkRecord, LastVotedForkSlotsAggregateFinal,
             LastVotedForkSlotsAggregateRecord, LastVotedForkSlotsEpochInfoRecord,
             LastVotedForkSlotsRecord, State as RestartState, WenRestartProgress,
         },
     },
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths::{
             get_highest_full_snapshot_archive_slot, get_highest_incremental_snapshot_archive_slot,
         },
@@ -23,20 +23,20 @@ use {
     anyhow::Result,
     log::*,
     prost::Message,
-    solana_clock::{Epoch, Slot},
-    solana_gossip::{
+    trezoa_clock::{Epoch, Slot},
+    trezoa_gossip::{
         cluster_info::{ClusterInfo, GOSSIP_SLEEP_MILLIS},
         restart_crds_values::RestartLastVotedForkSlots,
     },
-    solana_hash::Hash,
-    solana_ledger::{
+    trezoa_hash::Hash,
+    trezoa_ledger::{
         ancestor_iterator::AncestorIterator,
         blockstore::Blockstore,
         blockstore_processor::{process_single_slot, ConfirmationProgress, ProcessOptions},
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         accounts_background_service::AbsStatus,
         bank::Bank,
         bank_forks::BankForks,
@@ -46,10 +46,10 @@ use {
         snapshot_controller::SnapshotController,
         snapshot_utils::purge_all_bank_snapshots,
     },
-    solana_shred_version::compute_shred_version,
-    solana_svm_timings::ExecuteTimings,
-    solana_time_utils::timestamp,
-    solana_vote::vote_transaction::VoteTransaction,
+    trezoa_shred_version::compute_shred_version,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_time_utils::timestamp,
+    trezoa_vote::vote_transaction::VoteTransaction,
     std::{
         collections::{HashMap, HashSet},
         fs::{read, File},
@@ -268,7 +268,7 @@ pub(crate) fn aggregate_restart_last_voted_fork_slots(
             final_result: None,
         });
     }
-    let mut cursor = solana_gossip::crds::Cursor::default();
+    let mut cursor = trezoa_gossip::crds::Cursor::default();
     let mut is_full_slots = HashSet::new();
     let mut old_progress = WenRestartProgress::default();
     loop {
@@ -713,7 +713,7 @@ pub(crate) fn aggregate_restart_heaviest_fork(
         });
     }
 
-    let mut cursor = solana_gossip::crds::Cursor::default();
+    let mut cursor = trezoa_gossip::crds::Cursor::default();
     let mut total_active_stake = 0;
     let mut stat_printed_at = Instant::now();
     let mut old_progress = WenRestartProgress::default();
@@ -896,7 +896,7 @@ pub(crate) fn receive_restart_heaviest_fork(
     exit: Arc<AtomicBool>,
     progress: &mut WenRestartProgress,
 ) -> Result<(Slot, Hash)> {
-    let mut cursor = solana_gossip::crds::Cursor::default();
+    let mut cursor = trezoa_gossip::crds::Cursor::default();
     loop {
         if exit.load(Ordering::Relaxed) {
             return Err(WenRestartError::Exiting.into());
@@ -1408,15 +1408,15 @@ pub(crate) fn write_wen_restart_records(
 mod tests {
     use {
         crate::wen_restart::{tests::wen_restart_proto::LastVotedForkSlotsAggregateFinal, *},
-        agave_snapshots::{
+        trezoa_snapshots::{
             paths::build_incremental_snapshot_archive_path,
             snapshot_config::{SnapshotConfig, SnapshotUsage},
             snapshot_hash::SnapshotHash,
         },
         crossbeam_channel::unbounded,
-        solana_entry::entry::create_ticks,
-        solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
-        solana_gossip::{
+        trezoa_entry::entry::create_ticks,
+        trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+        trezoa_gossip::{
             cluster_info::ClusterInfo,
             contact_info::ContactInfo,
             crds::GossipRoute,
@@ -1424,28 +1424,28 @@ mod tests {
             crds_value::CrdsValue,
             restart_crds_values::{RestartHeaviestFork, RestartLastVotedForkSlots},
         },
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::{create_new_ledger, entries_to_test_shreds, Blockstore},
             blockstore_options::LedgerColumnOptions,
             blockstore_processor::{fill_blockstore_slot_with_ticks, test_process_blockstore},
             get_tmp_ledger_path_auto_delete,
         },
-        solana_net_utils::SocketAddrSpace,
-        solana_pubkey::Pubkey,
-        solana_runtime::{
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{
             epoch_stakes::VersionedEpochStakes,
             genesis_utils::{
                 create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
             },
             snapshot_bank_utils::bank_to_full_snapshot_archive,
         },
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
-        solana_vote::vote_account::VoteAccount,
-        solana_vote_interface::state::{TowerSync, Vote},
-        solana_vote_program::vote_state::create_v4_account_with_authorized,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
+        trezoa_vote::vote_account::VoteAccount,
+        trezoa_vote_interface::state::{TowerSync, Vote},
+        trezoa_vote_program::vote_state::create_v4_account_with_authorized,
         std::{fs::remove_file, sync::Arc, thread::Builder},
         tempfile::TempDir,
     };
@@ -1696,7 +1696,7 @@ mod tests {
             exit: exit.clone(),
         };
         let wen_restart_thread_handle = Builder::new()
-            .name("solana-wen-restart".to_string())
+            .name("trezoa-wen-restart".to_string())
             .spawn(move || {
                 let _ = wait_for_wen_restart(wen_restart_config).is_ok();
             })
@@ -1765,7 +1765,7 @@ mod tests {
             exit: exit.clone(),
         };
         let wen_restart_thread_handle = Builder::new()
-            .name("solana-wen-restart".to_string())
+            .name("trezoa-wen-restart".to_string())
             .spawn(move || {
                 assert!(wait_for_wen_restart(wen_restart_config).is_ok());
             })
@@ -1953,7 +1953,7 @@ mod tests {
 
     #[test]
     fn test_wen_restart_divergence_across_epoch_boundary() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let test_state = wen_restart_test_init(&ledger_path);
         let last_vote_slot = test_state.last_voted_fork_slots[0];
@@ -2125,7 +2125,7 @@ mod tests {
 
     #[test]
     fn test_wen_restart_initialize() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let test_state = wen_restart_test_init(&ledger_path);
         let last_vote_bankhash = Hash::new_unique();
@@ -2597,7 +2597,7 @@ mod tests {
             let mut progress_clone = progress.clone();
             let last_voted_fork_slots = test_state.last_voted_fork_slots.clone();
             let wen_restart_thread_handle = Builder::new()
-                .name("solana-wen-restart".to_string())
+                .name("trezoa-wen-restart".to_string())
                 .spawn(move || {
                     assert!(aggregate_restart_last_voted_fork_slots(
                         &wen_restart_proto_path_clone,
@@ -2687,7 +2687,7 @@ mod tests {
 
     #[test]
     fn test_increment_and_write_wen_restart_records() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let my_dir = TempDir::new().unwrap();
         let mut wen_restart_proto_path = my_dir.path().to_path_buf();
         wen_restart_proto_path.push("wen_restart_status.proto");
@@ -2924,7 +2924,7 @@ mod tests {
 
     #[test]
     fn test_find_heaviest_fork_failures() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let exit = Arc::new(AtomicBool::new(false));
         let test_state = wen_restart_test_init(&ledger_path);
@@ -3125,7 +3125,7 @@ mod tests {
         let cluster_info = test_state.cluster_info.clone();
         let bank_forks = test_state.bank_forks.clone();
         Builder::new()
-            .name("solana-wen-restart-aggregate-heaviest-fork".to_string())
+            .name("trezoa-wen-restart-aggregate-heaviest-fork".to_string())
             .spawn(move || {
                 let result = aggregate_restart_heaviest_fork(
                     &wen_restart_path,
@@ -3191,7 +3191,7 @@ mod tests {
 
     #[test]
     fn test_generate_snapshot() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let test_state = wen_restart_test_init(&ledger_path);
         let bank_snapshots_dir = tempfile::TempDir::new().unwrap();
@@ -3497,7 +3497,7 @@ mod tests {
         let blockstore_clone = blockstore.clone();
         let wen_restart_repair_slots_clone = wen_restart_repair_slots.clone();
         let repair_heaviest_fork_thread_handle = Builder::new()
-            .name("solana-repair-heaviest-fork".to_string())
+            .name("trezoa-repair-heaviest-fork".to_string())
             .spawn(move || {
                 assert!(repair_heaviest_fork(
                     my_heaviest_fork_slot,

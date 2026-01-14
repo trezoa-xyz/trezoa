@@ -1,6 +1,6 @@
 use {
-    crate::is_zero_lamport::IsZeroLamport, solana_account::ReadableAccount, solana_clock::Epoch,
-    solana_pubkey::Pubkey, std::ptr,
+    crate::is_zero_lamport::IsZeroLamport, trezoa_account::ReadableAccount, trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey, std::ptr,
 };
 
 /// Meta contains enough context to recover the index from storage itself
@@ -184,7 +184,7 @@ impl IsZeroLamport for StoredAccountNoData<'_> {
 mod tests {
     use {
         super::*,
-        solana_account::{accounts_equal, Account},
+        trezoa_account::{accounts_equal, Account},
     };
 
     #[test]

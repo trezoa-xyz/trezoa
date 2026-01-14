@@ -12,9 +12,9 @@ use {
         },
         program::*,
     },
-    agave_feature_set::{self as feature_set, FeatureSet},
-    agave_reserved_account_keys::ReservedAccountKeys,
-    agave_snapshots::{
+    trezoa_feature_set::{self as feature_set, FeatureSet},
+    trezoa_reserved_account_keys::ReservedAccountKeys,
+    trezoa_snapshots::{
         snapshot_archive_info::SnapshotArchiveInfoGetter as _, ArchiveFormat, SnapshotVersion,
         DEFAULT_ARCHIVE_COMPRESSION, SUPPORTED_ARCHIVE_COMPRESSION,
     },
@@ -25,42 +25,42 @@ use {
     dashmap::DashMap,
     log::*,
     serde::Serialize,
-    solana_account::{state_traits::StateMut, AccountSharedData, ReadableAccount, WritableAccount},
-    solana_accounts_db::accounts_index::{ScanConfig, ScanOrder},
-    solana_clap_utils::{
+    trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_accounts_db::accounts_index::{ScanConfig, ScanOrder},
+    trezoa_clap_utils::{
         input_parsers::{cluster_type_of, pubkey_of, pubkeys_of},
         input_validators::{
             is_parsable, is_pubkey, is_pubkey_or_keypair, is_slot, is_valid_percentage,
             is_within_range,
         },
     },
-    solana_cli_output::{display::build_balance_message, CliAccount, OutputFormat},
-    solana_clock::{Epoch, Slot},
-    solana_cluster_type::ClusterType,
-    solana_core::{
+    trezoa_cli_output::{display::build_balance_message, CliAccount, OutputFormat},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_cluster_type::ClusterType,
+    trezoa_core::{
         banking_simulation::{BankingSimulator, BankingTraceEvents},
         resource_limits::adjust_nofile_limit,
         system_monitor_service::{SystemMonitorService, SystemMonitorStatsReportConfig},
         validator::{BlockProductionMethod, BlockVerificationMethod, TransactionStructure},
     },
-    solana_cost_model::{cost_model::CostModel, cost_tracker::CostTracker},
-    solana_entry::entry::create_ticks,
-    solana_feature_gate_interface::{self as feature, Feature},
-    solana_inflation::Inflation,
-    solana_instruction::TRANSACTION_LEVEL_STACK_HEIGHT,
-    solana_ledger::{
+    trezoa_cost_model::{cost_model::CostModel, cost_tracker::CostTracker},
+    trezoa_entry::entry::create_ticks,
+    trezoa_feature_gate_interface::{self as feature, Feature},
+    trezoa_inflation::Inflation,
+    trezoa_instruction::TRANSACTION_LEVEL_STACK_HEIGHT,
+    trezoa_ledger::{
         blockstore::{banking_trace_path, create_new_ledger, Blockstore},
         blockstore_options::{AccessType, LedgerColumnOptions},
         blockstore_processor::{
             ProcessSlotCallback, TransactionStatusMessage, TransactionStatusSender,
         },
     },
-    solana_measure::{measure::Measure, measure_time},
-    solana_message::SimpleAddressLoader,
-    solana_native_token::{Sol, LAMPORTS_PER_SOL},
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_runtime::{
+    trezoa_measure::{measure::Measure, measure_time},
+    trezoa_message::SimpleAddressLoader,
+    trezoa_native_token::{Sol, LAMPORTS_PER_SOL},
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_runtime::{
         bank::{
             bank_hash_details::{self, SlotDetails, TransactionDetails},
             Bank, RewardCalculationEvent,
@@ -72,15 +72,15 @@ use {
         snapshot_minimizer::SnapshotMinimizer,
         stake_utils,
     },
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_shred_version::compute_shred_version,
-    solana_stake_interface::{self as stake, state::StakeStateV2},
-    solana_system_interface::program as system_program,
-    solana_transaction::sanitized::MessageHash,
-    solana_transaction_status::parse_ui_instruction,
-    solana_unified_scheduler_pool::DefaultSchedulerPool,
-    solana_vote::vote_state_view::VoteStateView,
-    solana_vote_program::{
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_shred_version::compute_shred_version,
+    trezoa_stake_interface::{self as stake, state::StakeStateV2},
+    trezoa_system_interface::program as system_program,
+    trezoa_transaction::sanitized::MessageHash,
+    trezoa_transaction_status::parse_ui_instruction,
+    trezoa_unified_scheduler_pool::DefaultSchedulerPool,
+    trezoa_vote::vote_state_view::VoteStateView,
+    trezoa_vote_program::{
         self,
         vote_state::{self, VoteStateV4},
     },
@@ -276,7 +276,7 @@ fn graph_forks(bank_forks: &BankForks, config: &GraphConfig) -> String {
                         slot_stake_and_vote_count.get(&bank.slot())
                     {
                         format!(
-                            "\nvotes: {}, stake: {:.1} SOL ({:.1}%)",
+                            "\nvotes: {}, stake: {:.1} TRZ ({:.1}%)",
                             votes,
                             build_balance_message(*stake, false, false),
                             *stake as f64 / *total_stake as f64 * 100.,
@@ -371,7 +371,7 @@ fn graph_forks(bank_forks: &BankForks, config: &GraphConfig) -> String {
                     )
                 };
             dot.push(format!(
-                r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} SOL\nroot slot: {}\n{}"];"#,
+                r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} TRZ\nroot slot: {}\n{}"];"#,
                 node_pubkey,
                 node_pubkey,
                 build_balance_message(*stake, false, false),
@@ -394,7 +394,7 @@ fn graph_forks(bank_forks: &BankForks, config: &GraphConfig) -> String {
     // Annotate the final "..." node with absent vote and stake information
     if absent_votes > 0 {
         dot.push(format!(
-            r#"    "..."[label="...\nvotes: {}, stake: {:.1} SOL {:.1}%"];"#,
+            r#"    "..."[label="...\nvotes: {}, stake: {:.1} TRZ {:.1}%"];"#,
             absent_votes,
             build_balance_message(absent_stake, false, false),
             absent_stake as f64 / lowest_total_stake as f64 * 100.,
@@ -467,7 +467,7 @@ fn compute_slot_cost(
                     None,
                     SimpleAddressLoader::Disabled,
                     &reserved_account_keys.active,
-                    feature_set.is_active(&agave_feature_set::static_instruction_limit::id()),
+                    feature_set.is_active(&trezoa_feature_set::static_instruction_limit::id()),
                 )
                 .map_err(|err| {
                     warn!("Failed to compute cost of transaction: {err:?}");
@@ -949,7 +949,7 @@ fn main() {
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .global_setting(AppSettings::ColoredHelp)
         .global_setting(AppSettings::InferSubcommands)
         .global_setting(AppSettings::UnifiedHelpMessage)
@@ -1699,9 +1699,9 @@ fn main() {
         .get_matches();
 
     let logfile = value_t!(matches, "logfile", PathBuf).ok();
-    agave_logger::initialize_logging(logfile);
+    trezoa_logger::initialize_logging(logfile);
 
-    info!("{} {}", crate_name!(), solana_version::version!());
+    info!("{} {}", crate_name!(), trezoa_version::version!());
 
     let ledger_path = PathBuf::from(value_t_or_exit!(matches, "ledger_path", String));
     let verbose_level = matches.occurrences_of("verbose");
@@ -1789,7 +1789,7 @@ fn main() {
 
                     if let Some(hashes_per_tick) = arg_matches.value_of("hashes_per_tick") {
                         genesis_config.poh_config.hashes_per_tick = match hashes_per_tick {
-                            // Note: Unlike `solana-genesis`, "auto" is not supported here.
+                            // Note: Unlike `trezoa-genesis`, "auto" is not supported here.
                             "sleep" => None,
                             _ => Some(value_t_or_exit!(arg_matches, "hashes_per_tick", u64)),
                         }
@@ -1798,7 +1798,7 @@ fn main() {
                     create_new_ledger(
                         &output_directory,
                         &genesis_config,
-                        solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+                        trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
                         LedgerColumnOptions::default(),
                     )
                     .unwrap_or_else(|err| {
@@ -1840,7 +1840,7 @@ fn main() {
                 }
                 ("bank-hash", Some(_)) => {
                     eprintln!(
-                        "The bank-hash command has been deprecated, use agave-ledger-tool verify \
+                        "The bank-hash command has been deprecated, use trezoa-ledger-tool verify \
                          --print-bank-hash ... instead"
                     );
                 }
@@ -2201,7 +2201,7 @@ fn main() {
 
                         if let Some(hashes_per_tick) = hashes_per_tick {
                             child_bank.set_hashes_per_tick(match hashes_per_tick {
-                                // Note: Unlike `solana-genesis`, "auto" is not supported here.
+                                // Note: Unlike `trezoa-genesis`, "auto" is not supported here.
                                 "sleep" => None,
                                 _ => Some(value_t_or_exit!(arg_matches, "hashes_per_tick", u64)),
                             });
@@ -2299,7 +2299,7 @@ fn main() {
                     }
 
                     if fix_testnet_ed25519_precompile_account {
-                        use solana_sdk_ids::{ed25519_program, native_loader, system_program};
+                        use trezoa_sdk_ids::{ed25519_program, native_loader, system_program};
 
                         if bank.cluster_type() != ClusterType::Testnet {
                             eprintln!(
@@ -2359,7 +2359,7 @@ fn main() {
                         // Delete existing vote accounts
                         for (address, mut account) in bank
                             .get_program_accounts(
-                                &solana_vote_program::id(),
+                                &trezoa_vote_program::id(),
                                 &ScanConfig::new(ScanOrder::Sorted),
                             )
                             .unwrap()
@@ -3055,7 +3055,7 @@ fn main() {
                         for (pubkey, warped_account) in all_accounts {
                             // Don't output sysvars; it's always updated but not related to
                             // inflation.
-                            if solana_sdk_ids::sysvar::check_id(warped_account.owner()) {
+                            if trezoa_sdk_ids::sysvar::check_id(warped_account.owner()) {
                                 continue;
                             }
 

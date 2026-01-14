@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "agave-unstable-api"), allow(dead_code))]
+#![cfg_attr(not(feature = "trezoa-unstable-api"), allow(dead_code))]
 //! The `shred` module defines data structures and methods to pull MTU sized data frames from the
 //! network. There are two types of shreds: data and coding. Data shreds contain entry information
 //! while coding shreds provide redundancy to protect against dropped network packets (erasures).
@@ -58,13 +58,13 @@ use {
     bitflags::bitflags,
     num_enum::{IntoPrimitive, TryFromPrimitive},
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_entry::entry::{create_ticks, Entry},
-    solana_hash::Hash,
-    solana_perf::packet::PacketRef,
-    solana_pubkey::Pubkey,
-    solana_sha256_hasher::hashv,
-    solana_signature::{Signature, SIGNATURE_BYTES},
+    trezoa_clock::Slot,
+    trezoa_entry::entry::{create_ticks, Entry},
+    trezoa_hash::Hash,
+    trezoa_perf::packet::PacketRef,
+    trezoa_pubkey::Pubkey,
+    trezoa_sha256_hasher::hashv,
+    trezoa_signature::{Signature, SIGNATURE_BYTES},
     static_assertions::const_assert_eq,
     std::{fmt::Debug, mem::MaybeUninit},
     thiserror::Error,
@@ -83,7 +83,7 @@ pub use {
     crate::shredder::{ReedSolomonCache, Shredder},
 };
 #[cfg(any(test, feature = "dev-context-only-utils"))]
-use {solana_keypair::Keypair, solana_perf::packet::Packet, solana_signer::Signer};
+use {trezoa_keypair::Keypair, trezoa_perf::packet::Packet, trezoa_signer::Signer};
 
 mod common;
 pub mod merkle;
@@ -971,7 +971,7 @@ mod tests {
         rand::Rng,
         rand_chacha::{rand_core::SeedableRng, ChaChaRng},
         rayon::ThreadPoolBuilder,
-        solana_keypair::keypair_from_seed,
+        trezoa_keypair::keypair_from_seed,
         std::io::{Cursor, Seek, SeekFrom, Write},
         test_case::test_case,
     };
@@ -1120,7 +1120,7 @@ mod tests {
     #[test_case(true ; "last_in_slot")]
     #[test_case(false ; "not_last_in_slot")]
     fn test_should_discard_shred(is_last_in_slot: bool) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut rng = rand::rng();
         let slot = 18_291;
         let shreds = make_merkle_shreds_for_tests(
@@ -1384,7 +1384,7 @@ mod tests {
     #[test_case(true; "enforce_fixed_fec_set")]
     #[test_case(false ; "do_not_enforce_fixed_fec_set")]
     fn test_should_discard_shred_fec_set_checks(enforce_fixed_fec_set: bool) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut rng = rand::rng();
         let slot = 18_291;
         let shreds = make_merkle_shreds_for_tests(
@@ -1980,7 +1980,7 @@ mod tests {
 
     #[test]
     fn test_data_complete_shred_index_validation() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut rng = rand::rng();
         let slot = 18_291;
         let shreds = make_merkle_shreds_for_tests(

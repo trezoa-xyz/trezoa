@@ -1,16 +1,16 @@
 use {
-    solana_keypair::Keypair,
-    solana_program_test::ProgramTestContext,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_signer::Signer,
-    solana_stake_interface::{
+    trezoa_keypair::Keypair,
+    trezoa_program_test::ProgramTestContext,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_signer::Signer,
+    trezoa_stake_interface::{
         instruction as stake_instruction,
         state::{Authorized, Lockup},
     },
-    solana_system_interface::{instruction as system_instruction, program as system_program},
-    solana_transaction::Transaction,
-    solana_vote_program::{
+    trezoa_system_interface::{instruction as system_instruction, program as system_program},
+    trezoa_transaction::Transaction,
+    trezoa_vote_program::{
         vote_instruction,
         vote_state::{self, VoteInit, VoteStateV4},
     },

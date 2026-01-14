@@ -1,7 +1,7 @@
 use {
-    solana_clock::{Epoch, DEFAULT_MS_PER_SLOT},
-    solana_commitment_config::CommitmentConfig,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_clock::{Epoch, DEFAULT_MS_PER_SLOT},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
     std::{thread::sleep, time::Duration},
 };
 

@@ -1,8 +1,8 @@
 //! Big_mod_exp Syscall tests
 
 use {
-    solana_big_mod_exp::big_mod_exp, solana_msg::msg,
-    solana_program_entrypoint::custom_panic_default,
+    trezoa_big_mod_exp::big_mod_exp, trezoa_msg::msg,
+    trezoa_program_entrypoint::custom_panic_default,
 };
 
 fn big_mod_exp_test() {

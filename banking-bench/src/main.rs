@@ -1,14 +1,14 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    agave_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
     assert_matches::assert_matches,
     clap::{crate_description, crate_name, Arg, ArgEnum, Command},
     crossbeam_channel::{unbounded, Receiver},
     log::*,
     rand::{rng, Rng},
     rayon::prelude::*,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_core::{
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_core::{
         banking_stage::{
             transaction_scheduler::scheduler_controller::SchedulerConfig,
             unified_scheduler::ensure_banking_stage_setup,
@@ -17,27 +17,27 @@ use {
         banking_trace::{BankingTracer, Channels, BANKING_TRACE_DIR_DEFAULT_BYTE_LIMIT},
         validator::{BlockProductionMethod, SchedulerPacing, TransactionStructure},
     },
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore::Blockstore,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         get_tmp_ledger_path_auto_delete,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_measure::measure::Measure,
-    solana_message::Message,
-    solana_perf::packet::{to_packet_batches, PacketBatch},
-    solana_poh::poh_recorder::{create_test_recorder, PohRecorder, WorkingBankEntry},
-    solana_pubkey::{self as pubkey, Pubkey},
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_signature::Signature,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_system_transaction as system_transaction,
-    solana_time_utils::timestamp,
-    solana_transaction::Transaction,
-    solana_unified_scheduler_pool::DefaultSchedulerPool,
+    trezoa_measure::measure::Measure,
+    trezoa_message::Message,
+    trezoa_perf::packet::{to_packet_batches, PacketBatch},
+    trezoa_poh::poh_recorder::{create_test_recorder, PohRecorder, WorkingBankEntry},
+    trezoa_pubkey::{self as pubkey, Pubkey},
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_system_transaction as system_transaction,
+    trezoa_time_utils::timestamp,
+    trezoa_transaction::Transaction,
+    trezoa_unified_scheduler_pool::DefaultSchedulerPool,
     std::{
         num::NonZeroUsize,
         sync::{atomic::Ordering, Arc, RwLock},
@@ -234,11 +234,11 @@ impl PacketsPerIteration {
 
 #[allow(clippy::cognitive_complexity)]
 fn main() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let matches = Command::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::new("iterations")
                 .long("iterations")
@@ -520,7 +520,7 @@ fn main() {
     let mut tx_total_us = 0;
     let base_tx_count = bank.transaction_count();
     let mut txs_processed = 0;
-    let collector = solana_pubkey::new_rand();
+    let collector = trezoa_pubkey::new_rand();
     let mut total_sent = 0;
     for current_iteration_index in 0..iterations {
         trace!("RUNNING ITERATION {current_iteration_index}");

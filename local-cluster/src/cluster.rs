@@ -1,13 +1,13 @@
 use {
-    solana_commitment_config::CommitmentConfig,
-    solana_core::validator::{Validator, ValidatorConfig},
-    solana_gossip::{contact_info::ContactInfo, node::Node},
-    solana_keypair::Keypair,
-    solana_ledger::shred::Shred,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
-    solana_tpu_client::tpu_client::TpuClient,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_core::validator::{Validator, ValidatorConfig},
+    trezoa_gossip::{contact_info::ContactInfo, node::Node},
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::Shred,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
+    trezoa_tpu_client::tpu_client::TpuClient,
     std::{io::Result, path::PathBuf, sync::Arc},
 };
 

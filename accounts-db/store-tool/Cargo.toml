@@ -1,5 +1,5 @@
 [package]
-name = "agave-store-tool"
+name = "trezoa-store-tool"
 description = "Tool for account storage files"
 publish = false
 version = { workspace = true }
@@ -11,7 +11,7 @@ edition = { workspace = true }
 workspace = "../../dev-bins"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 dummy-for-ci-check = []
 frozen-abi = []
@@ -20,8 +20,8 @@ frozen-abi = []
 ahash = { workspace = true }
 clap = { workspace = true }
 rayon = { workspace = true }
-solana-account = { workspace = true }
-solana-accounts-db = { workspace = true, features = ["dev-context-only-utils"] }
-solana-pubkey = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-version = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-accounts-db = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-pubkey = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-version = { workspace = true }

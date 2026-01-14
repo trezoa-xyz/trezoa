@@ -1,5 +1,5 @@
 //! This module provides [`SlotReceiver`] structure.
-use {solana_clock::Slot, thiserror::Error, tokio::sync::watch};
+use {trezoa_clock::Slot, thiserror::Error, tokio::sync::watch};
 
 /// Receiver for slot updates from slot update services.
 #[derive(Clone)]

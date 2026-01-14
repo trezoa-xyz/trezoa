@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -14,14 +14,14 @@
 use qualifier_attr::qualifiers;
 use {
     cfg_if::cfg_if,
-    solana_bincode::limited_deserialize,
-    solana_clock::Slot,
-    solana_instruction::{error::InstructionError, AccountMeta},
-    solana_loader_v3_interface::{
+    trezoa_bincode::limited_deserialize,
+    trezoa_clock::Slot,
+    trezoa_instruction::{error::InstructionError, AccountMeta},
+    trezoa_loader_v3_interface::{
         instruction::UpgradeableLoaderInstruction, state::UpgradeableLoaderState,
     },
-    solana_program_entrypoint::{MAX_PERMITTED_DATA_INCREASE, SUCCESS},
-    solana_program_runtime::{
+    trezoa_program_entrypoint::{MAX_PERMITTED_DATA_INCREASE, SUCCESS},
+    trezoa_program_runtime::{
         execution_budget::MAX_INSTRUCTION_STACK_DEPTH,
         invoke_context::{BpfAllocator, InvokeContext, SerializedAccountMetadata, SyscallContext},
         loaded_programs::{
@@ -32,8 +32,8 @@ use {
         serialization, stable_log,
         sysvar_cache::get_sysvar_with_account_check,
     },
-    solana_pubkey::Pubkey,
-    solana_sbpf::{
+    trezoa_pubkey::Pubkey,
+    trezoa_sbpf::{
         declare_builtin_function,
         ebpf::{self, MM_HEAP_START},
         elf::{ElfError, Executable},
@@ -43,14 +43,14 @@ use {
         verifier::RequisiteVerifier,
         vm::{ContextObject, EbpfVm},
     },
-    solana_sdk_ids::{
+    trezoa_sdk_ids::{
         bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, loader_v4, native_loader,
     },
-    solana_svm_log_collector::{ic_logger_msg, ic_msg, LogCollector},
-    solana_svm_measure::measure::Measure,
-    solana_svm_type_overrides::sync::{atomic::Ordering, Arc},
-    solana_system_interface::{instruction as system_instruction, MAX_PERMITTED_DATA_LENGTH},
-    solana_transaction_context::{
+    trezoa_svm_log_collector::{ic_logger_msg, ic_msg, LogCollector},
+    trezoa_svm_measure::measure::Measure,
+    trezoa_svm_type_overrides::sync::{atomic::Ordering, Arc},
+    trezoa_system_interface::{instruction as system_instruction, MAX_PERMITTED_DATA_LENGTH},
+    trezoa_transaction_context::{
         instruction::InstructionContext, IndexOfAccount, TransactionContext,
     },
     std::{cell::RefCell, mem, rc::Rc},
@@ -381,7 +381,7 @@ declare_builtin_function!(
 );
 
 mod migration_authority {
-    solana_pubkey::declare_id!("3Scf35jMNk2xXBD6areNjgMtXgp5ZspDhms8vdcbzC42");
+    trezoa_pubkey::declare_id!("3Scf35jMNk2xXBD6areNjgMtXgp5ZspDhms8vdcbzC42");
 }
 
 #[cfg_attr(feature = "svm-internal", qualifiers(pub))]
@@ -453,7 +453,7 @@ fn process_loader_upgradeable_instruction(
     let instruction_data = instruction_context.get_instruction_data();
     let program_id = instruction_context.get_program_key()?;
 
-    match limited_deserialize(instruction_data, solana_packet::PACKET_DATA_SIZE as u64)? {
+    match limited_deserialize(instruction_data, trezoa_packet::PACKET_DATA_SIZE as u64)? {
         UpgradeableLoaderInstruction::InitializeBuffer => {
             instruction_context.check_number_of_instruction_accounts(2)?;
             let mut buffer = instruction_context.try_borrow_instruction_account(0)?;
@@ -605,7 +605,7 @@ fn process_loader_upgradeable_instruction(
             let signers = [[new_program_id.as_ref(), &[bump_seed]]]
                 .iter()
                 .map(|seeds| Pubkey::create_program_address(seeds, caller_program_id))
-                .collect::<Result<Vec<Pubkey>, solana_pubkey::PubkeyError>>()
+                .collect::<Result<Vec<Pubkey>, trezoa_pubkey::PubkeyError>>()
                 .map_err(|e| e as u64)?;
             invoke_context.native_invoke(instruction, signers.as_slice())?;
 
@@ -1181,7 +1181,7 @@ fn process_loader_upgradeable_instruction(
                     );
             } else {
                 invoke_context.native_invoke(
-                    solana_loader_v4_interface::instruction::set_program_length(
+                    trezoa_loader_v4_interface::instruction::set_program_length(
                         &program_address,
                         &provided_authority_address,
                         program_len as u32,
@@ -1191,7 +1191,7 @@ fn process_loader_upgradeable_instruction(
                 )?;
 
                 invoke_context.native_invoke(
-                    solana_loader_v4_interface::instruction::copy(
+                    trezoa_loader_v4_interface::instruction::copy(
                         &program_address,
                         &provided_authority_address,
                         &programdata_address,
@@ -1203,7 +1203,7 @@ fn process_loader_upgradeable_instruction(
                 )?;
 
                 invoke_context.native_invoke(
-                    solana_loader_v4_interface::instruction::deploy(
+                    trezoa_loader_v4_interface::instruction::deploy(
                         &program_address,
                         &provided_authority_address,
                     ),
@@ -1212,7 +1212,7 @@ fn process_loader_upgradeable_instruction(
 
                 if upgrade_authority_address.is_none() {
                     invoke_context.native_invoke(
-                        solana_loader_v4_interface::instruction::finalize(
+                        trezoa_loader_v4_interface::instruction::finalize(
                             &program_address,
                             &provided_authority_address,
                             &program_address,
@@ -1221,7 +1221,7 @@ fn process_loader_upgradeable_instruction(
                     )?;
                 } else if migration_authority::check_id(&provided_authority_address) {
                     invoke_context.native_invoke(
-                        solana_loader_v4_interface::instruction::transfer_authority(
+                        trezoa_loader_v4_interface::instruction::transfer_authority(
                             &program_address,
                             &provided_authority_address,
                             &upgrade_authority_address.unwrap(),
@@ -1705,9 +1705,9 @@ fn execute<'a, 'b: 'a>(
 mod test_utils {
     #[cfg(feature = "svm-internal")]
     use {
-        super::*, agave_syscalls::create_program_runtime_environment_v1,
-        solana_account::ReadableAccount, solana_loader_v4_interface::state::LoaderV4State,
-        solana_sdk_ids::loader_v4,
+        super::*, trezoa_syscalls::create_program_runtime_environment_v1,
+        trezoa_account::ReadableAccount, trezoa_loader_v4_interface::state::LoaderV4State,
+        trezoa_sdk_ids::loader_v4,
     };
 
     #[cfg(feature = "svm-internal")]
@@ -1777,19 +1777,19 @@ mod tests {
         super::*,
         assert_matches::assert_matches,
         rand::Rng,
-        solana_account::{
+        trezoa_account::{
             create_account_shared_data_for_test as create_account_for_test, state_traits::StateMut,
             AccountSharedData, ReadableAccount, WritableAccount,
         },
-        solana_clock::Clock,
-        solana_epoch_schedule::EpochSchedule,
-        solana_instruction::{error::InstructionError, AccountMeta},
-        solana_program_runtime::{
+        trezoa_clock::Clock,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_instruction::{error::InstructionError, AccountMeta},
+        trezoa_program_runtime::{
             invoke_context::mock_process_instruction, with_mock_invoke_context,
         },
-        solana_pubkey::Pubkey,
-        solana_rent::Rent,
-        solana_sdk_ids::{system_program, sysvar},
+        trezoa_pubkey::Pubkey,
+        trezoa_rent::Rent,
+        trezoa_sdk_ids::{system_program, sysvar},
         std::{fs::File, io::Read, ops::Range, sync::atomic::AtomicU64},
     };
 

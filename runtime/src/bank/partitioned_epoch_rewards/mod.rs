@@ -10,16 +10,16 @@ use {
         stake_account::StakeAccount, stake_history::StakeHistory,
     },
     rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_accounts_db::{
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_accounts_db::{
         partitioned_rewards::PartitionedEpochRewardsConfig,
         stake_rewards::StakeReward,
         storable_accounts::{AccountForStorage, StorableAccounts},
     },
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::state::{Delegation, Stake},
-    solana_vote::vote_account::VoteAccounts,
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::state::{Delegation, Stake},
+    trezoa_vote::vote_account::VoteAccounts,
     std::{mem::MaybeUninit, sync::Arc},
 };
 
@@ -423,19 +423,19 @@ mod tests {
             stake_utils,
         },
         assert_matches::assert_matches,
-        solana_account::{state_traits::StateMut, Account},
-        solana_accounts_db::accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
-        solana_epoch_schedule::EpochSchedule,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_reward_info::RewardType,
-        solana_signer::Signer,
-        solana_stake_interface::state::StakeStateV2,
-        solana_system_transaction as system_transaction,
-        solana_vote::vote_transaction,
-        solana_vote_interface::state::{VoteStateV4, VoteStateVersions, MAX_LOCKOUT_HISTORY},
-        solana_vote_program::vote_state::{self, handler::VoteStateHandle, TowerSync},
+        trezoa_account::{state_traits::StateMut, Account},
+        trezoa_accounts_db::accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_reward_info::RewardType,
+        trezoa_signer::Signer,
+        trezoa_stake_interface::state::StakeStateV2,
+        trezoa_system_transaction as system_transaction,
+        trezoa_vote::vote_transaction,
+        trezoa_vote_interface::state::{VoteStateV4, VoteStateVersions, MAX_LOCKOUT_HISTORY},
+        trezoa_vote_program::vote_state::{self, handler::VoteStateHandle, TowerSync},
         std::sync::{Arc, RwLock},
     };
 
@@ -748,7 +748,7 @@ mod tests {
     /// Test get_reward_distribution_num_blocks during normal epoch gives the expected result
     #[test]
     fn test_get_reward_distribution_num_blocks_normal() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (mut genesis_config, _mint_keypair) =
             create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
         genesis_config.epoch_schedule = EpochSchedule::custom(432000, 432000, false);
@@ -803,7 +803,7 @@ mod tests {
 
     #[test]
     fn test_rewards_computation_and_partitioned_distribution_one_block() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let starting_slot = SLOTS_PER_EPOCH - 1;
         let (
@@ -856,10 +856,10 @@ mod tests {
                     RewardInterval::OutsideInterval
                 );
                 let account = curr_bank
-                    .get_account(&solana_sysvar::epoch_rewards::id())
+                    .get_account(&trezoa_sysvar::epoch_rewards::id())
                     .unwrap();
-                let epoch_rewards: solana_sysvar::epoch_rewards::EpochRewards =
-                    solana_account::from_account(&account).unwrap();
+                let epoch_rewards: trezoa_sysvar::epoch_rewards::EpochRewards =
+                    trezoa_account::from_account(&account).unwrap();
                 assert_eq!(post_cap, pre_cap + epoch_rewards.distributed_rewards);
             } else {
                 // 2. when curr_slot == SLOTS_PER_EPOCH + 2, the 3rd block of
@@ -878,7 +878,7 @@ mod tests {
             // Ensure the sysvar persists thereafter.
             if slot >= SLOTS_PER_EPOCH {
                 let epoch_rewards_lamports =
-                    curr_bank.get_balance(&solana_sysvar::epoch_rewards::id());
+                    curr_bank.get_balance(&trezoa_sysvar::epoch_rewards::id());
                 assert!(epoch_rewards_lamports > 0);
             }
             previous_bank = curr_bank;
@@ -888,7 +888,7 @@ mod tests {
     /// Test rewards computation and partitioned rewards distribution at the epoch boundary (two reward distribution blocks)
     #[test]
     fn test_rewards_computation_and_partitioned_distribution_two_blocks() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let starting_slot = SLOTS_PER_EPOCH - 1;
         let (
@@ -905,10 +905,10 @@ mod tests {
             let pre_cap = previous_bank.capitalization();
 
             let pre_sysvar_account = previous_bank
-                .get_account(&solana_sysvar::epoch_rewards::id())
+                .get_account(&trezoa_sysvar::epoch_rewards::id())
                 .unwrap_or_default();
-            let pre_epoch_rewards: solana_sysvar::epoch_rewards::EpochRewards =
-                solana_account::from_account(&pre_sysvar_account).unwrap_or_default();
+            let pre_epoch_rewards: trezoa_sysvar::epoch_rewards::EpochRewards =
+                trezoa_account::from_account(&pre_sysvar_account).unwrap_or_default();
             let pre_distributed_rewards = pre_epoch_rewards.distributed_rewards;
             let curr_bank = Bank::new_from_parent_with_bank_forks(
                 bank_forks.as_ref(),
@@ -955,10 +955,10 @@ mod tests {
                 assert!(curr_bank.is_partitioned());
 
                 let account = curr_bank
-                    .get_account(&solana_sysvar::epoch_rewards::id())
+                    .get_account(&trezoa_sysvar::epoch_rewards::id())
                     .unwrap();
-                let epoch_rewards: solana_sysvar::epoch_rewards::EpochRewards =
-                    solana_account::from_account(&account).unwrap();
+                let epoch_rewards: trezoa_sysvar::epoch_rewards::EpochRewards =
+                    trezoa_account::from_account(&account).unwrap();
                 assert_eq!(
                     post_cap,
                     pre_cap + epoch_rewards.distributed_rewards - pre_distributed_rewards
@@ -980,10 +980,10 @@ mod tests {
                 );
 
                 let account = curr_bank
-                    .get_account(&solana_sysvar::epoch_rewards::id())
+                    .get_account(&trezoa_sysvar::epoch_rewards::id())
                     .unwrap();
-                let epoch_rewards: solana_sysvar::epoch_rewards::EpochRewards =
-                    solana_account::from_account(&account).unwrap();
+                let epoch_rewards: trezoa_sysvar::epoch_rewards::EpochRewards =
+                    trezoa_account::from_account(&account).unwrap();
                 assert_eq!(
                     post_cap,
                     pre_cap + epoch_rewards.distributed_rewards - pre_distributed_rewards

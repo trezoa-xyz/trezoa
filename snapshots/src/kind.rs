@@ -1,4 +1,4 @@
-use solana_clock::Slot;
+use trezoa_clock::Slot;
 
 /// All snapshots are archived at this time, but it is possible that
 /// in the future there could be other kinds of snapshots that are not archived.

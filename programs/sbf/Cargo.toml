@@ -1,6 +1,6 @@
 [package]
-name = "solana-sbf-programs"
-documentation = "https://docs.rs/solana"
+name = "trezoa-sbf-programs"
+documentation = "https://docs.rs/trezoa"
 readme = "README.md"
 publish = false
 version = { workspace = true }
@@ -74,27 +74,27 @@ members = [
 ]
 [workspace.package]
 version = "4.0.0-alpha.0"
-description = "Solana SBF test program written in Rust"
-authors = ["Anza Maintainers <maintainers@anza.xyz>"]
-repository = "https://github.com/anza-xyz/agave"
-homepage = "https://anza.xyz"
+description = "Trezoa SBF test program written in Rust"
+authors = ["Trezoa-team Maintainers <maintainers@trezoa.xyz>"]
+repository = "https://github.com/trezoa-xyz/trezoa"
+homepage = "https://trezoa.xyz"
 license = "Apache-2.0"
 edition = "2021"
 
 [workspace.lints.rust.unexpected_cfgs]
 level = "warn"
 check-cfg = [
-    'cfg(target_os, values("solana"))',
+    'cfg(target_os, values("trezoa"))',
     'cfg(feature, values("custom-panic", "custom-heap"))',
     'cfg(target_feature, values("dynamic-frames"))',
 ]
 
 [workspace.dependencies]
-agave-feature-set = { path = "../../feature-set", version = "=4.0.0-alpha.0" }
-agave-logger = { path = "../../logger", version = "=4.0.0-alpha.0" }
-agave-reserved-account-keys = { path = "../../reserved-account-keys", version = "=4.0.0-alpha.0" }
-agave-syscalls = { path = "../../syscalls", version = "=4.0.0-alpha.0" }
-agave-validator = { path = "../../validator", version = "=4.0.0-alpha.0" }
+trezoa-feature-set = { path = "../../feature-set", version = "=4.0.0-alpha.0" }
+trezoa-logger = { path = "../../logger", version = "=4.0.0-alpha.0" }
+trezoa-reserved-account-keys = { path = "../../reserved-account-keys", version = "=4.0.0-alpha.0" }
+trezoa-syscalls = { path = "../../syscalls", version = "=4.0.0-alpha.0" }
+trezoa-validator = { path = "../../validator", version = "=4.0.0-alpha.0" }
 array-bytes = "=1.4.1"
 bincode = { version = "1.1.4", default-features = false }
 blake3 = "1.0.0"
@@ -114,65 +114,65 @@ serde = { version = "1.0.112", features = ["derive"] }
 serde_json = "1.0.149"
 sha2 = "0.10.8"
 sha3 = "0.10.8"
-solana-account-decoder = { path = "../../account-decoder", version = "=4.0.0-alpha.0" }
-solana-account-info = "=3.1.0"
-solana-accounts-db = { path = "../../accounts-db", version = "=4.0.0-alpha.0" }
-solana-big-mod-exp = "=3.0.0"
-solana-blake3-hasher = { version = "=3.1.0", features = ["blake3"] }
-solana-bn254 = "=3.1.2"
-solana-bpf-loader-program = { path = "../bpf_loader", version = "=4.0.0-alpha.0" }
-solana-cli-output = { path = "../../cli-output", version = "=4.0.0-alpha.0" }
-solana-clock = { version = "=3.0.0", features = ["serde", "sysvar"] }
-solana-compute-budget = { path = "../../compute-budget", version = "=4.0.0-alpha.0" }
-solana-compute-budget-instruction = { path = "../../compute-budget-instruction", version = "=4.0.0-alpha.0" }
-solana-cpi = "=3.1.0"
-solana-curve25519 = "=4.0.0"
-solana-define-syscall = "=3.0.0"
-solana-fee = { path = "../../fee", version = "=4.0.0-alpha.0" }
-solana-hash = { version = "=4.0.1", features = ["bytemuck", "serde", "std"] }
-solana-instruction = "=3.1.0"
-solana-instructions-sysvar = "=3.0.0"
-solana-keccak-hasher = { version = "=3.1.0", features = ["sha3"] }
-solana-ledger = { path = "../../ledger", version = "=4.0.0-alpha.0" }
-solana-measure = { path = "../../measure", version = "=4.0.0-alpha.0" }
-solana-msg = "=3.0.0"
-solana-poseidon = "=4.0.0"
-solana-program = "=3.0.0"
-solana-program-entrypoint = "=3.1.1"
-solana-program-error = "=3.0.0"
-solana-program-memory = "=3.0.0"
-solana-program-runtime = { path = "../../program-runtime", version = "=4.0.0-alpha.0" }
-solana-pubkey = { version = "=4.0.0", default-features = false }
-solana-runtime = { path = "../../runtime", version = "=4.0.0-alpha.0" }
-solana-runtime-transaction = { path = "../../runtime-transaction", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-128bit-dep = { path = "rust/128bit_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-invoke-dep = { path = "rust/invoke_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-invoked-dep = { path = "rust/invoked_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-many-args-dep = { path = "rust/many_args_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-mem-dep = { path = "rust/mem_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-param-passing-dep = { path = "rust/param_passing_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-r2-instruction-data-pointer = { path = "rust/r2_instruction_data_pointer", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-realloc-dep = { path = "rust/realloc_dep", version = "=4.0.0-alpha.0" }
-solana-sbf-rust-realloc-invoke-dep = { path = "rust/realloc_invoke_dep", version = "=4.0.0-alpha.0" }
-solana-sbpf = "=0.13.1"
-solana-sdk-ids = "=3.1.0"
-solana-secp256k1-recover = "=3.1.0"
-solana-sha256-hasher = { version = "=3.1.0", features = ["sha2"] }
-solana-stake-interface = { version = "=2.0.2", features = ["bincode"] }
-solana-svm = { path = "../../svm", version = "=4.0.0-alpha.0" }
-solana-svm-callback = { path = "../../svm-callback", version = "=4.0.0-alpha.0" }
-solana-svm-feature-set = { path = "../../svm-feature-set", version = "=4.0.0-alpha.0" }
-solana-svm-log-collector = { path = "../../svm-log-collector", version = "=4.0.0-alpha.0" }
-solana-svm-test-harness-instr = { path = "../../svm-test-harness/instr", version = "=4.0.0-alpha.0" }
-solana-svm-timings = { path = "../../svm-timings", version = "=4.0.0-alpha.0" }
-solana-svm-transaction = { path = "../../svm-transaction", version = "=4.0.0-alpha.0" }
-solana-svm-type-overrides = { path = "../../svm-type-overrides", version = "=4.0.0-alpha.0" }
-solana-system-interface = { version = "=3.0", features = ["bincode"] }
-solana-sysvar = "=3.1.1"
-solana-transaction-context = { path = "../../transaction-context", version = "=4.0.0-alpha.0" }
-solana-transaction-status = { path = "../../transaction-status", version = "=4.0.0-alpha.0" }
-solana-vote = { path = "../../vote", version = "=4.0.0-alpha.0" }
-solana-vote-program = { path = "../../programs/vote", version = "=4.0.0-alpha.0" }
+trezoa-account-decoder = { path = "../../account-decoder", version = "=4.0.0-alpha.0" }
+trezoa-account-info = "=3.1.0"
+trezoa-accounts-db = { path = "../../accounts-db", version = "=4.0.0-alpha.0" }
+trezoa-big-mod-exp = "=3.0.0"
+trezoa-blake3-hasher = { version = "=3.1.0", features = ["blake3"] }
+trezoa-bn254 = "=3.1.2"
+trezoa-bpf-loader-program = { path = "../bpf_loader", version = "=4.0.0-alpha.0" }
+trezoa-cli-output = { path = "../../cli-output", version = "=4.0.0-alpha.0" }
+trezoa-clock = { version = "=3.0.0", features = ["serde", "sysvar"] }
+trezoa-compute-budget = { path = "../../compute-budget", version = "=4.0.0-alpha.0" }
+trezoa-compute-budget-instruction = { path = "../../compute-budget-instruction", version = "=4.0.0-alpha.0" }
+trezoa-cpi = "=3.1.0"
+trezoa-curve25519 = "=4.0.0"
+trezoa-define-syscall = "=3.0.0"
+trezoa-fee = { path = "../../fee", version = "=4.0.0-alpha.0" }
+trezoa-hash = { version = "=4.0.1", features = ["bytemuck", "serde", "std"] }
+trezoa-instruction = "=3.1.0"
+trezoa-instructions-sysvar = "=3.0.0"
+trezoa-keccak-hasher = { version = "=3.1.0", features = ["sha3"] }
+trezoa-ledger = { path = "../../ledger", version = "=4.0.0-alpha.0" }
+trezoa-measure = { path = "../../measure", version = "=4.0.0-alpha.0" }
+trezoa-msg = "=3.0.0"
+trezoa-poseidon = "=4.0.0"
+trezoa-program = "=3.0.0"
+trezoa-program-entrypoint = "=3.1.1"
+trezoa-program-error = "=3.0.0"
+trezoa-program-memory = "=3.0.0"
+trezoa-program-runtime = { path = "../../program-runtime", version = "=4.0.0-alpha.0" }
+trezoa-pubkey = { version = "=4.0.0", default-features = false }
+trezoa-runtime = { path = "../../runtime", version = "=4.0.0-alpha.0" }
+trezoa-runtime-transaction = { path = "../../runtime-transaction", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-128bit-dep = { path = "rust/128bit_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-invoke-dep = { path = "rust/invoke_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-invoked-dep = { path = "rust/invoked_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-many-args-dep = { path = "rust/many_args_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-mem-dep = { path = "rust/mem_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-param-passing-dep = { path = "rust/param_passing_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-r2-instruction-data-pointer = { path = "rust/r2_instruction_data_pointer", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-realloc-dep = { path = "rust/realloc_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbf-rust-realloc-invoke-dep = { path = "rust/realloc_invoke_dep", version = "=4.0.0-alpha.0" }
+trezoa-sbpf = "=0.13.1"
+trezoa-sdk-ids = "=3.1.0"
+trezoa-secp256k1-recover = "=3.1.0"
+trezoa-sha256-hasher = { version = "=3.1.0", features = ["sha2"] }
+trezoa-stake-interface = { version = "=2.0.2", features = ["bincode"] }
+trezoa-svm = { path = "../../svm", version = "=4.0.0-alpha.0" }
+trezoa-svm-callback = { path = "../../svm-callback", version = "=4.0.0-alpha.0" }
+trezoa-svm-feature-set = { path = "../../svm-feature-set", version = "=4.0.0-alpha.0" }
+trezoa-svm-log-collector = { path = "../../svm-log-collector", version = "=4.0.0-alpha.0" }
+trezoa-svm-test-harness-instr = { path = "../../svm-test-harness/instr", version = "=4.0.0-alpha.0" }
+trezoa-svm-timings = { path = "../../svm-timings", version = "=4.0.0-alpha.0" }
+trezoa-svm-transaction = { path = "../../svm-transaction", version = "=4.0.0-alpha.0" }
+trezoa-svm-type-overrides = { path = "../../svm-type-overrides", version = "=4.0.0-alpha.0" }
+trezoa-system-interface = { version = "=3.0", features = ["bincode"] }
+trezoa-sysvar = "=3.1.1"
+trezoa-transaction-context = { path = "../../transaction-context", version = "=4.0.0-alpha.0" }
+trezoa-transaction-status = { path = "../../transaction-status", version = "=4.0.0-alpha.0" }
+trezoa-vote = { path = "../../vote", version = "=4.0.0-alpha.0" }
+trezoa-vote-program = { path = "../../programs/vote", version = "=4.0.0-alpha.0" }
 test-case = "3.3.1"
 thiserror = "1.0"
 
@@ -185,11 +185,11 @@ dummy-for-ci-check = ["sbf_c", "sbf_rust", "sbf_sanity_list"]
 frozen-abi = []
 
 [dev-dependencies]
-agave-feature-set = { workspace = true }
-agave-logger = { workspace = true }
-agave-reserved-account-keys = { workspace = true }
-agave-syscalls = { workspace = true }
-agave-validator = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-reserved-account-keys = { workspace = true }
+trezoa-syscalls = { workspace = true }
+trezoa-validator = { workspace = true }
 bincode = { workspace = true }
 borsh = { workspace = true }
 byteorder = { workspace = true }
@@ -198,66 +198,66 @@ itertools = { workspace = true }
 log = { workspace = true }
 miow = { workspace = true }
 net2 = { workspace = true }
-solana-account = "3.3.0"
-solana-account-decoder = { workspace = true }
-solana-account-info = "3.1.0"
-solana-accounts-db = { workspace = true }
-solana-bpf-loader-program = { workspace = true }
-solana-cli-output = { workspace = true }
-solana-client-traits = "3.0.0"
-solana-clock = "3.0.0"
-solana-cluster-type = "3.0.0"
-solana-compute-budget = { workspace = true }
-solana-compute-budget-instruction = { workspace = true, features = [
+trezoa-account = "3.3.0"
+trezoa-account-decoder = { workspace = true }
+trezoa-account-info = "3.1.0"
+trezoa-accounts-db = { workspace = true }
+trezoa-bpf-loader-program = { workspace = true }
+trezoa-cli-output = { workspace = true }
+trezoa-client-traits = "3.0.0"
+trezoa-clock = "3.0.0"
+trezoa-cluster-type = "3.0.0"
+trezoa-compute-budget = { workspace = true }
+trezoa-compute-budget-instruction = { workspace = true, features = [
     "dev-context-only-utils",
 ] }
-solana-compute-budget-interface = "3.0.0"
-solana-fee = { workspace = true }
-solana-fee-calculator = "3.0.0"
-solana-fee-structure = "3.0.0"
-solana-genesis-config = "3.0.0"
-solana-hash = "3.1.0"
-solana-instruction = { workspace = true }
-solana-keypair = "3.0.0"
-solana-ledger = { workspace = true }
-solana-loader-v3-interface = "6.1.0"
-solana-loader-v4-interface = "3.1.0"
-solana-measure = { workspace = true }
-solana-message = "3.0.0"
-solana-program = { workspace = true }
-solana-program-entrypoint = "3.1.1"
-solana-program-runtime = { workspace = true }
-solana-pubkey = "4.0.0"
-solana-rent = "3.0.0"
-solana-runtime = { workspace = true, features = ["dev-context-only-utils"] }
-solana-runtime-transaction = { workspace = true, features = [
+trezoa-compute-budget-interface = "3.0.0"
+trezoa-fee = { workspace = true }
+trezoa-fee-calculator = "3.0.0"
+trezoa-fee-structure = "3.0.0"
+trezoa-genesis-config = "3.0.0"
+trezoa-hash = "3.1.0"
+trezoa-instruction = { workspace = true }
+trezoa-keypair = "3.0.0"
+trezoa-ledger = { workspace = true }
+trezoa-loader-v3-interface = "6.1.0"
+trezoa-loader-v4-interface = "3.1.0"
+trezoa-measure = { workspace = true }
+trezoa-message = "3.0.0"
+trezoa-program = { workspace = true }
+trezoa-program-entrypoint = "3.1.1"
+trezoa-program-runtime = { workspace = true }
+trezoa-pubkey = "4.0.0"
+trezoa-rent = "3.0.0"
+trezoa-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-runtime-transaction = { workspace = true, features = [
     "dev-context-only-utils",
 ] }
-solana-sbf-rust-invoke-dep = { workspace = true }
-solana-sbf-rust-realloc-dep = { workspace = true }
-solana-sbf-rust-realloc-invoke-dep = { workspace = true }
-solana-sbpf = { workspace = true, features = ["jit"] }
-solana-sdk-ids = "3.1.0"
-solana-signer = "3.0.0"
-solana-stake-interface = "2.0.2"
-solana-svm = { workspace = true }
-solana-svm-callback = { workspace = true }
-solana-svm-feature-set = { workspace = true }
-solana-svm-log-collector = { workspace = true }
-solana-svm-test-harness-instr = { workspace = true }
-solana-svm-timings = { workspace = true }
-solana-svm-transaction = { workspace = true }
-solana-svm-type-overrides = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-sysvar = "3.1.1"
-solana-transaction = "3.0.2"
-solana-transaction-context = { workspace = true, features = [
+trezoa-sbf-rust-invoke-dep = { workspace = true }
+trezoa-sbf-rust-realloc-dep = { workspace = true }
+trezoa-sbf-rust-realloc-invoke-dep = { workspace = true }
+trezoa-sbpf = { workspace = true, features = ["jit"] }
+trezoa-sdk-ids = "3.1.0"
+trezoa-signer = "3.0.0"
+trezoa-stake-interface = "2.0.2"
+trezoa-svm = { workspace = true }
+trezoa-svm-callback = { workspace = true }
+trezoa-svm-feature-set = { workspace = true }
+trezoa-svm-log-collector = { workspace = true }
+trezoa-svm-test-harness-instr = { workspace = true }
+trezoa-svm-timings = { workspace = true }
+trezoa-svm-transaction = { workspace = true }
+trezoa-svm-type-overrides = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-sysvar = "3.1.1"
+trezoa-transaction = "3.0.2"
+trezoa-transaction-context = { workspace = true, features = [
     "dev-context-only-utils",
 ] }
-solana-transaction-error = "3.0.0"
-solana-transaction-status = { workspace = true }
-solana-vote = { workspace = true }
-solana-vote-program = { workspace = true }
+trezoa-transaction-error = "3.0.0"
+trezoa-transaction-status = { workspace = true }
+trezoa-vote = { workspace = true }
+trezoa-vote-program = { workspace = true }
 test-case = { workspace = true }
 
 [profile.release]

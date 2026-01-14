@@ -10,22 +10,22 @@ use {
         },
         result::{Error, Result},
     },
-    agave_feature_set as feature_set,
+    trezoa_feature_set as feature_set,
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, Sender},
     rayon::{prelude::*, ThreadPool},
-    solana_clock::{Slot, DEFAULT_MS_PER_SLOT},
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    trezoa_clock::{Slot, DEFAULT_MS_PER_SLOT},
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_ledger::{
         blockstore::{Blockstore, BlockstoreInsertionMetrics, PossibleDuplicateShred},
         leader_schedule_cache::LeaderScheduleCache,
         shred::{self, ReedSolomonCache, Shred},
     },
-    solana_measure::measure::Measure,
-    solana_metrics::inc_new_counter_error,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::bank_forks::BankForks,
-    solana_streamer::evicting_sender::EvictingSender,
-    solana_turbine::cluster_nodes,
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::inc_new_counter_error,
+    trezoa_rayon_threadlimit::get_thread_count,
+    trezoa_runtime::bank_forks::BankForks,
+    trezoa_streamer::evicting_sender::EvictingSender,
+    trezoa_turbine::cluster_nodes,
     std::{
         borrow::Cow,
         net::UdpSocket,
@@ -344,7 +344,7 @@ impl WindowService {
         bank_forks: Arc<RwLock<BankForks>>,
     ) -> JoinHandle<()> {
         let handle_error = || {
-            inc_new_counter_error!("solana-check-duplicate-error", 1, 1);
+            inc_new_counter_error!("trezoa-check-duplicate-error", 1, 1);
         };
         Builder::new()
             .name("solWinCheckDup".to_string())
@@ -377,7 +377,7 @@ impl WindowService {
         accept_repairs_only: bool,
     ) -> JoinHandle<()> {
         let handle_error = || {
-            inc_new_counter_error!("solana-window-insert-error", 1, 1);
+            inc_new_counter_error!("trezoa-window-insert-error", 1, 1);
         };
         let reed_solomon_cache = ReedSolomonCache::default();
         Builder::new()
@@ -458,20 +458,20 @@ mod test {
     use {
         super::*,
         rand::Rng,
-        solana_entry::entry::{create_ticks, Entry},
-        solana_gossip::contact_info::ContactInfo,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_entry::entry::{create_ticks, Entry},
+        trezoa_gossip::contact_info::ContactInfo,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::{make_many_slot_entries, Blockstore},
             genesis_utils::create_genesis_config,
             get_tmp_ledger_path_auto_delete,
             shred::{ProcessShredsStats, Shredder},
         },
-        solana_net_utils::SocketAddrSpace,
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
     };
 
     fn local_entries_to_shred(

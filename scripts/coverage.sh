@@ -8,11 +8,11 @@
 #   $ ./script/coverage.sh
 #
 # Run for specific packages
-#   $ ./script/coverage.sh -p solana-account-decoder
-#   $ ./script/coverage.sh -p solana-account-decoder -p solana-accounts-db [-p ...]
+#   $ ./script/coverage.sh -p trezoa-account-decoder
+#   $ ./script/coverage.sh -p trezoa-account-decoder -p trezoa-accounts-db [-p ...]
 #
 # Custom folder name. (default: $(git rev-parse --short=9 HEAD))
-#   $ COMMIT_HASH=xxx ./script/coverage.sh -p solana-account-decoder
+#   $ COMMIT_HASH=xxx ./script/coverage.sh -p trezoa-account-decoder
 #
 
 set -e
@@ -54,7 +54,7 @@ if [[ -z $1 ]]; then
     --features frozen-abi
     --lib
     --all
-    --exclude solana-local-cluster
+    --exclude trezoa-local-cluster
     --
     --skip shred::merkle::test::test_make_shreds_from_data::
     --skip shred::merkle::test::test_make_shreds_from_data_rand::
@@ -64,11 +64,11 @@ else
   EXTRA_ARGS=("$@")
 fi
 
-# Most verbose log level (trace) is enabled for all solana code to make log!
+# Most verbose log level (trace) is enabled for all trezoa code to make log!
 # macro code green always. Also, forcibly discard the vast amount of log by
 # redirecting the stderr altogether on CI, where all tests are run unlike
 # developing.
-RUST_LOG="solana=trace,agave=trace,$RUST_LOG" INTERCEPT_OUTPUT=/dev/null "$here/../ci/intercept.sh" \
+RUST_LOG="trezoa=trace,trezoa=trace,$RUST_LOG" INTERCEPT_OUTPUT=/dev/null "$here/../ci/intercept.sh" \
   cargo +"$rust_nightly" test --target-dir "$here/../target/cov" "${EXTRA_ARGS[@]}"
 
 # Generate test reports

@@ -12,10 +12,10 @@ use {
     clap::Parser,
     crossbeam_channel::bounded,
     log::{debug, info},
-    solana_keypair::Keypair,
-    solana_net_utils::sockets::{bind_to_with_config, SocketConfiguration},
-    solana_pubkey::Pubkey,
-    solana_streamer::{
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::sockets::{bind_to_with_config, SocketConfiguration},
+    trezoa_pubkey::Pubkey,
+    trezoa_streamer::{
         nonblocking::{quic::SpawnNonBlockingServerResult, swqos::SwQosConfig},
         quic::QuicStreamerConfig,
         streamer::StakedNodes,
@@ -89,7 +89,7 @@ struct Cli {
 // number of threads as in fn default_num_tpu_transaction_forward_receive_threads
 #[tokio::main(flavor = "multi_thread", worker_threads = 16)]
 async fn main() -> anyhow::Result<()> {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let cli = Cli::parse();
     let socket = bind_to_with_config(
         cli.bind_to.ip(),
@@ -115,7 +115,7 @@ async fn main() -> anyhow::Result<()> {
         stats,
         thread: run_thread,
         max_concurrent_connections: _,
-    } = solana_streamer::nonblocking::testing_utilities::spawn_stake_weighted_qos_server(
+    } = trezoa_streamer::nonblocking::testing_utilities::spawn_stake_weighted_qos_server(
         "quic_streamer_test",
         [socket.try_clone()?],
         &keypair,
@@ -135,7 +135,7 @@ async fn main() -> anyhow::Result<()> {
 
     let path = cli.log_file.clone();
     let logger_thread = tokio::task::spawn_blocking(move || -> anyhow::Result<()> {
-        let solana_epoch = NaiveDateTime::new(
+        let trezoa_epoch = NaiveDateTime::new(
             NaiveDate::from_ymd_opt(2020, 3, 16).unwrap(),
             NaiveTime::MIN,
         );
@@ -145,7 +145,7 @@ async fn main() -> anyhow::Result<()> {
         let mut sum = 0;
         for batch in receiver {
             let now = Utc::now().naive_utc();
-            let delta_time = (now - solana_epoch).num_microseconds().unwrap() as u64;
+            let delta_time = (now - trezoa_epoch).num_microseconds().unwrap() as u64;
             for pkt in batch.iter() {
                 let pkt = pkt.to_bytes_packet();
                 if pkt.buffer().len() < 32 {

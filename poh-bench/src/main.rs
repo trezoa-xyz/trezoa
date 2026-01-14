@@ -1,20 +1,20 @@
 #![allow(clippy::arithmetic_side_effects)]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use solana_entry::entry::{self, create_ticks, init_poh, EntrySlice};
+use trezoa_entry::entry::{self, create_ticks, init_poh, EntrySlice};
 #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
-use solana_entry::entry::{create_ticks, init_poh, EntrySlice};
+use trezoa_entry::entry::{create_ticks, init_poh, EntrySlice};
 use {
     clap::{crate_description, crate_name, Arg, Command},
-    solana_measure::measure::Measure,
-    solana_sha256_hasher::hash,
+    trezoa_measure::measure::Measure,
+    trezoa_sha256_hasher::hash,
 };
 
 fn main() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let matches = Command::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::new("max_num_entries")
                 .long("max-num-entries")

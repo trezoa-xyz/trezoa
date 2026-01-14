@@ -1,11 +1,11 @@
 use {
-    solana_client::nonblocking::tpu_client::{LeaderTpuService, TpuClient},
-    solana_clock::DEFAULT_MS_PER_SLOT,
-    solana_connection_cache::connection_cache::Protocol,
-    solana_pubkey::Pubkey,
-    solana_system_transaction as system_transaction,
-    solana_test_validator::TestValidatorGenesis,
-    solana_tpu_client::tpu_client::TpuClientConfig,
+    trezoa_client::nonblocking::tpu_client::{LeaderTpuService, TpuClient},
+    trezoa_clock::DEFAULT_MS_PER_SLOT,
+    trezoa_connection_cache::connection_cache::Protocol,
+    trezoa_pubkey::Pubkey,
+    trezoa_system_transaction as system_transaction,
+    trezoa_test_validator::TestValidatorGenesis,
+    trezoa_tpu_client::tpu_client::TpuClientConfig,
     std::sync::{
         atomic::{AtomicBool, Ordering},
         Arc,

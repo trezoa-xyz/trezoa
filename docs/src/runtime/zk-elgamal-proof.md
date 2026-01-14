@@ -1,18 +1,18 @@
 ---
-title: Solana ZK ElGamal Proof Program
+title: Trezoa ZK ElGamal Proof Program
 pagination_label: Native ZK ElGamal Proof Program
 sidebar_label: ZK ElGamal Proof Program
 ---
-The native Solana ZK ElGamal Proof program verifies a number of zero-knowledge
+The native Trezoa ZK ElGamal Proof program verifies a number of zero-knowledge
 proofs that are tailored to work with Pedersen commitments and ElGamal
 encryption over the elliptic curve
 [curve25519](https://www.rfc-editor.org/rfc/rfc7748#section-4.1). The proof
 verification instructions in the ZK ElGamal Proof program are flexibly designed
 so that they can be combined to enable a number different applications.
 
-- Program id: see `solana_sdk_ids::zk_elgamal_proof_program::ID`
+- Program id: see `trezoa_sdk_ids::zk_elgamal_proof_program::ID`
 - Instructions:
-  [ProofInstruction](https://github.com/solana-program/zk-elgamal-proof/blob/main/zk-sdk/src/zk_elgamal_proof_program/instruction.rs)
+  [ProofInstruction](https://github.com/trezoa-program/zk-elgamal-proof/blob/main/zk-sdk/src/zk_elgamal_proof_program/instruction.rs)
 
 ### Pedersen commitments and ElGamal encryption
 
@@ -38,11 +38,11 @@ cannot change the original value that is contained in a commitment.
 Interested readers can refer to the following resources for a more in-depth
 treatment of Pedersen commitment and the (twisted) ElGamal encryption schemes.
 
-- [Notes](https://github.com/solana-labs/solana/blob/master/docs/src/runtime/zk-docs/twisted_elgamal.pdf)
+- [Notes](https://github.com/trezoa-labs/trezoa/blob/master/docs/src/runtime/zk-docs/twisted_elgamal.pdf)
   on the twisted ElGamal encryption
 - A technical
-  [overview](https://github.com/solana-program/token-2022/blob/main/zk-token-protocol-paper/part1.pdf)
-  of the SPL Token 2022 confidential extension
+  [overview](https://github.com/trezoa-program/token-2022/blob/main/zk-token-protocol-paper/part1.pdf)
+  of the TRZ Token 2022 confidential extension
 - Pretty Good Confidentiality [research paper](https://eprint.iacr.org/2019/319)
 
 The ZK ElGamal Proof program contains proof verification instructions on various
@@ -75,7 +75,7 @@ The ZK ElGamal Proof program processes a proof instruction in two steps:
 
 The simplest way to use a proof instruction is to execute it without producing a
 context state account. In this case, the proof instruction can be included as
-part of a larger Solana transaction that contains instructions of other Solana
+part of a larger Trezoa transaction that contains instructions of other Trezoa
 programs. Programs should directly access the context data from the proof
 instruction data and use it in its program logic.
 
@@ -98,14 +98,14 @@ proofs.
   - The ElGamal public-key validity proof instruction certifies that an ElGamal
     public-key is a properly formed public key.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/pubkey_proof.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/pubkey_proof.pdf)
 
 - `VerifyZeroCiphertext`:
 
   - The zero-ciphertext proof certifies that an ElGamal ciphertext encrypts the
     number zero.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/zero_proof.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/zero_proof.pdf)
 
 #### Equality proofs
 
@@ -114,14 +114,14 @@ proofs.
   - The ciphertext-commitment equality proof certifies that an ElGamal
     ciphertext and a Pedersen commitment encode the same message.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/ciphertext_commitment_equality.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/ciphertext_commitment_equality.pdf)
 
 - `VerifyCiphertextCiphertextEquality`:
 
   - The ciphertext-ciphertext equality proof certifies that two ElGamal
     ciphertexts encrypt the same message.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/ciphertext_ciphertext_equality.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/ciphertext_ciphertext_equality.pdf)
 
 #### Range proofs
 
@@ -143,7 +143,7 @@ proofs.
 
   - Verifies that a grouped ElGamal ciphertext with 2 handles is well-formed.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/ciphertext_validity.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/ciphertext_validity.pdf)
 
 - `VerifyBatchedGroupedCiphertext2HandlesValidity`:
 
@@ -153,7 +153,7 @@ proofs.
 
   - Verifies that a grouped ElGamal ciphertext with 3 handles is well-formed.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/ciphertext_validity.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/ciphertext_validity.pdf)
 
 - `VerifyBatchedGroupedCiphertext3HandlesValidity`:
 
@@ -165,7 +165,7 @@ proofs.
 
   - Verifies the percentage-with-cap relation used for fee calculations.
   - Mathematical description and proof of security:
-    [[Notes]](https://github.com/anza-xyz/agave/blob/master/docs/src/runtime/zk-docs/percentage_with_cap.pdf)
+    [[Notes]](https://github.com/trezoa-xyz/trezoa/blob/master/docs/src/runtime/zk-docs/percentage_with_cap.pdf)
 
 #### Administrative
 

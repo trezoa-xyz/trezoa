@@ -1,6 +1,6 @@
 use {
     assert_cmd::prelude::*,
-    solana_keypair::{write_keypair_file, Keypair},
+    trezoa_keypair::{write_keypair_file, Keypair},
     std::process::Command,
     tempfile::TempDir,
 };

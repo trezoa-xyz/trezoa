@@ -4,7 +4,7 @@ use {
         AtomicRefCount, DiskIndexValue, IndexValue, RefCount, SlotList, SlotListItem,
     },
     crate::{account_info::AccountInfo, is_zero_lamport::IsZeroLamport},
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::{
         fmt::Debug,
         ops::Deref,

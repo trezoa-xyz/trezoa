@@ -16,10 +16,10 @@ use {
     jsonrpc_core::{Error, ErrorCode, Result},
     jsonrpc_derive::rpc,
     jsonrpc_pubsub::{typed::Subscriber, SubscriptionId as PubSubSubscriptionId},
-    solana_account_decoder::{UiAccount, UiAccountEncoding},
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_api::{
+    trezoa_account_decoder::{UiAccount, UiAccountEncoding},
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_api::{
         config::{
             RpcAccountInfoConfig, RpcBlockSubscribeConfig, RpcBlockSubscribeFilter,
             RpcProgramAccountsConfig, RpcSignatureSubscribeConfig, RpcTransactionLogsConfig,
@@ -30,8 +30,8 @@ use {
             RpcSignatureResult, RpcVersionInfo, RpcVote, SlotInfo, SlotUpdate,
         },
     },
-    solana_signature::Signature,
-    solana_transaction_status::UiTransactionEncoding,
+    trezoa_signature::Signature,
+    trezoa_transaction_status::UiTransactionEncoding,
     std::{str::FromStr, sync::Arc},
 };
 
@@ -352,7 +352,7 @@ mod internal {
         #[rpc(name = "rootUnsubscribe")]
         fn root_unsubscribe(&self, id: SubscriptionId) -> Result<bool>;
 
-        // Get the current solana version running on the node
+        // Get the current trezoa version running on the node
         #[rpc(name = "getVersion")]
         fn get_version(&self) -> Result<RpcVersionInfo>;
     }
@@ -602,9 +602,9 @@ impl RpcSolPubSubInternal for RpcSolPubSubImpl {
     }
 
     fn get_version(&self) -> Result<RpcVersionInfo> {
-        let version = solana_version::Version::default();
+        let version = trezoa_version::Version::default();
         Ok(RpcVersionInfo {
-            solana_core: version.to_string(),
+            trezoa_core: version.to_string(),
             feature_set: Some(version.feature_set),
         })
     }
@@ -621,19 +621,19 @@ mod tests {
         base64::{prelude::BASE64_STANDARD, Engine},
         jsonrpc_core::{IoHandler, Response},
         serial_test::serial,
-        solana_account::ReadableAccount,
-        solana_account_decoder::{parse_account_data::parse_account_data_v3, UiAccountEncoding},
-        solana_clock::Slot,
-        solana_commitment_config::CommitmentConfig,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_rent::Rent,
-        solana_rpc_client_api::response::{
+        trezoa_account::ReadableAccount,
+        trezoa_account_decoder::{parse_account_data::parse_account_data_v3, UiAccountEncoding},
+        trezoa_clock::Slot,
+        trezoa_commitment_config::CommitmentConfig,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_rent::Rent,
+        trezoa_rpc_client_api::response::{
             ProcessedSignatureResult, ReceivedSignatureResult, RpcSignatureResult, SlotInfo,
         },
-        solana_runtime::{
+        trezoa_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             commitment::{BlockCommitmentCache, CommitmentSlots},
@@ -642,12 +642,12 @@ mod tests {
                 create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
-        solana_system_interface::{instruction as system_instruction, program as system_program},
-        solana_system_transaction as system_transaction,
-        solana_transaction::Transaction,
-        solana_vote::vote_transaction::VoteTransaction,
-        solana_vote_interface::{
+        trezoa_signer::Signer,
+        trezoa_system_interface::{instruction as system_instruction, program as system_program},
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::Transaction,
+        trezoa_vote::vote_transaction::VoteTransaction,
+        trezoa_vote_interface::{
             instruction::{self as vote_instruction, CreateVoteAccountConfig},
             program as vote_program,
             state::{Vote, VoteInit, VoteStateV4},
@@ -662,7 +662,7 @@ mod tests {
     };
 
     mod transaction {
-        pub use solana_transaction_error::TransactionResult as Result;
+        pub use trezoa_transaction_error::TransactionResult as Result;
     }
 
     fn process_transaction_and_notify(
@@ -821,7 +821,7 @@ mod tests {
             mint_keypair: alice,
             ..
         } = create_genesis_config(10_000);
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let bank = Bank::new_for_tests(&genesis_config);
         let blockhash = bank.last_blockhash();
         let bank_forks = BankForks::new_rw_arc(bank);
@@ -1079,7 +1079,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_account_unsubscribe() {
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let bank_forks = BankForks::new_rw_arc(Bank::new_for_tests(&genesis_config));
@@ -1395,7 +1395,7 @@ mod tests {
         ));
         let (rpc, _receiver) = rpc_pubsub_service::test_connection(&rpc_subscriptions);
         let version = rpc.get_version().unwrap();
-        let expected_version = solana_version::Version::default();
+        let expected_version = trezoa_version::Version::default();
         assert_eq!(version.to_string(), expected_version.to_string());
         assert_eq!(version.feature_set.unwrap(), expected_version.feature_set);
     }

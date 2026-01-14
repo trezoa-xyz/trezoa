@@ -6,33 +6,33 @@ use {
         },
         spend_utils::{resolve_spend_tx_and_check_account_balance, SpendAmount},
     },
-    agave_feature_set::FEATURE_NAMES,
+    trezoa_feature_set::FEATURE_NAMES,
     clap::{value_t_or_exit, App, AppSettings, Arg, ArgMatches, SubCommand},
     console::style,
     serde::{Deserialize, Serialize},
-    solana_account::Account,
-    solana_clap_utils::{
+    trezoa_account::Account,
+    trezoa_clap_utils::{
         compute_budget::ComputeUnitLimit, fee_payer::*, hidden_unless_forced, input_parsers::*,
         input_validators::*, keypair::*,
     },
-    solana_cli_output::{cli_version::CliVersion, QuietDisplay, VerboseDisplay},
-    solana_clock::{Epoch, Slot},
-    solana_cluster_type::ClusterType,
-    solana_epoch_schedule::EpochSchedule,
-    solana_feature_gate_interface::{
+    trezoa_cli_output::{cli_version::CliVersion, QuietDisplay, VerboseDisplay},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_cluster_type::ClusterType,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_feature_gate_interface::{
         activate_with_lamports, error::FeatureGateError, from_account,
         instruction::revoke_pending_activation, Feature,
     },
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         client_error::Error as ClientError, request::MAX_MULTIPLE_ACCOUNTS,
         response::RpcVoteAccountInfo,
     },
-    solana_system_interface::error::SystemError,
-    solana_transaction::Transaction,
+    trezoa_system_interface::error::SystemError,
+    trezoa_transaction::Transaction,
     std::{cmp::Ordering, collections::HashMap, fmt, rc::Rc, str::FromStr},
 };
 
@@ -790,7 +790,7 @@ async fn feature_activation_allowed(
     let cluster_info_stats = cluster_info_stats(rpc_client).await?;
     let feature_set_stats = cluster_info_stats.aggregate_by_feature_set();
 
-    let tool_version = solana_version::Version::default();
+    let tool_version = trezoa_version::Version::default();
     let tool_feature_set = tool_version.feature_set;
     let tool_software_version = CliVersion::from(semver::Version::new(
         tool_version.major as u64,

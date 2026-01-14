@@ -1,14 +1,14 @@
 use {
-    solana_account_info::AccountInfo,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_msg::msg,
-    solana_program::program::invoke,
-    solana_program_error::ProgramResult,
-    solana_pubkey::Pubkey,
-    solana_system_interface::{instruction::SystemInstruction, program as system_program},
+    trezoa_account_info::AccountInfo,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_msg::msg,
+    trezoa_program::program::invoke,
+    trezoa_program_error::ProgramResult,
+    trezoa_pubkey::Pubkey,
+    trezoa_system_interface::{instruction::SystemInstruction, program as system_program},
 };
 
-solana_program_entrypoint::entrypoint_no_alloc!(process_instruction);
+trezoa_program_entrypoint::entrypoint_no_alloc!(process_instruction);
 fn process_instruction(
     _program_id: &Pubkey,
     accounts: &[AccountInfo],

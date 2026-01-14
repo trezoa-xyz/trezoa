@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -22,9 +22,9 @@
 //! [`::schedule_next_unblocked_task()`](SchedulingStateMachine::schedule_next_unblocked_task) as
 //! newly-unblocked runnable ones.
 //!
-//! The design principle of this crate (`solana-unified-scheduler-logic`) is simplicity for the
+//! The design principle of this crate (`trezoa-unified-scheduler-logic`) is simplicity for the
 //! separation of concern. It is interacted only with a few of its public API by
-//! `solana-unified-scheduler-pool`. This crate doesn't know about banks, slots, solana-runtime,
+//! `trezoa-unified-scheduler-pool`. This crate doesn't know about banks, slots, trezoa-runtime,
 //! threads, crossbeam-channel at all. Because of this, it's deterministic, easy-to-unit-test, and
 //! its perf footprint is well understood. It really focuses on its single job: sorting
 //! transactions in executable order.
@@ -107,10 +107,10 @@
 use {
     crate::utils::{ShortCounter, Token, TokenCell},
     assert_matches::assert_matches,
-    solana_clock::{Epoch, Slot},
-    solana_pubkey::Pubkey,
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_transaction::sanitized::SanitizedTransaction,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_transaction::sanitized::SanitizedTransaction,
     static_assertions::const_assert_eq,
     std::{
         cmp::Ordering,
@@ -341,7 +341,7 @@ mod utils {
 
         #[test]
         #[should_panic(
-            expected = "\"solana_unified_scheduler_logic::utils::Token<usize>\" is wrongly \
+            expected = "\"trezoa_unified_scheduler_logic::utils::Token<usize>\" is wrongly \
                         initialized twice on Thread"
         )]
         fn test_second_creation_of_tokens_in_a_thread() {
@@ -1025,7 +1025,7 @@ impl UsageQueueInner {
 
 const_assert_eq!(mem::size_of::<TokenCell<UsageQueueInner>>(), 56);
 
-/// Scheduler's internal data for each address ([`Pubkey`](`solana_pubkey::Pubkey`)). Very
+/// Scheduler's internal data for each address ([`Pubkey`](`trezoa_pubkey::Pubkey`)). Very
 /// opaque wrapper type; no methods just with [`::clone()`](Clone::clone) and
 /// [`::default()`](Default::default).
 ///
@@ -1042,7 +1042,7 @@ impl UsageQueue {
 }
 
 /// A high-level `struct`, managing the overall scheduling of [tasks](Task), to be used by
-/// `solana-unified-scheduler-pool`.
+/// `trezoa-unified-scheduler-pool`.
 pub struct SchedulingStateMachine {
     unblocked_task_queue: VecDeque<Task>,
     /// The number of all tasks which aren't `deschedule_task()`-ed yet while their ownership has
@@ -1468,10 +1468,10 @@ impl SchedulingStateMachine {
 mod tests {
     use {
         super::*,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
         std::{
             cell::RefCell,
             collections::HashMap,

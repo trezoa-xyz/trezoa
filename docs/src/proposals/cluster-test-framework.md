@@ -24,8 +24,8 @@ Each CTF test starts with an opaque entry point and a funded keypair. The test s
 
 ```text
 use crate::contact_info::ContactInfo;
-use solana_keypair::Keypair;
-use solana_signer::Signer;
+use trezoa_keypair::Keypair;
+use trezoa_signer::Signer;
 pub fn test_this_behavior(
     entry_point_info: &ContactInfo,
     funding_keypair: &Keypair,

@@ -1,8 +1,8 @@
-//! Solana Rust-based SBF program utility functions and types
+//! Trezoa Rust-based SBF program utility functions and types
 
 #![allow(clippy::arithmetic_side_effects)]
 
-use {solana_msg::msg, solana_program::log::sol_log_64};
+use {trezoa_msg::msg, trezoa_program::log::sol_log_64};
 
 pub fn many_args(
     arg1: u64,

@@ -17,7 +17,7 @@ Figure 1 describes the architecture diagram of the Vortexor and its
 relationship with the validator.
 
                      +---------------------+
-                     |   Solana            |
+                     |   Trezoa            |
                      |   RPC / Web Socket  |
                      |   Service           |
                      +---------------------+
@@ -43,7 +43,7 @@ relationship with the validator.
                                 ^                    | (UDP/QUIC)
     Heartbeat/subscriptions     |                    |
                                 |                    v
-                    +-------------------- AGAVE VALIDATOR ------------------+
+                    +-------------------- TREZOA VALIDATOR ------------------+
                     |                                                       |
                     |  +----------------+      +-----------------------+    |
           Config->  |  | Subscription   |      | VerifiedPacketReceiver|    |

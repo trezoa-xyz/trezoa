@@ -12,16 +12,16 @@ use {
         },
         event::VotorEvent,
     },
-    agave_votor_messages::{
+    trezoa_votor_messages::{
         consensus_message::{Block, Certificate, CertificateType, ConsensusMessage, VoteMessage},
         vote::Vote,
     },
     log::trace,
-    solana_clock::{Epoch, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, epoch_stakes::VersionedEpochStakes},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, epoch_stakes::VersionedEpochStakes},
     std::{
         cmp::Ordering,
         collections::{BTreeMap, HashMap},
@@ -541,24 +541,24 @@ impl ConsensusPool {
 mod tests {
     use {
         super::*,
-        agave_votor_messages::consensus_message::{VoteMessage, BLS_KEYPAIR_DERIVE_SEED},
-        solana_bls_signatures::{
+        trezoa_votor_messages::consensus_message::{VoteMessage, BLS_KEYPAIR_DERIVE_SEED},
+        trezoa_bls_signatures::{
             keypair::Keypair as BLSKeypair, Pubkey as BLSPubkey, Signature as BLSSignature,
             VerifiableSignature,
         },
-        solana_clock::Slot,
-        solana_gossip::contact_info::ContactInfo,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_net_utils::SocketAddrSpace,
-        solana_runtime::{
+        trezoa_clock::Slot,
+        trezoa_gossip::contact_info::ContactInfo,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_runtime::{
             bank::{Bank, NewBankOptions},
             bank_forks::BankForks,
             genesis_utils::{
                 create_genesis_config_with_alpenglow_vote_accounts, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
+        trezoa_signer::Signer,
         std::sync::{Arc, RwLock},
         test_case::test_case,
     };
@@ -1483,7 +1483,7 @@ mod tests {
 
     #[test]
     fn test_safe_to_notar() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (validator_keypairs, mut pool, bank_forks) = create_initial_state();
         let bank = bank_forks.read().unwrap().root_bank();
         let (my_vote_key, _, _) =

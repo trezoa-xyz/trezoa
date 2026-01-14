@@ -1,8 +1,8 @@
 use {
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_commitment_config::CommitmentLevel,
-    solana_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
+    trezoa_clock::Slot,
+    trezoa_commitment_config::CommitmentLevel,
+    trezoa_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
     std::collections::HashMap,
 };
 

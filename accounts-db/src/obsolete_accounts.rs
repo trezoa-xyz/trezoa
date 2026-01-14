@@ -1,4 +1,4 @@
-use {crate::account_info::Offset, solana_clock::Slot};
+use {crate::account_info::Offset, trezoa_clock::Slot};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ObsoleteAccountItem {

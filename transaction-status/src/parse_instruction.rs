@@ -1,4 +1,4 @@
-pub use solana_transaction_status_client_types::ParsedInstruction;
+pub use trezoa_transaction_status_client_types::ParsedInstruction;
 use {
     crate::{
         parse_address_lookup_table::parse_address_lookup_table,
@@ -12,10 +12,10 @@ use {
     inflector::Inflector,
     serde::{Deserialize, Serialize},
     serde_json::Value,
-    solana_account_decoder::parse_token::spl_token_ids,
-    solana_message::{compiled_instruction::CompiledInstruction, AccountKeys},
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{address_lookup_table, stake, system_program, vote},
+    trezoa_account_decoder::parse_token::tpl_token_ids,
+    trezoa_message::{compiled_instruction::CompiledInstruction, AccountKeys},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{address_lookup_table, stake, system_program, vote},
     std::{
         collections::HashMap,
         str::{from_utf8, Utf8Error},
@@ -36,9 +36,9 @@ static PARSABLE_PROGRAM_IDS: std::sync::LazyLock<HashMap<Pubkey, ParsableProgram
             ),
             (spl_memo_interface::v1::id(), ParsableProgram::SplMemo),
             (spl_memo_interface::v3::id(), ParsableProgram::SplMemo),
-            (solana_sdk_ids::bpf_loader::id(), ParsableProgram::BpfLoader),
+            (trezoa_sdk_ids::bpf_loader::id(), ParsableProgram::BpfLoader),
             (
-                solana_sdk_ids::bpf_loader_upgradeable::id(),
+                trezoa_sdk_ids::bpf_loader_upgradeable::id(),
                 ParsableProgram::BpfUpgradeableLoader,
             ),
             (stake::id(), ParsableProgram::Stake),
@@ -47,9 +47,9 @@ static PARSABLE_PROGRAM_IDS: std::sync::LazyLock<HashMap<Pubkey, ParsableProgram
         ]
         .into_iter()
         .chain(
-            spl_token_ids()
+            tpl_token_ids()
                 .into_iter()
-                .map(|spl_token_id| (spl_token_id, ParsableProgram::SplToken)),
+                .map(|tpl_token_id| (tpl_token_id, ParsableProgram::SplToken)),
         )
         .collect()
     });

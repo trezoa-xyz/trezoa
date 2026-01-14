@@ -1,9 +1,9 @@
 use {
-    solana_clock::Epoch, solana_epoch_schedule::EpochSchedule,
-    solana_genesis_config::GenesisConfig, solana_rent::Rent,
+    trezoa_clock::Epoch, trezoa_epoch_schedule::EpochSchedule,
+    trezoa_genesis_config::GenesisConfig, trezoa_rent::Rent,
 };
 
-#[cfg_attr(feature = "frozen-abi", derive(solana_frozen_abi_macro::AbiExample))]
+#[cfg_attr(feature = "frozen-abi", derive(trezoa_frozen_abi_macro::AbiExample))]
 #[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct RentCollector {
     pub epoch: Epoch,

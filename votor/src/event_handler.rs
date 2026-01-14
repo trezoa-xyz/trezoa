@@ -13,18 +13,18 @@ use {
         voting_utils::{generate_vote_message, VoteError, VotingContext},
         votor::{SharedContext, Votor},
     },
-    agave_votor_messages::{consensus_message::Block, vote::Vote},
+    trezoa_votor_messages::{consensus_message::Block, vote::Vote},
     crossbeam_channel::{RecvTimeoutError, TrySendError},
     parking_lot::RwLock,
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_ledger::leader_schedule_utils::{
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_ledger::leader_schedule_utils::{
         first_of_consecutive_leader_slots, last_of_consecutive_leader_slots, leader_slot_index,
     },
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank::Bank,
-    solana_signer::Signer,
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank::Bank,
+    trezoa_signer::Signer,
     std::{
         collections::{BTreeMap, BTreeSet},
         sync::{
@@ -827,23 +827,23 @@ mod tests {
             voting_service::BLSOp,
             votor::LeaderWindowNotifier,
         },
-        agave_votor_messages::{
+        trezoa_votor_messages::{
             consensus_message::{ConsensusMessage, VoteMessage, BLS_KEYPAIR_DERIVE_SEED},
             vote::Vote,
         },
         crossbeam_channel::{bounded, Receiver, TryRecvError},
         parking_lot::RwLock as PlRwLock,
-        solana_bls_signatures::{
+        trezoa_bls_signatures::{
             keypair::Keypair as BLSKeypair, signature::Signature as BLSSignature,
         },
-        solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::Blockstore, blockstore_options::BlockstoreOptions, get_tmp_ledger_path,
             leader_schedule_cache::LeaderScheduleCache,
         },
-        solana_net_utils::SocketAddrSpace,
-        solana_runtime::{
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             genesis_utils::{
@@ -1547,7 +1547,7 @@ mod tests {
 
     #[test]
     fn test_received_finalized() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut test_context = EventHandlerTestContext::setup();
 
         let root_bank = test_context
@@ -1576,7 +1576,7 @@ mod tests {
 
     #[test]
     fn test_parent_ready_in_middle_of_window() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut test_context = EventHandlerTestContext::setup();
 
         // We just woke up and received finalize for slot 5
@@ -1609,7 +1609,7 @@ mod tests {
 
     #[test]
     fn test_received_standstill() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut test_context = EventHandlerTestContext::setup();
 
         // Send notarize vote for slot 1 then skip rest of the window
@@ -1643,7 +1643,7 @@ mod tests {
 
     #[test]
     fn test_received_set_identity() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut test_context = EventHandlerTestContext::setup();
         let old_identity = test_context.cluster_info.keypair().insecure_clone();
         let new_identity = Keypair::new();

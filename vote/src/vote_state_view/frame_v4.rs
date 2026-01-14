@@ -4,8 +4,8 @@ use {
         AuthorizedVotersListFrame, EpochCreditsListFrame, Field, Result, RootSlotFrame,
         Simd185Field, VoteStateViewError,
     },
-    solana_pubkey::Pubkey,
-    solana_vote_interface::state::BlockTimestamp,
+    trezoa_pubkey::Pubkey,
+    trezoa_vote_interface::state::BlockTimestamp,
     std::io::BufRead,
 };
 
@@ -124,7 +124,7 @@ mod tests {
     use {
         super::*,
         serde::{Deserialize, Serialize},
-        solana_vote_interface::{
+        trezoa_vote_interface::{
             authorized_voters::AuthorizedVoters,
             state::{LandedVote, Lockout, VoteStateV4, BLS_PUBLIC_KEY_COMPRESSED_SIZE},
         },

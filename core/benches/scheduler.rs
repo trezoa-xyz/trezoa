@@ -5,7 +5,7 @@ mod utils;
 use {
     criterion::{criterion_group, criterion_main, Criterion, Throughput},
     crossbeam_channel::{unbounded, Receiver, Sender},
-    solana_core::banking_stage::{
+    trezoa_core::banking_stage::{
         scheduler_messages::{ConsumeWork, FinishedConsumeWork},
         transaction_scheduler::{
             greedy_scheduler::{GreedyScheduler, GreedySchedulerConfig},
@@ -16,7 +16,7 @@ use {
             transaction_state_container::StateContainer,
         },
     },
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
     std::{
         hint::black_box,
         time::{Duration, Instant},
@@ -120,7 +120,7 @@ fn bench_scheduler_impl<T: ReceiveAndBuffer + utils::ReceiveAndBufferCreator>(
 
     let scheduler_types: Vec<(bool, &str)> =
         vec![(true, "greedy_scheduler"), (false, "prio_graph_scheduler")];
-    //solana_core::banking_stage::TOTAL_BUFFERED_PACKETS took too long
+    //trezoa_core::banking_stage::TOTAL_BUFFERED_PACKETS took too long
     let tx_counts: Vec<(usize, &str)> = vec![(16 * 1024, "16K_txs")];
     let ix_counts: Vec<(usize, &str)> = vec![
         (1, "single_ix"),

@@ -1,5 +1,5 @@
 [package]
-name = "agave-xdp-ebpf"
+name = "trezoa-xdp-ebpf"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -7,16 +7,16 @@ repository = { workspace = true }
 homepage = { workspace = true }
 license = { workspace = true }
 edition = { workspace = true }
-include = ["Cargo.toml", "src/**", "README", "agave-xdp-prog"]
+include = ["Cargo.toml", "src/**", "README", "trezoa-xdp-prog"]
 
 [[bin]]
-name = "agave-xdp-prog"
-path = "src/bin/agave-xdp-prog.rs"
+name = "trezoa-xdp-prog"
+path = "src/bin/trezoa-xdp-prog.rs"
 required-features = ["ebpf"]
 
 [features]
 ebpf = []
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [target.'cfg(target_arch = "bpf")'.dependencies]
 aya-ebpf = { workspace = true }

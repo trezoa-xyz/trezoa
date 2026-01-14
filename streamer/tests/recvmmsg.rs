@@ -1,8 +1,8 @@
 #![cfg(target_os = "linux")]
 
 use {
-    solana_net_utils::sockets::bind_to_localhost_unique,
-    solana_streamer::{
+    trezoa_net_utils::sockets::bind_to_localhost_unique,
+    trezoa_streamer::{
         packet::{Meta, Packet, PACKET_DATA_SIZE},
         recvmmsg::*,
     },

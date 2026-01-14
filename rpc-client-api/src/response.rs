@@ -1,5 +1,5 @@
 use crate::client_error;
-pub use solana_rpc_client_types::response::{
+pub use trezoa_rpc_client_types::response::{
     transaction, EncodedTransaction, EncodedTransactionWithStatusMeta, FeeCalculator,
     FeeRateGovernor, OptionSerializer, OptionalContext, ParsedAccount, ParsedInstruction,
     ProcessedSignatureResult, ReceivedSignatureResult, Response, Reward, RewardType, Rewards,

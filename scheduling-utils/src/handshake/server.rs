@@ -6,7 +6,7 @@ use {
         },
         ClientLogon,
     },
-    agave_scheduler_bindings::{
+    trezoa_scheduler_bindings::{
         PackToWorkerMessage, ProgressMessage, TpuToPackMessage, WorkerToPackMessage,
     },
     nix::sys::socket::{self, ControlMessage, MsgFlags, UnixAddr},
@@ -29,9 +29,9 @@ type ShaqError = shaq::error::Error;
 type RtsAllocError = rts_alloc::error::Error;
 
 const HANDSHAKE_TIMEOUT: Duration = Duration::from_secs(1);
-const SHMEM_NAME: &CStr = c"/agave-scheduler-bindings";
+const SHMEM_NAME: &CStr = c"/trezoa-scheduler-bindings";
 
-/// Implements the Agave side of the scheduler bindings handshake protocol.
+/// Implements the Trezoa-team side of the scheduler bindings handshake protocol.
 pub struct Server {
     listener: UnixListener,
 
@@ -48,7 +48,7 @@ impl Server {
         })
     }
 
-    pub fn accept(&mut self) -> Result<AgaveSession, AgaveHandshakeError> {
+    pub fn accept(&mut self) -> Result<Trezoa-teamSession, Trezoa-teamHandshakeError> {
         // Wait for next stream.
         let (mut stream, _) = self.listener.accept()?;
         stream.set_read_timeout(Some(HANDSHAKE_TIMEOUT))?;
@@ -78,7 +78,7 @@ impl Server {
     fn handle_logon(
         &mut self,
         stream: &mut UnixStream,
-    ) -> Result<AgaveSession, AgaveHandshakeError> {
+    ) -> Result<Trezoa-teamSession, Trezoa-teamHandshakeError> {
         // Receive & validate the logon message.
         let logon = self.recv_logon(stream)?;
 
@@ -97,21 +97,21 @@ impl Server {
         Ok(session)
     }
 
-    fn recv_logon(&mut self, stream: &mut UnixStream) -> Result<ClientLogon, AgaveHandshakeError> {
+    fn recv_logon(&mut self, stream: &mut UnixStream) -> Result<ClientLogon, Trezoa-teamHandshakeError> {
         // Read the logon message.
         let handshake_start = Instant::now();
         let mut buffer_len = 0;
         while buffer_len < self.buffer.len() {
             let read = stream.read(&mut self.buffer[buffer_len..])?;
             if read == 0 {
-                return Err(AgaveHandshakeError::EofDuringHandshake);
+                return Err(Trezoa-teamHandshakeError::EofDuringHandshake);
             }
 
             // SAFETY: We cannot read a value greater than buffer.len() which itself is a usize.
             buffer_len = buffer_len.checked_add(read).unwrap();
 
             if handshake_start.elapsed() > HANDSHAKE_TIMEOUT {
-                return Err(AgaveHandshakeError::Timeout);
+                return Err(Trezoa-teamHandshakeError::Timeout);
             }
         }
 
@@ -119,7 +119,7 @@ impl Server {
         // change is made to handshake/shared memory objects.
         let version = u64::from_le_bytes(self.buffer[..8].try_into().unwrap());
         if version != VERSION {
-            return Err(AgaveHandshakeError::Version {
+            return Err(Trezoa-teamHandshakeError::Version {
                 server: VERSION,
                 client: version,
             });
@@ -132,12 +132,12 @@ impl Server {
 
         // Put a hard limit of 64 worker threads for now.
         if !(1..=MAX_WORKERS).contains(&logon.worker_count) {
-            return Err(AgaveHandshakeError::WorkerCount(logon.worker_count));
+            return Err(Trezoa-teamHandshakeError::WorkerCount(logon.worker_count));
         }
 
         // Hard limit allocator handles to 128.
         if !(1..=MAX_ALLOCATOR_HANDLES).contains(&logon.allocator_handles) {
-            return Err(AgaveHandshakeError::AllocatorHandles(
+            return Err(Trezoa-teamHandshakeError::AllocatorHandles(
                 logon.allocator_handles,
             ));
         }
@@ -147,7 +147,7 @@ impl Server {
 
     pub fn setup_session(
         logon: ClientLogon,
-    ) -> Result<(AgaveSession, Vec<File>), AgaveHandshakeError> {
+    ) -> Result<(Trezoa-teamSession, Vec<File>), Trezoa-teamHandshakeError> {
         // Setup the allocator in shared memory (`worker_count` & `allocator_handles` have been
         // validated so this won't panic).
         let (allocator_file, tpu_to_pack_allocator) = Self::create_allocator(&logon)?;
@@ -175,20 +175,20 @@ impl Server {
                     Self::create_producer(logon.worker_to_pack_capacity, true)?;
 
                 fds.extend([pack_to_worker_file, worker_to_pack_file]);
-                workers.push(AgaveWorkerSession {
+                workers.push(Trezoa-teamWorkerSession {
                     allocator,
                     pack_to_worker,
                     worker_to_pack,
                 });
 
-                Ok::<_, AgaveHandshakeError>((fds, workers))
+                Ok::<_, Trezoa-teamHandshakeError>((fds, workers))
             },
         )?;
 
         Ok((
-            AgaveSession {
+            Trezoa-teamSession {
                 flags: logon.flags,
-                tpu_to_pack: AgaveTpuToPackSession {
+                tpu_to_pack: Trezoa-teamTpuToPackSession {
                     allocator: tpu_to_pack_allocator,
                     producer: tpu_to_pack_queue,
                 },
@@ -343,33 +343,33 @@ impl Server {
 }
 
 /// An initialized scheduling session.
-pub struct AgaveSession {
+pub struct Trezoa-teamSession {
     pub flags: u16,
-    pub tpu_to_pack: AgaveTpuToPackSession,
+    pub tpu_to_pack: Trezoa-teamTpuToPackSession,
     pub progress_tracker: shaq::Producer<ProgressMessage>,
-    pub workers: Vec<AgaveWorkerSession>,
+    pub workers: Vec<Trezoa-teamWorkerSession>,
 }
 
 /// Shared memory objects for the tpu to pack worker.
-pub struct AgaveTpuToPackSession {
+pub struct Trezoa-teamTpuToPackSession {
     pub allocator: Allocator,
     pub producer: shaq::Producer<TpuToPackMessage>,
 }
 
 /// Shared memory objects for a single banking worker.
-pub struct AgaveWorkerSession {
+pub struct Trezoa-teamWorkerSession {
     pub allocator: Allocator,
     pub pack_to_worker: shaq::Consumer<PackToWorkerMessage>,
     pub worker_to_pack: shaq::Producer<WorkerToPackMessage>,
 }
 
-/// Potential errors that can occur during the Agave side of the handshake.
+/// Potential errors that can occur during the Trezoa-team side of the handshake.
 ///
 /// # Note
 ///
 /// These errors are stringified (up to 256 bytes then truncated) and sent to the client.
 #[derive(Debug, Error)]
-pub enum AgaveHandshakeError {
+pub enum Trezoa-teamHandshakeError {
     #[error("Io; err={0}")]
     Io(#[from] std::io::Error),
     #[error("Timeout")]

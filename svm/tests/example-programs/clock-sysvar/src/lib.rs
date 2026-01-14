@@ -1,10 +1,10 @@
 use {
-    solana_account_info::AccountInfo,
-    solana_program::program::set_return_data,
-    solana_program_entrypoint::entrypoint,
-    solana_program_error::ProgramResult,
-    solana_pubkey::Pubkey,
-    solana_sysvar::{clock::Clock, Sysvar},
+    trezoa_account_info::AccountInfo,
+    trezoa_program::program::set_return_data,
+    trezoa_program_entrypoint::entrypoint,
+    trezoa_program_error::ProgramResult,
+    trezoa_pubkey::Pubkey,
+    trezoa_sysvar::{clock::Clock, Sysvar},
 };
 
 entrypoint!(process_instruction);

@@ -1,7 +1,7 @@
 [package]
-name = "solana-bucket-map"
-description = "solana-bucket-map"
-documentation = "https://docs.rs/solana-bucket-map"
+name = "trezoa-bucket-map"
+description = "trezoa-bucket-map"
+documentation = "https://docs.rs/trezoa-bucket-map"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -11,10 +11,10 @@ edition = { workspace = true }
 
 [lib]
 crate-type = ["lib"]
-name = "solana_bucket_map"
+name = "trezoa_bucket_map"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 
 [dependencies]
@@ -26,14 +26,14 @@ memmap2 = { workspace = true }
 modular-bitfield = { workspace = true }
 num_enum = { workspace = true }
 rand = { workspace = true }
-solana-clock = { workspace = true }
-solana-measure = { workspace = true }
-solana-pubkey = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-measure = { workspace = true }
+trezoa-pubkey = { workspace = true }
 tempfile = { workspace = true }
 
 [dev-dependencies]
-agave-logger = { workspace = true }
+trezoa-logger = { workspace = true }
 fs_extra = { workspace = true }
 rayon = { workspace = true }
-solana-bucket-map = { path = ".", features = ["agave-unstable-api", "dev-context-only-utils"] }
-solana-pubkey = { workspace = true, features = ["rand"] }
+trezoa-bucket-map = { path = ".", features = ["trezoa-unstable-api", "dev-context-only-utils"] }
+trezoa-pubkey = { workspace = true, features = ["rand"] }

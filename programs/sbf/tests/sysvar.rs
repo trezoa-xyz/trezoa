@@ -1,31 +1,31 @@
 #![cfg(feature = "sbf_rust")]
 
 use {
-    agave_feature_set::disable_fees_sysvar,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_feature_set::disable_fees_sysvar,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_client::BankClient,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         loader_utils::load_program_of_loader_v4,
     },
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_sdk_ids::sysvar::{
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_sdk_ids::sysvar::{
         clock, epoch_schedule, instructions, recent_blockhashes, rent, slot_hashes, slot_history,
         stake_history,
     },
-    solana_signer::Signer,
-    solana_stake_interface::stake_history::{StakeHistory, StakeHistoryEntry},
-    solana_sysvar::epoch_rewards,
-    solana_transaction::Transaction,
+    trezoa_signer::Signer,
+    trezoa_stake_interface::stake_history::{StakeHistory, StakeHistoryEntry},
+    trezoa_sysvar::epoch_rewards,
+    trezoa_transaction::Transaction,
 };
 
 #[test]
 fn test_sysvar_syscalls() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         mut genesis_config,
@@ -67,12 +67,12 @@ fn test_sysvar_syscalls() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_sysvar",
+        "trezoa_sbf_rust_sysvar",
     );
     let dummy_account_key = Pubkey::new_unique();
     bank.store_account(
         &dummy_account_key,
-        &solana_account::AccountSharedData::new(1, 32, &program_id),
+        &trezoa_account::AccountSharedData::new(1, 32, &program_id),
     );
     bank.freeze();
     let blockhash = bank.last_blockhash();

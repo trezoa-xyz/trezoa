@@ -1,15 +1,15 @@
 use {
     super::{Error, Result},
     crossbeam_channel::Receiver,
-    solana_clock::Slot,
-    solana_entry::entry::Entry,
-    solana_hash::Hash,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_entry::entry::Entry,
+    trezoa_hash::Hash,
+    trezoa_ledger::{
         blockstore::Blockstore,
         shred::{self, get_data_shred_bytes_per_batch_typical, ProcessShredsStats},
     },
-    solana_poh::poh_recorder::WorkingBankEntry,
-    solana_runtime::bank::Bank,
+    trezoa_poh::poh_recorder::WorkingBankEntry,
+    trezoa_runtime::bank::Bank,
     std::{
         sync::Arc,
         time::{Duration, Instant},
@@ -197,11 +197,11 @@ mod tests {
     use {
         super::*,
         crossbeam_channel::unbounded,
-        solana_genesis_config::GenesisConfig,
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_pubkey::Pubkey,
-        solana_system_transaction as system_transaction,
-        solana_transaction::Transaction,
+        trezoa_genesis_config::GenesisConfig,
+        trezoa_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_pubkey::Pubkey,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::Transaction,
     };
 
     fn setup_test() -> (GenesisConfig, Arc<Bank>, Transaction) {
@@ -213,7 +213,7 @@ mod tests {
         let bank0 = Arc::new(Bank::new_for_tests(&genesis_config));
         let tx = system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             1,
             genesis_config.hash(),
         );

@@ -6,7 +6,7 @@ use {
         tpu_info::NullTpuInfo,
         transaction_client::{TpuClientNextClient, TransactionClient},
     },
-    solana_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
+    trezoa_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
     std::net::{IpAddr, Ipv4Addr, SocketAddr},
     tokio::runtime::Handle,
     tokio_util::sync::CancellationToken,

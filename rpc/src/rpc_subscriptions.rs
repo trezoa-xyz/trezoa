@@ -17,30 +17,30 @@ use {
     itertools::Either,
     rayon::prelude::*,
     serde::Serialize,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_account_decoder::{
-        encode_ui_account, parse_token::is_known_spl_token_id, UiAccount, UiAccountEncoding,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_account_decoder::{
+        encode_ui_account, parse_token::is_known_tpl_token_id, UiAccount, UiAccountEncoding,
     },
-    solana_clock::Slot,
-    solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_api::response::{
+    trezoa_clock::Slot,
+    trezoa_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_api::response::{
         ProcessedSignatureResult, ReceivedSignatureResult, Response as RpcResponse, RpcBlockUpdate,
         RpcBlockUpdateError, RpcKeyedAccount, RpcLogsResponse, RpcResponseContext,
         RpcSignatureResult, RpcVote, SlotInfo, SlotUpdate,
     },
-    solana_runtime::{
+    trezoa_runtime::{
         bank::{Bank, TransactionLogInfo},
         bank_forks::BankForks,
         commitment::{BlockCommitmentCache, CommitmentSlots},
     },
-    solana_signature::Signature,
-    solana_time_utils::timestamp,
-    solana_transaction_status::{
+    trezoa_signature::Signature,
+    trezoa_time_utils::timestamp,
+    trezoa_transaction_status::{
         BlockEncodingOptions, ConfirmedBlock, EncodeError, VersionedConfirmedBlock,
     },
-    solana_vote::vote_transaction::VoteTransaction,
+    trezoa_vote::vote_transaction::VoteTransaction,
     std::{
         cell::RefCell,
         collections::{HashMap, VecDeque},
@@ -57,7 +57,7 @@ use {
 };
 
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 
 const RECEIVE_DELAY_MILLIS: u64 = 100;
@@ -383,7 +383,7 @@ fn filter_account_result(
     // If last_modified_slot < last_notified_slot this means that we last notified for a fork
     // and should notify that the account state has been reverted.
     let account = (last_modified_slot != last_notified_slot).then(|| {
-        if is_known_spl_token_id(account.owner())
+        if is_known_tpl_token_id(account.owner())
             && params.encoding == UiAccountEncoding::JsonParsed
         {
             get_parsed_token_account(&bank, &params.pubkey, account, None)
@@ -424,7 +424,7 @@ fn filter_program_results(
             .iter()
             .all(|filter_type| filter_allows(filter_type, account))
     });
-    let accounts = if is_known_spl_token_id(&params.pubkey)
+    let accounts = if is_known_tpl_token_id(&params.pubkey)
         && params.encoding == UiAccountEncoding::JsonParsed
         && !accounts_is_empty
     {
@@ -1221,26 +1221,26 @@ pub(crate) mod tests {
             rpc_pubsub_service,
         },
         serial_test::serial,
-        solana_commitment_config::CommitmentConfig,
-        solana_keypair::Keypair,
-        solana_ledger::get_tmp_ledger_path_auto_delete,
-        solana_message::Message,
-        solana_rpc_client_api::config::{
+        trezoa_commitment_config::CommitmentConfig,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::get_tmp_ledger_path_auto_delete,
+        trezoa_message::Message,
+        trezoa_rpc_client_api::config::{
             RpcAccountInfoConfig, RpcBlockSubscribeConfig, RpcBlockSubscribeFilter,
             RpcProgramAccountsConfig, RpcSignatureSubscribeConfig, RpcTransactionLogsConfig,
             RpcTransactionLogsFilter,
         },
-        solana_runtime::{
+        trezoa_runtime::{
             commitment::BlockCommitment,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             prioritization_fee_cache::PrioritizationFeeCache,
         },
-        solana_signer::Signer,
-        solana_stake_interface as stake,
-        solana_system_interface::{instruction as system_instruction, program as system_program},
-        solana_system_transaction as system_transaction,
-        solana_transaction::Transaction,
-        solana_transaction_status::{TransactionDetails, UiTransactionEncoding},
+        trezoa_signer::Signer,
+        trezoa_stake_interface as stake,
+        trezoa_system_interface::{instruction as system_instruction, program as system_program},
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::Transaction,
+        trezoa_transaction_status::{TransactionDetails, UiTransactionEncoding},
         std::{collections::HashSet, sync::atomic::AtomicU64},
     };
 
@@ -2424,7 +2424,7 @@ pub(crate) mod tests {
 
         let next_bank = Bank::new_from_parent(
             bank_forks.read().unwrap().get(0).unwrap(),
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             1,
         );
         bank_forks.write().unwrap().insert(next_bank);

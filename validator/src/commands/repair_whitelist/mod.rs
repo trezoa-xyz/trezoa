@@ -5,9 +5,9 @@ use {
     },
     clap::{values_t, App, AppSettings, Arg, ArgMatches, SubCommand},
     itertools::Itertools,
-    solana_clap_utils::input_validators::is_pubkey,
-    solana_cli_output::OutputFormat,
-    solana_pubkey::Pubkey,
+    trezoa_clap_utils::input_validators::is_pubkey,
+    trezoa_cli_output::OutputFormat,
+    trezoa_pubkey::Pubkey,
     std::path::Path,
 };
 

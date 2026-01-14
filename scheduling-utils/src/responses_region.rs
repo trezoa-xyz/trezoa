@@ -1,5 +1,5 @@
 use {
-    agave_scheduler_bindings::{
+    trezoa_scheduler_bindings::{
         worker_message_types::{
             self, CheckResponse, ExecutionResponse, CHECK_RESPONSE, EXECUTION_RESPONSE,
         },
@@ -111,7 +111,7 @@ impl CheckResponsesPtr {
     ///
     /// # Note
     ///
-    /// If you are trying to construct a pointer for use by Agave, you almost certainly want to use
+    /// If you are trying to construct a pointer for use by Trezoa-team, you almost certainly want to use
     /// [`Self::from_transaction_response_region`].
     #[cfg(feature = "dev-context-only-utils")]
     pub unsafe fn from_raw_parts(ptr: NonNull<CheckResponse>, count: usize) -> Self {
@@ -180,7 +180,7 @@ impl ExecutionResponsesPtr {
     ///
     /// # Note
     ///
-    /// If you are trying to construct a pointer for use by Agave, you almost certainly want to use
+    /// If you are trying to construct a pointer for use by Trezoa-team, you almost certainly want to use
     /// [`Self::from_transaction_response_region`].
     #[cfg(feature = "dev-context-only-utils")]
     pub unsafe fn from_raw_parts(ptr: NonNull<ExecutionResponse>, count: usize) -> Self {

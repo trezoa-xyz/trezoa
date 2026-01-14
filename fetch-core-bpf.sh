@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Fetches the latest Core BPF programs and produces the solana-genesis
+# Fetches the latest Core BPF programs and produces the trezoa-genesis
 # command-line arguments needed to install them
 #
 
@@ -20,8 +20,8 @@ add_core_bpf_program_to_fetch() {
   declare address=$3
   declare loader=$4
 
-  so_name="solana_${name//-/_}_program.so"
-  declare download_url="https://github.com/solana-program/$name/releases/download/program%40v$version/$so_name"
+  so_name="trezoa_${name//-/_}_program.so"
+  declare download_url="https://github.com/trezoa-program/$name/releases/download/program%40v$version/$so_name"
 
   programs+=("$name $version $address $loader $download_url")
 }

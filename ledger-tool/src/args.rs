@@ -2,25 +2,25 @@ use {
     crate::LEDGER_TOOL_DIRECTORY,
     clap::{value_t, value_t_or_exit, values_t, values_t_or_exit, Arg, ArgMatches},
     log::*,
-    solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
-    solana_accounts_db::{
+    trezoa_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
+    trezoa_accounts_db::{
         accounts_db::AccountsDbConfig,
         accounts_file::StorageAccess,
         accounts_index::{AccountsIndexConfig, IndexLimit, ScanFilter},
     },
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         hidden_unless_forced,
         input_parsers::pubkeys_of,
         input_validators::{is_parsable, is_pow2},
     },
-    solana_cli_output::CliAccountNewConfig,
-    solana_clock::Slot,
-    solana_core::resource_limits,
-    solana_ledger::{
+    trezoa_cli_output::CliAccountNewConfig,
+    trezoa_clock::Slot,
+    trezoa_core::resource_limits,
+    trezoa_ledger::{
         blockstore_processor::ProcessOptions,
         use_snapshot_archives_at_startup::{self, UseSnapshotArchivesAtStartup},
     },
-    solana_runtime::runtime_config::RuntimeConfig,
+    trezoa_runtime::runtime_config::RuntimeConfig,
     std::{
         collections::HashSet,
         path::{Path, PathBuf},
@@ -316,7 +316,7 @@ pub fn get_accounts_db_config(
         storage_access,
         scan_filter_for_shrinking,
         use_registered_io_uring_buffers: resource_limits::check_memlock_limit_for_disk_io(
-            solana_accounts_db::accounts_db::TOTAL_IO_URING_BUFFERS_SIZE_LIMIT,
+            trezoa_accounts_db::accounts_db::TOTAL_IO_URING_BUFFERS_SIZE_LIMIT,
         ),
         ..AccountsDbConfig::default()
     }
@@ -364,7 +364,7 @@ pub fn hardforks_of(matches: &ArgMatches<'_>, name: &str) -> Option<Vec<Slot>> {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE};
+    use {super::*, trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE};
 
     #[test]
     fn test_max_genesis_archive_unpacked_size_constant() {

@@ -150,7 +150,7 @@ pub fn file_creator<'a>(
     file_complete: impl FnMut(FileInfo) -> Option<File> + 'a,
 ) -> io::Result<Box<dyn FileCreator + 'a>> {
     #[cfg(target_os = "linux")]
-    if agave_io_uring::io_uring_supported() {
+    if trezoa_io_uring::io_uring_supported() {
         use crate::io_uring::file_creator::{IoUringFileCreatorBuilder, DEFAULT_WRITE_SIZE};
 
         if buf_size >= DEFAULT_WRITE_SIZE {

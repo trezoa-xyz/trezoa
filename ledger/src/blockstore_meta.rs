@@ -5,8 +5,8 @@ use {
     },
     bitflags::bitflags,
     serde::{Deserialize, Deserializer, Serialize, Serializer},
-    solana_clock::{Slot, UnixTimestamp},
-    solana_hash::Hash,
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_hash::Hash,
     std::{
         collections::BTreeSet,
         ops::{Range, RangeBounds},
@@ -243,7 +243,7 @@ pub type Index = IndexV2;
 pub type ShredIndex = ShredIndexV2;
 /// We currently support falling back to the previous format for migration purposes.
 ///
-/// See https://github.com/anza-xyz/agave/issues/3570.
+/// See https://github.com/trezoa-xyz/trezoa/issues/3570.
 pub type IndexFallback = IndexV1;
 pub type ShredIndexFallback = ShredIndexV1;
 

@@ -1,17 +1,17 @@
-pub use solana_tpu_client::nonblocking::tpu_client::{LeaderTpuService, TpuSenderError};
+pub use trezoa_tpu_client::nonblocking::tpu_client::{LeaderTpuService, TpuSenderError};
 use {
     crate::{connection_cache::ConnectionCache, tpu_client::TpuClientConfig},
-    solana_connection_cache::connection_cache::{
+    trezoa_connection_cache::connection_cache::{
         ConnectionCache as BackendConnectionCache, ConnectionManager, ConnectionPool,
         NewConnectionConfig,
     },
-    solana_message::Message,
-    solana_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_signer::signers::Signers,
-    solana_tpu_client::nonblocking::tpu_client::{Result, TpuClient as BackendTpuClient},
-    solana_transaction::Transaction,
-    solana_transaction_error::{TransactionError, TransportResult},
+    trezoa_message::Message,
+    trezoa_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_signer::signers::Signers,
+    trezoa_tpu_client::nonblocking::tpu_client::{Result, TpuClient as BackendTpuClient},
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::{TransactionError, TransportResult},
     std::sync::Arc,
 };
 

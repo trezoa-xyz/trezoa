@@ -12,8 +12,8 @@ use {
         bank::Bank,
         bank_forks::{BankForks, SharableBanks},
     },
-    solana_clock::Slot,
-    solana_hash::Hash,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
     std::{
         collections::BTreeMap,
         sync::{Arc, Mutex, MutexGuard, RwLock},

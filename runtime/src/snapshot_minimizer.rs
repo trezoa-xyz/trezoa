@@ -3,26 +3,26 @@
 
 use {
     crate::{bank::Bank, static_ids},
-    agave_reserved_account_keys::ReservedAccountKeys,
+    trezoa_reserved_account_keys::ReservedAccountKeys,
     dashmap::DashSet,
     log::info,
     rayon::{
         iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator},
         prelude::ParallelSlice,
     },
-    solana_account::{state_traits::StateMut, ReadableAccount},
-    solana_accounts_db::{
+    trezoa_account::{state_traits::StateMut, ReadableAccount},
+    trezoa_accounts_db::{
         account_storage_entry::AccountStorageEntry,
         accounts_db::{
             stats::PurgeStats, AccountsDb, GetUniqueAccountsResult, UpdateIndexThreadSelection,
         },
         storable_accounts::StorableAccountsBySlot,
     },
-    solana_clock::Slot,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_measure::measure_time,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader_upgradeable,
+    trezoa_clock::Slot,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_measure::measure_time,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader_upgradeable,
     std::{
         collections::HashSet,
         sync::{
@@ -376,16 +376,16 @@ mod tests {
             snapshot_minimizer::SnapshotMinimizer,
             snapshot_utils,
         },
-        agave_snapshots::snapshot_config::SnapshotConfig,
+        trezoa_snapshots::snapshot_config::SnapshotConfig,
         dashmap::DashSet,
-        solana_account::{AccountSharedData, ReadableAccount, WritableAccount},
-        solana_accounts_db::accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
-        solana_genesis_config::create_genesis_config,
-        solana_loader_v3_interface::state::UpgradeableLoaderState,
-        solana_pubkey::Pubkey,
-        solana_sdk_ids::bpf_loader_upgradeable,
-        solana_signer::Signer,
-        solana_stake_interface as stake,
+        trezoa_account::{AccountSharedData, ReadableAccount, WritableAccount},
+        trezoa_accounts_db::accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
+        trezoa_genesis_config::create_genesis_config,
+        trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+        trezoa_pubkey::Pubkey,
+        trezoa_sdk_ids::bpf_loader_upgradeable,
+        trezoa_signer::Signer,
+        trezoa_stake_interface as stake,
         std::sync::Arc,
         tempfile::TempDir,
         test_case::test_case,
@@ -393,9 +393,9 @@ mod tests {
 
     #[test]
     fn test_minimization_get_vote_accounts() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
-        let bootstrap_validator_pubkey = solana_pubkey::new_rand();
+        let bootstrap_validator_pubkey = trezoa_pubkey::new_rand();
         let bootstrap_validator_stake_lamports = 30;
         let genesis_config_info = create_genesis_config_with_leader(
             10,
@@ -422,9 +422,9 @@ mod tests {
 
     #[test]
     fn test_minimization_get_stake_accounts() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
-        let bootstrap_validator_pubkey = solana_pubkey::new_rand();
+        let bootstrap_validator_pubkey = trezoa_pubkey::new_rand();
         let bootstrap_validator_stake_lamports = 30;
         let genesis_config_info = create_genesis_config_with_leader(
             10,
@@ -461,13 +461,13 @@ mod tests {
 
     #[test]
     fn test_minimization_get_owner_accounts() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let (genesis_config, _) = create_genesis_config(1_000_000);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
-        let pubkey = solana_pubkey::new_rand();
-        let owner_pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
+        let owner_pubkey = trezoa_pubkey::new_rand();
         bank.store_account(&pubkey, &AccountSharedData::new(1, 0, &owner_pubkey));
 
         let owner_accounts = DashSet::new();
@@ -485,14 +485,14 @@ mod tests {
 
     #[test]
     fn test_minimization_add_programdata_accounts() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let (genesis_config, _) = create_genesis_config(1_000_000);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
-        let non_program_id = solana_pubkey::new_rand();
-        let program_id = solana_pubkey::new_rand();
-        let programdata_address = solana_pubkey::new_rand();
+        let non_program_id = trezoa_pubkey::new_rand();
+        let program_id = trezoa_pubkey::new_rand();
+        let programdata_address = trezoa_pubkey::new_rand();
 
         let program = UpgradeableLoaderState::Program {
             programdata_address,
@@ -531,7 +531,7 @@ mod tests {
 
     #[test]
     fn test_minimize_accounts_db() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let (genesis_config, _) = create_genesis_config(1_000_000);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -544,7 +544,7 @@ mod tests {
         let minimized_account_set = DashSet::new();
         for _ in 0..num_slots {
             let pubkeys: Vec<_> = (0..num_accounts_per_slot)
-                .map(|_| solana_pubkey::new_rand())
+                .map(|_| trezoa_pubkey::new_rand())
                 .collect();
 
             let some_lamport = 223;

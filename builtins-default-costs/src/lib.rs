@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -14,8 +14,8 @@
 use qualifier_attr::field_qualifiers;
 use {
     ahash::AHashMap,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{
         bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, compute_budget, ed25519_program,
         loader_v4, secp256k1_program, system_program, vote,
     },
@@ -71,10 +71,10 @@ impl BuiltinCost {
 /// DEVELOPER WARNING: This map CANNOT be modified without causing a
 /// consensus failure because this map is used to calculate the compute
 /// limit for transactions that don't specify a compute limit themselves as
-/// of https://github.com/anza-xyz/agave/issues/2212.  It's also used to
+/// of https://github.com/trezoa-xyz/trezoa/issues/2212.  It's also used to
 /// calculate the cost of a transaction which is used in replay to enforce
 /// block cost limits as of
-/// https://github.com/solana-labs/solana/issues/29595.
+/// https://github.com/trezoa-labs/trezoa/issues/29595.
 static BUILTIN_INSTRUCTION_COSTS: std::sync::LazyLock<AHashMap<Pubkey, BuiltinCost>> =
     std::sync::LazyLock::new(|| {
         MIGRATING_BUILTINS_COSTS

@@ -1,4 +1,4 @@
-use solana_lattice_hash::lt_hash::LtHash;
+use trezoa_lattice_hash::lt_hash::LtHash;
 
 /// Lattice hash of an account
 #[derive(Debug, Clone, Eq, PartialEq)]

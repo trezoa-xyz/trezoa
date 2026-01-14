@@ -1,5 +1,5 @@
 [package]
-name = "agave-store-histogram"
+name = "trezoa-store-histogram"
 description = "Tool to calculate account storage histogram"
 publish = false
 version = { workspace = true }
@@ -10,9 +10,9 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 
 [dependencies]
 clap = { workspace = true }
-solana-version = { workspace = true }
+trezoa-version = { workspace = true }

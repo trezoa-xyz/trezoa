@@ -13,42 +13,42 @@ use {
         },
         validator::BlockProductionMethod,
     },
-    agave_banking_stage_ingress_types::BankingPacketBatch,
-    agave_votor_messages::migration::MigrationStatus,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_votor_messages::migration::MigrationStatus,
     assert_matches::assert_matches,
     bincode::deserialize_from,
     crossbeam_channel::{bounded, unbounded, Sender},
     itertools::Itertools,
     log::*,
-    solana_clock::{Slot, DEFAULT_MS_PER_SLOT, HOLD_TRANSACTIONS_SLOT_OFFSET},
-    solana_genesis_config::GenesisConfig,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfoQuery, node::Node},
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_clock::{Slot, DEFAULT_MS_PER_SLOT, HOLD_TRANSACTIONS_SLOT_OFFSET},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfoQuery, node::Node},
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore::{Blockstore, PurgeType},
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_net_utils::{
+    trezoa_net_utils::{
         sockets::{bind_in_range_with_config, SocketConfiguration},
         SocketAddrSpace,
     },
-    solana_poh::{
+    trezoa_poh::{
         poh_controller::PohController,
         poh_recorder::{PohRecorder, GRACE_TICKS_FACTOR, MAX_GRACE_SLOTS},
         poh_service::{PohService, DEFAULT_HASHES_PER_BATCH, DEFAULT_PINNED_CPU_CORE},
         record_channels::record_channels,
         transaction_recorder::TransactionRecorder,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::{Bank, HashOverrides},
         bank_forks::BankForks,
         installed_scheduler_pool::BankWithScheduler,
     },
-    solana_shred_version::compute_shred_version,
-    solana_signer::Signer,
-    solana_turbine::broadcast_stage::{BroadcastStage, BroadcastStageType},
-    solana_unified_scheduler_pool::DefaultSchedulerPool,
+    trezoa_shred_version::compute_shred_version,
+    trezoa_signer::Signer,
+    trezoa_turbine::broadcast_stage::{BroadcastStage, BroadcastStageType},
+    trezoa_unified_scheduler_pool::DefaultSchedulerPool,
     std::{
         collections::BTreeMap,
         fmt::Display,
@@ -100,7 +100,7 @@ use {
 /// A closer look of the transaction load profile is below, regardless of internal banking
 /// implementation and simulation:
 ///
-/// Due to solana's general tx broadcast strategy of client's submission and optional node
+/// Due to trezoa's general tx broadcast strategy of client's submission and optional node
 /// forwarding, many transactions often arrive before the first leader slot begins. Thus, the
 /// initial leader block creation typically starts with rather large number of schedule-able
 /// transactions. Also, note that additional transactions arrive during the 4 leader slot window

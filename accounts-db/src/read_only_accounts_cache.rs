@@ -11,10 +11,10 @@ use {
         seq::{IndexedRandom as _, IteratorRandom},
         Rng,
     },
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_clock::Slot,
-    solana_measure::{measure::Measure, measure_us},
-    solana_pubkey::Pubkey,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_clock::Slot,
+    trezoa_measure::{measure::Measure, measure_us},
+    trezoa_pubkey::Pubkey,
     std::{
         mem::ManuallyDrop,
         sync::{
@@ -454,7 +454,7 @@ mod tests {
         super::*,
         rand::{Rng, SeedableRng},
         rand_chacha::ChaChaRng,
-        solana_account::Account,
+        trezoa_account::Account,
         std::{
             collections::HashMap,
             iter::repeat_with,

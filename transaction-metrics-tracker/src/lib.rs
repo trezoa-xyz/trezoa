@@ -1,18 +1,18 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 use {
     log::*,
     rand::Rng,
-    solana_perf::{packet::BytesPacket, sigverify::PacketError},
-    solana_short_vec::decode_shortu16_len,
-    solana_signature::SIGNATURE_BYTES,
+    trezoa_perf::{packet::BytesPacket, sigverify::PacketError},
+    trezoa_short_vec::decode_shortu16_len,
+    trezoa_signature::SIGNATURE_BYTES,
 };
 
 // The mask is 12 bits long (1<<12 = 4096), it means the probability of matching
@@ -67,11 +67,11 @@ pub fn get_signature_from_packet(
 mod tests {
     use {
         super::*,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_perf::packet::{bytes::Bytes, Meta},
-        solana_signature::Signature,
-        solana_system_transaction as system_transaction,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_perf::packet::{bytes::Bytes, Meta},
+        trezoa_signature::Signature,
+        trezoa_system_transaction as system_transaction,
     };
 
     #[test]
@@ -84,7 +84,7 @@ mod tests {
         // Use a valid transaction, it should succeed
         let tx = system_transaction::transfer(
             &Keypair::new(),
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             1,
             Hash::new_unique(),
         );
@@ -131,7 +131,7 @@ mod tests {
         // Use a valid transaction which is not matched
         let tx = system_transaction::transfer(
             &Keypair::new(),
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             1,
             Hash::new_unique(),
         );
@@ -142,7 +142,7 @@ mod tests {
         // Now simulate a txn matching the signature mask
         let mut tx = system_transaction::transfer(
             &Keypair::new(),
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             1,
             Hash::new_unique(),
         );

@@ -22,24 +22,24 @@ use {
         },
         validator::BlockProductionMethod,
     },
-    agave_banking_stage_ingress_types::BankingPacketReceiver,
+    trezoa_banking_stage_ingress_types::BankingPacketReceiver,
     crossbeam_channel::{unbounded, Receiver, Sender},
     futures::{stream::FuturesUnordered, StreamExt},
     histogram::Histogram,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfoQuery},
-    solana_ledger::blockstore_processor::TransactionStatusSender,
-    solana_perf::packet::PACKETS_PER_BATCH,
-    solana_poh::{
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfoQuery},
+    trezoa_ledger::blockstore_processor::TransactionStatusSender,
+    trezoa_perf::packet::PACKETS_PER_BATCH,
+    trezoa_poh::{
         poh_controller::PohController, poh_recorder::PohRecorder,
         transaction_recorder::TransactionRecorder,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank, bank_forks::BankForks, prioritization_fee_cache::PrioritizationFeeCache,
         vote_sender_types::ReplayVoteSender,
     },
-    solana_time_utils::AtomicInterval,
-    solana_unified_scheduler_logic::SchedulingMode,
+    trezoa_time_utils::AtomicInterval,
+    trezoa_unified_scheduler_logic::SchedulingMode,
     std::{
         num::{NonZeroU64, NonZeroUsize, Saturating},
         ops::Deref,
@@ -720,9 +720,9 @@ mod external {
     use {
         super::*,
         crate::banking_stage::consume_worker::external::ExternalWorker,
-        agave_scheduling_utils::handshake::{
+        trezoa_scheduling_utils::handshake::{
             logon_flags,
-            server::{AgaveSession, AgaveWorkerSession},
+            server::{Trezoa-teamSession, Trezoa-teamWorkerSession},
         },
         tpu_to_pack::BankingPacketReceivers,
     };
@@ -730,12 +730,12 @@ mod external {
     impl BankingStage {
         pub(super) fn spawn_external(
             &self,
-            AgaveSession {
+            Trezoa-teamSession {
                 flags,
                 tpu_to_pack,
                 progress_tracker,
                 workers,
-            }: AgaveSession,
+            }: Trezoa-teamSession,
         ) -> Result<Vec<JoinHandle<()>>, ()> {
             info!("Spawning external scheduler");
             // Toggling unified scheduler into the disabled state should always be a safe and
@@ -743,7 +743,7 @@ mod external {
             assert!(self.toggle_internal_unified(false));
 
             static_assertions::const_assert!(
-                agave_scheduling_utils::handshake::MAX_WORKERS
+                trezoa_scheduling_utils::handshake::MAX_WORKERS
                     == BankingStage::max_num_workers().get()
             );
             assert!(workers.len() <= BankingStage::max_num_workers().get());
@@ -770,7 +770,7 @@ mod external {
             let mut worker_metrics = Vec::with_capacity(workers.len());
             for (
                 index,
-                AgaveWorkerSession {
+                Trezoa-teamWorkerSession {
                     allocator,
                     pack_to_worker,
                     worker_to_pack,
@@ -852,7 +852,7 @@ pub enum BankingControlMsg {
     },
     #[cfg(unix)]
     External {
-        session: agave_scheduling_utils::handshake::server::AgaveSession,
+        session: trezoa_scheduling_utils::handshake::server::Trezoa-teamSession,
     },
 }
 
@@ -924,34 +924,34 @@ mod tests {
             banking_trace::{BankingTracer, Channels},
             validator::SchedulerPacing,
         },
-        agave_banking_stage_ingress_types::BankingPacketBatch,
+        trezoa_banking_stage_ingress_types::BankingPacketBatch,
         crossbeam_channel::unbounded,
         itertools::Itertools,
-        solana_entry::entry::{self, EntrySlice},
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_entry::entry::{self, EntrySlice},
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::Blockstore,
             genesis_utils::{
                 create_genesis_config, create_genesis_config_with_leader, GenesisConfigInfo,
             },
             get_tmp_ledger_path_auto_delete,
         },
-        solana_perf::packet::to_packet_batches,
-        solana_poh::{
+        trezoa_perf::packet::to_packet_batches,
+        trezoa_poh::{
             poh_recorder::{create_test_recorder, PohRecorderError},
             record_channels::record_channels,
             transaction_recorder::RecordTransactionsSummary,
         },
-        solana_poh_config::PohConfig,
-        solana_pubkey::Pubkey,
-        solana_runtime::{bank::Bank, genesis_utils::bootstrap_validator_stake_lamports},
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_signer::Signer,
-        solana_system_transaction as system_transaction,
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
-        solana_vote::vote_transaction::new_tower_sync_transaction,
-        solana_vote_program::vote_state::TowerSync,
+        trezoa_poh_config::PohConfig,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{bank::Bank, genesis_utils::bootstrap_validator_stake_lamports},
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_signer::Signer,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_vote::vote_transaction::new_tower_sync_transaction,
+        trezoa_vote_program::vote_state::TowerSync,
         std::{sync::atomic::Ordering, thread::sleep, time::Instant},
     };
 
@@ -1019,7 +1019,7 @@ mod tests {
 
     #[test]
     fn test_banking_stage_tick() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = create_genesis_config(2);
@@ -1097,7 +1097,7 @@ mod tests {
 
     #[test]
     fn test_banking_stage_entries_only_central_scheduler() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -1149,16 +1149,16 @@ mod tests {
         );
 
         // good tx, and no verify
-        let to = solana_pubkey::new_rand();
+        let to = trezoa_pubkey::new_rand();
         let tx_no_ver = system_transaction::transfer(&mint_keypair, &to, 2, start_hash);
 
         // good tx
-        let to2 = solana_pubkey::new_rand();
+        let to2 = trezoa_pubkey::new_rand();
         let tx = system_transaction::transfer(&mint_keypair, &to2, 1, start_hash);
 
         // bad tx, AccountNotFound
         let keypair = Keypair::new();
-        let to3 = solana_pubkey::new_rand();
+        let to3 = trezoa_pubkey::new_rand();
         let tx_anf = system_transaction::transfer(&keypair, &to3, 1, start_hash);
 
         // send 'em over
@@ -1226,7 +1226,7 @@ mod tests {
 
     #[test]
     fn test_banking_stage_entryfication() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         // In this attack we'll demonstrate that a verifier can interpret the ledger
         // differently if either the server doesn't signal the ledger to add an
         // Entry OR if the verifier tries to parallelize across multiple Entries.
@@ -1340,7 +1340,7 @@ mod tests {
 
     #[test]
     fn test_bank_record_transactions() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -1353,9 +1353,9 @@ mod tests {
         let recorder = TransactionRecorder::new(record_sender);
         record_receiver.restart(bank.bank_id());
 
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let keypair2 = Keypair::new();
-        let pubkey2 = solana_pubkey::new_rand();
+        let pubkey2 = trezoa_pubkey::new_rand();
 
         let txs = vec![
             system_transaction::transfer(&mint_keypair, &pubkey, 1, genesis_config.hash()).into(),
@@ -1381,7 +1381,7 @@ mod tests {
     }
 
     pub(crate) fn create_slow_genesis_config(lamports: u64) -> GenesisConfigInfo {
-        create_slow_genesis_config_with_leader(lamports, &solana_pubkey::new_rand())
+        create_slow_genesis_config_with_leader(lamports, &trezoa_pubkey::new_rand())
     }
 
     pub(crate) fn create_slow_genesis_config_with_leader(
@@ -1391,7 +1391,7 @@ mod tests {
         let mut config_info = create_genesis_config_with_leader(
             lamports,
             validator_pubkey,
-            // See solana_ledger::genesis_utils::create_genesis_config.
+            // See trezoa_ledger::genesis_utils::create_genesis_config.
             bootstrap_validator_stake_lamports(),
         );
 
@@ -1402,7 +1402,7 @@ mod tests {
 
     #[test]
     fn test_vote_storage_full_send() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,

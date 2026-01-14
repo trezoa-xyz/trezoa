@@ -25,7 +25,7 @@ pub fn adjust_nofile_limit(enforce_nofile_limit: bool) -> Result<(), ResourceLim
     // to ensure each database will be able to function properly
     //
     // This should be kept in sync with published validator instructions:
-    // https://docs.anza.xyz/operations/guides/validator-start#system-tuning
+    // https://docs.trezoa.xyz/operations/guides/validator-start#system-tuning
     let desired_nofile = 1_000_000;
 
     fn get_nofile() -> libc::rlimit {

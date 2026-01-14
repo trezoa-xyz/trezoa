@@ -1,7 +1,7 @@
 ---
-title: Deploy a Solana Program with the CLI
-pagination_label: "Solana CLI: Deploy a Program"
+title: Deploy a Trezoa Program with the CLI
+pagination_label: "Trezoa CLI: Deploy a Program"
 sidebar_label: Deploy a Program
 ---
 
-[Redirect](https://solana.com/docs/programs/deploying)
+[Redirect](https://trezoa.com/docs/programs/deploying)

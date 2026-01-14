@@ -1,7 +1,7 @@
 use {
     criterion::{criterion_group, criterion_main, BenchmarkId, Criterion},
     rand::{rngs::SmallRng, seq::IndexedRandom as _, SeedableRng},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::AccountsDb, read_only_accounts_cache::ReadOnlyAccountsCache,
     },
     std::{

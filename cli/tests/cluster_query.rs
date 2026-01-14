@@ -1,18 +1,18 @@
 use {
-    solana_cli::{
+    trezoa_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
         test_utils::check_ready,
     },
-    solana_commitment_config::CommitmentConfig,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_fee_structure::FeeStructure,
-    solana_keypair::Keypair,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_signer::Signer,
-    solana_test_validator::TestValidator,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_fee_structure::FeeStructure,
+    trezoa_keypair::Keypair,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_signer::Signer,
+    trezoa_test_validator::TestValidator,
     std::time::Duration,
     test_case::test_case,
 };
@@ -23,7 +23,7 @@ use {
 #[test_case(true, None; "tpu_base")]
 #[test_case(true, Some(1_000_000); "tpu_with_compute_unit_price")]
 async fn test_ping(use_tpu_client: bool, compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let fee = FeeStructure::default().get_max_fee(1, 0);
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());

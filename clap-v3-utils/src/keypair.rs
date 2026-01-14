@@ -1,16 +1,16 @@
 //! Loading signers and keypairs from the command line.
 //!
 //! This module contains utilities for loading [Signer]s and [Keypair]s from
-//! standard signing sources, from the command line, as in the Solana CLI.
+//! standard signing sources, from the command line, as in the Trezoa CLI.
 //!
 //! The key function here is [`signer_from_path`], which loads a `Signer` from
 //! one of several possible sources by interpreting a "path" command line
 //! argument. Its documentation includes a description of all possible signing
-//! sources supported by the Solana CLI. Many other functions here are
+//! sources supported by the Trezoa CLI. Many other functions here are
 //! variations on, or delegate to, `signer_from_path`.
 
 #[cfg(feature = "elgamal")]
-use solana_zk_sdk::encryption::{auth_encryption::AeKey, elgamal::ElGamalKeypair};
+use trezoa_zk_sdk::encryption::{auth_encryption::AeKey, elgamal::ElGamalKeypair};
 use {
     crate::{
         input_parsers::signer::{try_pubkeys_sigs_of, SignerSource, SignerSourceKind},
@@ -20,20 +20,20 @@ use {
     bip39::{Language, Mnemonic, Seed},
     clap::ArgMatches,
     rpassword::prompt_password,
-    solana_derivation_path::DerivationPath,
-    solana_hash::Hash,
-    solana_keypair::{read_keypair, read_keypair_file, Keypair},
-    solana_message::Message,
-    solana_presigner::Presigner,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::{
+    trezoa_derivation_path::DerivationPath,
+    trezoa_hash::Hash,
+    trezoa_keypair::{read_keypair, read_keypair_file, Keypair},
+    trezoa_message::Message,
+    trezoa_presigner::Presigner,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::{
         remote_keypair::generate_remote_keypair,
         remote_wallet::{maybe_wallet_manager, RemoteWalletError, RemoteWalletManager},
     },
-    solana_seed_derivable::SeedDerivable,
-    solana_seed_phrase::generate_seed_from_seed_phrase_and_passphrase,
-    solana_signature::Signature,
-    solana_signer::{null_signer::NullSigner, EncodableKey, EncodableKeypair, Signer},
+    trezoa_seed_derivable::SeedDerivable,
+    trezoa_seed_phrase::generate_seed_from_seed_phrase_and_passphrase,
+    trezoa_signature::Signature,
+    trezoa_signer::{null_signer::NullSigner, EncodableKey, EncodableKeypair, Signer},
     std::{
         cell::RefCell,
         error,
@@ -132,8 +132,8 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{Arg, Command};
-    /// use solana_clap_v3_utils::keypair::DefaultSigner;
-    /// use solana_clap_v3_utils::offline::OfflineArgs;
+    /// use trezoa_clap_v3_utils::keypair::DefaultSigner;
+    /// use trezoa_clap_v3_utils::offline::OfflineArgs;
     ///
     /// let clap_app = Command::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -172,7 +172,7 @@ impl DefaultSigner {
                 })
                 .map_err(|_| {
                     std::io::Error::other(format!(
-                        "No default signer found, run \"solana-keygen new -o {}\" to create a new \
+                        "No default signer found, run \"trezoa-keygen new -o {}\" to create a new \
                          one",
                         self.path
                     ))
@@ -200,9 +200,9 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{Arg, Command};
-    /// use solana_clap_v3_utils::keypair::{DefaultSigner, signer_from_path};
-    /// use solana_clap_v3_utils::offline::OfflineArgs;
-    /// use solana_signer::Signer;
+    /// use trezoa_clap_v3_utils::keypair::{DefaultSigner, signer_from_path};
+    /// use trezoa_clap_v3_utils::offline::OfflineArgs;
+    /// use trezoa_signer::Signer;
     ///
     /// let clap_app = Command::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -275,8 +275,8 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{Arg, Command};
-    /// use solana_clap_v3_utils::keypair::DefaultSigner;
-    /// use solana_clap_v3_utils::offline::OfflineArgs;
+    /// use trezoa_clap_v3_utils::keypair::DefaultSigner;
+    /// use trezoa_clap_v3_utils::offline::OfflineArgs;
     ///
     /// let clap_app = Command::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -322,8 +322,8 @@ impl DefaultSigner {
     ///
     /// ```no_run
     /// use clap::{Arg, Command};
-    /// use solana_clap_v3_utils::keypair::{SignerFromPathConfig, DefaultSigner};
-    /// use solana_clap_v3_utils::offline::OfflineArgs;
+    /// use trezoa_clap_v3_utils::keypair::{SignerFromPathConfig, DefaultSigner};
+    /// use trezoa_clap_v3_utils::offline::OfflineArgs;
     ///
     /// let clap_app = Command::new("my-program")
     ///     // The argument we'll parse as a signer "path"
@@ -518,8 +518,8 @@ pub struct SignerFromPathConfig {
 ///
 /// ```no_run
 /// use clap::{Arg, Command};
-/// use solana_clap_v3_utils::keypair::signer_from_path;
-/// use solana_clap_v3_utils::offline::OfflineArgs;
+/// use trezoa_clap_v3_utils::keypair::signer_from_path;
+/// use trezoa_clap_v3_utils::offline::OfflineArgs;
 ///
 /// let clap_app = Command::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -588,8 +588,8 @@ pub fn signer_from_source(
 ///
 /// ```no_run
 /// use clap::{Arg, Command};
-/// use solana_clap_v3_utils::keypair::{signer_from_path_with_config, SignerFromPathConfig};
-/// use solana_clap_v3_utils::offline::OfflineArgs;
+/// use trezoa_clap_v3_utils::keypair::{signer_from_path_with_config, SignerFromPathConfig};
+/// use trezoa_clap_v3_utils::offline::OfflineArgs;
 ///
 /// let clap_app = Command::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -652,7 +652,7 @@ pub fn signer_from_source_with_config(
         }
         SignerSourceKind::Filepath(path) => match read_keypair_file(path) {
             Err(e) => Err(std::io::Error::other(format!(
-                "could not read keypair file \"{path}\". Run \"solana-keygen new\" to create a \
+                "could not read keypair file \"{path}\". Run \"trezoa-keygen new\" to create a \
                  keypair file: {e}"
             ))
             .into()),
@@ -719,7 +719,7 @@ pub fn signer_from_source_with_config(
 ///
 /// ```no_run
 /// use clap::{Arg, Command};
-/// use solana_clap_v3_utils::keypair::pubkey_from_path;
+/// use trezoa_clap_v3_utils::keypair::pubkey_from_path;
 ///
 /// let clap_app = Command::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -797,7 +797,7 @@ pub fn resolve_signer_from_source(
         }
         SignerSourceKind::Filepath(path) => match read_keypair_file(path) {
             Err(e) => Err(std::io::Error::other(format!(
-                "could not read keypair file \"{path}\". Run \"solana-keygen new\" to create a \
+                "could not read keypair file \"{path}\". Run \"trezoa-keygen new\" to create a \
                  keypair file: {e}"
             ))
             .into()),
@@ -875,7 +875,7 @@ pub fn prompt_passphrase(prompt: &str) -> Result<String, Box<dyn error::Error>> 
 ///
 /// ```no_run
 /// use clap::{Arg, Command};
-/// use solana_clap_v3_utils::keypair::keypair_from_path;
+/// use trezoa_clap_v3_utils::keypair::keypair_from_path;
 ///
 /// let clap_app = Command::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -937,7 +937,7 @@ pub fn keypair_from_source(
 ///
 /// ```no_run`
 /// use clap::{Arg, Command};
-/// use solana_clap_v3_utils::keypair::elgamal_keypair_from_path;
+/// use trezoa_clap_v3_utils::keypair::elgamal_keypair_from_path;
 ///
 /// let clap_app = Command::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -1010,7 +1010,7 @@ fn confirm_encodable_keypair_pubkey<K: EncodableKeypair>(keypair: &K, pubkey_lab
 ///
 /// ```no_run`
 /// use clap::{Arg, Command};
-/// use solana_clap_v3_utils::keypair::ae_key_from_path;
+/// use trezoa_clap_v3_utils::keypair::ae_key_from_path;
 ///
 /// let clap_app = Command::new("my-program")
 ///     // The argument we'll parse as a signer "path"
@@ -1076,7 +1076,7 @@ fn encodable_key_from_source<K: EncodableKey + SeedDerivable>(
         )?),
         SignerSourceKind::Filepath(path) => match K::read_from_file(path) {
             Err(e) => Err(std::io::Error::other(format!(
-                "could not read keypair file \"{path}\". Run \"solana-keygen new\" to create a \
+                "could not read keypair file \"{path}\". Run \"trezoa-keygen new\" to create a \
                  keypair file: {e}"
             ))
             .into()),
@@ -1213,9 +1213,9 @@ mod tests {
         super::*,
         crate::offline::OfflineArgs,
         clap::{Arg, Command},
-        solana_keypair::write_keypair_file,
-        solana_remote_wallet::remote_wallet::initialize_wallet_manager,
-        solana_system_interface::instruction::transfer,
+        trezoa_keypair::write_keypair_file,
+        trezoa_remote_wallet::remote_wallet::initialize_wallet_manager,
+        trezoa_system_interface::instruction::transfer,
         tempfile::TempDir,
     };
 

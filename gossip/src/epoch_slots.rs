@@ -7,9 +7,9 @@ use {
     bv::BitVec,
     flate2::{Compress, Compression, Decompress, FlushCompress, FlushDecompress},
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
     std::{borrow::Cow, cell::RefCell, sync::Arc},
 };
 
@@ -360,7 +360,7 @@ impl EpochSlots {
     /// New random EpochSlots for tests and simulations.
     pub(crate) fn new_rand<R: rand::Rng>(rng: &mut R, pubkey: Option<Pubkey>) -> Self {
         let now = crds_data::new_rand_timestamp(rng);
-        let pubkey = pubkey.unwrap_or_else(solana_pubkey::new_rand);
+        let pubkey = pubkey.unwrap_or_else(trezoa_pubkey::new_rand);
         let mut epoch_slots = Self::new(pubkey, now);
         let num_slots = rng.random_range(0..20);
         let slots: Vec<_> = std::iter::repeat_with(|| 47825632 + rng.random_range(0..512))

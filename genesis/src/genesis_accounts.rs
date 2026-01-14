@@ -3,9 +3,9 @@ use {
         stakes::{create_and_add_stakes, StakerInfo},
         unlocks::UnlockInfo,
     },
-    solana_cluster_type::ClusterType,
-    solana_genesis_config::GenesisConfig,
-    solana_native_token::LAMPORTS_PER_SOL,
+    trezoa_cluster_type::ClusterType,
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_native_token::LAMPORTS_PER_SOL,
 };
 
 // 9 month schedule is 100% after 9 months

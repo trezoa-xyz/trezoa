@@ -8,15 +8,15 @@ use {
         committer::CommitTransactionDetails, BatchedTransactionCostDetails,
         BatchedTransactionDetails, BatchedTransactionErrorDetails,
     },
-    agave_feature_set::FeatureSet,
-    solana_clock::Slot,
-    solana_cost_model::{
+    trezoa_feature_set::FeatureSet,
+    trezoa_clock::Slot,
+    trezoa_cost_model::{
         cost_model::CostModel, cost_tracker::UpdatedCosts, transaction_cost::TransactionCost,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::bank::Bank,
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
-    solana_transaction_error::TransactionError,
+    trezoa_measure::measure::Measure,
+    trezoa_runtime::bank::Bank,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_transaction_error::TransactionError,
     std::{
         num::Saturating,
         sync::atomic::{AtomicU64, Ordering},
@@ -24,7 +24,7 @@ use {
 };
 
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 
 // QosService is local to each banking thread, each instance of QosService provides services to
@@ -592,21 +592,21 @@ mod tests {
     use {
         super::*,
         itertools::Itertools,
-        solana_cost_model::transaction_cost::{UsageCostDetails, WritableKeysTransaction},
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_runtime::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_signer::Signer,
-        solana_system_transaction as system_transaction,
-        solana_vote::vote_transaction,
-        solana_vote_program::vote_state::TowerSync,
+        trezoa_cost_model::transaction_cost::{UsageCostDetails, WritableKeysTransaction},
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_runtime::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_signer::Signer,
+        trezoa_system_transaction as system_transaction,
+        trezoa_vote::vote_transaction,
+        trezoa_vote_program::vote_state::TowerSync,
         std::sync::Arc,
     };
 
     #[test]
     fn test_compute_transaction_costs() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // make a vec of txs
         let keypair = Keypair::new();
@@ -648,7 +648,7 @@ mod tests {
 
     #[test]
     fn test_select_transactions_per_cost() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -698,7 +698,7 @@ mod tests {
 
     #[test]
     fn test_update_and_remove_transaction_costs_committed() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -707,10 +707,10 @@ mod tests {
         let transaction_count = 5;
         let keypair = Keypair::new();
         let loaded_accounts_data_size: u32 = 1_000_000;
-        let transaction = solana_transaction::Transaction::new_unsigned(solana_message::Message::new(
+        let transaction = trezoa_transaction::Transaction::new_unsigned(trezoa_message::Message::new(
             &[
-                solana_compute_budget_interface::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(loaded_accounts_data_size),
-                solana_system_interface::instruction::transfer(&keypair.pubkey(), &solana_pubkey::Pubkey::new_unique(), 1),
+                trezoa_compute_budget_interface::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(loaded_accounts_data_size),
+                trezoa_system_interface::instruction::transfer(&keypair.pubkey(), &trezoa_pubkey::Pubkey::new_unique(), 1),
             ],
             Some(&keypair.pubkey()),
         ));
@@ -778,7 +778,7 @@ mod tests {
 
     #[test]
     fn test_update_and_remove_transaction_costs_not_committed() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -824,7 +824,7 @@ mod tests {
 
     #[test]
     fn test_update_and_remove_transaction_costs_mixed_execution() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -833,10 +833,10 @@ mod tests {
         let transaction_count = 5;
         let keypair = Keypair::new();
         let loaded_accounts_data_size: u32 = 1_000_000;
-        let transaction = solana_transaction::Transaction::new_unsigned(solana_message::Message::new(
+        let transaction = trezoa_transaction::Transaction::new_unsigned(trezoa_message::Message::new(
             &[
-                solana_compute_budget_interface::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(loaded_accounts_data_size),
-                solana_system_interface::instruction::transfer(&keypair.pubkey(), &solana_pubkey::Pubkey::new_unique(), 1),
+                trezoa_compute_budget_interface::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(loaded_accounts_data_size),
+                trezoa_system_interface::instruction::transfer(&keypair.pubkey(), &trezoa_pubkey::Pubkey::new_unique(), 1),
             ],
             Some(&keypair.pubkey()),
         ));

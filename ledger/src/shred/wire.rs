@@ -9,17 +9,17 @@ use {
             ShredId, ShredType, ShredVariant, SIZE_OF_COMMON_SHRED_HEADER,
         },
     },
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_perf::packet::{PacketRef, PacketRefMut},
-    solana_signature::{Signature, SIGNATURE_BYTES},
-    solana_signer::Signer,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_perf::packet::{PacketRef, PacketRefMut},
+    trezoa_signature::{Signature, SIGNATURE_BYTES},
+    trezoa_signer::Signer,
 };
 #[cfg(test)]
 use {
     rand::{prelude::IndexedMutRandom as _, Rng},
-    solana_perf::packet::Packet,
+    trezoa_perf::packet::Packet,
     std::collections::HashMap,
     std::ops::Range,
 };
@@ -416,7 +416,7 @@ mod tests {
         },
         assert_matches::assert_matches,
         rand::Rng,
-        solana_perf::packet::PacketFlags,
+        trezoa_perf::packet::PacketFlags,
         test_case::test_matrix,
     };
 

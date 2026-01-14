@@ -21,19 +21,19 @@ use {
     },
     crate::{consensus::progress_map::LockoutInterval, replay_stage::DUPLICATE_THRESHOLD},
     chrono::prelude::*,
-    solana_clock::{Slot, UnixTimestamp},
-    solana_hash::Hash,
-    solana_instruction::Instruction,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_hash::Hash,
+    trezoa_instruction::Instruction,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         ancestor_iterator::AncestorIterator,
         blockstore::{self, Blockstore},
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, bank_forks::BankForks, commitment::VOTE_THRESHOLD_SIZE},
-    solana_slot_history::{Check, SlotHistory},
-    solana_vote::{vote_account::VoteAccountsHashMap, vote_transaction::VoteTransaction},
-    solana_vote_program::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks, commitment::VOTE_THRESHOLD_SIZE},
+    trezoa_slot_history::{Check, SlotHistory},
+    trezoa_vote::{vote_account::VoteAccountsHashMap, vote_transaction::VoteTransaction},
+    trezoa_vote_program::{
         vote_error::VoteError,
         vote_instruction,
         vote_state::{BlockTimestamp, Lockout, TowerSync, Vote, VoteState1_14_11, VoteStateUpdate},
@@ -332,7 +332,7 @@ impl Tower {
     pub fn new_random(node_pubkey: Pubkey) -> Self {
         use {
             rand::Rng,
-            solana_vote_program::vote_state::{LandedVote, VoteStateV4},
+            trezoa_vote_program::vote_state::{LandedVote, VoteStateV4},
         };
 
         let mut rng = rand::rng();
@@ -664,7 +664,7 @@ impl Tower {
             bank.slot(),
             bank.hash(),
             bank.feature_set
-                .is_active(&agave_feature_set::enable_tower_sync_ix::id()),
+                .is_active(&trezoa_feature_set::enable_tower_sync_ix::id()),
             block_id,
         )
     }
@@ -1016,7 +1016,7 @@ impl Tower {
             // So, don't re-vote on it by returning pseudo FailedSwitchThreshold, otherwise
             // there would be slashing because of double vote on one of last_vote_ancestors.
             // (Well, needless to say, re-creating the duplicate block must be handled properly
-            // at the banking stage: https://github.com/solana-labs/solana/issues/8232)
+            // at the banking stage: https://github.com/trezoa-labs/trezoa/issues/8232)
             //
             // To be specific, the replay stage is tricked into a false perception where
             // last_vote_ancestors is AVAILABLE for descendant-of-`switch_slot`,  stale, and
@@ -1819,16 +1819,16 @@ pub mod test {
             vote_simulator::VoteSimulator,
         },
         itertools::Itertools,
-        solana_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
-        solana_clock::Slot,
-        solana_hash::Hash,
-        solana_ledger::{blockstore::make_slot_entries, get_tmp_ledger_path_auto_delete},
-        solana_pubkey::Pubkey,
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
-        solana_slot_history::SlotHistory,
-        solana_vote::vote_account::VoteAccount,
-        solana_vote_program::vote_state::{
+        trezoa_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
+        trezoa_clock::Slot,
+        trezoa_hash::Hash,
+        trezoa_ledger::{blockstore::make_slot_entries, get_tmp_ledger_path_auto_delete},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
+        trezoa_slot_history::SlotHistory,
+        trezoa_vote::vote_account::VoteAccount,
+        trezoa_vote_program::vote_state::{
             process_slot_vote_unchecked, Vote, VoteStateV4, VoteStateVersions, MAX_LOCKOUT_HISTORY,
         },
         std::{
@@ -1849,7 +1849,7 @@ pub mod test {
                 let mut account = AccountSharedData::from(Account {
                     data: vec![0; VoteStateV4::size_of()],
                     lamports: *lamports,
-                    owner: solana_vote_program::id(),
+                    owner: trezoa_vote_program::id(),
                     ..Account::default()
                 });
                 let mut vote_state = VoteStateV4::default();
@@ -1862,7 +1862,7 @@ pub mod test {
                 )
                 .expect("serialize state");
                 (
-                    solana_pubkey::new_rand(),
+                    trezoa_pubkey::new_rand(),
                     (*lamports, VoteAccount::try_from(account).unwrap()),
                 )
             })
@@ -2600,7 +2600,7 @@ pub mod test {
 
     #[test]
     fn test_check_vote_threshold_no_skip_lockout_with_new_root() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut tower = Tower::new_for_tests(4, 0.67);
         let mut stakes = HashMap::default();
         for i in 0..(MAX_LOCKOUT_HISTORY as u64 + 1) {
@@ -2821,7 +2821,7 @@ pub mod test {
 
     #[test]
     fn test_check_vote_threshold_lockouts_not_updated() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut tower = Tower::new_for_tests(1, 0.67);
         let stakes = vec![(0, 1), (1, 2)].into_iter().collect();
         tower.record_vote(0, Hash::default());
@@ -3037,7 +3037,7 @@ pub mod test {
 
     #[test]
     fn test_switch_threshold_across_tower_reload() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         // Init state
         let mut vote_simulator = VoteSimulator::new(2);
         let other_vote_account = vote_simulator.vote_pubkeys[1];
@@ -3294,7 +3294,7 @@ pub mod test {
 
     #[test]
     fn test_reconcile_blockstore_roots_with_tower_normal() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
 
@@ -3330,7 +3330,7 @@ pub mod test {
                     1) from external root (Tower(4))!?"
     )]
     fn test_reconcile_blockstore_roots_with_tower_panic_no_common_root() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
 
@@ -3358,7 +3358,7 @@ pub mod test {
 
     #[test]
     fn test_reconcile_blockstore_roots_with_tower_nop_no_parent() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
 
@@ -3384,7 +3384,7 @@ pub mod test {
 
     #[test]
     fn test_adjust_lockouts_after_replay_future_slots() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut tower = Tower::new_for_tests(10, 0.9);
         tower.record_vote(0, Hash::default());
         tower.record_vote(1, Hash::default());
@@ -3459,7 +3459,7 @@ pub mod test {
 
     #[test]
     fn test_adjust_lockouts_after_replay_all_rooted_with_too_old() {
-        use solana_slot_history::MAX_ENTRIES;
+        use trezoa_slot_history::MAX_ENTRIES;
 
         let mut tower = Tower::new_for_tests(10, 0.9);
         tower.record_vote(0, Hash::default());
@@ -3585,7 +3585,7 @@ pub mod test {
 
     #[test]
     fn test_adjust_lockouts_after_replay_too_old_tower() {
-        use solana_slot_history::MAX_ENTRIES;
+        use trezoa_slot_history::MAX_ENTRIES;
 
         let mut tower = Tower::new_for_tests(10, 0.9);
         tower.record_vote(0, Hash::default());
@@ -3641,7 +3641,7 @@ pub mod test {
 
     #[test]
     fn test_adjust_lockouts_after_replay_out_of_order() {
-        use solana_slot_history::MAX_ENTRIES;
+        use trezoa_slot_history::MAX_ENTRIES;
 
         let mut tower = Tower::new_for_tests(10, 0.9);
         tower

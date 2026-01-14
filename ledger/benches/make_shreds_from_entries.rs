@@ -2,13 +2,13 @@
 use {
     criterion::{criterion_group, criterion_main, Criterion},
     rand::Rng,
-    solana_entry::entry::Entry,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::shred::{self, ProcessShredsStats, ReedSolomonCache, Shred, Shredder},
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_transaction::Transaction,
+    trezoa_entry::entry::Entry,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::{self, ProcessShredsStats, ReedSolomonCache, Shred, Shredder},
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_transaction::Transaction,
     std::{hint::black_box, iter::repeat_with},
 };
 
@@ -17,7 +17,7 @@ fn make_dummy_hash<R: Rng>(rng: &mut R) -> Hash {
 }
 
 fn make_dummy_transaction<R: Rng>(rng: &mut R) -> Transaction {
-    solana_system_transaction::transfer(
+    trezoa_system_transaction::transfer(
         &Keypair::new(),                         // from
         &Pubkey::from(rng.random::<[u8; 32]>()), // to
         rng.random(),                            // lamports

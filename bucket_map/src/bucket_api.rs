@@ -5,7 +5,7 @@ use {
         bucket::Bucket, bucket_map::BucketMapError, bucket_stats::BucketMapStats,
         restart::RestartableBucket, MaxSearch, RefCount,
     },
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
     std::{
         path::PathBuf,
         sync::{

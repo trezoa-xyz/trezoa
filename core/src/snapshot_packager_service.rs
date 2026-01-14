@@ -1,16 +1,16 @@
 mod snapshot_gossip_manager;
 use {
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths as snapshot_paths, snapshot_config::SnapshotConfig,
         snapshot_hash::StartingSnapshotHashes, SnapshotKind,
     },
     snapshot_gossip_manager::SnapshotGossipManager,
-    solana_accounts_db::account_storage_entry::AccountStorageEntry,
-    solana_clock::Slot,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_measure::{meas_dur, measure::Measure, measure_us},
-    solana_perf::thread::renice_this_thread,
-    solana_runtime::{
+    trezoa_accounts_db::account_storage_entry::AccountStorageEntry,
+    trezoa_clock::Slot,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_measure::{meas_dur, measure::Measure, measure_us},
+    trezoa_perf::thread::renice_this_thread,
+    trezoa_runtime::{
         accounts_background_service::PendingSnapshotPackages,
         snapshot_controller::SnapshotController,
         snapshot_package::{BankSnapshotPackage, SnapshotPackage},

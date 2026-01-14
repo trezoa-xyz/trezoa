@@ -1,9 +1,9 @@
 use {
     criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion, Throughput},
     serde::{Deserialize, Serialize},
-    solana_account::Account,
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
+    trezoa_account::Account,
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
     std::mem,
 };
 

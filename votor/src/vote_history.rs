@@ -2,12 +2,12 @@ use {
     super::vote_history_storage::{
         Result, SavedVoteHistory, SavedVoteHistoryVersions, VoteHistoryStorage,
     },
-    agave_votor_messages::{consensus_message::Block, vote::Vote},
+    trezoa_votor_messages::{consensus_message::Block, vote::Vote},
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
     std::collections::{hash_map::Entry, HashMap, HashSet},
     thiserror::Error,
 };
@@ -297,7 +297,7 @@ impl VoteHistoryError {
 mod test {
     use {
         super::*, crate::vote_history_storage::FileVoteHistoryStorage,
-        agave_votor_messages::vote::Vote, solana_signer::Signer, tempfile::TempDir,
+        trezoa_votor_messages::vote::Vote, trezoa_signer::Signer, tempfile::TempDir,
     };
 
     // Votes cast since is kept in HashMap, so order is not guaranteed.

@@ -1,5 +1,5 @@
 #[allow(deprecated)]
-use solana_sysvar::{fees::Fees, recent_blockhashes::RecentBlockhashes};
+use trezoa_sysvar::{fees::Fees, recent_blockhashes::RecentBlockhashes};
 use {
     crate::{
         parse_account_data::{ParsableAccount, ParseAccountError},
@@ -8,15 +8,15 @@ use {
     bincode::deserialize,
     bv::BitVec,
     serde::{Deserialize, Serialize},
-    solana_clock::{Clock, Epoch, Slot, UnixTimestamp},
-    solana_epoch_schedule::EpochSchedule,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::sysvar,
-    solana_slot_hashes::SlotHashes,
-    solana_slot_history::{self as slot_history, SlotHistory},
-    solana_stake_interface::stake_history::{StakeHistory, StakeHistoryEntry},
-    solana_sysvar::{
+    trezoa_clock::{Clock, Epoch, Slot, UnixTimestamp},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::sysvar,
+    trezoa_slot_hashes::SlotHashes,
+    trezoa_slot_history::{self as slot_history, SlotHistory},
+    trezoa_stake_interface::stake_history::{StakeHistory, StakeHistoryEntry},
+    trezoa_sysvar::{
         epoch_rewards::EpochRewards, last_restart_slot::LastRestartSlot, rewards::Rewards,
     },
 };
@@ -268,10 +268,10 @@ impl From<EpochRewards> for UiEpochRewards {
 #[cfg(test)]
 mod test {
     #[allow(deprecated)]
-    use solana_sysvar::recent_blockhashes::IterItem;
+    use trezoa_sysvar::recent_blockhashes::IterItem;
     use {
-        super::*, solana_account::create_account_for_test, solana_fee_calculator::FeeCalculator,
-        solana_hash::Hash,
+        super::*, trezoa_account::create_account_for_test, trezoa_fee_calculator::FeeCalculator,
+        trezoa_hash::Hash,
     };
 
     #[test]
@@ -376,7 +376,7 @@ mod test {
             }]),
         );
 
-        let bad_pubkey = solana_pubkey::new_rand();
+        let bad_pubkey = trezoa_pubkey::new_rand();
         assert!(parse_sysvar(&stake_history_sysvar.data, &bad_pubkey).is_err());
 
         let bad_data = vec![0; 4];

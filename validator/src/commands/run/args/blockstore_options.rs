@@ -4,8 +4,8 @@ use {
         commands::{FromClapArgMatches, Result},
     },
     clap::{value_t, Arg, ArgMatches},
-    solana_clap_utils::{hidden_unless_forced, input_validators::is_parsable},
-    solana_ledger::blockstore_options::{
+    trezoa_clap_utils::{hidden_unless_forced, input_validators::is_parsable},
+    trezoa_ledger::blockstore_options::{
         AccessType, BlockstoreCompressionType, BlockstoreOptions, BlockstoreRecoveryMode,
         LedgerColumnOptions,
     },
@@ -19,7 +19,7 @@ impl ThreadArg for RocksdbCompactionThreadsArg {
     const HELP: &'static str = "Number of threads to use for rocksdb (Blockstore) compactions";
 
     fn default() -> usize {
-        solana_ledger::blockstore::default_num_compaction_threads().get()
+        trezoa_ledger::blockstore::default_num_compaction_threads().get()
     }
 }
 
@@ -30,7 +30,7 @@ impl ThreadArg for RocksdbFlushThreadsArg {
     const HELP: &'static str = "Number of threads to use for rocksdb (Blockstore) memtable flushes";
 
     fn default() -> usize {
-        solana_ledger::blockstore::default_num_flush_threads().get()
+        trezoa_ledger::blockstore::default_num_flush_threads().get()
     }
 }
 

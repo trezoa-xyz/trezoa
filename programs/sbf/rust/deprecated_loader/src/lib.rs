@@ -4,15 +4,15 @@
 #![allow(clippy::arithmetic_side_effects)]
 
 use {
-    solana_account_info::AccountInfo,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_msg::msg,
-    solana_program::{log::sol_log_params, program::invoke},
-    solana_program_error::ProgramResult,
-    solana_pubkey::Pubkey,
-    solana_sbf_rust_invoke_dep::*,
-    solana_sbf_rust_realloc_dep::*,
-    solana_sdk_ids::bpf_loader,
+    trezoa_account_info::AccountInfo,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_msg::msg,
+    trezoa_program::{log::sol_log_params, program::invoke},
+    trezoa_program_error::ProgramResult,
+    trezoa_pubkey::Pubkey,
+    trezoa_sbf_rust_invoke_dep::*,
+    trezoa_sbf_rust_realloc_dep::*,
+    trezoa_sdk_ids::bpf_loader,
 };
 
 #[derive(Debug, PartialEq)]
@@ -33,7 +33,7 @@ fn custom_panic(info: &core::panic::PanicInfo<'_>) {
     msg!(&format!("{info}"));
 }
 
-solana_program::entrypoint_deprecated!(process_instruction);
+trezoa_program::entrypoint_deprecated!(process_instruction);
 fn process_instruction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -131,7 +131,7 @@ fn process_instruction(
             )
             .unwrap();
 
-            if !solana_sdk_ids::bpf_loader_deprecated::check_id(realloc_program_owner) {
+            if !trezoa_sdk_ids::bpf_loader_deprecated::check_id(realloc_program_owner) {
                 assert_eq!(&*account.data.borrow(), &expected);
             }
         }
@@ -169,7 +169,7 @@ fn process_instruction(
 
             // deserialize_parameters_unaligned predates realloc support, and
             // hardcodes the account data length to the original length.
-            if !solana_program::bpf_loader_deprecated::check_id(realloc_program_owner)
+            if !trezoa_program::bpf_loader_deprecated::check_id(realloc_program_owner)
                 && stricter_abi_and_runtime_constraints == 0
             {
                 assert_eq!(&*account.data.borrow(), &expected);
@@ -281,7 +281,7 @@ fn process_instruction(
 
             {
                 // Test - arch config
-                #[cfg(not(target_os = "solana"))]
+                #[cfg(not(target_os = "trezoa"))]
                 panic!();
             }
         }

@@ -9,12 +9,12 @@ mod serde_snapshot_tests {
             },
             snapshot_utils::StorageAndNextAccountsFileId,
         },
-        agave_fs::FileInfo,
+        trezoa_fs::FileInfo,
         bincode::{serialize_into, Error},
         log::info,
         rand::{rng, Rng},
-        solana_account::{AccountSharedData, ReadableAccount},
-        solana_accounts_db::{
+        trezoa_account::{AccountSharedData, ReadableAccount},
+        trezoa_accounts_db::{
             account_storage::AccountStorageMap,
             account_storage_entry::AccountStorageEntry,
             account_storage_reader::AccountStorageReader,
@@ -27,9 +27,9 @@ mod serde_snapshot_tests {
             ancestors::Ancestors,
             ObsoleteAccounts,
         },
-        solana_clock::Slot,
-        solana_epoch_schedule::EpochSchedule,
-        solana_pubkey::Pubkey,
+        trezoa_clock::Slot,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_pubkey::Pubkey,
         std::{
             fs::File,
             io::{self, BufReader, Cursor, Read, Write},
@@ -203,13 +203,13 @@ mod serde_snapshot_tests {
 
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     fn test_accounts_serialize(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (_accounts_dir, paths) = get_temp_accounts_paths(4).unwrap();
         let accounts_db = AccountsDb::new_for_tests(paths);
         let accounts = Accounts::new(Arc::new(accounts_db));
 
         let slot = 0;
-        let pubkeys: Vec<_> = std::iter::repeat_with(solana_pubkey::new_rand)
+        let pubkeys: Vec<_> = std::iter::repeat_with(trezoa_pubkey::new_rand)
             .take(100)
             .collect();
         for (i, pubkey) in pubkeys.iter().enumerate() {
@@ -262,11 +262,11 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_remove_unrooted_slot_snapshot(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let unrooted_slot = 9;
         let unrooted_bank_id = 9;
         let db = AccountsDb::new_single_for_tests();
-        let key = solana_pubkey::new_rand();
+        let key = trezoa_pubkey::new_rand();
         let account0 = AccountSharedData::new(1, 0, &key);
         db.store_for_tests((unrooted_slot, [(&key, &account0)].as_slice()));
 
@@ -274,7 +274,7 @@ mod serde_snapshot_tests {
         db.remove_unrooted_slots(&[(unrooted_slot, unrooted_bank_id)]);
 
         // Add a new root
-        let key2 = solana_pubkey::new_rand();
+        let key2 = trezoa_pubkey::new_rand();
         let new_root = unrooted_slot + 1;
         db.store_for_tests((new_root, [(&key2, &account0)].as_slice()));
         db.add_root_and_flush_write_cache(new_root);
@@ -308,7 +308,7 @@ mod serde_snapshot_tests {
         mark_obsolete_accounts_restore: MarkObsoleteAccounts,
     ) {
         for pass in 0..2 {
-            agave_logger::setup();
+            trezoa_logger::setup();
             let accounts = AccountsDb::new_with_config(
                 Vec::new(),
                 AccountsDbConfig {
@@ -437,7 +437,7 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_accounts_db_serialize_zero_and_free(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let some_lamport = 223;
         let zero_lamport = 0;
@@ -445,11 +445,11 @@ mod serde_snapshot_tests {
         let owner = *AccountSharedData::default().owner();
 
         let account = AccountSharedData::new(some_lamport, no_data, &owner);
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let zero_lamport_account = AccountSharedData::new(zero_lamport, no_data, &owner);
 
         let account2 = AccountSharedData::new(some_lamport + 1, no_data, &owner);
-        let pubkey2 = solana_pubkey::new_rand();
+        let pubkey2 = trezoa_pubkey::new_rand();
 
         let accounts = AccountsDb::new_single_for_tests();
 
@@ -498,9 +498,9 @@ mod serde_snapshot_tests {
         let account3 = AccountSharedData::new(some_lamport + 100_002, no_data, &owner);
         let zero_lamport_account = AccountSharedData::new(zero_lamport, no_data, &owner);
 
-        let pubkey = solana_pubkey::new_rand();
-        let purged_pubkey1 = solana_pubkey::new_rand();
-        let purged_pubkey2 = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
+        let purged_pubkey1 = trezoa_pubkey::new_rand();
+        let purged_pubkey2 = trezoa_pubkey::new_rand();
 
         let dummy_account = AccountSharedData::new(dummy_lamport, no_data, &owner);
         let dummy_pubkey = Pubkey::default();
@@ -551,7 +551,7 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_accounts_purge_chained_purge_before_snapshot_restore(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         with_chained_zero_lamport_accounts(|accounts, current_slot| {
             // If there is no latest full snapshot, zero lamport accounts can be cleaned and
             // removed immediately. Set latest full snapshot slot to zero to avoid cleaning
@@ -570,7 +570,7 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_accounts_purge_chained_purge_after_snapshot_restore(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         with_chained_zero_lamport_accounts(|accounts, current_slot| {
             let accounts = reconstruct_accounts_db_via_serialization(
                 &accounts,
@@ -593,7 +593,7 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_accounts_purge_long_chained_after_snapshot_restore(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let old_lamport = 223;
         let zero_lamport = 0;
         let no_data = 0;
@@ -605,10 +605,10 @@ mod serde_snapshot_tests {
         let dummy_account = AccountSharedData::new(99_999_999, no_data, &owner);
         let zero_lamport_account = AccountSharedData::new(zero_lamport, no_data, &owner);
 
-        let pubkey = solana_pubkey::new_rand();
-        let dummy_pubkey = solana_pubkey::new_rand();
-        let purged_pubkey1 = solana_pubkey::new_rand();
-        let purged_pubkey2 = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
+        let dummy_pubkey = trezoa_pubkey::new_rand();
+        let purged_pubkey1 = trezoa_pubkey::new_rand();
+        let purged_pubkey2 = trezoa_pubkey::new_rand();
 
         let mut current_slot = 0;
         let accounts = AccountsDb::new_single_for_tests();
@@ -667,7 +667,7 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_accounts_clean_after_snapshot_restore_then_old_revives(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let old_lamport = 223;
         let zero_lamport = 0;
         let no_data = 0;
@@ -680,9 +680,9 @@ mod serde_snapshot_tests {
         let dummy_account = AccountSharedData::new(dummy_lamport, no_data, &owner);
         let zero_lamport_account = AccountSharedData::new(zero_lamport, no_data, &owner);
 
-        let pubkey1 = solana_pubkey::new_rand();
-        let pubkey2 = solana_pubkey::new_rand();
-        let dummy_pubkey = solana_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
+        let pubkey2 = trezoa_pubkey::new_rand();
+        let dummy_pubkey = trezoa_pubkey::new_rand();
 
         let mut current_slot = 0;
         let accounts = AccountsDb::new_single_for_tests();
@@ -799,14 +799,14 @@ mod serde_snapshot_tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_shrink_stale_slots_processed(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         for startup in &[false, true] {
             let accounts = AccountsDb::new_single_for_tests();
 
             let pubkey_count = 100;
             let pubkeys: Vec<_> = (0..pubkey_count)
-                .map(|_| solana_pubkey::new_rand())
+                .map(|_| trezoa_pubkey::new_rand())
                 .collect();
 
             let some_lamport = 223;

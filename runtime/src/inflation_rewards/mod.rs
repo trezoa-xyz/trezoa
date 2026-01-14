@@ -5,9 +5,9 @@ use {
         calculate_stake_points_and_credits, CalculatedStakePoints, DelegatedVoteState,
         InflationPointCalculationEvent, PointValue, SkippedReason,
     },
-    solana_clock::Epoch,
-    solana_instruction::error::InstructionError,
-    solana_stake_interface::{
+    trezoa_clock::Epoch,
+    trezoa_instruction::error::InstructionError,
+    trezoa_stake_interface::{
         error::StakeError,
         stake_history::StakeHistory,
         state::{Stake, StakeStateV2},
@@ -266,10 +266,10 @@ mod tests {
     use {
         self::points::null_tracer,
         super::*,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_pubkey::Pubkey,
-        solana_stake_interface::state::Delegation,
-        solana_vote_program::vote_state::{handler::VoteStateHandle, VoteStateV4},
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_pubkey::Pubkey,
+        trezoa_stake_interface::state::Delegation,
+        trezoa_vote_program::vote_state::{handler::VoteStateHandle, VoteStateV4},
         test_case::test_case,
     };
 
@@ -702,7 +702,7 @@ mod tests {
         let vote_state = VoteStateV4::default();
 
         // bootstrap means fully-vested stake at epoch 0 with
-        //  10_000_000 SOL is a big but not unreasaonable stake
+        //  10_000_000 TRZ is a big but not unreasaonable stake
         let stake = new_stake(
             10_000_000 * LAMPORTS_PER_SOL,
             &Pubkey::default(),

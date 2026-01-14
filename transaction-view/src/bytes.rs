@@ -240,8 +240,8 @@ mod tests {
     use {
         super::*,
         bincode::{DefaultOptions, Options, serialize_into},
-        solana_packet::PACKET_DATA_SIZE,
-        solana_short_vec::ShortU16,
+        trezoa_packet::PACKET_DATA_SIZE,
+        trezoa_short_vec::ShortU16,
     };
 
     #[test]

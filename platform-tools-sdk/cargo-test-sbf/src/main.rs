@@ -110,7 +110,7 @@ pub fn is_version_string(arg: &str) -> Result<(), String> {
     )
 }
 
-fn test_solana_package(
+fn test_trezoa_package(
     config: &Config,
     target_directory: &Path,
     package: &cargo_metadata::Package,
@@ -164,7 +164,7 @@ fn test_solana_package(
         config.generate_child_script_on_failure,
     );
 
-    // Pass --sbf-out-dir along to the solana-program-test crate
+    // Pass --sbf-out-dir along to the trezoa-program-test crate
     // Safety: cargo-test-sbf doesn't spawn any threads, env is updated one-by-one between spawns
     unsafe {
         env::set_var("SBF_OUT_DIR", sbf_out_dir);
@@ -207,7 +207,7 @@ fn test_solana_package(
     );
 }
 
-fn test_solana(config: Config, manifest_path: Option<PathBuf>) {
+fn test_trezoa(config: Config, manifest_path: Option<PathBuf>) {
     let mut metadata_command = cargo_metadata::MetadataCommand::new();
     if let Some(manifest_path) = manifest_path.as_ref() {
         metadata_command.manifest_path(manifest_path);
@@ -230,7 +230,7 @@ fn test_solana(config: Config, manifest_path: Option<PathBuf>) {
                     .any(|p| root_package.id.repr.contains(p)))
         {
             debug!("test root package {:?}", root_package.id);
-            test_solana_package(&config, metadata.target_directory.as_ref(), root_package);
+            test_trezoa_package(&config, metadata.target_directory.as_ref(), root_package);
             return;
         }
     }
@@ -254,13 +254,13 @@ fn test_solana(config: Config, manifest_path: Option<PathBuf>) {
         if config.packages.is_empty() || config.packages.iter().any(|p| package.id.repr.contains(p))
         {
             debug!("test package {:?}", package.id);
-            test_solana_package(&config, metadata.target_directory.as_ref(), package);
+            test_trezoa_package(&config, metadata.target_directory.as_ref(), package);
         }
     }
 }
 
 fn main() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let mut args = env::args().collect::<Vec<_>>();
     // When run as a cargo subcommand, the first program argument is the subcommand name.
     // Remove it
@@ -282,7 +282,7 @@ fn main() {
                 .long("sbf-sdk")
                 .value_name("PATH")
                 .takes_value(true)
-                .help("UNUSED: Path to the Solana SBF SDK"),
+                .help("UNUSED: Path to the Trezoa SBF SDK"),
         )
         .arg(
             Arg::new("features")
@@ -360,7 +360,7 @@ fn main() {
                 .long("workspace")
                 .takes_value(false)
                 .alias("all")
-                .help("Test all Solana packages in the workspace"),
+                .help("Test all Trezoa packages in the workspace"),
         )
         .arg(
             Arg::new("jobs")
@@ -448,5 +448,5 @@ fn main() {
     }
 
     let manifest_path: Option<PathBuf> = matches.value_of_t("manifest_path").ok();
-    test_solana(config, manifest_path);
+    test_trezoa(config, manifest_path);
 }

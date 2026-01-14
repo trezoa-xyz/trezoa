@@ -12,8 +12,8 @@ use {
         spend_utils::{resolve_spend_tx_and_check_account_balance, SpendAmount},
     },
     clap::{App, Arg, ArgMatches, SubCommand},
-    solana_account::Account,
-    solana_clap_utils::{
+    trezoa_account::Account,
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit, COMPUTE_UNIT_PRICE_ARG},
         input_parsers::*,
         input_validators::*,
@@ -21,23 +21,23 @@ use {
         memo::{memo_arg, MEMO_ARG},
         nonce::*,
     },
-    solana_cli_output::CliNonceAccount,
-    solana_hash::Hash,
-    solana_message::Message,
-    solana_nonce::state::State,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_nonce_utils::nonblocking::*,
-    solana_sdk_ids::system_program,
-    solana_system_interface::{
+    trezoa_cli_output::CliNonceAccount,
+    trezoa_hash::Hash,
+    trezoa_message::Message,
+    trezoa_nonce::state::State,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_nonce_utils::nonblocking::*,
+    trezoa_sdk_ids::system_program,
+    trezoa_system_interface::{
         error::SystemError,
         instruction::{
             advance_nonce_account, authorize_nonce_account, create_nonce_account,
             create_nonce_account_with_seed, upgrade_nonce_account, withdraw_nonce_account,
         },
     },
-    solana_transaction::Transaction,
+    trezoa_transaction::Transaction,
     std::rc::Rc,
 };
 
@@ -88,7 +88,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .required(true)
                         .validator(is_amount_or_all)
                         .help(
-                            "The amount to load the nonce account with, in SOL; accepts keyword \
+                            "The amount to load the nonce account with, in TRZ; accepts keyword \
                              ALL",
                         ),
                 )
@@ -152,12 +152,12 @@ impl NonceSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 ),
         )
         .subcommand(
             SubCommand::with_name("withdraw-from-nonce-account")
-                .about("Withdraw SOL from the nonce account")
+                .about("Withdraw TRZ from the nonce account")
                 .arg(pubkey!(
                     Arg::with_name("nonce_account_pubkey")
                         .index(1)
@@ -170,7 +170,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .index(2)
                         .value_name("RECIPIENT_ADDRESS")
                         .required(true),
-                    "Recipient of withdrawn SOL."
+                    "Recipient of withdrawn TRZ."
                 ))
                 .arg(
                     Arg::with_name("amount")
@@ -179,7 +179,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .required(true)
                         .validator(is_amount)
-                        .help("The amount to withdraw from the nonce account, in SOL"),
+                        .help("The amount to withdraw from the nonce account, in TRZ"),
                 )
                 .arg(nonce_authority_arg())
                 .arg(memo_arg())
@@ -746,17 +746,17 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_account::{state_traits::StateMut, Account},
-        solana_keypair::{read_keypair_file, write_keypair, Keypair},
-        solana_nonce::{
+        trezoa_account::{state_traits::StateMut, Account},
+        trezoa_keypair::{read_keypair_file, write_keypair, Keypair},
+        trezoa_nonce::{
             self as nonce,
             state::{DurableNonce, State},
             versions::Versions,
         },
-        solana_nonce_account as nonce_account,
-        solana_sdk_ids::system_program,
-        solana_sha256_hasher::hash,
-        solana_signer::Signer,
+        trezoa_nonce_account as nonce_account,
+        trezoa_sdk_ids::system_program,
+        trezoa_sha256_hasher::hash,
+        trezoa_signer::Signer,
         tempfile::NamedTempFile,
     };
 
@@ -1062,7 +1062,7 @@ mod tests {
     fn test_check_nonce_account() {
         let durable_nonce = DurableNonce::from_blockhash(&Hash::default());
         let blockhash = *durable_nonce.as_hash();
-        let nonce_pubkey = solana_pubkey::new_rand();
+        let nonce_pubkey = trezoa_pubkey::new_rand();
         let data = Versions::new(State::Initialized(nonce::state::Data::new(
             nonce_pubkey,
             durable_nonce,
@@ -1104,7 +1104,7 @@ mod tests {
             );
         }
 
-        let new_nonce_authority = solana_pubkey::new_rand();
+        let new_nonce_authority = trezoa_pubkey::new_rand();
         let data = Versions::new(State::Initialized(nonce::state::Data::new(
             new_nonce_authority,
             durable_nonce,

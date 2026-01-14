@@ -1,6 +1,6 @@
 [package]
-name = "solana-core"
-documentation = "https://docs.rs/solana-core"
+name = "trezoa-core"
+documentation = "https://docs.rs/trezoa-core"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -13,44 +13,44 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = [
-    "solana-perf/dev-context-only-utils",
-    "solana-runtime/dev-context-only-utils",
-    "solana-streamer/dev-context-only-utils",
+    "trezoa-perf/dev-context-only-utils",
+    "trezoa-runtime/dev-context-only-utils",
+    "trezoa-streamer/dev-context-only-utils",
 ]
 frozen-abi = [
-    "dep:solana-frozen-abi",
-    "dep:solana-frozen-abi-macro",
-    "solana-accounts-db/frozen-abi",
-    "solana-bloom/frozen-abi",
-    "solana-compute-budget/frozen-abi",
-    "solana-cost-model/frozen-abi",
-    "solana-frozen-abi/frozen-abi",
-    "solana-gossip/frozen-abi",
-    "solana-ledger/frozen-abi",
-    "solana-packet/frozen-abi",
-    "solana-perf/frozen-abi",
-    "solana-program-runtime/frozen-abi",
-    "solana-runtime/frozen-abi",
-    "solana-short-vec/frozen-abi",
-    "solana-signature/frozen-abi",
-    "solana-svm/frozen-abi",
-    "solana-vote/frozen-abi",
-    "solana-vote-program/frozen-abi",
+    "dep:trezoa-frozen-abi",
+    "dep:trezoa-frozen-abi-macro",
+    "trezoa-accounts-db/frozen-abi",
+    "trezoa-bloom/frozen-abi",
+    "trezoa-compute-budget/frozen-abi",
+    "trezoa-cost-model/frozen-abi",
+    "trezoa-frozen-abi/frozen-abi",
+    "trezoa-gossip/frozen-abi",
+    "trezoa-ledger/frozen-abi",
+    "trezoa-packet/frozen-abi",
+    "trezoa-perf/frozen-abi",
+    "trezoa-program-runtime/frozen-abi",
+    "trezoa-runtime/frozen-abi",
+    "trezoa-short-vec/frozen-abi",
+    "trezoa-signature/frozen-abi",
+    "trezoa-svm/frozen-abi",
+    "trezoa-vote/frozen-abi",
+    "trezoa-vote-program/frozen-abi",
 ]
 
 [dependencies]
-agave-banking-stage-ingress-types = { workspace = true }
-agave-feature-set = { workspace = true }
-agave-logger = { workspace = true }
-agave-scheduler-bindings = { workspace = true }
-agave-scheduling-utils = { workspace = true }
-agave-snapshots = { workspace = true }
-agave-transaction-view = { workspace = true }
-agave-verified-packet-receiver = { workspace = true }
-agave-votor = { workspace = true, features = ["agave-unstable-api"] }
-agave-votor-messages = { workspace = true }
+trezoa-banking-stage-ingress-types = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-scheduler-bindings = { workspace = true }
+trezoa-scheduling-utils = { workspace = true }
+trezoa-snapshots = { workspace = true }
+trezoa-transaction-view = { workspace = true }
+trezoa-verified-packet-receiver = { workspace = true }
+trezoa-votor = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-votor-messages = { workspace = true }
 ahash = { workspace = true }
 anyhow = { workspace = true }
 arc-swap = { workspace = true }
@@ -87,93 +87,93 @@ serde = { workspace = true }
 serde_bytes = { workspace = true }
 signal-hook = { workspace = true }
 slab = { workspace = true }
-solana-account = { workspace = true }
-solana-accounts-db = { workspace = true }
-solana-address-lookup-table-interface = { workspace = true }
-solana-bincode = { workspace = true }
-solana-bloom = { workspace = true }
-solana-builtins-default-costs = { workspace = true }
-solana-client = { workspace = true }
-solana-clock = { workspace = true }
-solana-cluster-type = { workspace = true }
-solana-compute-budget = { workspace = true }
-solana-compute-budget-instruction = { workspace = true }
-solana-compute-budget-interface = { workspace = true }
-solana-connection-cache = { workspace = true }
-solana-cost-model = { workspace = true }
-solana-entry = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-fee = { workspace = true }
-solana-fee-calculator = { workspace = true }
-solana-fee-structure = { workspace = true }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-account = { workspace = true }
+trezoa-accounts-db = { workspace = true }
+trezoa-address-lookup-table-interface = { workspace = true }
+trezoa-bincode = { workspace = true }
+trezoa-bloom = { workspace = true }
+trezoa-builtins-default-costs = { workspace = true }
+trezoa-client = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-cluster-type = { workspace = true }
+trezoa-compute-budget = { workspace = true }
+trezoa-compute-budget-instruction = { workspace = true }
+trezoa-compute-budget-interface = { workspace = true }
+trezoa-connection-cache = { workspace = true }
+trezoa-cost-model = { workspace = true }
+trezoa-entry = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-fee = { workspace = true }
+trezoa-fee-calculator = { workspace = true }
+trezoa-fee-structure = { workspace = true }
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-frozen-abi-macro = { workspace = true, optional = true, features = [
+trezoa-frozen-abi-macro = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-genesis-config = { workspace = true }
-solana-genesis-utils = { workspace = true }
-solana-geyser-plugin-manager = { workspace = true }
-solana-gossip = { workspace = true, features = ["agave-unstable-api"] }
-solana-hard-forks = { workspace = true }
-solana-hash = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keypair = { workspace = true }
-solana-ledger = { workspace = true, features = ["agave-unstable-api"] }
-solana-loader-v3-interface = { workspace = true }
-solana-measure = { workspace = true }
-solana-message = { workspace = true }
-solana-metrics = { workspace = true }
-solana-native-token = { workspace = true }
-solana-net-utils = { workspace = true, features = ["agave-unstable-api"] }
-solana-nonce = { workspace = true }
-solana-nonce-account = { workspace = true }
-solana-packet = { workspace = true }
-solana-perf = { workspace = true }
-solana-poh = { workspace = true }
-solana-poh-config = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-quic-client = { workspace = true }
-solana-quic-definitions = { workspace = true }
-solana-rayon-threadlimit = { workspace = true }
-solana-rent = { workspace = true }
-solana-rpc = { workspace = true }
-solana-rpc-client-api = { workspace = true }
-solana-runtime = { workspace = true }
-solana-runtime-transaction = { workspace = true }
-solana-sanitize = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-send-transaction-service = { workspace = true }
-solana-sha256-hasher = { workspace = true }
-solana-short-vec = { workspace = true }
-solana-shred-version = { workspace = true }
-solana-signature = { workspace = true }
-solana-signer = { workspace = true }
-solana-slot-hashes = { workspace = true }
-solana-slot-history = { workspace = true }
-solana-streamer = { workspace = true }
-solana-svm = { workspace = true }
-solana-svm-timings = { workspace = true }
-solana-svm-transaction = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-system-transaction = { workspace = true }
-solana-sysvar = { workspace = true }
-solana-time-utils = { workspace = true }
-solana-tls-utils = { workspace = true }
-solana-tpu-client = { workspace = true }
-solana-tpu-client-next = { workspace = true }
-solana-transaction = { workspace = true }
-solana-transaction-error = { workspace = true }
-solana-transaction-status = { workspace = true }
-solana-turbine = { workspace = true, features = ["agave-unstable-api"] }
-solana-unified-scheduler-logic = { workspace = true }
-solana-unified-scheduler-pool = { workspace = true }
-solana-validator-exit = { workspace = true }
-solana-version = { workspace = true }
-solana-vote = { workspace = true }
-solana-vote-program = { workspace = true }
-solana-wen-restart = { workspace = true }
+trezoa-genesis-config = { workspace = true }
+trezoa-genesis-utils = { workspace = true }
+trezoa-geyser-plugin-manager = { workspace = true }
+trezoa-gossip = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-hard-forks = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-ledger = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-loader-v3-interface = { workspace = true }
+trezoa-measure = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-metrics = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-net-utils = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-nonce = { workspace = true }
+trezoa-nonce-account = { workspace = true }
+trezoa-packet = { workspace = true }
+trezoa-perf = { workspace = true }
+trezoa-poh = { workspace = true }
+trezoa-poh-config = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-quic-client = { workspace = true }
+trezoa-quic-definitions = { workspace = true }
+trezoa-rayon-threadlimit = { workspace = true }
+trezoa-rent = { workspace = true }
+trezoa-rpc = { workspace = true }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-runtime = { workspace = true }
+trezoa-runtime-transaction = { workspace = true }
+trezoa-sanitize = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-send-transaction-service = { workspace = true }
+trezoa-sha256-hasher = { workspace = true }
+trezoa-short-vec = { workspace = true }
+trezoa-shred-version = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-slot-hashes = { workspace = true }
+trezoa-slot-history = { workspace = true }
+trezoa-streamer = { workspace = true }
+trezoa-svm = { workspace = true }
+trezoa-svm-timings = { workspace = true }
+trezoa-svm-transaction = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-system-transaction = { workspace = true }
+trezoa-sysvar = { workspace = true }
+trezoa-time-utils = { workspace = true }
+trezoa-tls-utils = { workspace = true }
+trezoa-tpu-client = { workspace = true }
+trezoa-tpu-client-next = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-transaction-error = { workspace = true }
+trezoa-transaction-status = { workspace = true }
+trezoa-turbine = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-unified-scheduler-logic = { workspace = true }
+trezoa-unified-scheduler-pool = { workspace = true }
+trezoa-validator-exit = { workspace = true }
+trezoa-version = { workspace = true }
+trezoa-vote = { workspace = true }
+trezoa-vote-program = { workspace = true }
+trezoa-wen-restart = { workspace = true }
 static_assertions = { workspace = true }
 strum = { workspace = true, features = ["derive"] }
 strum_macros = { workspace = true }
@@ -193,33 +193,33 @@ shaq = { workspace = true }
 sysctl = { workspace = true }
 
 [dev-dependencies]
-agave-reserved-account-keys = { workspace = true }
-agave-scheduler-bindings = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-reserved-account-keys = { workspace = true }
+trezoa-scheduler-bindings = { workspace = true, features = ["dev-context-only-utils"] }
 bencher = { workspace = true }
 criterion = { workspace = true }
 fs_extra = { workspace = true }
 serde_json = { workspace = true }
 serial_test = { workspace = true }
-solana-account = { workspace = true, features = ["dev-context-only-utils"] }
-solana-bpf-loader-program = { workspace = true }
-solana-client = { workspace = true, features = ["dev-context-only-utils"] }
-solana-compute-budget-interface = { workspace = true }
-solana-compute-budget-program = { workspace = true }
+trezoa-account = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-bpf-loader-program = { workspace = true }
+trezoa-client = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-compute-budget-interface = { workspace = true }
+trezoa-compute-budget-program = { workspace = true }
 # See order-crates-for-publishing.py for using this unusual `path = "."`
-solana-core = { path = ".", features = ["agave-unstable-api", "dev-context-only-utils"] }
-solana-cost-model = { workspace = true, features = ["dev-context-only-utils"] }
-solana-keypair = { workspace = true }
-solana-ledger = { workspace = true, features = ["dev-context-only-utils"] }
-solana-net-utils = { workspace = true, features = ["dev-context-only-utils"] }
-solana-poh = { workspace = true, features = ["dev-context-only-utils"] }
-solana-program-binaries = { workspace = true }
-solana-program-runtime = { workspace = true, features = ["metrics"] }
-solana-rpc = { workspace = true, features = ["dev-context-only-utils"] }
-solana-system-program = { workspace = true }
-solana-unified-scheduler-pool = { workspace = true, features = [
+trezoa-core = { path = ".", features = ["trezoa-unstable-api", "dev-context-only-utils"] }
+trezoa-cost-model = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-keypair = { workspace = true }
+trezoa-ledger = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-net-utils = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-poh = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-program-binaries = { workspace = true }
+trezoa-program-runtime = { workspace = true, features = ["metrics"] }
+trezoa-rpc = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-system-program = { workspace = true }
+trezoa-unified-scheduler-pool = { workspace = true, features = [
     "dev-context-only-utils",
 ] }
-solana-vote = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-vote = { workspace = true, features = ["dev-context-only-utils"] }
 spl-memo-interface = { workspace = true }
 static_assertions = { workspace = true }
 test-case = { workspace = true }

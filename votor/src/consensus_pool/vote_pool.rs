@@ -5,10 +5,10 @@
 
 use {
     crate::common::Stake,
-    agave_votor_messages::{consensus_message::VoteMessage, vote::Vote},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
+    trezoa_votor_messages::{consensus_message::VoteMessage, vote::Vote},
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
     std::collections::{btree_map::Entry, BTreeMap},
     thiserror::Error,
 };
@@ -336,8 +336,8 @@ impl VotePool {
 mod test {
     use {
         super::*,
-        agave_votor_messages::{consensus_message::VoteMessage, vote::Vote},
-        solana_bls_signatures::Signature as BLSSignature,
+        trezoa_votor_messages::{consensus_message::VoteMessage, vote::Vote},
+        trezoa_bls_signatures::Signature as BLSSignature,
     };
 
     #[test]

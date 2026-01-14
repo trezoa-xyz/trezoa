@@ -1,8 +1,8 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
     criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion, Throughput},
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_accounts_db::{
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_accounts_db::{
         accounts_file::StorageAccess,
         append_vec::{self, AppendVec},
         tiered_storage::{
@@ -11,9 +11,9 @@ use {
         },
         utils::create_account_shared_data,
     },
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_system_interface::MAX_PERMITTED_DATA_LENGTH,
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_system_interface::MAX_PERMITTED_DATA_LENGTH,
     std::mem::ManuallyDrop,
 };
 

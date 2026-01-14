@@ -4,13 +4,13 @@ use {
         remote_wallet::{RemoteWallet, RemoteWalletError, RemoteWalletInfo},
     },
     console::Emoji,
-    solana_derivation_path::DerivationPath,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
+    trezoa_derivation_path::DerivationPath,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
     std::{cell::RefCell, fmt, rc::Rc},
     trezor_client::{
         client::common::handle_interaction,
-        protos::{SolanaGetPublicKey, SolanaPublicKey, SolanaSignTx, SolanaTxSignature},
+        protos::{TrezoaGetPublicKey, TrezoaPublicKey, TrezoaSignTx, TrezoaTxSignature},
         Trezor,
     },
 };
@@ -86,17 +86,17 @@ impl RemoteWallet<Trezor> for TrezorWallet {
         })
     }
 
-    /// Get solana pubkey from a RemoteWallet
+    /// Get trezoa pubkey from a RemoteWallet
     fn get_pubkey(
         &self,
         derivation_path: &DerivationPath,
         confirm_key: bool,
     ) -> Result<Pubkey, RemoteWalletError> {
         let address_n = derivation_path.into_iter().map(|i| i.to_bits()).collect();
-        let solana_get_pubkey = SolanaGetPublicKey {
+        let trezoa_get_pubkey = TrezoaGetPublicKey {
             address_n,
             show_display: Some(confirm_key),
-            ..SolanaGetPublicKey::default()
+            ..TrezoaGetPublicKey::default()
         };
         if confirm_key {
             println!("Waiting for your approval on {}", self.name());
@@ -104,7 +104,7 @@ impl RemoteWallet<Trezor> for TrezorWallet {
         let pubkey = handle_interaction(
             self.trezor_client
                 .borrow_mut()
-                .call(solana_get_pubkey, Box::new(|_, m: SolanaPublicKey| Ok(m)))?,
+                .call(trezoa_get_pubkey, Box::new(|_, m: TrezoaPublicKey| Ok(m)))?,
         )?;
         if confirm_key {
             println!("{CHECK_MARK}Approved");
@@ -121,17 +121,17 @@ impl RemoteWallet<Trezor> for TrezorWallet {
         data: &[u8],
     ) -> Result<Signature, RemoteWalletError> {
         let address_n = derivation_path.into_iter().map(|i| i.to_bits()).collect();
-        let solana_sign_tx = SolanaSignTx {
+        let trezoa_sign_tx = TrezoaSignTx {
             address_n,
             serialized_tx: Some(data.to_vec()),
-            ..SolanaSignTx::default()
+            ..TrezoaSignTx::default()
         };
-        let solana_tx_signature = handle_interaction(
+        let trezoa_tx_signature = handle_interaction(
             self.trezor_client
                 .borrow_mut()
-                .call(solana_sign_tx, Box::new(|_, m: SolanaTxSignature| Ok(m)))?,
+                .call(trezoa_sign_tx, Box::new(|_, m: TrezoaTxSignature| Ok(m)))?,
         )?;
-        Signature::try_from(solana_tx_signature.signature())
+        Signature::try_from(trezoa_tx_signature.signature())
             .map_err(|_e| RemoteWalletError::Protocol("Signature packet size mismatch"))
     }
 
@@ -179,26 +179,26 @@ mod tests {
     #[test]
     #[serial]
     #[ignore]
-    fn test_solana_pubkey() {
+    fn test_trezoa_pubkey() {
         let mut emulator = init_emulator();
         let derivation_path_str = "m/44'/501'/0'/0'";
         let derivation_path = DerivationPath::from_absolute_path_str(derivation_path_str).unwrap();
         let address_n = derivation_path.into_iter().map(|i| i.to_bits()).collect();
-        let solana_get_pubkey = SolanaGetPublicKey {
+        let trezoa_get_pubkey = TrezoaGetPublicKey {
             address_n,
             show_display: Some(false),
-            ..SolanaGetPublicKey::default()
+            ..TrezoaGetPublicKey::default()
         };
         let pubkey = handle_interaction(
             emulator
-                .call(solana_get_pubkey, Box::new(|_, m: SolanaPublicKey| Ok(m)))
+                .call(trezoa_get_pubkey, Box::new(|_, m: TrezoaPublicKey| Ok(m)))
                 .expect(
-                    "Trezor client (the emulator) has been initialized and SolanaGetPublicKey is \
+                    "Trezor client (the emulator) has been initialized and TrezoaGetPublicKey is \
                      initialized correctly",
                 ),
         )
         .expect(
-            "Trezor client (the emulator) has been initialized and SolanaGetPublicKey is \
+            "Trezor client (the emulator) has been initialized and TrezoaGetPublicKey is \
              initialized correctly",
         );
         assert!(Pubkey::try_from(pubkey.public_key()).is_ok());

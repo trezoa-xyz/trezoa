@@ -1,6 +1,6 @@
 [package]
-name = "solana-cargo-test-sbf"
-description = "Execute all unit and integration tests after building with the Solana SBF SDK"
+name = "trezoa-cargo-test-sbf"
+description = "Execute all unit and integration tests after building with the Trezoa SBF SDK"
 publish = false
 version = { workspace = true }
 authors = { workspace = true }
@@ -14,10 +14,10 @@ name = "cargo-test-sbf"
 path = "src/main.rs"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-logger = { workspace = true }
+trezoa-logger = { workspace = true }
 cargo_metadata = { workspace = true }
 clap = { version = "3.1.5", features = ["cargo"] }
 itertools = { workspace = true }

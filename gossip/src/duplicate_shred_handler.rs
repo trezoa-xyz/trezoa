@@ -5,10 +5,10 @@ use {
     },
     crossbeam_channel::Sender,
     log::error,
-    solana_clock::{Epoch, Slot},
-    solana_ledger::{blockstore::Blockstore, leader_schedule_cache::LeaderScheduleCache},
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::BankForks,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_ledger::{blockstore::Blockstore, leader_schedule_cache::LeaderScheduleCache},
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::BankForks,
     std::{
         cmp::Reverse,
         collections::HashMap,
@@ -236,15 +236,15 @@ mod tests {
         },
         crossbeam_channel::unbounded,
         itertools::Itertools,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             genesis_utils::{create_genesis_config_with_leader, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
             shred::Shredder,
         },
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
     };
 
     fn create_duplicate_proof(
@@ -289,7 +289,7 @@ mod tests {
 
     #[test]
     fn test_handle_mixed_entries() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Arc::new(Blockstore::open(ledger_path.path()).unwrap());
@@ -381,7 +381,7 @@ mod tests {
 
     #[test]
     fn test_reject_abuses() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Arc::new(Blockstore::open(ledger_path.path()).unwrap());

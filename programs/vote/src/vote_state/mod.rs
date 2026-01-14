@@ -6,28 +6,28 @@ pub mod handler;
 #[cfg(not(feature = "dev-context-only-utils"))]
 pub(crate) mod handler;
 
-pub use solana_vote_interface::state::{vote_state_versions::*, *};
+pub use trezoa_vote_interface::state::{vote_state_versions::*, *};
 use {
     handler::{VoteStateHandle, VoteStateHandler, VoteStateTargetVersion},
     log::*,
-    solana_account::{AccountSharedData, WritableAccount},
-    solana_bls_signatures::{
+    trezoa_account::{AccountSharedData, WritableAccount},
+    trezoa_bls_signatures::{
         keypair::Keypair as BLSKeypair, ProofOfPossession as BLSProofOfPossession,
         ProofOfPossessionCompressed as BLSProofOfPossessionCompressed, Pubkey as BLSPubkey,
         PubkeyCompressed as BLSPubkeyCompressed, VerifiableProofOfPossession,
     },
-    solana_clock::{Clock, Epoch, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_hash::Hash,
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_slot_hashes::SlotHash,
-    solana_transaction_context::{
+    trezoa_clock::{Clock, Epoch, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_hash::Hash,
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_slot_hashes::SlotHash,
+    trezoa_transaction_context::{
         instruction::InstructionContext, instruction_accounts::BorrowedInstructionAccount,
         IndexOfAccount,
     },
-    solana_vote_interface::{error::VoteError, program::id},
+    trezoa_vote_interface::{error::VoteError, program::id},
     std::{
         cmp::Ordering,
         collections::{HashSet, VecDeque},
@@ -500,9 +500,9 @@ pub fn process_new_vote_state(
             if vote.slot() <= new_root
                 &&
                 // This check is necessary because
-                // https://github.com/ryoqun/solana/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L120
+                // https://github.com/ryoqun/trezoa/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L120
                 // always sets a root for even empty towers, which is then hard unwrapped here
-                // https://github.com/ryoqun/solana/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L776
+                // https://github.com/ryoqun/trezoa/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L776
                 new_root != Slot::default()
             {
                 return Err(VoteError::SlotSmallerThanRoot);
@@ -920,7 +920,7 @@ pub(crate) fn generate_pop_message(
     message
 }
 
-// TODO(sam): use custom payload for PoP once solana-bls-signatures v2.0.0 is published.
+// TODO(sam): use custom payload for PoP once trezoa-bls-signatures v2.0.0 is published.
 pub fn verify_bls_proof_of_possession(
     vote_account_pubkey: &Pubkey,
     bls_pubkey_compressed_bytes: &[u8; BLS_PUBLIC_KEY_COMPRESSED_SIZE],
@@ -1281,13 +1281,13 @@ mod tests {
     use {
         super::*,
         assert_matches::assert_matches,
-        solana_account::{AccountSharedData, ReadableAccount},
-        solana_clock::DEFAULT_SLOTS_PER_EPOCH,
-        solana_sha256_hasher::hash,
-        solana_transaction_context::{
+        trezoa_account::{AccountSharedData, ReadableAccount},
+        trezoa_clock::DEFAULT_SLOTS_PER_EPOCH,
+        trezoa_sha256_hasher::hash,
+        trezoa_transaction_context::{
             instruction_accounts::InstructionAccount, TransactionContext,
         },
-        solana_vote_interface::authorized_voters::AuthorizedVoters,
+        trezoa_vote_interface::authorized_voters::AuthorizedVoters,
         test_case::{test_case, test_matrix},
     };
 
@@ -1297,9 +1297,9 @@ mod tests {
         vote_pubkey: &Pubkey,
         target_version: VoteStateTargetVersion,
     ) -> VoteStateHandler {
-        let auth_pubkey = solana_pubkey::new_rand();
+        let auth_pubkey = trezoa_pubkey::new_rand();
         let vote_init = VoteInit {
-            node_pubkey: solana_pubkey::new_rand(),
+            node_pubkey: trezoa_pubkey::new_rand(),
             authorized_voter: auth_pubkey,
             authorized_withdrawer: auth_pubkey,
             commission: 0,
@@ -1321,14 +1321,14 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_vote_state_upgrade_from_1_14_11(target_version: VoteStateTargetVersion) {
-        let vote_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
         let mut vote_state = vote_state_new_for_test(&vote_pubkey, target_version);
 
         // Simulate prior epochs completed with credits and each setting a new authorized voter
         vote_state.increment_credits(0, 100);
         assert_eq!(
             vote_state.set_new_authorized_voter(
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 0,
                 1,
                 None,
@@ -1339,7 +1339,7 @@ mod tests {
         vote_state.increment_credits(1, 200);
         assert_eq!(
             vote_state.set_new_authorized_voter(
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 1,
                 2,
                 None,
@@ -1350,7 +1350,7 @@ mod tests {
         vote_state.increment_credits(2, 300);
         assert_eq!(
             vote_state.set_new_authorized_voter(
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 3,
                 None,
@@ -1406,7 +1406,7 @@ mod tests {
 
         // Create a fake TransactionContext with a fake InstructionContext with a single account which is the
         // vote account that was just created
-        let processor_account = AccountSharedData::new(0, 0, &solana_sdk_ids::native_loader::id());
+        let processor_account = AccountSharedData::new(0, 0, &trezoa_sdk_ids::native_loader::id());
         let mut transaction_context = TransactionContext::new(
             vec![(id(), processor_account), (vote_pubkey, vote_account)],
             rent.clone(),
@@ -1523,7 +1523,7 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_vote_lockout(target_version: VoteStateTargetVersion) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
 
         for i in 0..(MAX_LOCKOUT_HISTORY + 1) {
             process_slot_vote_unchecked(&mut vote_state, (INITIAL_LOCKOUT * i) as u64);
@@ -1562,7 +1562,7 @@ mod tests {
         target_version: VoteStateTargetVersion,
         disable_commission_update_rule: bool,
     ) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
         let node_pubkey = *vote_state.node_pubkey();
         let withdrawer_pubkey = *vote_state.authorized_withdrawer();
 
@@ -1578,7 +1578,7 @@ mod tests {
 
         // Create a fake TransactionContext with a fake InstructionContext with a single account which is the
         // vote account that was just created
-        let processor_account = AccountSharedData::new(0, 0, &solana_sdk_ids::native_loader::id());
+        let processor_account = AccountSharedData::new(0, 0, &trezoa_sdk_ids::native_loader::id());
         let mut transaction_context = TransactionContext::new(
             vec![(id(), processor_account), (node_pubkey, vote_account)],
             rent,
@@ -1731,7 +1731,7 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_vote_double_lockout_after_expiration(target_version: VoteStateTargetVersion) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
 
         for i in 0..3 {
             process_slot_vote_unchecked(&mut vote_state, i as u64);
@@ -1759,7 +1759,7 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_expire_multiple_votes(target_version: VoteStateTargetVersion) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
 
         for i in 0..3 {
             process_slot_vote_unchecked(&mut vote_state, i as u64);
@@ -1791,7 +1791,7 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_vote_credits(target_version: VoteStateTargetVersion) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
 
         for i in 0..MAX_LOCKOUT_HISTORY {
             process_slot_vote_unchecked(&mut vote_state, i as u64);
@@ -1810,7 +1810,7 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_duplicate_vote(target_version: VoteStateTargetVersion) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
         process_slot_vote_unchecked(&mut vote_state, 0);
         process_slot_vote_unchecked(&mut vote_state, 1);
         process_slot_vote_unchecked(&mut vote_state, 0);
@@ -1822,7 +1822,7 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_nth_recent_lockout(target_version: VoteStateTargetVersion) {
-        let mut vote_state = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
         for i in 0..MAX_LOCKOUT_HISTORY {
             process_slot_vote_unchecked(&mut vote_state, i as u64);
         }
@@ -1861,8 +1861,8 @@ mod tests {
     #[test_case(VoteStateTargetVersion::V3 ; "VoteStateV3")]
     #[test_case(VoteStateTargetVersion::V4 ; "VoteStateV4")]
     fn test_process_missed_votes(target_version: VoteStateTargetVersion) {
-        let mut vote_state_a = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
-        let mut vote_state_b = vote_state_new_for_test(&solana_pubkey::new_rand(), target_version);
+        let mut vote_state_a = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
+        let mut vote_state_b = vote_state_new_for_test(&trezoa_pubkey::new_rand(), target_version);
 
         // process some votes on account a
         (0..5).for_each(|i| process_slot_vote_unchecked(&mut vote_state_a, i as u64));
@@ -3928,7 +3928,7 @@ mod tests {
     #[test]
     fn test_update_validator_identity_syncs_block_revenue_collector() {
         let vote_state =
-            vote_state_new_for_test(&solana_pubkey::new_rand(), VoteStateTargetVersion::V4);
+            vote_state_new_for_test(&trezoa_pubkey::new_rand(), VoteStateTargetVersion::V4);
         let node_pubkey = *vote_state.node_pubkey();
         let withdrawer_pubkey = *vote_state.authorized_withdrawer();
 
@@ -3939,7 +3939,7 @@ mod tests {
         let mut vote_account = AccountSharedData::new(lamports, serialized_len, &id());
         vote_account.set_data_from_slice(&serialized);
 
-        let processor_account = AccountSharedData::new(0, 0, &solana_sdk_ids::native_loader::id());
+        let processor_account = AccountSharedData::new(0, 0, &trezoa_sdk_ids::native_loader::id());
         let mut transaction_context = TransactionContext::new(
             vec![(id(), processor_account), (node_pubkey, vote_account)],
             rent,
@@ -3959,7 +3959,7 @@ mod tests {
             .try_borrow_instruction_account(0)
             .unwrap();
 
-        let new_node_pubkey = solana_pubkey::new_rand();
+        let new_node_pubkey = trezoa_pubkey::new_rand();
         let signers: HashSet<Pubkey> = vec![withdrawer_pubkey, new_node_pubkey]
             .into_iter()
             .collect();
@@ -3980,7 +3980,7 @@ mod tests {
         assert_eq!(vote_state.block_revenue_collector, new_node_pubkey);
 
         // Run it again.
-        let new_node_pubkey = solana_pubkey::new_rand();
+        let new_node_pubkey = trezoa_pubkey::new_rand();
         let signers: HashSet<Pubkey> = vec![withdrawer_pubkey, new_node_pubkey]
             .into_iter()
             .collect();
@@ -4023,7 +4023,7 @@ mod tests {
         assert_eq!(vote_account.owner(), &id());
         assert_eq!(vote_account.data().len(), VoteStateV4::size_of());
 
-        let processor_account = AccountSharedData::new(0, 0, &solana_sdk_ids::native_loader::id());
+        let processor_account = AccountSharedData::new(0, 0, &trezoa_sdk_ids::native_loader::id());
         let mut transaction_context = TransactionContext::new(
             vec![
                 (id(), processor_account),
@@ -4046,7 +4046,7 @@ mod tests {
             .try_borrow_instruction_account(0)
             .unwrap();
 
-        let new_node_pubkey = solana_pubkey::new_rand();
+        let new_node_pubkey = trezoa_pubkey::new_rand();
         let signers: HashSet<Pubkey> = vec![authorized_withdrawer, new_node_pubkey]
             .into_iter()
             .collect();
@@ -4076,7 +4076,7 @@ mod tests {
         };
         let (others_bls_pubkey, others_bls_proof_of_possession) =
             create_bls_pubkey_and_proof_of_possession(&Pubkey::new_unique());
-        let new_node_pubkey = solana_pubkey::new_rand();
+        let new_node_pubkey = trezoa_pubkey::new_rand();
         let signers: HashSet<Pubkey> = vec![authorized_withdrawer, new_node_pubkey]
             .into_iter()
             .collect();
@@ -4103,7 +4103,7 @@ mod tests {
         };
         let (new_bls_pubkey, new_bls_proof_of_possession) =
             create_bls_pubkey_and_proof_of_possession(&vote_account_pubkey);
-        let new_authorized_voter = solana_pubkey::new_rand();
+        let new_authorized_voter = trezoa_pubkey::new_rand();
         let signers: HashSet<Pubkey> = vec![authorized_withdrawer, new_authorized_voter]
             .into_iter()
             .collect();

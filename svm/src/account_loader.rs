@@ -10,31 +10,31 @@ use {
         transaction_error_metrics::TransactionErrorMetrics,
     },
     ahash::{AHashMap, AHashSet},
-    solana_account::{
+    trezoa_account::{
         state_traits::StateMut, Account, AccountSharedData, ReadableAccount, WritableAccount,
         PROGRAM_OWNERS,
     },
-    solana_clock::Slot,
-    solana_fee_structure::FeeDetails,
-    solana_instruction::{BorrowedAccountMeta, BorrowedInstruction},
-    solana_instructions_sysvar::construct_instructions_data,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_nonce::state::State as NonceState,
-    solana_nonce_account::{get_system_account_kind, SystemAccountKind},
-    solana_program_runtime::execution_budget::{
+    trezoa_clock::Slot,
+    trezoa_fee_structure::FeeDetails,
+    trezoa_instruction::{BorrowedAccountMeta, BorrowedInstruction},
+    trezoa_instructions_sysvar::construct_instructions_data,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_nonce::state::State as NonceState,
+    trezoa_nonce_account::{get_system_account_kind, SystemAccountKind},
+    trezoa_program_runtime::execution_budget::{
         SVMTransactionExecutionAndFeeBudgetLimits, SVMTransactionExecutionBudget,
     },
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::{
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::{
         bpf_loader_upgradeable, native_loader,
         sysvar::{self, slot_history},
     },
-    solana_svm_callback::{AccountState, TransactionProcessingCallback},
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_transaction_context::{transaction_accounts::KeyedAccountSharedData, IndexOfAccount},
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_svm_callback::{AccountState, TransactionProcessingCallback},
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_transaction_context::{transaction_accounts::KeyedAccountSharedData, IndexOfAccount},
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
     std::num::NonZeroU32,
 };
 
@@ -117,7 +117,7 @@ impl Default for ValidatedTransactionDetails {
             rollback_accounts: RollbackAccounts::default(),
             compute_budget: SVMTransactionExecutionBudget::default(),
             loaded_accounts_bytes_limit:
-                solana_program_runtime::execution_budget::MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES,
+                trezoa_program_runtime::execution_budget::MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES,
             fee_details: FeeDetails::default(),
             loaded_fee_payer_account: LoadedTransactionAccount::default(),
         }
@@ -322,7 +322,7 @@ impl<CB: TransactionProcessingCallback> TransactionProcessingCallback for Accoun
 // NOTE this is a required subtrait of TransactionProcessingCallback.
 // It may make sense to break out a second subtrait just for the above two functions,
 // but this would be a nontrivial breaking change and require careful consideration.
-impl<CB: TransactionProcessingCallback> solana_svm_callback::InvokeContextCallback
+impl<CB: TransactionProcessingCallback> trezoa_svm_callback::InvokeContextCallback
     for AccountLoader<'_, CB>
 {
 }
@@ -594,7 +594,7 @@ fn load_transaction_account<CB: TransactionProcessingCallback>(
     rent: &Rent,
 ) -> LoadedTransactionAccount {
     let is_writable = message.is_writable(account_index);
-    if solana_sdk_ids::sysvar::instructions::check_id(account_key) {
+    if trezoa_sdk_ids::sysvar::instructions::check_id(account_key) {
         // Since the instructions sysvar is constructed by the SVM and modified
         // for each transaction instruction, it cannot be loaded.
         LoadedTransactionAccount {
@@ -655,35 +655,35 @@ mod tests {
         super::*,
         crate::transaction_account_state_info::TransactionAccountStateInfo,
         rand0_7::prelude::*,
-        solana_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
-        solana_hash::Hash,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_keypair::Keypair,
-        solana_loader_v3_interface::state::UpgradeableLoaderState,
-        solana_message::{
+        trezoa_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
+        trezoa_hash::Hash,
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_keypair::Keypair,
+        trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+        trezoa_message::{
             compiled_instruction::CompiledInstruction,
             v0::{LoadedAddresses, LoadedMessage},
             LegacyMessage, Message, MessageHeader, SanitizedMessage,
         },
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_nonce::{self as nonce, versions::Versions as NonceVersions},
-        solana_program_runtime::execution_budget::{
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_nonce::{self as nonce, versions::Versions as NonceVersions},
+        trezoa_program_runtime::execution_budget::{
             DEFAULT_INSTRUCTION_COMPUTE_UNIT_LIMIT, MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES,
         },
-        solana_pubkey::Pubkey,
-        solana_rent::Rent,
-        solana_sdk_ids::{
+        trezoa_pubkey::Pubkey,
+        trezoa_rent::Rent,
+        trezoa_sdk_ids::{
             bpf_loader, bpf_loader_upgradeable, native_loader, system_program, sysvar,
         },
-        solana_signature::Signature,
-        solana_signer::Signer,
-        solana_svm_callback::{InvokeContextCallback, TransactionProcessingCallback},
-        solana_system_transaction::transfer,
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
-        solana_transaction_context::{
+        trezoa_signature::Signature,
+        trezoa_signer::Signer,
+        trezoa_svm_callback::{InvokeContextCallback, TransactionProcessingCallback},
+        trezoa_system_transaction::transfer,
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_transaction_context::{
             transaction_accounts::KeyedAccountSharedData, TransactionContext,
         },
-        solana_transaction_error::{TransactionError, TransactionResult as Result},
+        trezoa_transaction_error::{TransactionError, TransactionResult as Result},
         std::{
             borrow::Cow,
             cell::RefCell,
@@ -1063,13 +1063,13 @@ mod tests {
 
     #[test]
     fn test_instructions() {
-        agave_logger::setup();
-        let instructions_key = solana_sdk_ids::sysvar::instructions::id();
+        trezoa_logger::setup();
+        let instructions_key = trezoa_sdk_ids::sysvar::instructions::id();
         let keypair = Keypair::new();
         let instructions = vec![CompiledInstruction::new(1, &(), vec![0, 1])];
         let tx = Transaction::new_with_compiled_instructions(
             &[&keypair],
-            &[solana_pubkey::new_rand(), instructions_key],
+            &[trezoa_pubkey::new_rand(), instructions_key],
             Hash::default(),
             vec![native_loader::id()],
             instructions,
@@ -1087,7 +1087,7 @@ mod tests {
 
     #[test]
     fn test_overrides() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut account_overrides = AccountOverrides::default();
         let slot_history_id = sysvar::slot_history::id();
         let account = AccountSharedData::new(42, 0, &Pubkey::default());
@@ -1292,7 +1292,7 @@ mod tests {
     #[test]
     fn test_construct_instructions_account() {
         let loaded_message = LoadedMessage {
-            message: Cow::Owned(solana_message::v0::Message::default()),
+            message: Cow::Owned(trezoa_message::v0::Message::default()),
             loaded_addresses: Cow::Owned(LoadedAddresses::default()),
             is_writable_account_cache: vec![false],
         };

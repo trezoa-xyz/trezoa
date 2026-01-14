@@ -11,12 +11,12 @@ use {
         recycler::Recycler,
     },
     rayon::{prelude::*, ThreadPool},
-    solana_hash::Hash,
-    solana_message::{MESSAGE_HEADER_LENGTH, MESSAGE_VERSION_PREFIX},
-    solana_pubkey::Pubkey,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_short_vec::decode_shortu16_len,
-    solana_signature::Signature,
+    trezoa_hash::Hash,
+    trezoa_message::{MESSAGE_HEADER_LENGTH, MESSAGE_VERSION_PREFIX},
+    trezoa_pubkey::Pubkey,
+    trezoa_rayon_threadlimit::get_thread_count,
+    trezoa_short_vec::decode_shortu16_len,
+    trezoa_signature::Signature,
     std::{convert::TryFrom, mem::size_of},
 };
 
@@ -281,7 +281,7 @@ fn do_get_packet_offsets(
         .ok_or(PacketError::InvalidLen)?;
 
     // SIMD-0160: skip if has more than 64 top instructions
-    if instruction_len > solana_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH {
+    if instruction_len > trezoa_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH {
         return Err(PacketError::InvalidNumberOfInstructions);
     }
 
@@ -389,7 +389,7 @@ fn check_for_simple_vote_transaction(
     if packet
         .data(instruction_program_id_start..instruction_program_id_end)
         .ok_or(PacketError::InvalidLen)?
-        == solana_sdk_ids::vote::id().as_ref()
+        == trezoa_sdk_ids::vote::id().as_ref()
     {
         packet.meta_mut().flags |= PacketFlags::SIMPLE_VOTE_TX;
     }
@@ -581,12 +581,12 @@ mod tests {
         bincode::{deserialize, serialize},
         bytes::{BufMut, Bytes, BytesMut},
         rand::Rng,
-        solana_keypair::Keypair,
-        solana_message::{compiled_instruction::CompiledInstruction, Message, MessageHeader},
-        solana_packet::PACKET_DATA_SIZE,
-        solana_signature::Signature,
-        solana_signer::Signer,
-        solana_transaction::{versioned::VersionedTransaction, Transaction},
+        trezoa_keypair::Keypair,
+        trezoa_message::{compiled_instruction::CompiledInstruction, Message, MessageHeader},
+        trezoa_packet::PACKET_DATA_SIZE,
+        trezoa_signature::Signature,
+        trezoa_signer::Signer,
+        trezoa_transaction::{versioned::VersionedTransaction, Transaction},
         std::iter::repeat_with,
         test_case::test_case,
     };
@@ -736,7 +736,7 @@ mod tests {
 
     #[test]
     fn test_pubkey_too_small() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut tx = test_tx();
         let sig = tx.signatures[0];
         const NUM_SIG: usize = 18;
@@ -760,7 +760,7 @@ mod tests {
     fn test_pubkey_len() {
         // See that the verify cannot walk off the end of the packet
         // trying to index into the account_keys to access pubkey.
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         const NUM_SIG: usize = 17;
         let keypair1 = Keypair::new();
@@ -1080,7 +1080,7 @@ mod tests {
 
     #[test]
     fn test_verify_multisig() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let tx = test_multisig_tx();
         let mut data = bincode::serialize(&tx).unwrap();
@@ -1123,7 +1123,7 @@ mod tests {
 
     #[test]
     fn test_is_simple_vote_transaction() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut rng = rand::rng();
 
         // transfer tx is not
@@ -1176,7 +1176,7 @@ mod tests {
                 &[&key],
                 &[key1, key2],
                 Hash::default(),
-                vec![solana_vote_program::id(), Pubkey::new_unique()],
+                vec![trezoa_vote_program::id(), Pubkey::new_unique()],
                 vec![
                     CompiledInstruction::new(3, &(), vec![0, 1]),
                     CompiledInstruction::new(4, &(), vec![0, 2]),
@@ -1206,7 +1206,7 @@ mod tests {
 
     #[test]
     fn test_is_simple_vote_transaction_with_offsets() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut rng = rand::rng();
 
         // batch of legacy messages

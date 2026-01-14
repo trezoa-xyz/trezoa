@@ -3,11 +3,11 @@ use {
         poh_recorder::{PohRecorderError, Record},
         record_channels::{RecordSender, RecordSenderError},
     },
-    solana_clock::BankId,
-    solana_entry::entry::hash_transactions,
-    solana_hash::Hash,
-    solana_measure::measure_us,
-    solana_transaction::versioned::VersionedTransaction,
+    trezoa_clock::BankId,
+    trezoa_entry::entry::hash_transactions,
+    trezoa_hash::Hash,
+    trezoa_measure::measure_us,
+    trezoa_transaction::versioned::VersionedTransaction,
     std::num::Saturating,
 };
 

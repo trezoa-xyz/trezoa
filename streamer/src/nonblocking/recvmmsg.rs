@@ -57,7 +57,7 @@ pub async fn recv_mmsg_exact(
 mod tests {
     use {
         crate::{nonblocking::recvmmsg::*, packet::PACKET_DATA_SIZE},
-        solana_net_utils::sockets::{bind_to_async, bind_to_localhost_async},
+        trezoa_net_utils::sockets::{bind_to_async, bind_to_localhost_async},
         std::{net::SocketAddr, time::Instant},
         tokio::net::UdpSocket,
     };

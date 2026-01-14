@@ -1,6 +1,6 @@
 use {
     crate::LEDGER_TOOL_DIRECTORY,
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths::{self as snapshot_paths, BANK_SNAPSHOTS_DIR},
         snapshot_config::{SnapshotConfig, SnapshotUsage},
         snapshot_hash::StartingSnapshotHashes,
@@ -8,19 +8,19 @@ use {
     clap::{value_t, value_t_or_exit, values_t_or_exit, ArgMatches},
     crossbeam_channel::unbounded,
     log::*,
-    solana_accounts_db::utils::{
+    trezoa_accounts_db::utils::{
         create_all_accounts_run_and_snapshot_dirs, move_and_async_delete_path_contents,
     },
-    solana_clock::Slot,
-    solana_core::validator::{
+    trezoa_clock::Slot,
+    trezoa_core::validator::{
         supported_scheduling_mode, BlockProductionMethod, BlockVerificationMethod,
     },
-    solana_genesis_config::GenesisConfig,
-    solana_genesis_utils::open_genesis_config,
-    solana_geyser_plugin_manager::geyser_plugin_service::{
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_genesis_utils::open_genesis_config,
+    trezoa_geyser_plugin_manager::geyser_plugin_service::{
         GeyserPluginService, GeyserPluginServiceError,
     },
-    solana_ledger::{
+    trezoa_ledger::{
         bank_forks_utils::{self, BankForksUtilsError},
         blockstore::{Blockstore, BlockstoreError},
         blockstore_options::{AccessType, BlockstoreOptions, BlockstoreRecoveryMode},
@@ -29,10 +29,10 @@ use {
         },
         use_snapshot_archives_at_startup::UseSnapshotArchivesAtStartup,
     },
-    solana_measure::measure_time,
-    solana_pubkey::Pubkey,
-    solana_rpc::transaction_status_service::TransactionStatusService,
-    solana_runtime::{
+    trezoa_measure::measure_time,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc::transaction_status_service::TransactionStatusService,
+    trezoa_runtime::{
         accounts_background_service::{
             AbsRequestHandlers, AccountsBackgroundService, PendingSnapshotPackages,
             PrunedBanksRequestHandler, SnapshotRequestHandler,
@@ -41,8 +41,8 @@ use {
         snapshot_controller::SnapshotController,
         snapshot_utils::{self, clean_orphaned_account_snapshot_dirs},
     },
-    solana_transaction::versioned::VersionedTransaction,
-    solana_unified_scheduler_pool::DefaultSchedulerPool,
+    trezoa_transaction::versioned::VersionedTransaction,
+    trezoa_unified_scheduler_pool::DefaultSchedulerPool,
     std::{
         path::{Path, PathBuf},
         process::exit,
@@ -209,14 +209,14 @@ pub fn load_and_process_ledger(
     }
 
     let account_paths = if let Some(account_paths) = arg_matches.value_of("account_paths") {
-        // If this blockstore access is Primary, no other process (agave-validator) can hold
+        // If this blockstore access is Primary, no other process (trezoa-validator) can hold
         // Primary access. So, allow a custom accounts path without worry of wiping the accounts
-        // of agave-validator.
+        // of trezoa-validator.
         if !blockstore.is_primary_access() {
             // Attempt to open the Blockstore in Primary access; if successful, no other process
             // was holding Primary so allow things to proceed with custom accounts path. Release
-            // the Primary access instead of holding it to give priority to agave-validator over
-            // agave-ledger-tool should agave-validator start before we've finished.
+            // the Primary access instead of holding it to give priority to trezoa-validator over
+            // trezoa-ledger-tool should trezoa-validator start before we've finished.
             info!(
                 "Checking if another process currently holding Primary access to {:?}",
                 blockstore.ledger_path()

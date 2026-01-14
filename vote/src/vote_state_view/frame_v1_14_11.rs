@@ -5,8 +5,8 @@ use {
         },
         EpochCreditsListFrame, Field, Result, VoteStateViewError,
     },
-    solana_pubkey::Pubkey,
-    solana_vote_interface::state::BlockTimestamp,
+    trezoa_pubkey::Pubkey,
+    trezoa_vote_interface::state::BlockTimestamp,
     std::io::BufRead,
 };
 
@@ -98,8 +98,8 @@ impl VoteStateFrameV1_14_11 {
 mod tests {
     use {
         super::*,
-        solana_clock::Clock,
-        solana_vote_interface::state::{
+        trezoa_clock::Clock,
+        trezoa_vote_interface::state::{
             LandedVote, Lockout, VoteInit, VoteState1_14_11, VoteStateV3, VoteStateVersions,
         },
     };

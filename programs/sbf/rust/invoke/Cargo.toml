@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-invoke"
+name = "trezoa-sbf-rust-invoke"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -12,19 +12,19 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-solana-account-info = { workspace = true }
-solana-instruction = { workspace = true }
-solana-msg = { workspace = true }
-solana-program = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-error = { workspace = true }
-solana-program-memory = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sbf-rust-invoke-dep = { workspace = true }
-solana-sbf-rust-invoked-dep = { workspace = true }
-solana-sbf-rust-realloc-dep = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-system-interface = { workspace = true }
+trezoa-account-info = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-msg = { workspace = true }
+trezoa-program = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-program-memory = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sbf-rust-invoke-dep = { workspace = true }
+trezoa-sbf-rust-invoked-dep = { workspace = true }
+trezoa-sbf-rust-realloc-dep = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-system-interface = { workspace = true }
 
 [lints]
 workspace = true

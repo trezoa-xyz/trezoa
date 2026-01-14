@@ -6,14 +6,14 @@ version = 4
 name = "a"
 version = "1.2.3"
 dependencies = [
- "solana-frozen-abi",
+ "trezoa-frozen-abi",
 ]
 
 [[package]]
 name = "b"
 version = "1.2.3"
 dependencies = [
- "solana-frozen-abi",
+ "trezoa-frozen-abi",
 ]
 
 [[package]]
@@ -417,7 +417,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
 
 [[package]]
-name = "solana-frozen-abi"
+name = "trezoa-frozen-abi"
 version = "3.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "498e7ac4f4a5d8d9841dbb548bba0fd07e3c0d551cd93bb62784993970ff79f3"
@@ -435,12 +435,12 @@ dependencies = [
  "serde_derive",
  "serde_with",
  "sha2",
- "solana-frozen-abi-macro",
+ "trezoa-frozen-abi-macro",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
+name = "trezoa-frozen-abi-macro"
 version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b8bfd7ae6f7e6e4d9a5ce0441111de9ca5bb30f2af144551696c638769b27023"

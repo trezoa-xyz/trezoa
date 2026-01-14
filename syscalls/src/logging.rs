@@ -1,5 +1,5 @@
 use {
-    super::*, solana_program_runtime::memory::translate_vm_slice, solana_sbpf::vm::ContextObject,
+    super::*, trezoa_program_runtime::memory::translate_vm_slice, trezoa_sbpf::vm::ContextObject,
 };
 
 declare_builtin_function!(

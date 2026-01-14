@@ -6,10 +6,10 @@ use {
     },
     bincode::Options as BincodeOptions,
     serde::{de::DeserializeOwned, Serialize},
-    solana_clock::{Slot, UnixTimestamp},
-    solana_pubkey::{Pubkey, PUBKEY_BYTES},
-    solana_signature::{Signature, SIGNATURE_BYTES},
-    solana_storage_proto::convert::generated,
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_pubkey::{Pubkey, PUBKEY_BYTES},
+    trezoa_signature::{Signature, SIGNATURE_BYTES},
+    trezoa_storage_proto::convert::generated,
 };
 
 pub(crate) const DEPRECATED_PROGRAM_COSTS_COLUMN_NAME: &str = "program_costs";
@@ -677,7 +677,7 @@ impl TypedColumn for columns::Index {
         // 2. Release 2: Switch to writing new format, keep reading old format as fallback
         // 3. Release 3: Remove old format support once stable
         // This allows safe downgrade to Release 1 since it can read both formats
-        // https://github.com/anza-xyz/agave/issues/3570
+        // https://github.com/trezoa-xyz/trezoa/issues/3570
         let index: bincode::Result<blockstore_meta::Index> = config.deserialize(data);
         match index {
             Ok(index) => Ok(index),

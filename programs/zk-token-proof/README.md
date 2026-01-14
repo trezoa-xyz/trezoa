@@ -7,7 +7,7 @@
 
 This crate originally contained the implementation logic for the **ZK Token Proof** program.
 
-The program waas never activated on any Solana network cluster (Testnet, Devnet, or Mainnet-Beta).
+The program waas never activated on any Trezoa network cluster (Testnet, Devnet, or Mainnet-Beta).
 The functionality intended for this program has been replaced by the **ZK ElGamal Proof** program.
 
 ## Current Status

@@ -64,7 +64,7 @@ while [[ -n $1 ]]; do
     elif [[ $1 = --no-airdrop ]]; then
       airdrops_enabled=0
       shift
-    # agave-validator options
+    # trezoa-validator options
     elif [[ $1 = --expected-genesis-hash ]]; then
       args+=("$1" "$2")
       shift 2
@@ -208,7 +208,7 @@ if [[ -n $REQUIRE_LEDGER_DIR ]]; then
   if [[ -z $ledger_dir ]]; then
     usage "Error: --ledger not specified"
   fi
-  SOLANA_CONFIG_DIR="$ledger_dir"
+  TREZOA_CONFIG_DIR="$ledger_dir"
 fi
 
 if [[ -n $REQUIRE_KEYPAIRS ]]; then
@@ -224,7 +224,7 @@ if [[ -n $REQUIRE_KEYPAIRS ]]; then
 fi
 
 if [[ -z "$ledger_dir" ]]; then
-  ledger_dir="$SOLANA_CONFIG_DIR/validator$label"
+  ledger_dir="$TREZOA_CONFIG_DIR/validator$label"
 fi
 mkdir -p "$ledger_dir"
 
@@ -268,7 +268,7 @@ if [[ $maybeRequireTower = true ]]; then
 fi
 
 
-program=$agave_validator
+program=$trezoa_validator
 
 set -e
 PS4="$(basename "$0"): "
@@ -296,7 +296,7 @@ trap 'kill_node_and_exit' INT TERM ERR
 wallet() {
   (
     set -x
-    $solana_cli --keypair "$identity" --url "$rpc_url" "$@"
+    $trezoa_cli --keypair "$identity" --url "$rpc_url" "$@"
   )
 }
 
@@ -312,8 +312,8 @@ setup_validator_accounts() {
       echo "Adding $node_sol to validator identity account:"
       (
         set -x
-        $solana_cli \
-          --keypair "$SOLANA_CONFIG_DIR/faucet.json" --url "$rpc_url" \
+        $trezoa_cli \
+          --keypair "$TREZOA_CONFIG_DIR/faucet.json" --url "$rpc_url" \
           transfer --allow-unfunded-recipient "$identity" "$node_sol"
       ) || return $?
     fi
@@ -330,11 +330,11 @@ setup_validator_accounts() {
 }
 
 # shellcheck disable=SC2086
-rpc_url=$($solana_gossip --allow-private-addr rpc-url --timeout 180 --entrypoint "$gossip_entrypoint")
+rpc_url=$($trezoa_gossip --allow-private-addr rpc-url --timeout 180 --entrypoint "$gossip_entrypoint")
 
-[[ -r "$identity" ]] || $solana_keygen new --no-passphrase -so "$identity"
-[[ -r "$vote_account" ]] || $solana_keygen new --no-passphrase -so "$vote_account"
-[[ -r "$authorized_withdrawer" ]] || $solana_keygen new --no-passphrase -so "$authorized_withdrawer"
+[[ -r "$identity" ]] || $trezoa_keygen new --no-passphrase -so "$identity"
+[[ -r "$vote_account" ]] || $trezoa_keygen new --no-passphrase -so "$vote_account"
+[[ -r "$authorized_withdrawer" ]] || $trezoa_keygen new --no-passphrase -so "$authorized_withdrawer"
 
 setup_validator_accounts "$node_sol"
 

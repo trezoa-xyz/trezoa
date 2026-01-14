@@ -1,10 +1,10 @@
 use {
     crate::consensus::{BlockhashStatus, SwitchForkDecision},
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_vote::vote_transaction::VoteTransaction,
-    solana_vote_program::vote_state::{vote_state_1_14_11::VoteState1_14_11, BlockTimestamp},
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_vote::vote_transaction::VoteTransaction,
+    trezoa_vote_program::vote_state::{vote_state_1_14_11::VoteState1_14_11, BlockTimestamp},
 };
 
 #[cfg_attr(

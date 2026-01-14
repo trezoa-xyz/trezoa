@@ -141,7 +141,7 @@ members = [
 ]
 
 exclude = [
-    # solana-dos depends on bench-tps. ignore bench-tps here to avoid confusing cargo's
+    # trezoa-dos depends on bench-tps. ignore bench-tps here to avoid confusing cargo's
     # workspace resolution logic, which expects it in the top-level worspace rather than
     # dev-bins
     "bench-tps",
@@ -155,10 +155,10 @@ resolver = "2"
 
 [workspace.package]
 version = "4.0.0-alpha.0"
-authors = ["Anza Maintainers <maintainers@anza.xyz>"]
+authors = ["Trezoa-team Maintainers <maintainers@trezoa.xyz>"]
 description = "Blockchain, Rebuilt for Scale"
-repository = "https://github.com/anza-xyz/agave"
-homepage = "https://anza.xyz/"
+repository = "https://github.com/trezoa-xyz/trezoa"
+homepage = "https://trezoa.xyz/"
 license = "Apache-2.0"
 edition = "2021"
 
@@ -181,7 +181,7 @@ unsafe_op_in_unsafe_fn = "deny"
 [workspace.lints.rust.unexpected_cfgs]
 level = "warn"
 check-cfg = [
-    'cfg(target_os, values("solana"))',
+    'cfg(target_os, values("trezoa"))',
     'cfg(feature, values("frozen-abi", "no-entrypoint"))',
 ]
 
@@ -194,27 +194,27 @@ used_underscore_binding = "deny"
 
 [workspace.dependencies]
 Inflector = "0.11.4"
-agave-banking-stage-ingress-types = { path = "banking-stage-ingress-types", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-cargo-registry = { path = "cargo-registry", version = "=4.0.0-alpha.0" }
-agave-feature-set = { path = "feature-set", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-fs = { path = "fs", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-geyser-plugin-interface = { path = "geyser-plugin-interface", version = "=4.0.0-alpha.0" }
-agave-io-uring = { path = "io-uring", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-logger = { path = "logger", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-precompiles = { path = "precompiles", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-random = { path = "random", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-reserved-account-keys = { path = "reserved-account-keys", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-scheduler-bindings = { path = "scheduler-bindings", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-scheduling-utils = { path = "scheduling-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-snapshots = { path = "snapshots", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-syscalls = { path = "syscalls", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-thread-manager = { path = "thread-manager", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-transaction-view = { path = "transaction-view", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-verified-packet-receiver = { path = "verified-packet-receiver", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-votor = { path = "votor", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-votor-messages = { path = "votor-messages", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-xdp = { path = "xdp", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-agave-xdp-ebpf = { path = "xdp-ebpf", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
+trezoa-banking-stage-ingress-types = { path = "banking-stage-ingress-types", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-cargo-registry = { path = "cargo-registry", version = "=4.0.0-alpha.0" }
+trezoa-feature-set = { path = "feature-set", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-fs = { path = "fs", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-geyser-plugin-interface = { path = "geyser-plugin-interface", version = "=4.0.0-alpha.0" }
+trezoa-io-uring = { path = "io-uring", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-logger = { path = "logger", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-precompiles = { path = "precompiles", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-random = { path = "random", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-reserved-account-keys = { path = "reserved-account-keys", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-scheduler-bindings = { path = "scheduler-bindings", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-scheduling-utils = { path = "scheduling-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-snapshots = { path = "snapshots", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-syscalls = { path = "syscalls", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-thread-manager = { path = "thread-manager", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-transaction-view = { path = "transaction-view", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-verified-packet-receiver = { path = "verified-packet-receiver", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-votor = { path = "votor", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-votor-messages = { path = "votor-messages", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-xdp = { path = "xdp", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-xdp-ebpf = { path = "xdp-ebpf", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
 ahash = "0.8.12"
 anyhow = "1.0.100"
 aquamarine = "0.6.0"
@@ -393,205 +393,205 @@ smallvec = { version = "1.15.1", default-features = false, features = ["union"] 
 smpl_jwt = "0.7.1"
 socket2 = "0.6.1"
 soketto = "0.8"
-solana-account = "3.3.0"
-solana-account-decoder = { path = "account-decoder", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-account-decoder-client-types = { path = "account-decoder-client-types", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-account-info = "3.1.0"
-solana-accounts-db = { path = "accounts-db", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-address = "2.0.0"
-solana-address-lookup-table-interface = "3.0.1"
-solana-atomic-u64 = "3.0.0"
-solana-banks-client = { path = "banks-client", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-banks-interface = { path = "banks-interface", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-banks-server = { path = "banks-server", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-big-mod-exp = "3.0.0"
-solana-bincode = "3.1.0"
-solana-blake3-hasher = "3.1.0"
-solana-bloom = { path = "bloom", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-bls-signatures = { version = "2.0.0-alpha.1", features = ["serde"] } #TODO: change to 2.0.0 before this gets into 4.0
-solana-bn254 = "3.1.2"
-solana-borsh = "3.0.0"
-solana-bpf-loader-program = { path = "programs/bpf_loader", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-bucket-map = { path = "bucket_map", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-builtins = { path = "builtins", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-builtins-default-costs = { path = "builtins-default-costs", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-clap-utils = { path = "clap-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-clap-v3-utils = { path = "clap-v3-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-cli = { path = "cli", version = "=4.0.0-alpha.0", default-features = false }
-solana-cli-config = { path = "cli-config", version = "=4.0.0-alpha.0" }
-solana-cli-output = { path = "cli-output", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-client = { path = "client", version = "=4.0.0-alpha.0" }
-solana-client-traits = "3.0.0"
-solana-clock = "3.0.0"
-solana-cluster-type = "3.0.0"
-solana-commitment-config = "3.1.0"
-solana-compute-budget = { path = "compute-budget", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-compute-budget-instruction = { path = "compute-budget-instruction", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-compute-budget-interface = "3.0.0"
-solana-compute-budget-program = { path = "programs/compute-budget", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-config-interface = "2.0.0"
-solana-connection-cache = { path = "connection-cache", version = "=4.0.0-alpha.0", default-features = false, features = ["agave-unstable-api"] }
-solana-core = { path = "core", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-cost-model = { path = "cost-model", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-cpi = "3.1.0"
-solana-curve25519 = "4.0.0"
-solana-define-syscall = "4.0.1"
-solana-derivation-path = "3.0.0"
-solana-download-utils = { path = "download-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-ed25519-program = "3.0.0"
-solana-entry = { path = "entry", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-epoch-info = "3.1.0"
-solana-epoch-rewards = "3.0.0"
-solana-epoch-rewards-hasher = "3.1.0"
-solana-epoch-schedule = "3.0.0"
-solana-example-mocks = "3.0.0"
-solana-faucet = { path = "faucet", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-feature-gate-interface = "3.0.0"
-solana-fee = { path = "fee", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-fee-calculator = "3.0.0"
-solana-fee-structure = "3.0.0"
-solana-file-download = "3.1.0"
-solana-frozen-abi = "3.1.2"
-solana-frozen-abi-macro = "3.2.1"
-solana-genesis = { path = "genesis", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-genesis-config = "3.0.0"
-solana-genesis-utils = { path = "genesis-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-geyser-plugin-manager = { path = "geyser-plugin-manager", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-gossip = { path = "gossip", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-hard-forks = "3.0.0"
-solana-hash = "3.1.0"
-solana-inflation = "3.0.0"
-solana-instruction = "3.1.0"
-solana-instruction-error = "2.1.0"
-solana-instructions-sysvar = "3.0.0"
-solana-keccak-hasher = "3.1.0"
-solana-keypair = "3.1.0"
-solana-last-restart-slot = "3.0.0"
-solana-lattice-hash = { path = "lattice-hash", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-ledger = { path = "ledger", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-loader-v2-interface = "3.0.0"
-solana-loader-v3-interface = "6.1.0"
-solana-loader-v4-interface = "3.1.0"
-solana-loader-v4-program = { path = "programs/loader-v4", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-local-cluster = { path = "local-cluster", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-measure = { path = "measure", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-merkle-tree = { path = "merkle-tree", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-message = "3.0.1"
-solana-metrics = { path = "metrics", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-msg = "3.0.0"
-solana-native-token = "3.0.0"
-solana-net-utils = { path = "net-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-nohash-hasher = "0.2.1"
-solana-nonce = "3.0.0"
-solana-nonce-account = "3.0.0"
-solana-notifier = { path = "notifier", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-offchain-message = "3.0.0"
-solana-packet = "4.0.0"
-solana-perf = { path = "perf", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-poh = { path = "poh", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-poh-config = "3.0.0"
-solana-poseidon = "4.0.0"
-solana-precompile-error = "3.0.0"
-solana-presigner = "3.0.0"
-solana-program = { version = "3.0.0", default-features = false }
-solana-program-binaries = { path = "program-binaries", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-program-entrypoint = "3.1.1"
-solana-program-error = "3.0.0"
-solana-program-memory = "3.1.0"
-solana-program-option = "3.0.0"
-solana-program-pack = "3.0.0"
-solana-program-runtime = { path = "program-runtime", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-program-test = { path = "program-test", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-pubkey = { version = "4.0.0", default-features = false }
-solana-pubsub-client = { path = "pubsub-client", version = "=4.0.0-alpha.0" }
-solana-quic-client = { path = "quic-client", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-quic-definitions = "3.0.0"
-solana-rayon-threadlimit = { path = "rayon-threadlimit", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-remote-wallet = { path = "remote-wallet", version = "=4.0.0-alpha.0", default-features = false, features = ["agave-unstable-api"] }
-solana-rent = "3.0.0"
-solana-reward-info = "3.0.0"
-solana-rpc = { path = "rpc", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-rpc-client = { path = "rpc-client", version = "=4.0.0-alpha.0", default-features = false }
-solana-rpc-client-api = { path = "rpc-client-api", version = "=4.0.0-alpha.0" }
-solana-rpc-client-nonce-utils = { path = "rpc-client-nonce-utils", version = "=4.0.0-alpha.0" }
-solana-rpc-client-types = { path = "rpc-client-types", version = "=4.0.0-alpha.0" }
-solana-runtime = { path = "runtime", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-runtime-transaction = { path = "runtime-transaction", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-sanitize = "3.0.1"
-solana-sbpf = { version = "=0.13.1", default-features = false }
-solana-sdk-ids = "3.1.0"
-solana-secp256k1-program = "3.0.0"
-solana-secp256k1-recover = "3.1.0"
-solana-secp256r1-program = "3.0.0"
-solana-seed-derivable = "3.0.0"
-solana-seed-phrase = "3.0.0"
-solana-send-transaction-service = { path = "send-transaction-service", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-serde = "3.0.0"
-solana-serde-varint = "3.0.0"
-solana-serialize-utils = "3.1.0"
-solana-sha256-hasher = "3.1.0"
-solana-short-vec = "3.1.0"
-solana-shred-version = "3.0.0"
-solana-signature = { version = "3.1.0", default-features = false }
-solana-signer = "3.0.0"
-solana-signer-store = "0.1.0"
-solana-slot-hashes = "3.0.0"
-solana-slot-history = "3.0.0"
-solana-stable-layout = "3.0.0"
-solana-stake-interface = "2.0.2"
-solana-storage-bigtable = { path = "storage-bigtable", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-storage-proto = { path = "storage-proto", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-streamer = { path = "streamer", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm = { path = "svm", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-callback = { path = "svm-callback", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-feature-set = { path = "svm-feature-set", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-log-collector = { path = "svm-log-collector", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-measure = { path = "svm-measure", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-test-harness = { path = "svm-test-harness", version = "=4.0.0-alpha.0" }
-solana-svm-test-harness-fixture = { path = "svm-test-harness/fixture", version = "=4.0.0-alpha.0" }
-solana-svm-test-harness-instr = { path = "svm-test-harness/instr", version = "=4.0.0-alpha.0" }
-solana-svm-timings = { path = "svm-timings", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-transaction = { path = "svm-transaction", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-svm-type-overrides = { path = "svm-type-overrides", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-system-interface = { version = "3.0", features = ["alloc","bincode","serde"] }
-solana-system-program = { path = "programs/system", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-system-transaction = "3.0.0"
-solana-sysvar = "3.1.1"
-solana-sysvar-id = "3.1.0"
-solana-test-validator = { path = "test-validator", version = "=4.0.0-alpha.0" }
-solana-time-utils = "3.0.0"
-solana-tls-utils = { path = "tls-utils", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-tps-client = { path = "tps-client", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-tpu-client = { path = "tpu-client", version = "=4.0.0-alpha.0", default-features = false, features = ["agave-unstable-api"] }
-solana-tpu-client-next = { path = "tpu-client-next", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-transaction = "3.0.2"
-solana-transaction-context = { path = "transaction-context", version = "=4.0.0-alpha.0", features = ["agave-unstable-api", "bincode"] }
-solana-transaction-error = "3.0.0"
-solana-transaction-metrics-tracker = { path = "transaction-metrics-tracker", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-transaction-status = { path = "transaction-status", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-transaction-status-client-types = { path = "transaction-status-client-types", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-turbine = { path = "turbine", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-udp-client = { path = "udp-client", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-unified-scheduler-logic = { path = "unified-scheduler-logic", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-unified-scheduler-pool = { path = "unified-scheduler-pool", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-validator-exit = "3.0.0"
-solana-version = { path = "version", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-vote = { path = "vote", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-vote-interface = "5.0.0"
-solana-vote-program = { path = "programs/vote", version = "=4.0.0-alpha.0", default-features = false, features = ["agave-unstable-api"] }
-solana-wen-restart = { path = "wen-restart", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-zk-elgamal-proof-program = { path = "programs/zk-elgamal-proof", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
-solana-zk-sdk = "4.0.0"
-solana-zk-token-proof-program = { path = "programs/zk-token-proof", version = "=4.0.0-alpha.0", features = ["agave-unstable-api"] }
+trezoa-account = "3.3.0"
+trezoa-account-decoder = { path = "account-decoder", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-account-decoder-client-types = { path = "account-decoder-client-types", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-account-info = "3.1.0"
+trezoa-accounts-db = { path = "accounts-db", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-address = "2.0.0"
+trezoa-address-lookup-table-interface = "3.0.1"
+trezoa-atomic-u64 = "3.0.0"
+trezoa-banks-client = { path = "banks-client", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-banks-interface = { path = "banks-interface", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-banks-server = { path = "banks-server", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-big-mod-exp = "3.0.0"
+trezoa-bincode = "3.1.0"
+trezoa-blake3-hasher = "3.1.0"
+trezoa-bloom = { path = "bloom", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-bls-signatures = { version = "2.0.0-alpha.1", features = ["serde"] } #TODO: change to 2.0.0 before this gets into 4.0
+trezoa-bn254 = "3.1.2"
+trezoa-borsh = "3.0.0"
+trezoa-bpf-loader-program = { path = "programs/bpf_loader", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-bucket-map = { path = "bucket_map", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-builtins = { path = "builtins", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-builtins-default-costs = { path = "builtins-default-costs", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-clap-utils = { path = "clap-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-clap-v3-utils = { path = "clap-v3-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-cli = { path = "cli", version = "=4.0.0-alpha.0", default-features = false }
+trezoa-cli-config = { path = "cli-config", version = "=4.0.0-alpha.0" }
+trezoa-cli-output = { path = "cli-output", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-client = { path = "client", version = "=4.0.0-alpha.0" }
+trezoa-client-traits = "3.0.0"
+trezoa-clock = "3.0.0"
+trezoa-cluster-type = "3.0.0"
+trezoa-commitment-config = "3.1.0"
+trezoa-compute-budget = { path = "compute-budget", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-compute-budget-instruction = { path = "compute-budget-instruction", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-compute-budget-interface = "3.0.0"
+trezoa-compute-budget-program = { path = "programs/compute-budget", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-config-interface = "2.0.0"
+trezoa-connection-cache = { path = "connection-cache", version = "=4.0.0-alpha.0", default-features = false, features = ["trezoa-unstable-api"] }
+trezoa-core = { path = "core", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-cost-model = { path = "cost-model", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-cpi = "3.1.0"
+trezoa-curve25519 = "4.0.0"
+trezoa-define-syscall = "4.0.1"
+trezoa-derivation-path = "3.0.0"
+trezoa-download-utils = { path = "download-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-ed25519-program = "3.0.0"
+trezoa-entry = { path = "entry", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-epoch-info = "3.1.0"
+trezoa-epoch-rewards = "3.0.0"
+trezoa-epoch-rewards-hasher = "3.1.0"
+trezoa-epoch-schedule = "3.0.0"
+trezoa-example-mocks = "3.0.0"
+trezoa-faucet = { path = "faucet", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-feature-gate-interface = "3.0.0"
+trezoa-fee = { path = "fee", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-fee-calculator = "3.0.0"
+trezoa-fee-structure = "3.0.0"
+trezoa-file-download = "3.1.0"
+trezoa-frozen-abi = "3.1.2"
+trezoa-frozen-abi-macro = "3.2.1"
+trezoa-genesis = { path = "genesis", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-genesis-config = "3.0.0"
+trezoa-genesis-utils = { path = "genesis-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-geyser-plugin-manager = { path = "geyser-plugin-manager", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-gossip = { path = "gossip", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-hard-forks = "3.0.0"
+trezoa-hash = "3.1.0"
+trezoa-inflation = "3.0.0"
+trezoa-instruction = "3.1.0"
+trezoa-instruction-error = "2.1.0"
+trezoa-instructions-sysvar = "3.0.0"
+trezoa-keccak-hasher = "3.1.0"
+trezoa-keypair = "3.1.0"
+trezoa-last-restart-slot = "3.0.0"
+trezoa-lattice-hash = { path = "lattice-hash", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-ledger = { path = "ledger", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-loader-v2-interface = "3.0.0"
+trezoa-loader-v3-interface = "6.1.0"
+trezoa-loader-v4-interface = "3.1.0"
+trezoa-loader-v4-program = { path = "programs/loader-v4", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-local-cluster = { path = "local-cluster", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-measure = { path = "measure", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-merkle-tree = { path = "merkle-tree", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-message = "3.0.1"
+trezoa-metrics = { path = "metrics", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-msg = "3.0.0"
+trezoa-native-token = "3.0.0"
+trezoa-net-utils = { path = "net-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-nohash-hasher = "0.2.1"
+trezoa-nonce = "3.0.0"
+trezoa-nonce-account = "3.0.0"
+trezoa-notifier = { path = "notifier", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-offchain-message = "3.0.0"
+trezoa-packet = "4.0.0"
+trezoa-perf = { path = "perf", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-poh = { path = "poh", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-poh-config = "3.0.0"
+trezoa-poseidon = "4.0.0"
+trezoa-precompile-error = "3.0.0"
+trezoa-presigner = "3.0.0"
+trezoa-program = { version = "3.0.0", default-features = false }
+trezoa-program-binaries = { path = "program-binaries", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-program-entrypoint = "3.1.1"
+trezoa-program-error = "3.0.0"
+trezoa-program-memory = "3.1.0"
+trezoa-program-option = "3.0.0"
+trezoa-program-pack = "3.0.0"
+trezoa-program-runtime = { path = "program-runtime", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-program-test = { path = "program-test", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-pubkey = { version = "4.0.0", default-features = false }
+trezoa-pubsub-client = { path = "pubsub-client", version = "=4.0.0-alpha.0" }
+trezoa-quic-client = { path = "quic-client", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-quic-definitions = "3.0.0"
+trezoa-rayon-threadlimit = { path = "rayon-threadlimit", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-remote-wallet = { path = "remote-wallet", version = "=4.0.0-alpha.0", default-features = false, features = ["trezoa-unstable-api"] }
+trezoa-rent = "3.0.0"
+trezoa-reward-info = "3.0.0"
+trezoa-rpc = { path = "rpc", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-rpc-client = { path = "rpc-client", version = "=4.0.0-alpha.0", default-features = false }
+trezoa-rpc-client-api = { path = "rpc-client-api", version = "=4.0.0-alpha.0" }
+trezoa-rpc-client-nonce-utils = { path = "rpc-client-nonce-utils", version = "=4.0.0-alpha.0" }
+trezoa-rpc-client-types = { path = "rpc-client-types", version = "=4.0.0-alpha.0" }
+trezoa-runtime = { path = "runtime", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-runtime-transaction = { path = "runtime-transaction", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-sanitize = "3.0.1"
+trezoa-sbpf = { version = "=0.13.1", default-features = false }
+trezoa-sdk-ids = "3.1.0"
+trezoa-secp256k1-program = "3.0.0"
+trezoa-secp256k1-recover = "3.1.0"
+trezoa-secp256r1-program = "3.0.0"
+trezoa-seed-derivable = "3.0.0"
+trezoa-seed-phrase = "3.0.0"
+trezoa-send-transaction-service = { path = "send-transaction-service", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-serde = "3.0.0"
+trezoa-serde-varint = "3.0.0"
+trezoa-serialize-utils = "3.1.0"
+trezoa-sha256-hasher = "3.1.0"
+trezoa-short-vec = "3.1.0"
+trezoa-shred-version = "3.0.0"
+trezoa-signature = { version = "3.1.0", default-features = false }
+trezoa-signer = "3.0.0"
+trezoa-signer-store = "0.1.0"
+trezoa-slot-hashes = "3.0.0"
+trezoa-slot-history = "3.0.0"
+trezoa-stable-layout = "3.0.0"
+trezoa-stake-interface = "2.0.2"
+trezoa-storage-bigtable = { path = "storage-bigtable", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-storage-proto = { path = "storage-proto", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-streamer = { path = "streamer", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm = { path = "svm", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-callback = { path = "svm-callback", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-feature-set = { path = "svm-feature-set", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-log-collector = { path = "svm-log-collector", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-measure = { path = "svm-measure", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-test-harness = { path = "svm-test-harness", version = "=4.0.0-alpha.0" }
+trezoa-svm-test-harness-fixture = { path = "svm-test-harness/fixture", version = "=4.0.0-alpha.0" }
+trezoa-svm-test-harness-instr = { path = "svm-test-harness/instr", version = "=4.0.0-alpha.0" }
+trezoa-svm-timings = { path = "svm-timings", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-transaction = { path = "svm-transaction", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-svm-type-overrides = { path = "svm-type-overrides", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-system-interface = { version = "3.0", features = ["alloc","bincode","serde"] }
+trezoa-system-program = { path = "programs/system", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-system-transaction = "3.0.0"
+trezoa-sysvar = "3.1.1"
+trezoa-sysvar-id = "3.1.0"
+trezoa-test-validator = { path = "test-validator", version = "=4.0.0-alpha.0" }
+trezoa-time-utils = "3.0.0"
+trezoa-tls-utils = { path = "tls-utils", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-tps-client = { path = "tps-client", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-tpu-client = { path = "tpu-client", version = "=4.0.0-alpha.0", default-features = false, features = ["trezoa-unstable-api"] }
+trezoa-tpu-client-next = { path = "tpu-client-next", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-transaction = "3.0.2"
+trezoa-transaction-context = { path = "transaction-context", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api", "bincode"] }
+trezoa-transaction-error = "3.0.0"
+trezoa-transaction-metrics-tracker = { path = "transaction-metrics-tracker", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-transaction-status = { path = "transaction-status", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-transaction-status-client-types = { path = "transaction-status-client-types", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-turbine = { path = "turbine", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-udp-client = { path = "udp-client", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-unified-scheduler-logic = { path = "unified-scheduler-logic", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-unified-scheduler-pool = { path = "unified-scheduler-pool", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-validator-exit = "3.0.0"
+trezoa-version = { path = "version", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-vote = { path = "vote", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-vote-interface = "5.0.0"
+trezoa-vote-program = { path = "programs/vote", version = "=4.0.0-alpha.0", default-features = false, features = ["trezoa-unstable-api"] }
+trezoa-wen-restart = { path = "wen-restart", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-zk-elgamal-proof-program = { path = "programs/zk-elgamal-proof", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
+trezoa-zk-sdk = "4.0.0"
+trezoa-zk-token-proof-program = { path = "programs/zk-token-proof", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
 spl-associated-token-account-interface = "2.0.0"
 spl-generic-token = "2.0.0"
 spl-memo-interface = "2.0.0"
 spl-pod = "0.7.0"
-spl-token-2022-interface = "2.1.0"
-spl-token-confidential-transfer-proof-extraction = "0.5.1"
-spl-token-group-interface = "0.7.0"
-spl-token-interface = "2.0.0"
-spl-token-metadata-interface = "0.8.0"
+tpl-token-2022-interface = "2.1.0"
+tpl-token-confidential-transfer-proof-extraction = "0.5.1"
+tpl-token-group-interface = "0.7.0"
+tpl-token-interface = "2.0.0"
+tpl-token-metadata-interface = "0.8.0"
 static_assertions = "1.1.0"
 stream-cancel = "0.8.2"
 strum = "0.27.2"
@@ -620,7 +620,7 @@ tower = "0.5.2"
 tracing = "0.1"
 trait-set = "0.3.0"
 trees = "0.4.2"
-trezor-client = { version = "0.1.5", default-features = false, features = ["solana"] }
+trezor-client = { version = "0.1.5", default-features = false, features = ["trezoa"] }
 tungstenite = "0.28.0"
 unwrap_none = "0.1.2"
 uriparse = "0.6.4"
@@ -628,7 +628,7 @@ url = "2.5.8"
 vec_extract_if_polyfill = "0.1.0"
 wasm-bindgen = "0.2"
 winapi = "0.3.8"
-wincode = { version = "0.2.5", features = ["derive", "solana-short-vec"] }
+wincode = { version = "0.2.5", features = ["derive", "trezoa-short-vec"] }
 winreg = "0.55"
 x509-parser = "0.18.0"
 zstd = "0.13.3"
@@ -651,14 +651,14 @@ codegen-units = 1
 # curve25519-dalek uses the simd backend by default in v4 if possible,
 # which has very slow performance on some platforms with opt-level 0,
 # which is the default for dev and test builds.
-# This slowdown causes certain interactions in the solana-test-validator,
+# This slowdown causes certain interactions in the trezoa-test-validator,
 # such as verifying ZK proofs in transactions, to take much more than 400ms,
 # creating problems in the testing environment.
-# To enable better performance in solana-test-validator during tests and dev builds,
+# To enable better performance in trezoa-test-validator during tests and dev builds,
 # we override the opt-level to 3 for the crate.
 [profile.dev.package.curve25519-dalek]
 opt-level = 3
 
 [patch.crates-io]
-# for details, see https://github.com/anza-xyz/crossbeam/commit/fd279d707025f0e60951e429bf778b4813d1b6bf
-crossbeam-epoch = { git = "https://github.com/anza-xyz/crossbeam", rev = "fd279d707025f0e60951e429bf778b4813d1b6bf" }
+# for details, see https://github.com/trezoa-xyz/crossbeam/commit/fd279d707025f0e60951e429bf778b4813d1b6bf
+crossbeam-epoch = { git = "https://github.com/trezoa-xyz/crossbeam", rev = "fd279d707025f0e60951e429bf778b4813d1b6bf" }

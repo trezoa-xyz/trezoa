@@ -1,6 +1,6 @@
 [package]
-name = "solana-lattice-hash"
-description = "Solana Lattice Hash"
+name = "trezoa-lattice-hash"
+description = "Trezoa Lattice Hash"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -9,7 +9,7 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 base64 = { workspace = true }
@@ -21,7 +21,7 @@ bytemuck = { workspace = true, features = ["must_cast"] }
 criterion = { workspace = true }
 rand = { workspace = true }
 rand_chacha = { workspace = true }
-solana-lattice-hash = { path = ".", features = ["agave-unstable-api"] }
+trezoa-lattice-hash = { path = ".", features = ["trezoa-unstable-api"] }
 
 [[bench]]
 name = "bench_lt_hash"

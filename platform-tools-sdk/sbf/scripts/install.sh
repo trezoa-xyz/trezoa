@@ -61,7 +61,7 @@ get() {
   declare version=$1
   declare dirname=$2
   declare job=$3
-  declare cache_root=~/.cache/solana
+  declare cache_root=~/.cache/trezoa
   declare cache_dirname="$cache_root/$version/$dirname"
   declare cache_partial_dirname="$cache_dirname"_partial
 
@@ -116,7 +116,7 @@ if [[ ! -e platform-tools-$tools_version.md || ! -e platform-tools ]]; then
     set -e
     rm -rf platform-tools*
     job="download \
-           https://github.com/anza-xyz/platform-tools/releases/download \
+           https://github.com/trezoa-xyz/platform-tools/releases/download \
            $tools_version \
            platform-tools-${machine}-${arch}.tar.bz2 \
            platform-tools"
@@ -142,13 +142,13 @@ if [[ ! -e platform-tools-$tools_version.md || ! -e platform-tools ]]; then
   set +e
   for item in "${toolchains[@]}"
   do
-    if [[ $item == *"solana"* ]]; then
+    if [[ $item == *"trezoa"* ]]; then
       rustup toolchain uninstall "$item"
     fi
   done
   set -e
 
-  rustup toolchain link "$rust_version-sbpf-solana-$tools_version" platform-tools/rust
+  rustup toolchain link "$rust_version-sbpf-trezoa-$tools_version" platform-tools/rust
 fi
 
 exit 0

@@ -1,19 +1,19 @@
 use {
     crate::{args::*, canonicalize_ledger_path, ledger_utils::*},
-    agave_syscalls::create_program_runtime_environment_v1,
+    trezoa_syscalls::create_program_runtime_environment_v1,
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     log::*,
     serde::{Deserialize, Serialize},
     serde_json::Result,
-    solana_account::{
+    trezoa_account::{
         create_account_shared_data_for_test, state_traits::StateMut, AccountSharedData,
     },
-    solana_bpf_loader_program::{create_vm, load_program_from_bytes},
-    solana_cli_output::{OutputFormat, QuietDisplay, VerboseDisplay},
-    solana_clock::Slot,
-    solana_ledger::blockstore_options::AccessType,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_program_runtime::{
+    trezoa_bpf_loader_program::{create_vm, load_program_from_bytes},
+    trezoa_cli_output::{OutputFormat, QuietDisplay, VerboseDisplay},
+    trezoa_clock::Slot,
+    trezoa_ledger::blockstore_options::AccessType,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_program_runtime::{
         invoke_context::InvokeContext,
         loaded_programs::{
             LoadProgramMetrics, ProgramCacheEntryType, DELAY_VISIBILITY_SLOT_OFFSET,
@@ -21,14 +21,14 @@ use {
         serialization::serialize_parameters,
         with_mock_invoke_context,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::bank::Bank,
-    solana_sbpf::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank::Bank,
+    trezoa_sbpf::{
         assembler::assemble, ebpf::MM_INPUT_START, elf::Executable, static_analysis::Analysis,
         verifier::RequisiteVerifier,
     },
-    solana_sdk_ids::{bpf_loader_upgradeable, sysvar},
-    solana_transaction_context::{
+    trezoa_sdk_ids::{bpf_loader_upgradeable, sysvar},
+    trezoa_transaction_context::{
         instruction::InstructionContext, instruction_accounts::InstructionAccount, IndexOfAccount,
     },
     std::{
@@ -463,7 +463,7 @@ pub fn program(ledger_path: &Path, matches: &ArgMatches<'_>) {
     let program_index: u16 = instruction_accounts.len().try_into().unwrap();
     transaction_accounts.push((
         loader_id,
-        AccountSharedData::new(0, 0, &solana_sdk_ids::native_loader::id()),
+        AccountSharedData::new(0, 0, &trezoa_sdk_ids::native_loader::id()),
     ));
     transaction_accounts.push((
         program_id, // ID of the loaded program. It can modify accounts with the same owner key

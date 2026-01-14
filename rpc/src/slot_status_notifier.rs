@@ -1,5 +1,5 @@
 use {
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::sync::{Arc, RwLock},
 };
 

@@ -1,19 +1,19 @@
 ---
-title: Using Trezor Hardware Wallets in the Solana CLI
-pagination_label: "Hardware Wallets in the Solana CLI: Trezor"
+title: Using Trezor Hardware Wallets in the Trezoa CLI
+pagination_label: "Hardware Wallets in the Trezoa CLI: Trezor"
 sidebar_label: Trezor
 ---
 
 This page describes how to use a Trezor Model T, Safe 3, or Safe 5 device to
-interact with Solana using the command line tools.
+interact with Trezoa using the command line tools.
 
 ## Before You Begin
 
-- [Install the Solana command-line tools](../../install.md)
+- [Install the Trezoa command-line tools](../../install.md)
 - [Review Trezor and BIP-32](https://trezor.io/learn/a/what-is-bip32)
 - [Review Trezor and BIP-44](https://trezor.io/learn/a/what-is-bip44)
 
-## Use Trezor Model T, Safe 3, or Safe 5 with Solana CLI
+## Use Trezor Model T, Safe 3, or Safe 5 with Trezoa CLI
 
 1. Plug your Trezor device into your computer's USB port
 2. Tap to connect the device
@@ -25,17 +25,17 @@ interact with Solana using the command line tools.
 On your computer, run:
 
 ```bash
-solana-keygen pubkey usb://trezor?key=0/0
+trezoa-keygen pubkey usb://trezor?key=0/0
 ```
 
 This confirms your Trezor device is connected properly and in the correct state
-to interact with the Solana CLI. The command returns your Trezor device's first
-Solana account's external (receiving) wallet address using the
+to interact with the Trezoa CLI. The command returns your Trezor device's first
+Trezoa account's external (receiving) wallet address using the
 [BIP-32](https://trezor.io/learn/a/what-is-bip32) derivation path
 `m/44'/501'/0'/0'`.
 
 Your Trezor device supports an arbitrary number of valid wallet addresses and signers. To
-view any address, use the `solana-keygen pubkey` command, as shown below,
+view any address, use the `trezoa-keygen pubkey` command, as shown below,
 followed by a valid [keypair URL](./index.md#specify-a-keypair-url).
 
 Multiple wallet addresses can be useful if you want to transfer tokens between
@@ -46,17 +46,17 @@ All of the following commands will display different addresses, associated with
 the keypair path given. Try them out!
 
 ```bash
-solana-keygen pubkey usb://trezor?key=0/0
-solana-keygen pubkey usb://trezor?key=0/1
-solana-keygen pubkey usb://trezor?key=1/0
-solana-keygen pubkey usb://trezor?key=1/1
+trezoa-keygen pubkey usb://trezor?key=0/0
+trezoa-keygen pubkey usb://trezor?key=0/1
+trezoa-keygen pubkey usb://trezor?key=1/0
+trezoa-keygen pubkey usb://trezor?key=1/1
 ```
 
 - NOTE: keypair url parameters are ignored in **zsh**
   &nbsp;[see troubleshooting for more info](#troubleshooting)
 
 You can use other values for the number after `key=` as well. Any of the
-addresses displayed by these commands are valid Solana wallet addresses. The
+addresses displayed by these commands are valid Trezoa wallet addresses. The
 private portion associated with each address is stored securely on the Trezor device, and
 is used to sign transactions from this address. Just make a note of which
 keypair URL you used to derive any address you will be using to receive tokens.
@@ -66,8 +66,8 @@ easy-to-remember path might be to use the address at `key=0/<CHANGE>`. View this
 with:
 
 ```bash
-solana-keygen pubkey usb://trezor?key=0/0
-solana-keygen pubkey usb://trezor?key=0/1
+trezoa-keygen pubkey usb://trezor?key=0/0
+trezoa-keygen pubkey usb://trezor?key=0/1
 ```
 
 Now you have a wallet address (or multiple addresses), you can share any of
@@ -105,13 +105,13 @@ character, you can disable it explicitly with a backslash in your keypair URLs.
 For example:
 
 ```bash
-solana-keygen pubkey usb://trezor\?key=0/0
+trezoa-keygen pubkey usb://trezor\?key=0/0
 ```
 
 ## Support
 
 You can find additional support and get help on the
-[Solana StackExchange](https://solana.stackexchange.com).
+[Trezoa StackExchange](https://trezoa.stackexchange.com).
 
 Read more about [sending and receiving tokens](../../examples/transfer-tokens.md) and
 [delegating stake](../../examples/delegate-stake.md). You can use your Ledger keypair

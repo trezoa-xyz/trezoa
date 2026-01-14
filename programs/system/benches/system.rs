@@ -1,22 +1,22 @@
 #[allow(deprecated)]
 use {
     criterion::{criterion_group, criterion_main, Criterion},
-    solana_account::{self as account, AccountSharedData, WritableAccount},
-    solana_hash::Hash,
-    solana_instruction::AccountMeta,
-    solana_nonce::{
+    trezoa_account::{self as account, AccountSharedData, WritableAccount},
+    trezoa_hash::Hash,
+    trezoa_instruction::AccountMeta,
+    trezoa_nonce::{
         state::{DurableNonce, State},
         versions::Versions,
     },
-    solana_program_runtime::invoke_context::mock_process_instruction,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::{
+    trezoa_program_runtime::invoke_context::mock_process_instruction,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::{
         system_program,
         sysvar::{recent_blockhashes, rent},
     },
-    solana_system_interface::instruction::SystemInstruction,
-    solana_sysvar::recent_blockhashes::{IterItem, RecentBlockhashes, MAX_ENTRIES},
+    trezoa_system_interface::instruction::SystemInstruction,
+    trezoa_sysvar::recent_blockhashes::{IterItem, RecentBlockhashes, MAX_ENTRIES},
 };
 
 const SEED: &str = "bench test";
@@ -482,13 +482,13 @@ impl TestSetup {
 
     fn run(&self) {
         mock_process_instruction(
-            &solana_system_program::id(),
+            &trezoa_system_program::id(),
             None,
             &self.instruction_data,
             self.transaction_accounts.clone(),
             self.instruction_accounts.clone(),
             Ok(()), //expected_result,
-            solana_system_program::system_processor::Entrypoint::vm,
+            trezoa_system_program::system_processor::Entrypoint::vm,
             |_invoke_context| {},
             |_invoke_context| {},
         );

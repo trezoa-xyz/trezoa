@@ -11,8 +11,8 @@ mod tests {
             snapshot_utils::{create_tmp_accounts_dir_for_tests, StorageAndNextAccountsFileId},
             stakes::{SerdeStakesToStakeFormat, Stakes},
         },
-        agave_snapshots::snapshot_config::SnapshotConfig,
-        solana_accounts_db::{
+        trezoa_snapshots::snapshot_config::SnapshotConfig,
+        trezoa_accounts_db::{
             account_storage::AccountStorageMap,
             account_storage_entry::AccountStorageEntry,
             accounts_db::{
@@ -22,10 +22,10 @@ mod tests {
             accounts_file::{AccountsFile, AccountsFileError, StorageAccess},
             ObsoleteAccounts,
         },
-        solana_epoch_schedule::EpochSchedule,
-        solana_genesis_config::create_genesis_config,
-        solana_pubkey::Pubkey,
-        solana_stake_interface::state::Stake,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_genesis_config::create_genesis_config,
+        trezoa_pubkey::Pubkey,
+        trezoa_stake_interface::state::Stake,
         std::{
             io::{BufReader, BufWriter, Cursor},
             mem,
@@ -180,7 +180,7 @@ mod tests {
     #[test_case(#[allow(deprecated)] StorageAccess::Mmap)]
     #[test_case(StorageAccess::File)]
     fn test_extra_fields_eof(storage_access: StorageAccess) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (genesis_config, _) = create_genesis_config(500);
 
         let bank0 = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -257,7 +257,7 @@ mod tests {
 
     #[test]
     fn test_extra_fields_full_snapshot_archive() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let (mut genesis_config, _) = create_genesis_config(500);
         activate_all_features(&mut genesis_config);
@@ -317,10 +317,10 @@ mod tests {
         use {
             super::*,
             crate::{bank::BankHashStats, serde_snapshot::ObsoleteIncrementalSnapshotPersistence},
-            solana_accounts_db::accounts_hash::AccountsLtHash,
-            solana_frozen_abi::abi_example::AbiExample,
-            solana_hash::Hash,
-            solana_lattice_hash::lt_hash::LtHash,
+            trezoa_accounts_db::accounts_hash::AccountsLtHash,
+            trezoa_frozen_abi::abi_example::AbiExample,
+            trezoa_hash::Hash,
+            trezoa_lattice_hash::lt_hash::LtHash,
             std::marker::PhantomData,
         };
 

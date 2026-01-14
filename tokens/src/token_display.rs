@@ -1,13 +1,13 @@
 use {
-    solana_account_decoder::parse_token::real_number_string_trimmed,
-    solana_cli_output::display::build_balance_message,
+    trezoa_account_decoder::parse_token::real_number_string_trimmed,
+    trezoa_cli_output::display::build_balance_message,
     std::{
         fmt::{Debug, Display, Formatter, Result},
         ops::Add,
     },
 };
 
-const SOL_SYMBOL: &str = "◎";
+const TRZ_SYMBOL: &str = "◎";
 
 #[derive(PartialEq, Eq)]
 pub enum TokenType {
@@ -43,7 +43,7 @@ impl Token {
         }
     }
 
-    pub fn spl_token(amount: u64, decimals: u8) -> Self {
+    pub fn tpl_token(amount: u64, decimals: u8) -> Self {
         Self {
             amount,
             decimals,

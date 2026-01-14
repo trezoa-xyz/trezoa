@@ -13,7 +13,7 @@ name = "gen-headers"
 path = "src/main.rs"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 log = { workspace = true, features = ["std"] }

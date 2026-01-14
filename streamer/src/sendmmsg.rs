@@ -12,7 +12,7 @@ use {
     },
 };
 use {
-    solana_transaction_error::TransportError,
+    trezoa_transaction_error::TransportError,
     std::{
         borrow::Borrow,
         io,
@@ -247,8 +247,8 @@ mod tests {
             sendmmsg::{batch_send, multi_target_send, SendPktsError},
         },
         assert_matches::assert_matches,
-        solana_net_utils::sockets::bind_to_localhost_unique,
-        solana_packet::PACKET_DATA_SIZE,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_packet::PACKET_DATA_SIZE,
         std::{
             io::ErrorKind,
             net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr},

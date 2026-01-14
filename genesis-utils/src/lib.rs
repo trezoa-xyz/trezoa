@@ -1,19 +1,19 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 use {
-    agave_snapshots::unpack_genesis_archive,
+    trezoa_snapshots::unpack_genesis_archive,
     log::*,
-    solana_download_utils::download_genesis_if_missing,
-    solana_genesis_config::{GenesisConfig, DEFAULT_GENESIS_ARCHIVE},
-    solana_hash::Hash,
-    solana_rpc_client::rpc_client::RpcClient,
+    trezoa_download_utils::download_genesis_if_missing,
+    trezoa_genesis_config::{GenesisConfig, DEFAULT_GENESIS_ARCHIVE},
+    trezoa_hash::Hash,
+    trezoa_rpc_client::rpc_client::RpcClient,
     std::net::SocketAddr,
 };
 

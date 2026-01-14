@@ -2,22 +2,22 @@
 
 use {
     crate::repair::{repair_service::OutstandingShredRepairs, serve_repair::ServeRepair},
-    agave_feature_set::FeatureSet,
+    trezoa_feature_set::FeatureSet,
     bytes::Bytes,
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, Sender},
     itertools::Itertools,
-    solana_clock::{Slot, DEFAULT_MS_PER_SLOT},
-    solana_epoch_schedule::EpochSchedule,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_keypair::Keypair,
-    solana_ledger::shred::{self, should_discard_shred, ShredFetchStats},
-    solana_packet::{Meta, PACKET_DATA_SIZE},
-    solana_perf::packet::{
+    trezoa_clock::{Slot, DEFAULT_MS_PER_SLOT},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::{self, should_discard_shred, ShredFetchStats},
+    trezoa_packet::{Meta, PACKET_DATA_SIZE},
+    trezoa_perf::packet::{
         BytesPacket, BytesPacketBatch, PacketBatch, PacketBatchRecycler, PacketFlags, PacketRef,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::{BankForks, SharableBanks},
-    solana_streamer::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::{BankForks, SharableBanks},
+    trezoa_streamer::{
         evicting_sender::EvictingSender,
         streamer::{self, ChannelSend, PacketBatchReceiver, StreamerReceiveStats},
     },
@@ -122,7 +122,7 @@ impl ShredFetchStage {
                     );
                 }
                 // Discard packets if repair nonce does not verify.
-                let now = solana_time_utils::timestamp();
+                let now = trezoa_time_utils::timestamp();
                 let mut outstanding_repair_requests =
                     repair_context.outstanding_repair_requests.write().unwrap();
                 packet_batch
@@ -147,7 +147,7 @@ impl ShredFetchStage {
             let max_slot = last_slot + MAX_SHRED_DISTANCE_MINIMUM.max(2 * slots_per_epoch);
             let enforce_fixed_fec_set = |shred_slot| {
                 check_feature_activation(
-                    &agave_feature_set::enforce_fixed_fec_set::id(),
+                    &trezoa_feature_set::enforce_fixed_fec_set::id(),
                     shred_slot,
                     &feature_set,
                     &epoch_schedule,
@@ -155,7 +155,7 @@ impl ShredFetchStage {
             };
             let discard_unexpected_data_complete_shreds = |shred_slot| {
                 check_feature_activation(
-                    &agave_feature_set::discard_unexpected_data_complete_shreds::id(),
+                    &trezoa_feature_set::discard_unexpected_data_complete_shreds::id(),
                     shred_slot,
                     &feature_set,
                     &epoch_schedule,
@@ -369,7 +369,7 @@ impl RepairContext {
 #[must_use]
 fn verify_repair_nonce(
     packet: PacketRef,
-    now: u64, // solana_time_utils::timestamp()
+    now: u64, // trezoa_time_utils::timestamp()
     outstanding_repair_requests: &mut OutstandingShredRepairs,
 ) -> bool {
     debug_assert!(packet.meta().flags.contains(PacketFlags::REPAIR));

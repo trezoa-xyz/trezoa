@@ -1,13 +1,13 @@
 use {
     super::Bank,
-    solana_address_lookup_table_interface::error::AddressLookupError,
-    solana_clock::Slot,
-    solana_message::{
+    trezoa_address_lookup_table_interface::error::AddressLookupError,
+    trezoa_clock::Slot,
+    trezoa_message::{
         v0::{LoadedAddresses, MessageAddressTableLookup},
         AddressLoader,
     },
-    solana_svm_transaction::message_address_table_lookup::SVMMessageAddressTableLookup,
-    solana_transaction_error::AddressLoaderError,
+    trezoa_svm_transaction::message_address_table_lookup::SVMMessageAddressTableLookup,
+    trezoa_transaction_error::AddressLoaderError,
 };
 
 fn into_address_loader_error(err: AddressLookupError) -> AddressLoaderError {

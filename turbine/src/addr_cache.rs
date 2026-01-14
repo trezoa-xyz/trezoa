@@ -1,8 +1,8 @@
 use {
     crate::retransmit_stage::RetransmitSlotStats,
     itertools::Itertools,
-    solana_clock::Slot,
-    solana_ledger::shred::{
+    trezoa_clock::Slot,
+    trezoa_ledger::shred::{
         ShredId, ShredType, MAX_CODE_SHREDS_PER_SLOT, MAX_DATA_SHREDS_PER_SLOT,
     },
     std::{

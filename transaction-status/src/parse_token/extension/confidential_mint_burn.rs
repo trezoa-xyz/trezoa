@@ -1,6 +1,6 @@
 use {
     super::*,
-    spl_token_2022_interface::{
+    tpl_token_2022_interface::{
         extension::confidential_mint_burn::instruction::*,
         instruction::{decode_instruction_data, decode_instruction_type},
     },
@@ -281,15 +281,15 @@ mod test {
     use {
         super::*,
         bytemuck::Zeroable,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        spl_token_2022_interface::{
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        tpl_token_2022_interface::{
             extension::confidential_mint_burn::instruction::{
                 confidential_burn_with_split_proofs, confidential_mint_with_split_proofs,
                 initialize_mint,
             },
-            solana_zk_sdk::{
+            trezoa_zk_sdk::{
                 encryption::pod::{
                     auth_encryption::PodAeCiphertext,
                     elgamal::{PodElGamalCiphertext, PodElGamalPubkey},
@@ -300,7 +300,7 @@ mod test {
                 },
             },
         },
-        spl_token_confidential_transfer_proof_extraction::instruction::ProofLocation,
+        tpl_token_confidential_transfer_proof_extraction::instruction::ProofLocation,
         std::num::NonZero,
     };
 
@@ -320,7 +320,7 @@ mod test {
     #[test]
     fn test_initialize() {
         let instruction = initialize_mint(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &Pubkey::new_unique(),
             &PodElGamalPubkey::default(),
             &PodAeCiphertext::default(),
@@ -332,7 +332,7 @@ mod test {
     #[test]
     fn test_update() {
         let instruction = update_decryptable_supply(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),
             &[],
@@ -352,7 +352,7 @@ mod test {
             ProofLocation::ContextStateAccount(&Pubkey::new_unique()),
         ] {
             let instructions = rotate_supply_elgamal_pubkey(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &[],
@@ -388,7 +388,7 @@ mod test {
             ),
         ] {
             let instructions = confidential_mint_with_split_proofs(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &PodElGamalCiphertext::default(),
@@ -429,7 +429,7 @@ mod test {
             ),
         ] {
             let instructions = confidential_burn_with_split_proofs(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &PodAeCiphertext::default(),

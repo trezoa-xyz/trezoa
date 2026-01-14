@@ -1,39 +1,39 @@
 use {
-    agave_feature_set::{
+    trezoa_feature_set::{
         enable_loader_v4, zk_elgamal_proof_program_enabled, zk_token_sdk_enabled, FeatureSet,
     },
-    agave_syscalls::create_program_runtime_environment_v1,
-    solana_account::{Account, AccountSharedData},
-    solana_builtins::BUILTINS,
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_instruction_error::InstructionError,
-    solana_program_runtime::loaded_programs::{
+    trezoa_syscalls::create_program_runtime_environment_v1,
+    trezoa_account::{Account, AccountSharedData},
+    trezoa_builtins::BUILTINS,
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_instruction_error::InstructionError,
+    trezoa_program_runtime::loaded_programs::{
         LoadProgramMetrics, ProgramCacheEntry, ProgramCacheForTxBatch, ProgramRuntimeEnvironments,
     },
-    solana_pubkey::Pubkey,
-    solana_svm_callback::{InvokeContextCallback, TransactionProcessingCallback},
-    solana_svm_timings::ExecuteTimings,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_callback::{InvokeContextCallback, TransactionProcessingCallback},
+    trezoa_svm_timings::ExecuteTimings,
     std::{collections::HashSet, sync::Arc},
 };
 
-/// Create a new `ProgramCacheForTxBatch` instance with all builtins from `solana-builtins`.
+/// Create a new `ProgramCacheForTxBatch` instance with all builtins from `trezoa-builtins`.
 pub fn new_with_builtins(feature_set: &FeatureSet, slot: u64) -> ProgramCacheForTxBatch {
     let mut cache = ProgramCacheForTxBatch::default();
     cache.set_slot_for_tests(slot);
 
     for builtin in BUILTINS {
         // Only activate feature-gated builtins if the feature is active.
-        if builtin.program_id == solana_sdk_ids::loader_v4::id()
+        if builtin.program_id == trezoa_sdk_ids::loader_v4::id()
             && !feature_set.is_active(&enable_loader_v4::id())
         {
             continue;
         }
-        if builtin.program_id == solana_sdk_ids::zk_elgamal_proof_program::id()
+        if builtin.program_id == trezoa_sdk_ids::zk_elgamal_proof_program::id()
             && !feature_set.is_active(&zk_elgamal_proof_program_enabled::id())
         {
             continue;
         }
-        if builtin.program_id == solana_sdk_ids::zk_token_proof_program::id()
+        if builtin.program_id == trezoa_sdk_ids::zk_token_proof_program::id()
             && !feature_set.is_active(&zk_token_sdk_enabled::id())
         {
             continue;
@@ -102,14 +102,14 @@ pub fn fill_from_accounts(
 
         if program_cache.find(&acc.0).is_none() {
             // load_program_with_pubkey expects the owner to be one of the bpf loader
-            if !solana_sdk_ids::loader_v4::check_id(&acc.1.owner)
-                && !solana_sdk_ids::bpf_loader_deprecated::check_id(&acc.1.owner)
-                && !solana_sdk_ids::bpf_loader::check_id(&acc.1.owner)
-                && !solana_sdk_ids::bpf_loader_upgradeable::check_id(&acc.1.owner)
+            if !trezoa_sdk_ids::loader_v4::check_id(&acc.1.owner)
+                && !trezoa_sdk_ids::bpf_loader_deprecated::check_id(&acc.1.owner)
+                && !trezoa_sdk_ids::bpf_loader::check_id(&acc.1.owner)
+                && !trezoa_sdk_ids::bpf_loader_upgradeable::check_id(&acc.1.owner)
             {
                 continue;
             }
-            // https://github.com/anza-xyz/agave/blob/af6930da3a99fd0409d3accd9bbe449d82725bd6/svm/src/program_loader.rs#L124
+            // https://github.com/trezoa-xyz/trezoa/blob/af6930da3a99fd0409d3accd9bbe449d82725bd6/svm/src/program_loader.rs#L124
             /* pub fn load_program_with_pubkey<CB: TransactionProcessingCallback, FG: ForkGraph>(
                 callbacks: &CB,
                 program_cache: &ProgramCache<FG>,
@@ -120,7 +120,7 @@ pub fn fill_from_accounts(
                 reload: bool,
             ) -> Option<Arc<ProgramCacheEntry>> { */
             if let Some((loaded_program, _last_modification_slot)) =
-                solana_svm::program_loader::load_program_with_pubkey(
+                trezoa_svm::program_loader::load_program_with_pubkey(
                     &FillFromAccountsCallback(accounts),
                     environments,
                     &acc.0,

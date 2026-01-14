@@ -3,11 +3,11 @@ use {
     dashmap::DashMap,
     rayon::iter::{IntoParallelRefIterator, ParallelIterator},
     serde::{Deserialize, Serialize},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_info::Offset, account_storage_entry::AccountStorageEntry,
         accounts_db::AccountsFileId, ObsoleteAccountItem, ObsoleteAccounts,
     },
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::sync::Arc,
 };
 

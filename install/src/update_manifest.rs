@@ -1,9 +1,9 @@
 use {
     serde::{Deserialize, Serialize},
-    solana_hash::Hash,
-    solana_keypair::signable::Signable,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
+    trezoa_hash::Hash,
+    trezoa_keypair::signable::Signable,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
     std::{borrow::Cow, error, io},
 };
 

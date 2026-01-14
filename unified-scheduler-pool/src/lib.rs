@@ -1,28 +1,28 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 //! Transaction scheduling code.
 //!
-//! This crate implements 3 solana-runtime traits [`InstalledScheduler`], [`UninstalledScheduler`]
+//! This crate implements 3 trezoa-runtime traits [`InstalledScheduler`], [`UninstalledScheduler`]
 //! and [`InstalledSchedulerPool`] to provide a concrete transaction scheduling implementation
 //! (including executing txes and committing tx results).
 //!
 //! At the highest level, this crate takes [`SanitizedTransaction`]s via its
 //! [`InstalledScheduler::schedule_execution`] and commits any side-effects (i.e. on-chain state
-//! changes) into the associated [`Bank`](solana_runtime::bank::Bank) via `solana-ledger`'s helper
+//! changes) into the associated [`Bank`](trezoa_runtime::bank::Bank) via `trezoa-ledger`'s helper
 //! function called [`execute_batch`].
 //!
 //! Refer to [`PooledScheduler`] doc comment for general overview of scheduler state transitions
 //! regarding to pooling and the actual use.
 
 use {
-    agave_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
+    trezoa_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
     assert_matches::assert_matches,
     crossbeam_channel::{
         self, never, select_biased, Receiver, RecvError, RecvTimeoutError, SendError, Sender,
@@ -32,15 +32,15 @@ use {
     dyn_clone::{clone_trait_object, DynClone},
     log::*,
     scopeguard::defer,
-    solana_clock::{Epoch, Slot},
-    solana_cost_model::cost_model::CostModel,
-    solana_ledger::blockstore_processor::{
+    trezoa_clock::{Epoch, Slot},
+    trezoa_cost_model::cost_model::CostModel,
+    trezoa_ledger::blockstore_processor::{
         execute_batch, TransactionBatchWithIndexes, TransactionStatusSender,
     },
-    solana_metrics::datapoint_info,
-    solana_poh::transaction_recorder::{RecordTransactionsSummary, TransactionRecorder},
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_metrics::datapoint_info,
+    trezoa_poh::transaction_recorder::{RecordTransactionsSummary, TransactionRecorder},
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         installed_scheduler_pool::{
             initialized_result_with_timings, InstalledScheduler, InstalledSchedulerBox,
             InstalledSchedulerPool, ResultWithTimings, ScheduleResult, SchedulerAborted,
@@ -50,12 +50,12 @@ use {
         prioritization_fee_cache::PrioritizationFeeCache,
         vote_sender_types::ReplayVoteSender,
     },
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_svm::transaction_processing_result::ProcessedTransaction,
-    solana_svm_timings::ExecuteTimings,
-    solana_transaction::sanitized::SanitizedTransaction,
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
-    solana_unified_scheduler_logic::{
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_svm::transaction_processing_result::ProcessedTransaction,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_transaction::sanitized::SanitizedTransaction,
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_unified_scheduler_logic::{
         BlockSize, Capability, OrderedTaskId,
         SchedulingMode::{self, BlockProduction, BlockVerification},
         SchedulingStateMachine, Task, UsageQueue,
@@ -144,9 +144,9 @@ impl SupportedSchedulingMode {
 ///   `UsageQueueLoader` drop.
 ///
 /// `SchedulerPool` (and [`PooledScheduler`] in this regard) must be accessed as a dyn trait from
-/// `solana-runtime`, because it contains some internal fields, whose types aren't available in
-/// `solana-runtime` ( [`TransactionStatusSender`] and [`TransactionRecorder`]). Refer to the doc
-/// comment with a diagram at [`solana_runtime::installed_scheduler_pool::InstalledScheduler`] for
+/// `trezoa-runtime`, because it contains some internal fields, whose types aren't available in
+/// `trezoa-runtime` ( [`TransactionStatusSender`] and [`TransactionRecorder`]). Refer to the doc
+/// comment with a diagram at [`trezoa_runtime::installed_scheduler_pool::InstalledScheduler`] for
 /// explanation of this rather complex dyn trait/type hierarchy.
 #[derive(Debug)]
 pub struct SchedulerPool<S: SpawnableScheduler<TH>, TH: TaskHandler> {
@@ -359,7 +359,7 @@ clone_trait_object!(BankingPacketHandler);
 ///
 /// Particularly, usage_queue_loader is desired to be shared across handlers so that task creation
 /// can be processed in the multi-threaded way. For more details, see
-/// solana_core::banking_stage::unified_scheduler module doc.
+/// trezoa_core::banking_stage::unified_scheduler module doc.
 #[derive(Debug)]
 pub struct BankingStageHelper {
     usage_queue_loader: UsageQueueLoaderInner,
@@ -483,7 +483,7 @@ const DEFAULT_TIMEOUT_DURATION: Duration = Duration::from_secs(12);
 // is recreated without any entries at first, needing to repopulate by means of actual use to eat
 // the memory.
 //
-// Along the lines, this isn't problematic for the development settings (= solana-test-validator),
+// Along the lines, this isn't problematic for the development settings (= trezoa-test-validator),
 // because UsageQueueLoader won't grow that much to begin with.
 const DEFAULT_MAX_USAGE_QUEUE_COUNT: usize = 262_144;
 
@@ -1512,7 +1512,7 @@ mod chained_channel {
 ///
 /// Currently, the simplest implementation. This grows memory usage in unbounded way. Overgrown
 /// instance destruction is managed via `solScCleaner`. This struct is here to be put outside
-/// `solana-unified-scheduler-logic` for the crate's original intent (separation of concerns from
+/// `trezoa-unified-scheduler-logic` for the crate's original intent (separation of concerns from
 /// the pure-logic-only crate). Some practical and mundane pruning will be implemented in this type.
 #[derive(Debug)]
 struct UsageQueueLoaderInner {
@@ -1549,7 +1549,7 @@ enum UsageQueueLoader {
     OwnedBySelf {
         usage_queue_loader_inner: UsageQueueLoaderInner,
     },
-    // As documented at BankingStageHelper and solana_core::banking_stage::unified_scheduler,
+    // As documented at BankingStageHelper and trezoa_core::banking_stage::unified_scheduler,
     // UsageQueueLoaderInner is placed behind BankingStageHelper for block production performance.
     // Barely expose that to the cleaner thread by holding its Arc here as well; used by block
     // production.
@@ -1613,12 +1613,12 @@ fn disconnected<T>() -> Receiver<T> {
 /// The concrete scheduler instance along with 1 scheduler and N handler threads.
 ///
 /// This implements the dyn-compatible [`InstalledScheduler`] trait to be interacted by
-/// solana-runtime code as `Box<dyn _>`.  This also implements the [`SpawnableScheduler`] subtrait
+/// trezoa-runtime code as `Box<dyn _>`.  This also implements the [`SpawnableScheduler`] subtrait
 /// to be spawned and pooled by [`SchedulerPool`].  When a scheduler is said to be _taken_ from a
 /// pool, the Rust's ownership is literally moved from the pool's vec to the particular
-/// [`BankWithScheduler`](solana_runtime::installed_scheduler_pool::BankWithScheduler) for
+/// [`BankWithScheduler`](trezoa_runtime::installed_scheduler_pool::BankWithScheduler) for
 /// type-level protection against double-use by different banks. As soon as the bank is
-/// [`is_complete()`](`solana_runtime::bank::Bank::is_complete`) (i.e. ready for freezing), the
+/// [`is_complete()`](`trezoa_runtime::bank::Bank::is_complete`) (i.e. ready for freezing), the
 /// associated scheduler is immediately _returned_ to the pool via
 /// [`InstalledScheduler::wait_for_termination`], to be taken by other banks quickly (usually,
 /// child bank).
@@ -1635,10 +1635,10 @@ fn disconnected<T>() -> Receiver<T> {
 /// and abortions.
 ///
 /// Timeouts are for rare conditions where there are abandoned-yet-unpruned banks in the
-/// [`BankForks`](solana_runtime::bank_forks::BankForks) under forky (unsteady rooting) cluster
+/// [`BankForks`](trezoa_runtime::bank_forks::BankForks) under forky (unsteady rooting) cluster
 /// conditions. The pool's background cleaner thread (`solScCleaner`) triggers the timeout-based
 /// out-of-pool (i.e. _taken_) scheduler reclamation with prior coordination of
-/// [`BankForks::insert()`](solana_runtime::bank_forks::BankForks::insert) via
+/// [`BankForks::insert()`](trezoa_runtime::bank_forks::BankForks::insert) via
 /// [`InstalledSchedulerPool::register_timeout_listener`].
 ///
 /// Abortions are for another rate conditions where there's a fatal processing error, marking the
@@ -1656,7 +1656,7 @@ fn disconnected<T>() -> Receiver<T> {
 /// ```mermaid
 /// stateDiagram-v2
 ///     [*] --> Active: Spawned (New bank by solReplayStage)
-///     state solana-runtime {
+///     state trezoa-runtime {
 ///         state if_usable <<choice>>
 ///         Active --> if_usable: Returned (Bank-freezing by solReplayStage)
 ///         Active --> if_usable: Dropped (BankForks-pruning by solReplayStage)
@@ -1668,7 +1668,7 @@ fn disconnected<T>() -> Receiver<T> {
 ///         Stale --> if_usable: Returned (Timeout-triggered by solScCleaner)
 ///         Pooled --> Active: Taken (New bank by solReplayStage)
 ///     }
-///     state solana-unified-scheduler-pool {
+///     state trezoa-unified-scheduler-pool {
 ///         Pooled --> Idle: !Taken after POOLING_DURATION
 ///         if_usable --> Trashed: IF overgrown || aborted
 ///         Idle --> Retired
@@ -2475,7 +2475,7 @@ impl<S: SpawnableScheduler<TH>, TH: TaskHandler> ThreadManager<S, TH> {
                                 continue;
                             }
                         },
-                        // See solana_core::banking_stage::unified_scheduler module doc as to
+                        // See trezoa_core::banking_stage::unified_scheduler module doc as to
                         // justification of this additional kind of work at the lowest precedence
                         // of select!
                         recv(handler_context.banking_packet_receiver) -> banking_packet => {
@@ -2901,13 +2901,13 @@ mod tests {
         super::*,
         crate::sleepless_testing,
         assert_matches::assert_matches,
-        solana_clock::{Slot, MAX_PROCESSING_AGE},
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::blockstore_processor::{TransactionStatusBatch, TransactionStatusMessage},
-        solana_poh::record_channels::record_channels,
-        solana_pubkey::Pubkey,
-        solana_runtime::{
+        trezoa_clock::{Slot, MAX_PROCESSING_AGE},
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::blockstore_processor::{TransactionStatusBatch, TransactionStatusMessage},
+        trezoa_poh::record_channels::record_channels,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
@@ -2915,11 +2915,11 @@ mod tests {
                 BankWithScheduler, InstalledSchedulerPoolArc, SchedulingContext,
             },
         },
-        solana_svm_timings::ExecuteTimingType,
-        solana_system_transaction as system_transaction,
-        solana_transaction::sanitized::SanitizedTransaction,
-        solana_transaction_error::TransactionError,
-        solana_unified_scheduler_logic::{
+        trezoa_svm_timings::ExecuteTimingType,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::sanitized::SanitizedTransaction,
+        trezoa_transaction_error::TransactionError,
+        trezoa_unified_scheduler_logic::{
             MAX_ALT_INVALIDATION_SLOT, MAX_SANITIZED_EPOCH, NO_CONSUMED_BLOCK_SIZE,
         },
         std::{
@@ -3004,7 +3004,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_pool_new() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let pool = DefaultSchedulerPool::new_dyn_for_verification(None, None, None, None, None);
 
@@ -3018,7 +3018,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_spawn() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let pool = DefaultSchedulerPool::new_dyn_for_verification(None, None, None, None, None);
         let bank = Arc::new(Bank::default_for_tests());
@@ -3033,7 +3033,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_drop_idle() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeIdleSchedulerCleaned,
@@ -3102,7 +3102,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_drop_overgrown() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeTrashedSchedulerCleaned,
@@ -3176,7 +3176,7 @@ mod tests {
     #[test]
     fn test_scheduler_drop_stale() {
         const SHORTENED_MAX_POOLING_DURATION: Duration = Duration::from_millis(100);
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeTimeoutListenerTriggered,
@@ -3221,7 +3221,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_active_after_stale() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeTimeoutListenerTriggered,
@@ -3279,7 +3279,7 @@ mod tests {
         let tx_before_stale =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -3291,7 +3291,7 @@ mod tests {
         let tx_after_stale =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -3311,7 +3311,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_pause_after_stale() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeTimeoutListenerTriggered,
@@ -3355,7 +3355,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_remain_stale_after_error() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeTimeoutListenerTriggered,
@@ -3397,7 +3397,7 @@ mod tests {
         let tx_before_stale =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -3410,7 +3410,7 @@ mod tests {
         let tx_after_stale =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -3442,7 +3442,7 @@ mod tests {
     }
 
     fn do_test_scheduler_drop_abort(abort_case: AbortCase) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(match abort_case {
             AbortCase::Unhandled => &[
@@ -3460,7 +3460,7 @@ mod tests {
 
         let tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -3521,7 +3521,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_drop_short_circuiting() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeThreadManagerDrop,
@@ -3570,7 +3570,7 @@ mod tests {
         for i in 0..MAX_TASK_COUNT {
             let tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -3587,7 +3587,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_pool_filo() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let pool = DefaultSchedulerPool::new_for_verification(None, None, None, None, None);
         let bank = Arc::new(Bank::default_for_tests());
@@ -3614,7 +3614,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_pool_context_drop_unless_reinitialized() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let pool = DefaultSchedulerPool::new_for_verification(None, None, None, None, None);
         let bank = Arc::new(Bank::default_for_tests());
@@ -3631,7 +3631,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_pool_context_replace() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let pool = DefaultSchedulerPool::new_for_verification(None, None, None, None, None);
         let old_bank = &Arc::new(Bank::default_for_tests());
@@ -3652,7 +3652,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_pool_install_into_bank_forks() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let bank = Bank::default_for_tests();
         let bank_forks = BankForks::new_rw_arc(bank);
@@ -3663,7 +3663,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_install_into_bank() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -3702,7 +3702,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_schedule_execution_success() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -3711,7 +3711,7 @@ mod tests {
         } = create_genesis_config(10_000);
         let tx0 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -3729,7 +3729,7 @@ mod tests {
     }
 
     fn do_test_scheduler_schedule_execution_failure(extra_tx_after_failure: bool) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &CheckPoint::TaskHandled(0),
@@ -3768,7 +3768,7 @@ mod tests {
         let unfunded_keypair = Keypair::new();
         let bad_tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &unfunded_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -3780,7 +3780,7 @@ mod tests {
         let good_tx_after_bad_tx =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 3,
                 genesis_config.hash(),
             ));
@@ -3833,7 +3833,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "This panic should be propagated. (From: ")]
     fn test_scheduler_schedule_execution_panic() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         #[derive(Debug)]
         enum PanickingHanlderCheckPoint {
@@ -3897,7 +3897,7 @@ mod tests {
             // Use 2 non-conflicting txes to exercise the channel disconnected case as well.
             let tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &Keypair::new(),
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 1,
                 genesis_config.hash(),
             ));
@@ -3917,7 +3917,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_execution_failure_short_circuiting() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &TestCheckPoint::BeforeNewTask,
@@ -3965,7 +3965,7 @@ mod tests {
         for i in 0..10 {
             let tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -3986,13 +3986,13 @@ mod tests {
     }
 
     fn create_genesis_config_for_block_production(lamports: u64) -> GenesisConfigInfo {
-        // The in-scope create_genesis_config(), which is imported from the `solana-runtime`,
+        // The in-scope create_genesis_config(), which is imported from the `trezoa-runtime`,
         // doesn't properly setup leader schedule, causing the following panic if used for poh
-        // recorder, so use the one from the `solana-ledger` crate:
+        // recorder, so use the one from the `trezoa-ledger` crate:
         //
         //   thread 'tests::...' panicked at ledger/src/leader_schedule.rs:LL:CC:
         //   called `Result::unwrap()` on an `Err` value: NoItem
-        solana_ledger::genesis_utils::create_genesis_config(lamports)
+        trezoa_ledger::genesis_utils::create_genesis_config(lamports)
     }
 
     #[test_matrix(
@@ -4001,7 +4001,7 @@ mod tests {
     fn test_scheduler_schedule_execution_blocked_at_session_ending(
         scheduling_mode: SchedulingMode,
     ) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         const STALLED_TRANSACTION_INDEX: OrderedTaskId = 0;
         const BLOCKED_TRANSACTION_INDEX: OrderedTaskId = 1;
@@ -4051,13 +4051,13 @@ mod tests {
         // tx0 and tx1 is definitely conflicting to write-lock the mint address
         let tx0 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
         let tx1 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -4159,7 +4159,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_schedule_execution_retry() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         const ORIGINAL_TRANSACTION_INDEX: OrderedTaskId = 999;
         // This is 0 because it's the first task id assigned internally by BankingStageHelper
@@ -4186,7 +4186,7 @@ mod tests {
 
         let tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -4263,7 +4263,7 @@ mod tests {
 
     #[test]
     fn test_scheduler_mismatched_scheduling_context_race() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         #[derive(Debug)]
         struct TaskAndContextChecker;
@@ -4307,7 +4307,7 @@ mod tests {
         let dummy_tx =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -4494,7 +4494,7 @@ mod tests {
     fn do_test_scheduler_schedule_execution_recent_blockhash_edge_case<
         const TRIGGER_RACE_CONDITION: bool,
     >() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -4504,7 +4504,7 @@ mod tests {
         let very_old_valid_tx =
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
                 &mint_keypair,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 2,
                 genesis_config.hash(),
             ));
@@ -4581,7 +4581,7 @@ mod tests {
     // See comment in SchedulingStateMachine::create_task() for the justification of this test
     #[test]
     fn test_enfoced_get_account_locks_validation() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -4593,7 +4593,7 @@ mod tests {
 
         let mut tx = system_transaction::transfer(
             mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         );
@@ -4635,7 +4635,7 @@ mod tests {
         [false, true]
     )]
     fn test_task_handler_poh_recording(tx_result: TxResult, should_succeed_to_record_to_poh: bool) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -4650,7 +4650,7 @@ mod tests {
             TxResult::ExecutedWithSuccess => (
                 system_transaction::transfer(
                     mint_keypair,
-                    &solana_pubkey::new_rand(),
+                    &trezoa_pubkey::new_rand(),
                     1,
                     genesis_config.hash(),
                 ),
@@ -4659,7 +4659,7 @@ mod tests {
             TxResult::ExecutedWithFailure => (
                 system_transaction::transfer(
                     mint_keypair,
-                    &solana_pubkey::new_rand(),
+                    &trezoa_pubkey::new_rand(),
                     1_000_000,
                     genesis_config.hash(),
                 ),
@@ -4668,7 +4668,7 @@ mod tests {
             TxResult::NotExecuted => (
                 system_transaction::transfer(
                     mint_keypair,
-                    &solana_pubkey::new_rand(),
+                    &trezoa_pubkey::new_rand(),
                     1,
                     Hash::default(),
                 ),
@@ -4764,7 +4764,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_schedule_execution_success() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -4797,7 +4797,7 @@ mod tests {
         scheduler.unpause_after_taken();
         let tx0 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -4825,7 +4825,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_buffering_on_spawn() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &CheckPoint::NewBufferedTask(17),
@@ -4856,7 +4856,7 @@ mod tests {
         // Create a dummy handler which unconditionally sends tx0 back to the scheduler thread
         let tx0 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -4887,7 +4887,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_buffering_before_new_session() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &CheckPoint::NewBufferedTask(18),
@@ -4911,7 +4911,7 @@ mod tests {
         // Create a dummy handler which unconditionally sends tx0 back to the scheduler thread
         let tx0 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -4958,7 +4958,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "register_banking_stage() isn't called yet")]
     fn test_block_production_scheduler_take_without_registering() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let pool = DefaultSchedulerPool::new_for_production(None, None, None, None, None);
         let bank = Arc::new(Bank::default_for_tests());
@@ -4970,7 +4970,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "cannot take: Taken(0)")]
     fn test_block_production_scheduler_double_take_without_returning() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } =
             create_genesis_config_for_block_production(10_000);
@@ -5002,7 +5002,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_drop_overgrown_on_returning() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } =
             create_genesis_config_for_block_production(10_000);
@@ -5079,7 +5079,7 @@ mod tests {
             }
         }
 
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } =
             create_genesis_config_for_block_production(10_000);
@@ -5141,7 +5141,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_return_block_verification_scheduler_while_pooled() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } =
             create_genesis_config_for_block_production(10_000);
@@ -5195,7 +5195,7 @@ mod tests {
             }
         }
 
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -5229,7 +5229,7 @@ mod tests {
 
         let tx0 = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             2,
             genesis_config.hash(),
         ));
@@ -5281,7 +5281,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_disable_while_taken() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &CheckPoint::TrashedSchedulerCleaned(1),
@@ -5332,7 +5332,7 @@ mod tests {
 
     #[test]
     fn test_block_production_scheduler_disable_while_pooled() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let _progress = sleepless_testing::setup(&[
             &CheckPoint::TrashedSchedulerCleaned(1),

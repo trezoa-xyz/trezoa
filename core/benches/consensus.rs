@@ -1,17 +1,17 @@
 #![feature(test)]
 
-extern crate solana_core;
+extern crate trezoa_core;
 extern crate test;
 
 use {
-    solana_core::{
+    trezoa_core::{
         consensus::{tower_storage::FileTowerStorage, Tower},
         vote_simulator::VoteSimulator,
     },
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_signer::Signer,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_signer::Signer,
     std::{
         collections::{HashMap, HashSet},
         sync::Arc,

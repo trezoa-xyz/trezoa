@@ -1,4 +1,4 @@
-pub use solana_account_decoder_client_types::token::{
+pub use trezoa_account_decoder_client_types::token::{
     UiConfidentialMintBurn, UiConfidentialTransferAccount, UiConfidentialTransferFeeAmount,
     UiConfidentialTransferFeeConfig, UiConfidentialTransferMint, UiCpiGuard, UiDefaultAccountState,
     UiExtension, UiGroupMemberPointer, UiGroupPointer, UiInterestBearingConfig, UiMemoTransfer,
@@ -8,15 +8,15 @@ pub use solana_account_decoder_client_types::token::{
 };
 use {
     crate::parse_token::convert_account_state,
-    solana_clock::UnixTimestamp,
-    solana_program_pack::Pack,
-    solana_pubkey::Pubkey,
-    spl_token_2022_interface::{
+    trezoa_clock::UnixTimestamp,
+    trezoa_program_pack::Pack,
+    trezoa_pubkey::Pubkey,
+    tpl_token_2022_interface::{
         extension::{self, BaseState, BaseStateWithExtensions, ExtensionType, StateWithExtensions},
-        solana_zk_sdk::encryption::pod::elgamal::PodElGamalPubkey,
+        trezoa_zk_sdk::encryption::pod::elgamal::PodElGamalPubkey,
     },
-    spl_token_group_interface::state::{TokenGroup, TokenGroupMember},
-    spl_token_metadata_interface::state::TokenMetadata,
+    tpl_token_group_interface::state::{TokenGroup, TokenGroupMember},
+    tpl_token_metadata_interface::state::TokenMetadata,
 };
 
 pub fn parse_extension<S: BaseState + Pack>(
@@ -203,7 +203,7 @@ fn convert_default_account_state(
     default_account_state: extension::default_account_state::DefaultAccountState,
 ) -> UiDefaultAccountState {
     let account_state =
-        spl_token_2022_interface::state::AccountState::try_from(default_account_state.state)
+        tpl_token_2022_interface::state::AccountState::try_from(default_account_state.state)
             .unwrap_or_default();
     UiDefaultAccountState {
         account_state: convert_account_state(account_state),

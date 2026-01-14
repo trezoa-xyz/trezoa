@@ -9,10 +9,10 @@ use {
     },
     log::*,
     parking_lot::RwLock,
-    solana_derivation_path::{DerivationPath, DerivationPathError},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_signer::SignerError,
+    trezoa_derivation_path::{DerivationPath, DerivationPathError},
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_signer::SignerError,
     std::{
         rc::Rc,
         time::{Duration, Instant},
@@ -191,7 +191,7 @@ impl RemoteWalletManager {
     #[cfg(not(feature = "hidapi"))]
     pub fn update_devices(&self) -> Result<usize, RemoteWalletError> {
         Err(RemoteWalletError::Hid(
-            "hidapi crate compilation disabled in solana-remote-wallet.".to_string(),
+            "hidapi crate compilation disabled in trezoa-remote-wallet.".to_string(),
         ))
     }
 
@@ -245,7 +245,7 @@ pub trait RemoteWallet<T> {
         unimplemented!();
     }
 
-    /// Get solana pubkey from a RemoteWallet
+    /// Get trezoa pubkey from a RemoteWallet
     fn get_pubkey(
         &self,
         derivation_path: &DerivationPath,
@@ -301,7 +301,7 @@ pub struct RemoteWalletInfo {
     pub serial: String,
     /// RemoteWallet host device path
     pub host_device_path: String,
-    /// Base pubkey of device at Solana derivation path
+    /// Base pubkey of device at Trezoa derivation path
     pub pubkey: Pubkey,
     /// Initial read error
     pub error: Option<RemoteWalletError>,
@@ -342,7 +342,7 @@ pub fn initialize_wallet_manager() -> Result<Rc<RemoteWalletManager>, RemoteWall
 #[cfg(not(feature = "hidapi"))]
 pub fn initialize_wallet_manager() -> Result<Rc<RemoteWalletManager>, RemoteWalletError> {
     Err(RemoteWalletError::Hid(
-        "hidapi crate compilation disabled in solana-remote-wallet.".to_string(),
+        "hidapi crate compilation disabled in trezoa-remote-wallet.".to_string(),
     ))
 }
 
@@ -363,7 +363,7 @@ mod tests {
 
     #[test]
     fn test_parse_locator() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let locator = Locator {
             manufacturer: Manufacturer::Ledger,
             pubkey: Some(pubkey),
@@ -425,7 +425,7 @@ mod tests {
 
     #[test]
     fn test_remote_wallet_info_matches() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let info = RemoteWalletInfo {
             manufacturer: Manufacturer::Ledger,
             model: "Nano S".to_string(),
@@ -447,7 +447,7 @@ mod tests {
         assert!(info.matches(&test_info));
         test_info.host_device_path = "/host/device/path".to_string();
         assert!(info.matches(&test_info));
-        let another_pubkey = solana_pubkey::new_rand();
+        let another_pubkey = trezoa_pubkey::new_rand();
         test_info.pubkey = another_pubkey;
         assert!(!info.matches(&test_info));
         test_info.pubkey = pubkey;
@@ -474,7 +474,7 @@ mod tests {
         assert!(info.matches(&test_info));
         test_info.host_device_path = "/host/device/path".to_string();
         assert!(info.matches(&test_info));
-        let another_pubkey = solana_pubkey::new_rand();
+        let another_pubkey = trezoa_pubkey::new_rand();
         test_info.pubkey = another_pubkey;
         assert!(!info.matches(&test_info));
         test_info.pubkey = pubkey;
@@ -483,7 +483,7 @@ mod tests {
 
     #[test]
     fn test_get_pretty_path() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let pubkey_str = pubkey.to_string();
         let remote_wallet_info = RemoteWalletInfo {
             model: "nano-s".to_string(),

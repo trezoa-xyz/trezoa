@@ -2,7 +2,7 @@ use {
     bencher::{benchmark_group, benchmark_main, Bencher},
     log::*,
     rand::distr::{Distribution, Uniform},
-    solana_metrics::{
+    trezoa_metrics::{
         counter::CounterPoint,
         datapoint::DataPoint,
         metrics::{serialize_points, test_mocks::MockMetricsWriter, MetricsAgent},

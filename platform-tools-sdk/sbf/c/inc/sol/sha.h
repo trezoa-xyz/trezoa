@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana sha system call
+ * @brief Trezoa sha system call
  */
 
 #include <sol/types.h>

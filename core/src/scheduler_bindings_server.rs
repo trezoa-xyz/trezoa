@@ -1,5 +1,5 @@
 use {
-    crate::banking_stage::BankingControlMsg, agave_scheduling_utils::handshake, std::path::Path,
+    crate::banking_stage::BankingControlMsg, trezoa_scheduling_utils::handshake, std::path::Path,
     tokio::sync::mpsc,
 };
 

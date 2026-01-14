@@ -4,7 +4,7 @@ use {
         in_mem_accounts_index::InMemAccountsIndex,
         DiskIndexValue, IndexValue, SlotListItem,
     },
-    solana_time_utils::AtomicInterval,
+    trezoa_time_utils::AtomicInterval,
     std::{
         fmt::Debug,
         sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering},

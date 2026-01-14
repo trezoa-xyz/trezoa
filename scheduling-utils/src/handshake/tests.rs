@@ -1,11 +1,11 @@
 use {
     crate::handshake::{
         client::{connect, ClientHandshakeError},
-        server::{AgaveHandshakeError, Server},
+        server::{Trezoa-teamHandshakeError, Server},
         shared::MAX_WORKERS,
         ClientLogon,
     },
-    agave_scheduler_bindings::{
+    trezoa_scheduler_bindings::{
         PackToWorkerMessage, ProgressMessage, SharableTransactionBatchRegion,
         SharableTransactionRegion, TpuToPackMessage, TransactionResponseRegion,
         WorkerToPackMessage,
@@ -30,7 +30,7 @@ fn message_passing_on_all_queues() {
         src_addr: [4; 16],
     };
     let progress_tracker = ProgressMessage {
-        leader_state: agave_scheduler_bindings::IS_LEADER,
+        leader_state: trezoa_scheduler_bindings::IS_LEADER,
         current_slot: 3,
         next_leader_slot: 12,
         leader_range_end: 16,
@@ -50,7 +50,7 @@ fn message_passing_on_all_queues() {
             num_transactions: 5,
             transactions_offset: 100,
         },
-        processed_code: agave_scheduler_bindings::processed_codes::PROCESSED,
+        processed_code: trezoa_scheduler_bindings::processed_codes::PROCESSED,
         responses: TransactionResponseRegion {
             tag: 3,
             num_transaction_responses: 2,
@@ -216,7 +216,7 @@ fn reject_worker_count_low() {
 
     let server_handle = std::thread::spawn(move || {
         let res = server.accept();
-        let Err(AgaveHandshakeError::WorkerCount(count)) = res else {
+        let Err(Trezoa-teamHandshakeError::WorkerCount(count)) = res else {
             panic!();
         };
         assert_eq!(count, 0);
@@ -254,7 +254,7 @@ fn reject_worker_count_high() {
 
     let server_handle = std::thread::spawn(move || {
         let res = server.accept();
-        let Err(AgaveHandshakeError::WorkerCount(count)) = res else {
+        let Err(Trezoa-teamHandshakeError::WorkerCount(count)) = res else {
             panic!();
         };
         assert_eq!(count, 100);

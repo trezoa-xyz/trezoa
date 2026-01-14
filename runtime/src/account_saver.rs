@@ -1,17 +1,17 @@
 use {
     core::borrow::Borrow,
-    solana_account::AccountSharedData,
-    solana_pubkey::Pubkey,
-    solana_svm::{
+    trezoa_account::AccountSharedData,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm::{
         rollback_accounts::RollbackAccounts,
         transaction_processing_result::{
             ProcessedTransaction, TransactionProcessingResult,
             TransactionProcessingResultExtensions,
         },
     },
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_transaction::sanitized::SanitizedTransaction,
-    solana_transaction_context::transaction_accounts::KeyedAccountSharedData,
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_transaction::sanitized::SanitizedTransaction,
+    trezoa_transaction_context::transaction_accounts::KeyedAccountSharedData,
 };
 
 // Used to approximate how many accounts will be calculated for storage so that
@@ -148,27 +148,27 @@ fn collect_accounts_for_failed_tx<'a>(
 mod tests {
     use {
         super::*,
-        solana_account::{AccountSharedData, ReadableAccount},
-        solana_fee_structure::FeeDetails,
-        solana_hash::Hash,
-        solana_instruction::error::InstructionError,
-        solana_keypair::{keypair_from_seed, Keypair},
-        solana_message::{compiled_instruction::CompiledInstruction, Message},
-        solana_nonce::{
+        trezoa_account::{AccountSharedData, ReadableAccount},
+        trezoa_fee_structure::FeeDetails,
+        trezoa_hash::Hash,
+        trezoa_instruction::error::InstructionError,
+        trezoa_keypair::{keypair_from_seed, Keypair},
+        trezoa_message::{compiled_instruction::CompiledInstruction, Message},
+        trezoa_nonce::{
             state::{Data as NonceData, DurableNonce, State as NonceState},
             versions::Versions as NonceVersions,
         },
-        solana_nonce_account as nonce_account,
-        solana_program_runtime::execution_budget::SVMTransactionExecutionBudget,
-        solana_sdk_ids::native_loader,
-        solana_signer::{signers::Signers, Signer},
-        solana_svm::{
+        trezoa_nonce_account as nonce_account,
+        trezoa_program_runtime::execution_budget::SVMTransactionExecutionBudget,
+        trezoa_sdk_ids::native_loader,
+        trezoa_signer::{signers::Signers, Signer},
+        trezoa_svm::{
             account_loader::{FeesOnlyTransaction, LoadedTransaction},
             transaction_execution_result::{ExecutedTransaction, TransactionExecutionDetails},
         },
-        solana_system_interface::{instruction as system_instruction, program as system_program},
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
-        solana_transaction_error::{TransactionError, TransactionResult as Result},
+        trezoa_system_interface::{instruction as system_instruction, program as system_program},
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_transaction_error::{TransactionError, TransactionResult as Result},
         std::collections::HashMap,
     };
 
@@ -208,7 +208,7 @@ mod tests {
     fn test_collect_accounts_to_store() {
         let keypair0 = Keypair::new();
         let keypair1 = Keypair::new();
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let account0 = AccountSharedData::new(1, 0, &Pubkey::default());
         let account1 = AccountSharedData::new(2, 0, &Pubkey::default());
         let account2 = AccountSharedData::new(3, 0, &Pubkey::default());

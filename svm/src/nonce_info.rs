@@ -1,14 +1,14 @@
 #[cfg(feature = "dev-context-only-utils")]
 use {
     qualifier_attr::qualifiers,
-    solana_account::state_traits::StateMut,
-    solana_nonce::{
+    trezoa_account::state_traits::StateMut,
+    trezoa_nonce::{
         state::{DurableNonce, State as NonceState},
         versions::Versions as NonceVersions,
     },
     thiserror::Error,
 };
-use {solana_account::AccountSharedData, solana_pubkey::Pubkey};
+use {trezoa_account::AccountSharedData, trezoa_pubkey::Pubkey};
 
 /// Holds limited nonce info available during transaction checks
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -68,12 +68,12 @@ impl NonceInfo {
 mod tests {
     use {
         super::*,
-        solana_hash::Hash,
-        solana_nonce::{
+        trezoa_hash::Hash,
+        trezoa_nonce::{
             state::{Data as NonceData, DurableNonce, State as NonceState},
             versions::Versions as NonceVersions,
         },
-        solana_sdk_ids::system_program,
+        trezoa_sdk_ids::system_program,
     };
 
     fn create_nonce_account(state: NonceState) -> AccountSharedData {

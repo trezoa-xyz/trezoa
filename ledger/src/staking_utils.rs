@@ -2,21 +2,21 @@
 pub(crate) mod tests {
     use {
         rand::Rng,
-        solana_account::AccountSharedData,
-        solana_clock::Clock,
-        solana_instruction::Instruction,
-        solana_keypair::Keypair,
-        solana_pubkey::Pubkey,
-        solana_runtime::bank::Bank,
-        solana_signer::{signers::Signers, Signer},
-        solana_stake_interface::{
+        trezoa_account::AccountSharedData,
+        trezoa_clock::Clock,
+        trezoa_instruction::Instruction,
+        trezoa_keypair::Keypair,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::{signers::Signers, Signer},
+        trezoa_stake_interface::{
             program as stake_program,
             stake_flags::StakeFlags,
             state::{Authorized, Delegation, Meta, Stake, StakeStateV2},
         },
-        solana_transaction::Transaction,
-        solana_vote::vote_account::{VoteAccount, VoteAccounts},
-        solana_vote_program::{
+        trezoa_transaction::Transaction,
+        trezoa_vote::vote_account::{VoteAccount, VoteAccounts},
+        trezoa_vote_program::{
             vote_instruction,
             vote_state::{VoteInit, VoteStateV4, VoteStateVersions},
         },
@@ -94,8 +94,8 @@ pub(crate) mod tests {
     #[test]
     fn test_to_staked_nodes() {
         let mut stakes = Vec::new();
-        let node1 = solana_pubkey::new_rand();
-        let vote_pubkey1 = solana_pubkey::new_rand();
+        let node1 = trezoa_pubkey::new_rand();
+        let vote_pubkey1 = trezoa_pubkey::new_rand();
 
         // Node 1 has stake of 3
         for i in 0..3 {
@@ -113,8 +113,8 @@ pub(crate) mod tests {
         }
 
         // Node 1 has stake of 5
-        let node2 = solana_pubkey::new_rand();
-        let vote_pubkey2 = solana_pubkey::new_rand();
+        let node2 = trezoa_pubkey::new_rand();
+        let vote_pubkey2 = trezoa_pubkey::new_rand();
 
         stakes.push((
             5,
@@ -132,7 +132,7 @@ pub(crate) mod tests {
             let account = AccountSharedData::new_data(
                 rng.random(), // lamports
                 &VoteStateVersions::new_v4(vote_state),
-                &solana_vote_program::id(), // owner
+                &trezoa_vote_program::id(), // owner
             )
             .unwrap();
             let vote_pubkey = Pubkey::new_unique();

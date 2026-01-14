@@ -1,13 +1,13 @@
 use {
-    solana_hash::Hash, solana_instruction::error::InstructionError, solana_pubkey::Pubkey,
+    trezoa_hash::Hash, trezoa_instruction::error::InstructionError, trezoa_pubkey::Pubkey,
     thiserror::Error,
 };
 
 /// Errors returned by a Core BPF migration.
 #[derive(Debug, Error)]
 pub enum CoreBpfMigrationError {
-    /// Solana instruction error
-    #[error("Solana instruction error: {0:?}")]
+    /// Trezoa instruction error
+    #[error("Trezoa instruction error: {0:?}")]
     InstructionError(#[from] InstructionError),
     /// Bincode serialization error
     #[error("Bincode serialization error: {0:?}")]

@@ -1,7 +1,7 @@
 [package]
-name = "solana-transaction-status-client-types"
-description = "Core RPC client types for solana-transaction-status"
-documentation = "https://docs.rs/solana-transaction-status-client-types"
+name = "trezoa-transaction-status-client-types"
+description = "Core RPC client types for trezoa-transaction-status"
+documentation = "https://docs.rs/trezoa-transaction-status-client-types"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -13,7 +13,7 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 base64 = { workspace = true }
@@ -21,16 +21,16 @@ bincode = { workspace = true }
 bs58 = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-solana-account-decoder-client-types = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-instruction = { workspace = true }
-solana-message = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-reward-info = { workspace = true, features = ["serde"] }
-solana-signature = { workspace = true, default-features = false }
-solana-transaction = { workspace = true, features = ["serde"] }
-solana-transaction-context = { workspace = true }
-solana-transaction-error = { workspace = true, features = ["serde"] }
+trezoa-account-decoder-client-types = { workspace = true }
+trezoa-commitment-config = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-reward-info = { workspace = true, features = ["serde"] }
+trezoa-signature = { workspace = true, default-features = false }
+trezoa-transaction = { workspace = true, features = ["serde"] }
+trezoa-transaction-context = { workspace = true }
+trezoa-transaction-error = { workspace = true, features = ["serde"] }
 thiserror = { workspace = true }
 
 [dev-dependencies]

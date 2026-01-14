@@ -1,6 +1,6 @@
 //! The `validator` module hosts all the validator microservices.
 
-pub use solana_perf::report_target_features;
+pub use trezoa_perf::report_target_features;
 use {
     crate::{
         admin_rpc_post_init::{AdminRpcRequestMetadataPostInit, KeyUpdaterType, KeyUpdaters},
@@ -33,7 +33,7 @@ use {
         tpu::{ForwardingClientOption, Tpu, TpuSockets},
         tvu::{Tvu, TvuConfig, TvuSockets},
     },
-    agave_snapshots::{
+    trezoa_snapshots::{
         snapshot_archive_info::SnapshotArchiveInfoGetter as _, snapshot_config::SnapshotConfig,
         snapshot_hash::StartingSnapshotHashes, SnapshotInterval,
     },
@@ -41,25 +41,25 @@ use {
     crossbeam_channel::{bounded, unbounded, Receiver},
     quinn::Endpoint,
     serde::{Deserialize, Serialize},
-    solana_account::ReadableAccount,
-    solana_accounts_db::{
+    trezoa_account::ReadableAccount,
+    trezoa_accounts_db::{
         accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
         accounts_update_notifier_interface::AccountsUpdateNotifier,
         utils::move_and_async_delete_path_contents,
     },
-    solana_client::connection_cache::{ConnectionCache, Protocol},
-    solana_clock::Slot,
-    solana_cluster_type::ClusterType,
-    solana_entry::poh::compute_hash_time,
-    solana_epoch_schedule::MAX_LEADER_SCHEDULE_EPOCH_OFFSET,
-    solana_genesis_config::GenesisConfig,
-    solana_genesis_utils::{
+    trezoa_client::connection_cache::{ConnectionCache, Protocol},
+    trezoa_clock::Slot,
+    trezoa_cluster_type::ClusterType,
+    trezoa_entry::poh::compute_hash_time,
+    trezoa_epoch_schedule::MAX_LEADER_SCHEDULE_EPOCH_OFFSET,
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_genesis_utils::{
         open_genesis_config, OpenGenesisConfigError, MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
     },
-    solana_geyser_plugin_manager::{
+    trezoa_geyser_plugin_manager::{
         geyser_plugin_service::GeyserPluginService, GeyserPluginManagerRequest,
     },
-    solana_gossip::{
+    trezoa_gossip::{
         cluster_info::{
             ClusterInfo, DEFAULT_CONTACT_DEBUG_INTERVAL_MILLIS,
             DEFAULT_CONTACT_SAVE_INTERVAL_MILLIS,
@@ -69,10 +69,10 @@ use {
         gossip_service::GossipService,
         node::{Node, NodeMultihoming},
     },
-    solana_hard_forks::HardForks,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_hard_forks::HardForks,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         bank_forks_utils,
         blockstore::{
             Blockstore, BlockstoreError, PurgeType, MAX_COMPLETED_SLOTS_IN_CHANNEL,
@@ -87,19 +87,19 @@ use {
         leader_schedule_cache::LeaderScheduleCache,
         use_snapshot_archives_at_startup::UseSnapshotArchivesAtStartup,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::{datapoint_info, metrics::metrics_config_sanity_check},
-    solana_net_utils::SocketAddrSpace,
-    solana_poh::{
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::{datapoint_info, metrics::metrics_config_sanity_check},
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_poh::{
         poh_controller::PohController,
         poh_recorder::PohRecorder,
         poh_service::{self, PohService},
         record_channels::record_channels,
         transaction_recorder::TransactionRecorder,
     },
-    solana_pubkey::Pubkey,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_rpc::{
+    trezoa_pubkey::Pubkey,
+    trezoa_rayon_threadlimit::get_thread_count,
+    trezoa_rpc::{
         max_slots::MaxSlots,
         optimistically_confirmed_bank_tracker::{
             BankNotificationSenderConfig, OptimisticallyConfirmedBank,
@@ -113,7 +113,7 @@ use {
         transaction_notifier_interface::TransactionNotifierArc,
         transaction_status_service::TransactionStatusService,
     },
-    solana_runtime::{
+    trezoa_runtime::{
         accounts_background_service::{
             AbsRequestHandlers, AccountsBackgroundService, DroppedSlotsReceiver,
             PendingSnapshotPackages, PrunedBanksRequestHandler, SnapshotRequestHandler,
@@ -128,26 +128,26 @@ use {
         snapshot_controller::SnapshotController,
         snapshot_utils::{self, clean_orphaned_account_snapshot_dirs},
     },
-    solana_send_transaction_service::send_transaction_service::Config as SendTransactionServiceConfig,
-    solana_shred_version::compute_shred_version,
-    solana_signer::Signer,
-    solana_streamer::{
+    trezoa_send_transaction_service::send_transaction_service::Config as SendTransactionServiceConfig,
+    trezoa_shred_version::compute_shred_version,
+    trezoa_signer::Signer,
+    trezoa_streamer::{
         nonblocking::{simple_qos::SimpleQosConfig, swqos::SwQosConfig},
         quic::{QuicStreamerConfig, SimpleQosQuicStreamerConfig, SwQosQuicStreamerConfig},
         streamer::StakedNodes,
     },
-    solana_time_utils::timestamp,
-    solana_tpu_client::tpu_client::{DEFAULT_TPU_CONNECTION_POOL_SIZE, DEFAULT_VOTE_USE_QUIC},
-    solana_turbine::{
+    trezoa_time_utils::timestamp,
+    trezoa_tpu_client::tpu_client::{DEFAULT_TPU_CONNECTION_POOL_SIZE, DEFAULT_VOTE_USE_QUIC},
+    trezoa_turbine::{
         self,
         broadcast_stage::BroadcastStageType,
         xdp::{master_ip_if_bonded, XdpConfig, XdpRetransmitter},
     },
-    solana_unified_scheduler_logic::SchedulingMode,
-    solana_unified_scheduler_pool::{DefaultSchedulerPool, SupportedSchedulingMode},
-    solana_validator_exit::Exit,
-    solana_vote_program::vote_state::VoteStateV4,
-    solana_wen_restart::wen_restart::{wait_for_wen_restart, WenRestartConfig},
+    trezoa_unified_scheduler_logic::SchedulingMode,
+    trezoa_unified_scheduler_pool::{DefaultSchedulerPool, SupportedSchedulingMode},
+    trezoa_validator_exit::Exit,
+    trezoa_vote_program::vote_state::VoteStateV4,
+    trezoa_wen_restart::wen_restart::{wait_for_wen_restart, WenRestartConfig},
     std::{
         borrow::Cow,
         collections::{HashMap, HashSet},
@@ -233,7 +233,7 @@ impl BlockProductionMethod {
             });
 
             let disable_experimental =
-                std::env::var("SOLANA_ENABLE_EXPERIMENTAL_BLOCK_PRODUCTION_METHOD").is_err();
+                std::env::var("TREZOA_ENABLE_EXPERIMENTAL_BLOCK_PRODUCTION_METHOD").is_err();
             if disable_experimental {
                 return &VARIANTS_NO_EXPERIMENTAL[..];
             }
@@ -668,7 +668,7 @@ pub struct Validator {
     block_creation_loop: BlockCreationLoop,
     tpu: Tpu,
     tvu: Tvu,
-    ip_echo_server: Option<solana_net_utils::IpEchoServer>,
+    ip_echo_server: Option<trezoa_net_utils::IpEchoServer>,
     pub cluster_info: Arc<ClusterInfo>,
     pub bank_forks: Arc<RwLock<BankForks>>,
     pub blockstore: Arc<Blockstore>,
@@ -1358,7 +1358,7 @@ impl Validator {
 
         let ip_echo_server = match node.sockets.ip_echo {
             None => None,
-            Some(tcp_listener) => Some(solana_net_utils::ip_echo_server(
+            Some(tcp_listener) => Some(trezoa_net_utils::ip_echo_server(
                 tcp_listener,
                 config.ip_echo_server_threads,
                 Some(node.info.shred_version()),
@@ -1733,7 +1733,7 @@ impl Validator {
         datapoint_info!(
             "validator-new",
             ("id", id.to_string(), String),
-            ("version", solana_version::version!(), String),
+            ("version", trezoa_version::version!(), String),
             ("cluster_type", genesis_config.cluster_type as u32, i64),
             ("elapsed_ms", start_time.elapsed().as_millis() as i64, i64),
             ("waited_for_supermajority", waited_for_supermajority, bool),
@@ -1824,7 +1824,7 @@ impl Validator {
                 {
                     if let Some(logfile) = self.logfile.as_ref() {
                         info!("Received SIGUSR1, reopening {}", logfile.display());
-                        agave_logger::redirect_stderr(logfile);
+                        trezoa_logger::redirect_stderr(logfile);
                         // Reset the flag to `false` to allow detection of the
                         // signal again and to avoid hitting this case every
                         // iteration
@@ -2913,21 +2913,21 @@ mod tests {
     use {
         super::*,
         crossbeam_channel::{bounded, RecvTimeoutError},
-        solana_entry::entry,
-        solana_genesis_config::create_genesis_config,
-        solana_gossip::contact_info::ContactInfo,
-        solana_ledger::{
+        trezoa_entry::entry,
+        trezoa_genesis_config::create_genesis_config,
+        trezoa_gossip::contact_info::ContactInfo,
+        trezoa_ledger::{
             blockstore, create_new_tmp_ledger, genesis_utils::create_genesis_config_with_leader,
             get_tmp_ledger_path_auto_delete,
         },
-        solana_poh_config::PohConfig,
-        solana_sha256_hasher::hash,
+        trezoa_poh_config::PohConfig,
+        trezoa_sha256_hasher::hash,
         std::{fs::remove_dir_all, num::NonZeroU64, thread, time::Duration},
     };
 
     #[test]
     fn validator_exit() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let leader_keypair = Keypair::new();
         let leader_node = Node::new_localhost_with_pubkey(&leader_keypair.pubkey());
 
@@ -2973,7 +2973,7 @@ mod tests {
 
     #[test]
     fn test_should_cleanup_blockstore_incorrect_shred_versions() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
@@ -3108,7 +3108,7 @@ mod tests {
 
     #[test]
     fn test_cleanup_blockstore_incorrect_shred_versions() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let validator_config = ValidatorConfig::default_for_test();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
@@ -3204,7 +3204,7 @@ mod tests {
 
     #[test]
     fn test_wait_for_supermajority() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let node_keypair = Arc::new(Keypair::new());
         let cluster_info = ClusterInfo::new(
             ContactInfo::new_localhost(&node_keypair.pubkey(), timestamp()),
@@ -3344,18 +3344,18 @@ mod tests {
         //
         // So, convert to microseconds first to avoid the integer rounding error
         let target_tick_duration_us =
-            solana_clock::DEFAULT_MS_PER_SLOT * 1000 / solana_clock::DEFAULT_TICKS_PER_SLOT;
+            trezoa_clock::DEFAULT_MS_PER_SLOT * 1000 / trezoa_clock::DEFAULT_TICKS_PER_SLOT;
         assert_eq!(target_tick_duration_us, 6250);
         Duration::from_micros(target_tick_duration_us)
     }
 
     #[test]
     fn test_poh_speed() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let poh_config = PohConfig {
             target_tick_duration: target_tick_duration(),
             // make PoH rate really fast to cause the panic condition
-            hashes_per_tick: Some(100 * solana_clock::DEFAULT_HASHES_PER_TICK),
+            hashes_per_tick: Some(100 * trezoa_clock::DEFAULT_HASHES_PER_TICK),
             ..PohConfig::default()
         };
         let genesis_config = GenesisConfig {
@@ -3368,7 +3368,7 @@ mod tests {
 
     #[test]
     fn test_poh_speed_no_hashes_per_tick() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let poh_config = PohConfig {
             target_tick_duration: target_tick_duration(),
             hashes_per_tick: None,

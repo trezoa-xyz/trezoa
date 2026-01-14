@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-instruction-introspection"
+name = "trezoa-sbf-rust-instruction-introspection"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -12,15 +12,15 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-solana-account-info = { workspace = true }
-solana-instruction = { workspace = true }
-solana-instructions-sysvar = { workspace = true }
-solana-msg = { workspace = true }
-solana-program = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-error = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sysvar = { workspace = true }
+trezoa-account-info = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-instructions-sysvar = { workspace = true }
+trezoa-msg = { workspace = true }
+trezoa-program = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sysvar = { workspace = true }
 
 [lints]
 workspace = true

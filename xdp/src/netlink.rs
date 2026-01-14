@@ -6,7 +6,7 @@ use {
         AF_NETLINK, NDA_DST, NDA_LLADDR, NETLINK_EXT_ACK, NETLINK_ROUTE, NLA_ALIGNTO,
         NLA_TYPE_MASK, NLMSG_DONE, NLMSG_ERROR, NLM_F_DUMP, NLM_F_MULTI, NLM_F_REQUEST, RTA_DST,
         RTA_GATEWAY, RTA_IIF, RTA_OIF, RTA_PREFSRC, RTA_PRIORITY, RTA_TABLE, RTM_GETNEIGH,
-        RTM_GETROUTE, RTM_NEWNEIGH, RTM_NEWROUTE, RT_TABLE_MAIN, SOCK_RAW, SOL_NETLINK, SOL_SOCKET,
+        RTM_GETROUTE, RTM_NEWNEIGH, RTM_NEWROUTE, RT_TABLE_MAIN, SOCK_RAW, TRZ_NETLINK, TRZ_SOCKET,
         SO_RCVBUF,
     },
     std::{
@@ -42,7 +42,7 @@ impl NetlinkSocket {
         if unsafe {
             setsockopt(
                 sock.as_raw_fd(),
-                SOL_NETLINK,
+                TRZ_NETLINK,
                 NETLINK_EXT_ACK,
                 &enable as *const _ as *const _,
                 mem::size_of::<i32>() as u32,
@@ -143,7 +143,7 @@ impl NetlinkSocket {
         unsafe {
             setsockopt(
                 sock.as_raw_fd(),
-                SOL_SOCKET,
+                TRZ_SOCKET,
                 SO_RCVBUF,
                 &NETLINK_RCVBUF_SIZE as *const _ as *const _,
                 mem::size_of::<i32>() as u32,

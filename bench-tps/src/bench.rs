@@ -11,23 +11,23 @@ use {
     log::*,
     rand::distr::{Distribution, Uniform},
     rayon::prelude::*,
-    solana_account::Account,
-    solana_client::nonce_utils,
-    solana_clock::{DEFAULT_MS_PER_SLOT, DEFAULT_S_PER_SLOT, MAX_PROCESSING_AGE},
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_hash::Hash,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_metrics::{self, datapoint_info},
-    solana_native_token::Sol,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_api::request::MAX_MULTIPLE_ACCOUNTS,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_time_utils::timestamp,
-    solana_tps_client::*,
-    solana_transaction::Transaction,
+    trezoa_account::Account,
+    trezoa_client::nonce_utils,
+    trezoa_clock::{DEFAULT_MS_PER_SLOT, DEFAULT_S_PER_SLOT, MAX_PROCESSING_AGE},
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_hash::Hash,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_metrics::{self, datapoint_info},
+    trezoa_native_token::Sol,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_api::request::MAX_MULTIPLE_ACCOUNTS,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_time_utils::timestamp,
+    trezoa_tps_client::*,
+    trezoa_transaction::Transaction,
     spl_instruction_padding_interface::instruction::wrap_instruction,
     std::{
         collections::{HashSet, VecDeque},
@@ -297,7 +297,7 @@ where
     let maxes = maxes.clone();
     let client = client.clone();
     Builder::new()
-        .name("solana-client-sample".to_string())
+        .name("trezoa-client-sample".to_string())
         .spawn(move || {
             sample_txs(exit_signal, &maxes, sample_period, &client);
         })
@@ -378,7 +378,7 @@ where
             let client = client.clone();
             let signatures_sender = signatures_sender.clone();
             Builder::new()
-                .name("solana-client-sender".to_string())
+                .name("trezoa-client-sender".to_string())
                 .spawn(move || {
                     do_tx_transfers(
                         &exit_signal,
@@ -467,7 +467,7 @@ where
         let id = id.pubkey();
         Some(
             Builder::new()
-                .name("solana-blockhash-poller".to_string())
+                .name("trezoa-blockhash-poller".to_string())
                 .spawn(move || {
                     poll_blockhash(&exit_signal, &blockhash, &client, &id);
                 })
@@ -1151,7 +1151,7 @@ pub fn fund_keypairs<T: 'static + TpsClient + Send + Sync + ?Sized>(
     let rent = client.get_minimum_balance_for_rent_exemption(0)?;
     info!("Get lamports...");
 
-    // Sample the first keypair, to prevent lamport loss on repeated solana-bench-tps executions
+    // Sample the first keypair, to prevent lamport loss on repeated trezoa-bench-tps executions
     let first_key = keypairs[0].pubkey();
     let first_keypair_balance = client.get_balance(&first_key).unwrap_or(0);
 
@@ -1223,13 +1223,13 @@ pub fn fund_keypairs<T: 'static + TpsClient + Send + Sync + ?Sized>(
 mod tests {
     use {
         super::*,
-        agave_feature_set::FeatureSet,
-        solana_commitment_config::CommitmentConfig,
-        solana_fee_calculator::FeeRateGovernor,
-        solana_genesis_config::{create_genesis_config, GenesisConfig},
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_nonce::state::State,
-        solana_runtime::{bank::Bank, bank_client::BankClient, bank_forks::BankForks},
+        trezoa_feature_set::FeatureSet,
+        trezoa_commitment_config::CommitmentConfig,
+        trezoa_fee_calculator::FeeRateGovernor,
+        trezoa_genesis_config::{create_genesis_config, GenesisConfig},
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_nonce::state::State,
+        trezoa_runtime::{bank::Bank, bank_client::BankClient, bank_forks::BankForks},
     };
 
     fn bank_with_all_features(

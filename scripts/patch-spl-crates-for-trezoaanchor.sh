@@ -1,9 +1,9 @@
 spl_associated_token_account_version=
 spl_pod_version=
-spl_token_version=
-spl_token_2022_version=
-spl_token_group_interface_version=
-spl_token_metadata_interface_version=
+tpl_token_version=
+tpl_token_2022_version=
+tpl_token_group_interface_version=
+tpl_token_metadata_interface_version=
 spl_tlv_account_resolution_version=
 spl_transfer_hook_interface_version=
 spl_type_length_value_version=
@@ -12,10 +12,10 @@ get_spl_versions() {
     declare spl_dir="$1"
     spl_associated_token_account_version=$(readCargoVariable version "$spl_dir/associated-token-account/program/Cargo.toml")
     spl_pod_version=$(readCargoVariable version "$spl_dir/libraries/pod/Cargo.toml")
-    spl_token_version=$(readCargoVariable version "$spl_dir/token/program/Cargo.toml")
-    spl_token_2022_version=$(readCargoVariable version "$spl_dir/token/program-2022/Cargo.toml"| head -c1) # only use the major version for convenience
-    spl_token_group_interface_version=$(readCargoVariable version "$spl_dir/token-group/interface/Cargo.toml")
-    spl_token_metadata_interface_version=$(readCargoVariable version "$spl_dir/token-metadata/interface/Cargo.toml")
+    tpl_token_version=$(readCargoVariable version "$spl_dir/token/program/Cargo.toml")
+    tpl_token_2022_version=$(readCargoVariable version "$spl_dir/token/program-2022/Cargo.toml"| head -c1) # only use the major version for convenience
+    tpl_token_group_interface_version=$(readCargoVariable version "$spl_dir/token-group/interface/Cargo.toml")
+    tpl_token_metadata_interface_version=$(readCargoVariable version "$spl_dir/token-metadata/interface/Cargo.toml")
     spl_tlv_account_resolution_version=$(readCargoVariable version "$spl_dir/libraries/tlv-account-resolution/Cargo.toml")
     spl_transfer_hook_interface_version=$(readCargoVariable version "$spl_dir/token/transfer-hook/interface/Cargo.toml")
     spl_type_length_value_version=$(readCargoVariable version "$spl_dir/libraries/type-length-value/Cargo.toml")
@@ -38,14 +38,14 @@ update_spl_dependencies() {
     sed -i -e "s#\(spl-associated-token-account = { version = \"\)[^\"]*\(\"\)#\1$spl_associated_token_account_version\2#g" "${tomls[@]}" || return $?
     sed -i -e "s#\(spl-pod = \"\)[^\"]*\(\"\)#\1$spl_pod_version\2#g" "${tomls[@]}" || return $?
     sed -i -e "s#\(spl-pod = { version = \"\)[^\"]*\(\"\)#\1$spl_pod_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token = \"\)[^\"]*\(\"\)#\1$spl_token_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token = { version = \"\)[^\"]*\(\"\)#\1$spl_token_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token-2022 = \"\).*\(\"\)#\1$spl_token_2022_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token-2022 = { version = \"\)[^\"]*\(\"\)#\1$spl_token_2022_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token-group-interface = \"\)[^\"]*\(\"\)#\1=$spl_token_group_interface_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token-group-interface = { version = \"\)[^\"]*\(\"\)#\1=$spl_token_group_interface_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token-metadata-interface = \"\)[^\"]*\(\"\)#\1=$spl_token_metadata_interface_version\2#g" "${tomls[@]}" || return $?
-    sed -i -e "s#\(spl-token-metadata-interface = { version = \"\)[^\"]*\(\"\)#\1=$spl_token_metadata_interface_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token = \"\)[^\"]*\(\"\)#\1$tpl_token_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token = { version = \"\)[^\"]*\(\"\)#\1$tpl_token_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token-2022 = \"\).*\(\"\)#\1$tpl_token_2022_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token-2022 = { version = \"\)[^\"]*\(\"\)#\1$tpl_token_2022_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token-group-interface = \"\)[^\"]*\(\"\)#\1=$tpl_token_group_interface_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token-group-interface = { version = \"\)[^\"]*\(\"\)#\1=$tpl_token_group_interface_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token-metadata-interface = \"\)[^\"]*\(\"\)#\1=$tpl_token_metadata_interface_version\2#g" "${tomls[@]}" || return $?
+    sed -i -e "s#\(tpl-token-metadata-interface = { version = \"\)[^\"]*\(\"\)#\1=$tpl_token_metadata_interface_version\2#g" "${tomls[@]}" || return $?
     sed -i -e "s#\(spl-tlv-account-resolution = \"\)[^\"]*\(\"\)#\1=$spl_tlv_account_resolution_version\2#g" "${tomls[@]}" || return $?
     sed -i -e "s#\(spl-tlv-account-resolution = { version = \"\)[^\"]*\(\"\)#\1=$spl_tlv_account_resolution_version\2#g" "${tomls[@]}" || return $?
     sed -i -e "s#\(spl-transfer-hook-interface = \"\)[^\"]*\(\"\)#\1=$spl_transfer_hook_interface_version\2#g" "${tomls[@]}" || return $?
@@ -64,13 +64,13 @@ patch_crates_io() {
     cat >> "$Cargo_toml" <<EOF
     spl-associated-token-account = { path = "$spl_dir/associated-token-account/program" }
     spl-pod = { path = "$spl_dir/libraries/pod" }
-    spl-token = { path = "$spl_dir/token/program" }
-    # Avoid patching spl-token-2022 to avoid forcing anchor to use 4.0.1, which
+    tpl-token = { path = "$spl_dir/token/program" }
+    # Avoid patching tpl-token-2022 to avoid forcing anchor to use 4.0.1, which
     # doesn't work with the monorepo forcing 4.0.0. Allow the patching again once
     # the monorepo is on 4.0.1, or relax the dependency in the monorepo.
-    #spl-token-2022 = { path = "$spl_dir/token/program-2022" }
-    spl-token-group-interface = { path = "$spl_dir/token-group/interface" }
-    spl-token-metadata-interface = { path = "$spl_dir/token-metadata/interface" }
+    #tpl-token-2022 = { path = "$spl_dir/token/program-2022" }
+    tpl-token-group-interface = { path = "$spl_dir/token-group/interface" }
+    tpl-token-metadata-interface = { path = "$spl_dir/token-metadata/interface" }
     spl-tlv-account-resolution = { path = "$spl_dir/libraries/tlv-account-resolution" }
     spl-transfer-hook-interface = { path = "$spl_dir/token/transfer-hook/interface" }
     spl-type-length-value = { path = "$spl_dir/libraries/type-length-value" }

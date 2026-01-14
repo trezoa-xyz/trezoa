@@ -1,27 +1,27 @@
 #![cfg(feature = "sbf_rust")]
 
 use {
-    agave_validator::test_validator::*,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_validator::test_validator::*,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_client::BankClient,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         loader_utils::load_program_of_loader_v4,
     },
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_signer::Signer,
-    solana_sysvar::{clock, slot_history},
-    solana_transaction::Transaction,
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_signer::Signer,
+    trezoa_sysvar::{clock, slot_history},
+    trezoa_transaction::Transaction,
     std::{thread::sleep, time::Duration},
 };
 
 #[test]
 fn test_no_panic_banks_client() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -36,7 +36,7 @@ fn test_no_panic_banks_client() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_simulation",
+        "trezoa_sbf_rust_simulation",
     );
     bank.freeze();
 
@@ -58,11 +58,11 @@ fn test_no_panic_banks_client() {
 
 #[test]
 fn test_no_panic_rpc_client() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let program_id = Pubkey::new_unique();
     let (test_validator, payer) = TestValidatorGenesis::default()
-        .add_program("solana_sbf_rust_simulation", program_id)
+        .add_program("trezoa_sbf_rust_simulation", program_id)
         .start();
     let rpc_client = test_validator.get_rpc_client();
     let blockhash = rpc_client.get_latest_blockhash().unwrap();

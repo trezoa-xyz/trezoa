@@ -9,9 +9,9 @@ use {
         static_account_keys_frame::StaticAccountKeysFrame,
         transaction_version::TransactionVersion,
     },
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
 };
 
 #[derive(Debug)]
@@ -271,11 +271,11 @@ impl TransactionFrame {
 mod tests {
     use {
         super::*,
-        solana_message::{AddressLookupTableAccount, Message, MessageHeader, VersionedMessage, v0},
-        solana_pubkey::Pubkey,
-        solana_signature::Signature,
-        solana_system_interface::instruction::{self as system_instruction, SystemInstruction},
-        solana_transaction::versioned::VersionedTransaction,
+        trezoa_message::{AddressLookupTableAccount, Message, MessageHeader, VersionedMessage, v0},
+        trezoa_pubkey::Pubkey,
+        trezoa_signature::Signature,
+        trezoa_system_interface::instruction::{self as system_instruction, SystemInstruction},
+        trezoa_transaction::versioned::VersionedTransaction,
     };
 
     fn verify_transaction_view_frame(tx: &VersionedTransaction) {

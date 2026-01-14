@@ -1,11 +1,11 @@
 use {
-    agave_feature_set as feature_set,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_program_test::ProgramTest,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader,
-    solana_signer::Signer,
-    solana_transaction::Transaction,
+    trezoa_feature_set as feature_set,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_program_test::ProgramTest,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader,
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
     test_case::test_case,
 };
 

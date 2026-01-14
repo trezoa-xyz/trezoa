@@ -10,7 +10,7 @@ use nix::poll::{poll, PollFd, PollTimeout};
 use nix::{poll::ppoll, sys::time::TimeSpec};
 use {
     crate::recvmmsg::recv_mmsg,
-    solana_net_utils::SocketAddrSpace,
+    trezoa_net_utils::SocketAddrSpace,
     std::{
         io::{ErrorKind, Result},
         net::UdpSocket,
@@ -18,8 +18,8 @@ use {
     },
 };
 pub use {
-    solana_packet::{Meta, Packet, PACKET_DATA_SIZE},
-    solana_perf::packet::{
+    trezoa_packet::{Meta, Packet, PACKET_DATA_SIZE},
+    trezoa_perf::packet::{
         PacketBatch, PacketBatchRecycler, PacketRef, PacketRefMut, RecycledPacketBatch,
         NUM_PACKETS, PACKETS_PER_BATCH,
     },
@@ -298,7 +298,7 @@ pub fn send_to(
 mod tests {
     use {
         super::{recv_from as recv_from_impl, *},
-        solana_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
         std::{
             io::{self, Write},
             net::SocketAddr,
@@ -335,7 +335,7 @@ mod tests {
 
     #[test]
     pub fn packet_send_recv() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let recv_socket = bind_to_localhost_unique().expect("should bind - receiver");
         let addr = recv_socket.local_addr().unwrap();
         let send_socket = bind_to_localhost_unique().expect("should bind - sender");
@@ -392,7 +392,7 @@ mod tests {
 
     #[test]
     fn test_packet_resize() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let recv_socket = bind_to_localhost_unique().expect("should bind - receiver");
         let addr = recv_socket.local_addr().unwrap();
         let send_socket = bind_to_localhost_unique().expect("should bind - sender");

@@ -1,14 +1,14 @@
 use {
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_program_binaries::spl_programs,
-    solana_program_test::ProgramTest,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{bpf_loader, bpf_loader_upgradeable},
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_sysvar::rent,
-    solana_transaction::Transaction,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_program_binaries::spl_programs,
+    trezoa_program_test::ProgramTest,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{bpf_loader, bpf_loader_upgradeable},
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_sysvar::rent,
+    trezoa_transaction::Transaction,
 };
 
 #[tokio::test]

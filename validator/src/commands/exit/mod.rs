@@ -6,7 +6,7 @@ use {
         commands::{wait_for_restart_window, Error, FromClapArgMatches, Result},
     },
     clap::{value_t_or_exit, App, Arg, ArgMatches, SubCommand},
-    solana_clap_utils::input_validators::{is_parsable, is_valid_percentage},
+    trezoa_clap_utils::input_validators::{is_parsable, is_valid_percentage},
     std::path::Path,
 };
 
@@ -138,7 +138,7 @@ pub fn execute(matches: &ArgMatches, ledger_path: &Path) -> Result<()> {
 fn poll_until_pid_terminates(pid: u32) -> Result<()> {
     let pid = i32::try_from(pid)?;
 
-    println!("Waiting for agave-validator process {pid} to terminate");
+    println!("Waiting for trezoa-validator process {pid} to terminate");
     loop {
         // From man kill(2)
         //
@@ -158,7 +158,7 @@ fn poll_until_pid_terminates(pid: u32) -> Result<()> {
                 .ok_or(Error::Dynamic("unable to read raw os error".into()))?;
             match errno {
                 libc::ESRCH => {
-                    println!("Done, agave-validator process {pid} has terminated");
+                    println!("Done, trezoa-validator process {pid} has terminated");
                     break;
                 }
                 libc::EINVAL => {
@@ -186,7 +186,7 @@ fn poll_until_pid_terminates(pid: u32) -> Result<()> {
 #[cfg(not(target_os = "linux"))]
 fn poll_until_pid_terminates(_pid: u32) -> Result<()> {
     Err(Error::Dynamic(
-        "Unable to wait for agave-validator process termination on this platform".into(),
+        "Unable to wait for trezoa-validator process termination on this platform".into(),
     ))
 }
 

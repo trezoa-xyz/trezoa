@@ -5,19 +5,19 @@ use {
     crate::serde_snapshot::{
         reconstruct_single_storage, remap_and_reconstruct_single_storage, SerdeObsoleteAccountsMap,
     },
-    agave_fs::FileInfo,
+    trezoa_fs::FileInfo,
     crossbeam_channel::{select, unbounded, Receiver, Sender},
     log::*,
     rayon::{
         iter::{IntoParallelIterator, ParallelIterator},
         ThreadPool, ThreadPoolBuilder,
     },
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_storage::AccountStorageMap,
         accounts_db::{AccountsFileId, AtomicAccountsFileId},
         accounts_file::StorageAccess,
     },
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::{
         collections::HashMap,
         path::PathBuf,
@@ -274,7 +274,7 @@ pub(crate) fn get_slot_and_append_vec_id(filename: &str) -> Result<(Slot, usize)
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_accounts_db::accounts_file::AccountsFile};
+    use {super::*, trezoa_accounts_db::accounts_file::AccountsFile};
 
     #[test]
     fn test_get_slot_and_append_vec_id() {

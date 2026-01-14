@@ -2,8 +2,8 @@
 set -euof pipefail
 
 team_to_add_slug="security-incident-response"
-github_org="anza-xyz"
-github_repo="agave"
+github_org="trezoa-xyz"
+github_repo="trezoa"
 
 # Note: This will get all the GHSAs even if there are more than the per_page value
 # from gh api --help

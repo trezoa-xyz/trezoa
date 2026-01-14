@@ -1,10 +1,10 @@
 use {
     crate::rent_calculator::{check_rent_state, get_account_rent_state, RentState},
-    solana_account::ReadableAccount,
-    solana_rent::Rent,
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_transaction_context::{IndexOfAccount, TransactionContext},
-    solana_transaction_error::TransactionResult as Result,
+    trezoa_account::ReadableAccount,
+    trezoa_rent::Rent,
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_transaction_context::{IndexOfAccount, TransactionContext},
+    trezoa_transaction_error::TransactionResult as Result,
 };
 
 #[derive(PartialEq, Debug)]
@@ -69,17 +69,17 @@ impl TransactionAccountStateInfo {
 mod test {
     use {
         super::*,
-        solana_account::AccountSharedData,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::{
+        trezoa_account::AccountSharedData,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::{
             compiled_instruction::CompiledInstruction, LegacyMessage, Message, MessageHeader,
             SanitizedMessage,
         },
-        solana_rent::Rent,
-        solana_signer::Signer,
-        solana_transaction_context::TransactionContext,
-        solana_transaction_error::TransactionError,
+        trezoa_rent::Rent,
+        trezoa_signer::Signer,
+        trezoa_transaction_context::TransactionContext,
+        trezoa_transaction_error::TransactionError,
         std::collections::HashSet,
     };
 

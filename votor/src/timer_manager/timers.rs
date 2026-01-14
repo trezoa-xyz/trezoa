@@ -1,8 +1,8 @@
 use {
     crate::{event::VotorEvent, timer_manager::stats::TimerManagerStats},
     crossbeam_channel::Sender,
-    solana_clock::Slot,
-    solana_ledger::leader_schedule_utils::last_of_consecutive_leader_slots,
+    trezoa_clock::Slot,
+    trezoa_ledger::leader_schedule_utils::last_of_consecutive_leader_slots,
     std::{
         cmp::Reverse,
         collections::{BinaryHeap, HashMap, VecDeque},

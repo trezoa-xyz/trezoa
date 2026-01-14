@@ -1,19 +1,19 @@
 //! A command-line executable for monitoring a cluster's gossip plane.
 #[allow(deprecated)]
-use solana_gossip::{contact_info::ContactInfo, gossip_service::discover_peers};
+use trezoa_gossip::{contact_info::ContactInfo, gossip_service::discover_peers};
 use {
     clap::{
         crate_description, crate_name, value_t, value_t_or_exit, values_t, App, AppSettings, Arg,
         ArgMatches, SubCommand,
     },
     log::{info, warn},
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         hidden_unless_forced,
         input_parsers::{keypair_of, pubkeys_of},
         input_validators::{is_keypair_or_ask_keyword, is_port, is_pubkey},
     },
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
     std::{
         error,
         net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -41,7 +41,7 @@ fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> App<'
         .long("bind-address")
         .value_name("HOST")
         .takes_value(true)
-        .validator(solana_net_utils::is_host)
+        .validator(trezoa_net_utils::is_host)
         .help("IP address to bind the node to for gossip");
 
     App::new(name)
@@ -65,7 +65,7 @@ fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> App<'
                         .value_name("HOST:PORT")
                         .takes_value(true)
                         .required(true)
-                        .validator(solana_net_utils::is_host_port)
+                        .validator(trezoa_net_utils::is_host_port)
                         .help("Rendezvous with the cluster at this entry point"),
                 )
                 .arg(
@@ -105,7 +105,7 @@ fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> App<'
                         .value_name("HOST:PORT")
                         .takes_value(true)
                         .multiple(true)
-                        .validator(solana_net_utils::is_host_port)
+                        .validator(trezoa_net_utils::is_host_port)
                         .help("Rendezvous with the cluster at this entrypoint"),
                 )
                 .arg(
@@ -161,7 +161,7 @@ fn parse_matches() -> ArgMatches<'static> {
     get_clap_app(
         crate_name!(),
         crate_description!(),
-        solana_version::version!(),
+        trezoa_version::version!(),
     )
     .get_matches()
 }
@@ -171,7 +171,7 @@ fn parse_matches() -> ArgMatches<'static> {
 /// 2. connect to entrypoints to determine my public IP address
 fn parse_bind_address(matches: &ArgMatches, entrypoint_addrs: &[SocketAddr]) -> IpAddr {
     if let Some(bind_address) = matches.value_of("bind_address") {
-        solana_net_utils::parse_host(bind_address).unwrap_or_else(|e| {
+        trezoa_net_utils::parse_host(bind_address).unwrap_or_else(|e| {
             eprintln!("failed to parse bind-address: {e}");
             exit(1);
         })
@@ -189,7 +189,7 @@ fn parse_bind_address(matches: &ArgMatches, entrypoint_addrs: &[SocketAddr]) -> 
 /// Find my public IP address by attempting connections to entrypoints until one succeeds.
 fn get_bind_address_from_entrypoints(entrypoint_addrs: &[SocketAddr]) -> Option<IpAddr> {
     entrypoint_addrs.iter().find_map(|entrypoint_addr| {
-        solana_net_utils::get_public_ip_addr_with_binding(
+        trezoa_net_utils::get_public_ip_addr_with_binding(
             entrypoint_addr,
             IpAddr::V4(Ipv4Addr::UNSPECIFIED),
         )
@@ -198,14 +198,14 @@ fn get_bind_address_from_entrypoints(entrypoint_addrs: &[SocketAddr]) -> Option<
 }
 
 // allow deprecations here to workaround limitations with dependency specification in
-// multi-target crates and agave-unstable-api. `ContactInfo` is deprecated here, but we
+// multi-target crates and trezoa-unstable-api. `ContactInfo` is deprecated here, but we
 // cannot specify deprecation allowances on function arguments. since this function is
 // private, we apply the allowance to the entire body as a refactor that would limit it
 // to a wrapper is going to be too invasive
 //
-// this mitigation can be removed once the solana-gossip binary target is moved to its
-// own crate and we can correctly depend on the solana-gossip lib crate with
-// `agave-unstable-api` enabled
+// this mitigation can be removed once the trezoa-gossip binary target is moved to its
+// own crate and we can correctly depend on the trezoa-gossip lib crate with
+// `trezoa-unstable-api` enabled
 #[allow(deprecated)]
 fn process_spy_results(
     timeout: Option<u64>,
@@ -250,7 +250,7 @@ fn process_spy_results(
 /// Check entrypoints until one returns a valid non-zero shred version
 fn get_entrypoint_shred_version(entrypoint_addrs: &[SocketAddr]) -> Option<u16> {
     entrypoint_addrs.iter().find_map(|entrypoint_addr| {
-        match solana_net_utils::get_cluster_shred_version(entrypoint_addr) {
+        match trezoa_net_utils::get_cluster_shred_version(entrypoint_addr) {
             Err(err) => {
                 warn!("get_cluster_shred_version failed: {entrypoint_addr}, {err}");
                 None
@@ -318,7 +318,7 @@ fn parse_entrypoints(matches: &ArgMatches) -> Vec<SocketAddr> {
     values_t!(matches, "entrypoint", String)
         .unwrap_or_default()
         .into_iter()
-        .map(|entrypoint| solana_net_utils::parse_host_port(&entrypoint))
+        .map(|entrypoint| trezoa_net_utils::parse_host_port(&entrypoint))
         .filter_map(Result::ok)
         .collect::<Vec<_>>()
 }
@@ -390,7 +390,7 @@ fn get_gossip_address(matches: &ArgMatches, entrypoint_addrs: &[SocketAddr]) -> 
     SocketAddr::new(
         bind_address,
         value_t!(matches, "gossip_port", u16).unwrap_or_else(|_| {
-            solana_net_utils::find_available_port_in_range(
+            trezoa_net_utils::find_available_port_in_range(
                 IpAddr::V4(Ipv4Addr::UNSPECIFIED),
                 (0, 1),
             )
@@ -400,7 +400,7 @@ fn get_gossip_address(matches: &ArgMatches, entrypoint_addrs: &[SocketAddr]) -> 
 }
 
 fn main() -> Result<(), Box<dyn error::Error>> {
-    agave_logger::setup_with_default_filter();
+    trezoa_logger::setup_with_default_filter();
 
     let matches = parse_matches();
     let socket_addr_space = SocketAddrSpace::new(matches.is_present("allow_private_addr"));

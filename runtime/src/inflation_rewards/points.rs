@@ -1,14 +1,14 @@
 //! Information about points calculation based on stake state.
 
 use {
-    solana_clock::Epoch,
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::{
+    trezoa_clock::Epoch,
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::{
         stake_history::StakeHistory,
         state::{Delegation, Stake, StakeStateV2},
     },
-    solana_vote::vote_state_view::VoteStateView,
+    trezoa_vote::vote_state_view::VoteStateView,
     std::cmp::Ordering,
 };
 
@@ -140,7 +140,7 @@ pub(crate) fn calculate_stake_points_and_credits(
             //    history sysvar. And properly handling all the cases
             //    regarding deactivation epoch/warm-up/cool-down without
             //    introducing incentive skew is hard.
-            //  - Conceptually, it should be acceptable for the staked SOLs at
+            //  - Conceptually, it should be acceptable for the staked TRZs at
             //    the recreated vote to receive rewards again immediately after
             //    rewind even if it looks like instant activation. That's
             //    because it must have passed the required warmed-up at least
@@ -226,8 +226,8 @@ pub(crate) fn calculate_stake_points_and_credits(
 mod tests {
     use {
         super::*,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_vote_program::vote_state::{handler::VoteStateHandle, VoteStateV4},
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_vote_program::vote_state::{handler::VoteStateHandle, VoteStateV4},
     };
 
     impl<'a> From<&'a VoteStateV4> for DelegatedVoteState<'a> {
@@ -256,7 +256,7 @@ mod tests {
         let mut vote_state = VoteStateV4::default();
 
         // bootstrap means fully-vested stake at epoch 0 with
-        //  10_000_000 SOL is a big but not unreasonable stake
+        //  10_000_000 TRZ is a big but not unreasonable stake
         let stake = new_stake(
             10_000_000 * LAMPORTS_PER_SOL,
             &Pubkey::default(),

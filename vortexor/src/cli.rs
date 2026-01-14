@@ -1,7 +1,7 @@
 use {
     clap::{builder::ValueParser, crate_description, crate_name, ArgAction, ColorChoice, Parser},
-    solana_net_utils::{MINIMUM_VALIDATOR_PORT_RANGE_WIDTH, VALIDATOR_PORT_RANGE},
-    solana_streamer::quic::{
+    trezoa_net_utils::{MINIMUM_VALIDATOR_PORT_RANGE_WIDTH, VALIDATOR_PORT_RANGE},
+    trezoa_streamer::quic::{
         DEFAULT_MAX_CONNECTIONS_PER_IPADDR_PER_MINUTE, DEFAULT_MAX_STAKED_CONNECTIONS,
         DEFAULT_MAX_STREAMS_PER_MS, DEFAULT_MAX_UNSTAKED_CONNECTIONS,
     },
@@ -16,7 +16,7 @@ pub const DEFAULT_MAX_QUIC_CONNECTIONS_PER_PEER: usize = 8;
 pub const DEFAULT_NUM_QUIC_ENDPOINTS: usize = 8;
 
 fn parse_port_range(port_range: &str) -> Result<(u16, u16), String> {
-    if let Some((start, end)) = solana_net_utils::parse_port_range(port_range) {
+    if let Some((start, end)) = trezoa_net_utils::parse_port_range(port_range) {
         if end.saturating_sub(start) < MINIMUM_VALIDATOR_PORT_RANGE_WIDTH {
             Err(format!(
                 "Port range is too small.  Try --dynamic-port-range {}-{}",
@@ -32,7 +32,7 @@ fn parse_port_range(port_range: &str) -> Result<(u16, u16), String> {
 }
 
 fn get_version() -> &'static str {
-    let version = solana_version::version!();
+    let version = trezoa_version::version!();
     let version_static: &'static str = Box::leak(version.to_string().into_boxed_str());
     version_static
 }

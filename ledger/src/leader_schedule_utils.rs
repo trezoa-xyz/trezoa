@@ -1,8 +1,8 @@
 use {
     crate::leader_schedule::{LeaderSchedule, VoteKeyedLeaderSchedule},
-    solana_clock::{Epoch, Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
-    solana_pubkey::Pubkey,
-    solana_runtime::bank::Bank,
+    trezoa_clock::{Epoch, Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank::Bank,
     std::collections::HashMap,
 };
 
@@ -81,14 +81,14 @@ pub fn remaining_slots_in_window(slot: Slot) -> u64 {
 mod tests {
     use {
         super::*,
-        solana_runtime::genesis_utils::{
+        trezoa_runtime::genesis_utils::{
             bootstrap_validator_stake_lamports, create_genesis_config_with_leader,
         },
     };
 
     #[test]
     fn test_leader_schedule_via_bank() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let genesis_config =
             create_genesis_config_with_leader(0, &pubkey, bootstrap_validator_stake_lamports())
                 .genesis_config;
@@ -104,7 +104,7 @@ mod tests {
 
     #[test]
     fn test_leader_scheduler1_basic() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let genesis_config =
             create_genesis_config_with_leader(42, &pubkey, bootstrap_validator_stake_lamports())
                 .genesis_config;

@@ -16,21 +16,21 @@ if [[ $1 = "--prebuild" ]]; then
   prebuild=true
 fi
 
-if [[ -n $USE_INSTALL || ! -f "$SOLANA_ROOT"/Cargo.toml ]]; then
-  solana_program() {
+if [[ -n $USE_INSTALL || ! -f "$TREZOA_ROOT"/Cargo.toml ]]; then
+  trezoa_program() {
     declare program="$1"
     if [[ -z $program ]]; then
-      printf "solana"
+      printf "trezoa"
     else
       if [[ $program == "validator" || $program == "ledger-tool" || $program == "watchtower" || $program == "install" ]]; then
-        printf "agave-%s" "$program"
+        printf "trezoa-%s" "$program"
       else
-        printf "solana-%s" "$program"
+        printf "trezoa-%s" "$program"
       fi
     fi
   }
 else
-  solana_program() {
+  trezoa_program() {
     declare program="$1"
     declare crate="$program"
     declare manifest_path
@@ -39,11 +39,11 @@ else
     fi
     if [[ -z $program ]]; then
       crate="cli"
-      program="solana"
+      program="trezoa"
     elif [[ $program == "validator" || $program == "ledger-tool" || $program == "watchtower" || $program == "install" ]]; then
-      program="agave-$program"
+      program="trezoa-$program"
     else
-      program="solana-$program"
+      program="trezoa-$program"
     fi
 
     if [[ -n $CARGO_BUILD_PROFILE ]]; then
@@ -63,14 +63,14 @@ else
   }
 fi
 
-solana_bench_tps=$(solana_program bench-tps)
-solana_faucet=$(solana_program faucet)
-agave_validator=$(solana_program validator)
-solana_genesis=$(solana_program genesis)
-solana_gossip=$(solana_program gossip)
-solana_keygen=$(solana_program keygen)
-solana_ledger_tool=$(solana_program ledger-tool)
-solana_cli=$(solana_program)
+trezoa_bench_tps=$(trezoa_program bench-tps)
+trezoa_faucet=$(trezoa_program faucet)
+trezoa_validator=$(trezoa_program validator)
+trezoa_genesis=$(trezoa_program genesis)
+trezoa_gossip=$(trezoa_program gossip)
+trezoa_keygen=$(trezoa_program keygen)
+trezoa_ledger_tool=$(trezoa_program ledger-tool)
+trezoa_cli=$(trezoa_program)
 
 export RUST_BACKTRACE=1
 

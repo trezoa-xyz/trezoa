@@ -9,13 +9,13 @@ use {
     bincode::serialize,
     rand::Rng,
     serde::{de::Deserializer, Deserialize, Serialize},
-    solana_hash::Hash,
-    solana_keypair::{signable::Signable, Keypair},
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
-    solana_signature::Signature,
-    solana_signer::Signer,
+    trezoa_hash::Hash,
+    trezoa_keypair::{signable::Signable, Keypair},
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
     std::borrow::{Borrow, Cow},
 };
 
@@ -104,7 +104,7 @@ impl CrdsValue {
     pub fn new(data: CrdsData, keypair: &Keypair) -> Self {
         let bincode_serialized_data = bincode::serialize(&data).unwrap();
         let signature = keypair.sign_message(&bincode_serialized_data);
-        let hash = solana_sha256_hasher::hashv(&[signature.as_ref(), &bincode_serialized_data]);
+        let hash = trezoa_sha256_hasher::hashv(&[signature.as_ref(), &bincode_serialized_data]);
         Self {
             signature,
             data,
@@ -116,7 +116,7 @@ impl CrdsValue {
     pub(crate) fn new_unsigned(data: CrdsData) -> Self {
         let bincode_serialized_data = bincode::serialize(&data).unwrap();
         let signature = Signature::default();
-        let hash = solana_sha256_hasher::hashv(&[signature.as_ref(), &bincode_serialized_data]);
+        let hash = trezoa_sha256_hasher::hashv(&[signature.as_ref(), &bincode_serialized_data]);
         Self {
             signature,
             data,
@@ -228,7 +228,7 @@ impl<'de> Deserialize<'de> for CrdsValue {
         // ArrayVec allows us to write serialized data into stack memory without initializing it
         let mut buffer = ArrayVec::<u8, PACKET_DATA_SIZE>::new();
         bincode::serialize_into(&mut buffer, &data).map_err(serde::de::Error::custom)?;
-        let hash = solana_sha256_hasher::hashv(&[signature.as_ref(), &buffer]);
+        let hash = trezoa_sha256_hasher::hashv(&[signature.as_ref(), &buffer]);
         Ok(Self {
             signature,
             data,
@@ -245,13 +245,13 @@ mod test {
         bincode::deserialize,
         rand::SeedableRng as _,
         rand_chacha::ChaChaRng,
-        solana_keypair::Keypair,
-        solana_perf::test_tx::new_test_vote_tx,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
-        solana_vote::vote_transaction::new_tower_sync_transaction,
-        solana_vote_interface::state::TowerSync,
-        solana_vote_program::vote_state::Lockout,
+        trezoa_keypair::Keypair,
+        trezoa_perf::test_tx::new_test_vote_tx,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
+        trezoa_vote::vote_transaction::new_tower_sync_transaction,
+        trezoa_vote_interface::state::TowerSync,
+        trezoa_vote_program::vote_state::Lockout,
         std::str::FromStr,
     };
 
@@ -409,7 +409,7 @@ mod test {
         let bytes = bincode::serialize(&values).unwrap();
         // Serialized bytes are fixed and should never change.
         assert_eq!(
-            solana_sha256_hasher::hash(&bytes),
+            trezoa_sha256_hasher::hash(&bytes),
             Hash::from_str("BTg284TRo5S5PpbA9YZaab5rKeoLNAj7arwadvG6XVLT").unwrap()
         );
         // serialize -> deserialize should round trip.

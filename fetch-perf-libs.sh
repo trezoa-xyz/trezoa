@@ -7,11 +7,11 @@ function installPerfLibSymlinks() {
   done
 }
 
-if [[ -n "$SOLANA_PERF_LIBS_PATH" ]]; then
+if [[ -n "$TREZOA_PERF_LIBS_PATH" ]]; then
   mkdir -p target
 
-  ln -sfT "$SOLANA_PERF_LIBS_PATH" target/perf-libs
-  installPerfLibSymlinks "$SOLANA_PERF_LIBS_PATH"
+  ln -sfT "$TREZOA_PERF_LIBS_PATH" target/perf-libs
+  installPerfLibSymlinks "$TREZOA_PERF_LIBS_PATH"
 
   exit 0
 fi
@@ -39,18 +39,18 @@ if [[ $VERSION != "$(cat target/perf-libs/.version 2> /dev/null)" ]]; then
     set -x
     cd target/perf-libs
 
-    if [[ -r ~/.cache/solana-perf-$PERF_LIBS_VERSION.tgz ]]; then
-      cp ~/.cache/solana-perf-$PERF_LIBS_VERSION.tgz solana-perf.tgz
+    if [[ -r ~/.cache/trezoa-perf-$PERF_LIBS_VERSION.tgz ]]; then
+      cp ~/.cache/trezoa-perf-$PERF_LIBS_VERSION.tgz trezoa-perf.tgz
     else
-      curl -L --retry 5 --retry-delay 2 --retry-connrefused -o solana-perf.tgz \
-        https://github.com/solana-labs/solana-perf-libs/releases/download/$PERF_LIBS_VERSION/solana-perf.tgz
+      curl -L --retry 5 --retry-delay 2 --retry-connrefused -o trezoa-perf.tgz \
+        https://github.com/trezoa-labs/trezoa-perf-libs/releases/download/$PERF_LIBS_VERSION/trezoa-perf.tgz
     fi
-    tar zxvf solana-perf.tgz
+    tar zxvf trezoa-perf.tgz
 
-    if [[ ! -r ~/.cache/solana-perf-$PERF_LIBS_VERSION.tgz ]]; then
+    if [[ ! -r ~/.cache/trezoa-perf-$PERF_LIBS_VERSION.tgz ]]; then
       # Save it for next time
       mkdir -p ~/.cache
-      mv solana-perf.tgz ~/.cache/solana-perf-$PERF_LIBS_VERSION.tgz
+      mv trezoa-perf.tgz ~/.cache/trezoa-perf-$PERF_LIBS_VERSION.tgz
     fi
     echo "$VERSION" > .version
   )

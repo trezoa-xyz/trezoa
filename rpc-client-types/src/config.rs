@@ -1,12 +1,12 @@
 use {
     crate::filter::RpcFilterType,
     serde::{Deserialize, Serialize},
-    solana_clock::{Epoch, Slot},
+    trezoa_clock::{Epoch, Slot},
 };
 pub use {
-    solana_account_decoder_client_types::{UiAccountEncoding, UiDataSliceConfig},
-    solana_commitment_config::{CommitmentConfig, CommitmentLevel},
-    solana_transaction_status_client_types::{TransactionDetails, UiTransactionEncoding},
+    trezoa_account_decoder_client_types::{UiAccountEncoding, UiDataSliceConfig},
+    trezoa_commitment_config::{CommitmentConfig, CommitmentLevel},
+    trezoa_transaction_status_client_types::{TransactionDetails, UiTransactionEncoding},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

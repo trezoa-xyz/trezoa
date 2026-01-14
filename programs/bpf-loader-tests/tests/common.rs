@@ -1,20 +1,20 @@
 #![allow(dead_code)]
 
 use {
-    solana_account::{state_traits::StateMut, AccountSharedData},
-    solana_instruction::{error::InstructionError, Instruction},
-    solana_keypair::Keypair,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_program_test::*,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader_upgradeable::id,
-    solana_signer::Signer,
-    solana_transaction::Transaction,
-    solana_transaction_error::TransactionError,
+    trezoa_account::{state_traits::StateMut, AccountSharedData},
+    trezoa_instruction::{error::InstructionError, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_program_test::*,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader_upgradeable::id,
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionError,
 };
 
 pub async fn setup_test_context() -> ProgramTestContext {
-    let program_test = ProgramTest::new("", id(), Some(solana_bpf_loader_program::Entrypoint::vm));
+    let program_test = ProgramTest::new("", id(), Some(trezoa_bpf_loader_program::Entrypoint::vm));
     program_test.start_with_context().await
 }
 

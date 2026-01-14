@@ -1,36 +1,36 @@
 #[allow(deprecated)]
-use solana_stake_interface::config::Config as StakeConfig;
+use trezoa_stake_interface::config::Config as StakeConfig;
 use {
     crate::stake_utils,
-    agave_feature_set::{vote_state_v4, FeatureSet, FEATURE_NAMES},
-    agave_votor_messages::consensus_message::BLS_KEYPAIR_DERIVE_SEED,
+    trezoa_feature_set::{vote_state_v4, FeatureSet, FEATURE_NAMES},
+    trezoa_votor_messages::consensus_message::BLS_KEYPAIR_DERIVE_SEED,
     bincode::serialize,
     log::*,
-    solana_account::{state_traits::StateMut, Account, AccountSharedData, ReadableAccount},
-    solana_bls_signatures::{
+    trezoa_account::{state_traits::StateMut, Account, AccountSharedData, ReadableAccount},
+    trezoa_bls_signatures::{
         keypair::Keypair as BLSKeypair, pubkey::PubkeyCompressed as BLSPubkeyCompressed,
         Pubkey as BLSPubkey,
     },
-    solana_cluster_type::ClusterType,
-    solana_config_interface::state::ConfigKeys,
-    solana_feature_gate_interface::{self as feature, Feature},
-    solana_fee_calculator::FeeRateGovernor,
-    solana_genesis_config::GenesisConfig,
-    solana_keypair::Keypair,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::{stake as stake_program, sysvar},
-    solana_seed_derivable::SeedDerivable,
-    solana_signer::Signer,
-    solana_stake_interface::state::{Authorized, Lockup, Meta, StakeStateV2},
-    solana_system_interface::program as system_program,
-    solana_sysvar::{
+    trezoa_cluster_type::ClusterType,
+    trezoa_config_interface::state::ConfigKeys,
+    trezoa_feature_gate_interface::{self as feature, Feature},
+    trezoa_fee_calculator::FeeRateGovernor,
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_keypair::Keypair,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::{stake as stake_program, sysvar},
+    trezoa_seed_derivable::SeedDerivable,
+    trezoa_signer::Signer,
+    trezoa_stake_interface::state::{Authorized, Lockup, Meta, StakeStateV2},
+    trezoa_system_interface::program as system_program,
+    trezoa_sysvar::{
         epoch_rewards::{self, EpochRewards},
         SysvarSerialize,
     },
-    solana_vote_interface::state::BLS_PUBLIC_KEY_COMPRESSED_SIZE,
-    solana_vote_program::vote_state,
+    trezoa_vote_interface::state::BLS_PUBLIC_KEY_COMPRESSED_SIZE,
+    trezoa_vote_program::vote_state,
     std::{borrow::Borrow, sync::Arc},
 };
 
@@ -99,7 +99,7 @@ pub fn create_genesis_config(mint_lamports: u64) -> GenesisConfigInfo {
     // accounts-db which in particular will break snapshots test.
     create_genesis_config_with_leader(
         mint_lamports,
-        &solana_pubkey::new_rand(), // validator_pubkey
+        &trezoa_pubkey::new_rand(), // validator_pubkey
         0,                          // validator_stake_lamports
     )
 }
@@ -314,10 +314,10 @@ pub fn activate_all_features(genesis_config: &mut GenesisConfig) {
 fn do_activate_all_features<const IS_ALPENGLOW: bool>(genesis_config: &mut GenesisConfig) {
     // Activate all features at genesis in development mode
     for feature_id in FeatureSet::default().inactive() {
-        if (IS_ALPENGLOW || *feature_id != agave_feature_set::alpenglow::id())
+        if (IS_ALPENGLOW || *feature_id != trezoa_feature_set::alpenglow::id())
             // Skip bls_pubkey_management_in_vote_account feature activation until cli change is in place
             && *feature_id
-                != agave_feature_set::bls_pubkey_management_in_vote_account::id()
+                != trezoa_feature_set::bls_pubkey_management_in_vote_account::id()
         {
             activate_feature(genesis_config, *feature_id);
         }
@@ -422,7 +422,7 @@ pub fn create_genesis_config_with_leader_ex_no_features(
     initial_accounts.push((*validator_vote_account_pubkey, validator_vote_account));
     initial_accounts.push((*validator_stake_account_pubkey, validator_stake_account));
 
-    let native_mint_account = solana_account::AccountSharedData::from(Account {
+    let native_mint_account = trezoa_account::AccountSharedData::from(Account {
         owner: spl_generic_token::token::id(),
         data: spl_generic_token::token::native_mint::ACCOUNT_DATA.to_vec(),
         lamports: LAMPORTS_PER_SOL,
@@ -486,11 +486,11 @@ pub fn create_genesis_config_with_leader_ex(
 
     for feature_id in feature_set.active().keys() {
         // Skip alpenglow (existing behavior)
-        if *feature_id == agave_feature_set::alpenglow::id() {
+        if *feature_id == trezoa_feature_set::alpenglow::id() {
             continue;
         }
         // Skip bls_pubkey_management_in_vote_account feature activation until cli change is in place
-        if *feature_id == agave_feature_set::bls_pubkey_management_in_vote_account::id() {
+        if *feature_id == trezoa_feature_set::bls_pubkey_management_in_vote_account::id() {
             continue;
         }
         activate_feature(&mut genesis_config, *feature_id);
@@ -507,11 +507,11 @@ pub fn add_genesis_stake_config_account(genesis_config: &mut GenesisConfig) -> u
     let account = AccountSharedData::from(Account {
         lamports,
         data,
-        owner: solana_sdk_ids::config::id(),
+        owner: trezoa_sdk_ids::config::id(),
         ..Account::default()
     });
 
-    genesis_config.add_account(solana_stake_interface::config::id(), account);
+    genesis_config.add_account(trezoa_stake_interface::config::id(), account);
 
     lamports
 }

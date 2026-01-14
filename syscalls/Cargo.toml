@@ -1,7 +1,7 @@
 [package]
-name = "agave-syscalls"
-description = "Agave implementation of the Solana syscalls."
-documentation = "https://docs.rs/agave-syscalls"
+name = "trezoa-syscalls"
+description = "Trezoa-team implementation of the Trezoa syscalls."
+documentation = "https://docs.rs/trezoa-syscalls"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,12 +14,12 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
 default = ["metrics"]
-agave-unstable-api = []
-metrics = ["solana-program-runtime/metrics"]
+trezoa-unstable-api = []
+metrics = ["trezoa-program-runtime/metrics"]
 shuttle-test = [
-    "solana-program-runtime/shuttle-test",
-    "solana-sbpf/shuttle-test",
-    "solana-svm-type-overrides/shuttle-test",
+    "trezoa-program-runtime/shuttle-test",
+    "trezoa-sbpf/shuttle-test",
+    "trezoa-svm-type-overrides/shuttle-test",
 ]
 svm-internal = []
 
@@ -27,51 +27,51 @@ svm-internal = []
 bincode = { workspace = true }
 libsecp256k1 = { workspace = true }
 num-traits = { workspace = true }
-solana-account = { workspace = true }
-solana-account-info = { workspace = true }
-solana-big-mod-exp = { workspace = true }
-solana-blake3-hasher = { workspace = true, features = ["blake3"] }
-solana-bn254 = { workspace = true }
-solana-clock = { workspace = true }
-solana-cpi = { workspace = true }
-solana-curve25519 = { workspace = true }
-solana-hash = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keccak-hasher = { workspace = true, features = ["sha3"] }
-solana-loader-v3-interface = { workspace = true, features = ["serde"] }
-solana-poseidon = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-runtime = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sbpf = { workspace = true, features = ["jit"] }
-solana-sdk-ids = { workspace = true }
-solana-secp256k1-recover = { workspace = true }
-solana-sha256-hasher = { workspace = true }
-solana-stable-layout = { workspace = true }
-solana-stake-interface = { workspace = true }
-solana-svm-callback = { workspace = true }
-solana-svm-feature-set = { workspace = true }
-solana-svm-log-collector = { workspace = true }
-solana-svm-measure = { workspace = true }
-solana-svm-timings = { workspace = true }
-solana-svm-type-overrides = { workspace = true }
-solana-sysvar = { workspace = true }
-solana-sysvar-id = { workspace = true }
-solana-transaction-context = { workspace = true, features = ["bincode"] }
+trezoa-account = { workspace = true }
+trezoa-account-info = { workspace = true }
+trezoa-big-mod-exp = { workspace = true }
+trezoa-blake3-hasher = { workspace = true, features = ["blake3"] }
+trezoa-bn254 = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-cpi = { workspace = true }
+trezoa-curve25519 = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-keccak-hasher = { workspace = true, features = ["sha3"] }
+trezoa-loader-v3-interface = { workspace = true, features = ["serde"] }
+trezoa-poseidon = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-runtime = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sbpf = { workspace = true, features = ["jit"] }
+trezoa-sdk-ids = { workspace = true }
+trezoa-secp256k1-recover = { workspace = true }
+trezoa-sha256-hasher = { workspace = true }
+trezoa-stable-layout = { workspace = true }
+trezoa-stake-interface = { workspace = true }
+trezoa-svm-callback = { workspace = true }
+trezoa-svm-feature-set = { workspace = true }
+trezoa-svm-log-collector = { workspace = true }
+trezoa-svm-measure = { workspace = true }
+trezoa-svm-timings = { workspace = true }
+trezoa-svm-type-overrides = { workspace = true }
+trezoa-sysvar = { workspace = true }
+trezoa-sysvar-id = { workspace = true }
+trezoa-transaction-context = { workspace = true, features = ["bincode"] }
 thiserror = { workspace = true }
 
 [dev-dependencies]
 assert_matches = { workspace = true }
-solana-epoch-rewards = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-fee-calculator = { workspace = true }
-solana-last-restart-slot = { workspace = true }
-solana-program = { workspace = true }
-solana-program-runtime = { workspace = true, features = ["dev-context-only-utils"] }
-solana-pubkey = { workspace = true, features = ["rand"] }
-solana-rent = { workspace = true }
-solana-slot-hashes = { workspace = true }
-solana-transaction-context = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-epoch-rewards = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-fee-calculator = { workspace = true }
+trezoa-last-restart-slot = { workspace = true }
+trezoa-program = { workspace = true }
+trezoa-program-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-pubkey = { workspace = true, features = ["rand"] }
+trezoa-rent = { workspace = true }
+trezoa-slot-hashes = { workspace = true }
+trezoa-transaction-context = { workspace = true, features = ["dev-context-only-utils"] }
 static_assertions = { workspace = true }
 test-case = { workspace = true }
 

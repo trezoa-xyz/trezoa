@@ -1,7 +1,7 @@
 [package]
-name = "solana-fee"
-description = "Solana fee calculation"
-documentation = "https://docs.rs/solana-fee"
+name = "trezoa-fee"
+description = "Trezoa fee calculation"
+documentation = "https://docs.rs/trezoa-fee"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,9 +10,9 @@ license = { workspace = true }
 edition = "2024"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-feature-set = { workspace = true }
-solana-fee-structure = { workspace = true }
-solana-svm-transaction = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-fee-structure = { workspace = true }
+trezoa-svm-transaction = { workspace = true }

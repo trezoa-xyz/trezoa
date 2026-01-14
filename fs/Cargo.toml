@@ -1,7 +1,7 @@
 [package]
-name = "agave-fs"
-description = "Agave file system utils"
-documentation = "https://docs.rs/agave-fs"
+name = "trezoa-fs"
+description = "Trezoa-team file system utils"
+documentation = "https://docs.rs/trezoa-fs"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,10 +14,10 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "agave_fs"
+name = "trezoa_fs"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 libc = { workspace = true }
@@ -27,7 +27,7 @@ smallvec = { workspace = true }
 thiserror = { workspace = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-agave-io-uring = { workspace = true }
+trezoa-io-uring = { workspace = true }
 io-uring = { workspace = true }
 
 [dev-dependencies]

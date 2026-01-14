@@ -1,15 +1,15 @@
 use {
     serde_json::json,
-    solana_cli::{
+    trezoa_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
     },
-    solana_commitment_config::CommitmentConfig,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_keypair::{keypair_from_seed, Keypair},
-    solana_net_utils::SocketAddrSpace,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_test_validator::TestValidator,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_keypair::{keypair_from_seed, Keypair},
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_test_validator::TestValidator,
     test_case::test_case,
 };
 
@@ -17,7 +17,7 @@ use {
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_publish(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());

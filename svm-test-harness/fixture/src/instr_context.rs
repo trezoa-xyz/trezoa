@@ -1,8 +1,8 @@
 //! Instruction context (input).
 
 use {
-    agave_feature_set::FeatureSet, solana_account::Account, solana_instruction::Instruction,
-    solana_pubkey::Pubkey,
+    trezoa_feature_set::FeatureSet, trezoa_account::Account, trezoa_instruction::Instruction,
+    trezoa_pubkey::Pubkey,
 };
 
 /// Instruction context fixture.
@@ -15,7 +15,7 @@ pub struct InstrContext {
 #[cfg(feature = "fuzz")]
 use {
     crate::{error::FixtureError, proto::InstrContext as ProtoInstrContext},
-    solana_instruction::AccountMeta,
+    trezoa_instruction::AccountMeta,
 };
 
 #[cfg(feature = "fuzz")]

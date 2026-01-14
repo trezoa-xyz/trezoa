@@ -1,23 +1,23 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 use {
     serde::{Deserialize, Serialize},
-    solana_account_decoder::{
+    trezoa_account_decoder::{
         parse_token::{real_number_string_trimmed, UiTokenAmount},
         StringAmount,
     },
-    solana_message::v0::LoadedAddresses,
-    solana_serde::default_on_eof,
-    solana_transaction_context::TransactionReturnData,
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
-    solana_transaction_status::{
+    trezoa_message::v0::LoadedAddresses,
+    trezoa_serde::default_on_eof,
+    trezoa_transaction_context::TransactionReturnData,
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_transaction_status::{
         InnerInstructions, Reward, RewardType, TransactionStatusMeta, TransactionTokenBalance,
     },
     std::str::FromStr,
@@ -294,8 +294,8 @@ impl TryFrom<TransactionStatusMeta> for StoredTransactionStatusMeta {
 #[cfg(test)]
 mod tests {
     use {
-        crate::StoredTransactionError, solana_instruction::error::InstructionError,
-        solana_transaction_error::TransactionError, test_case::test_case,
+        crate::StoredTransactionError, trezoa_instruction::error::InstructionError,
+        trezoa_transaction_error::TransactionError, test_case::test_case,
     };
 
     #[test_case(TransactionError::InsufficientFundsForFee; "Named variant error")]

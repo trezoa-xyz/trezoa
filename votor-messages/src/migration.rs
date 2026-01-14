@@ -45,10 +45,10 @@
 use {
     crate::consensus_message::{Block, Certificate, CertificateType},
     log::*,
-    solana_address::Address,
-    solana_clock::{Epoch, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_pubkey::Pubkey,
+    trezoa_address::Address,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_pubkey::Pubkey,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -58,7 +58,7 @@ use {
     },
 };
 #[cfg(feature = "dev-context-only-utils")]
-use {solana_bls_signatures::Signature as BLSSignature, solana_hash::Hash};
+use {trezoa_bls_signatures::Signature as BLSSignature, trezoa_hash::Hash};
 
 /// The slot offset post feature flag activation to begin the migration.
 /// Epoch boundaries induce heavy computation often resulting in forks. It's best to decouple the migration period
@@ -85,7 +85,7 @@ pub const GENESIS_VOTE_REFRESH: Duration = Duration::from_millis(400);
 /// The off-curve account where we store the genesis certificate
 pub static GENESIS_CERTIFICATE_ACCOUNT: LazyLock<Address> = LazyLock::new(|| {
     let (address, _) =
-        Address::find_program_address(&[b"carlgration"], &agave_feature_set::alpenglow::id());
+        Address::find_program_address(&[b"carlgration"], &trezoa_feature_set::alpenglow::id());
     address
 });
 
@@ -195,7 +195,7 @@ impl MigrationPhase {
         }
     }
 
-    /// Should we report commitment or root for this slot in solana-core?
+    /// Should we report commitment or root for this slot in trezoa-core?
     /// We do not report commitment or root during the Alpenglow migrationary period.
     /// Post Alpenglow genesis, "OC" is faked by votor, and commitment/rooting is handled by votor
     fn should_report_commitment_or_root(&self, slot: Slot) -> bool {

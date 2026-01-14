@@ -17,8 +17,8 @@ if [[ $OSTYPE == darwin* ]]; then
   fi
 fi
 
-SOLANA_ROOT="$("${readlink_cmd}" -f "${here}/..")"
-cargo="${SOLANA_ROOT}/cargo"
+TREZOA_ROOT="$("${readlink_cmd}" -f "${here}/..")"
+cargo="${TREZOA_ROOT}/cargo"
 
 set -e
 
@@ -40,10 +40,10 @@ usage: $0 [+<cargo version>] [options] <install directory>
     --no-build-deprecated-bins  Do not build deprecated binaries.
     --no-build-dev-bins         Do not build development binaries.
     --no-build-end-user-bins    Do not build end user binaries.
-    --no-build-platform-tools   Do not build solana-platform-tools.
+    --no-build-platform-tools   Do not build trezoa-platform-tools.
     --no-build-validator-bins   Do not build validator binaries.
     --no-perf-libs              Do not fetch and install perf-libs. (Note: Not using this flag may require internet at build time)
-    --no-spl-token              Do not fetch and install SPL-Token. (Note: Not using this flag requires internet at build time)
+    --no-tpl-token              Do not fetch and install SPL-Token. (Note: Not using this flag requires internet at build time)
     --help                      Show this help information and exit.
 EOF
   exit $exitcode
@@ -65,7 +65,7 @@ noBuildEndUserBins=
 noBuildPlatformTools=
 noBuildValidatorBins=
 noPerfLibs=
-noSPLToken=
+noTPLToken=
 
 while [[ -n $1 ]]; do
   if [[ ${1:0:1} = - ]]; then
@@ -102,8 +102,8 @@ while [[ -n $1 ]]; do
     elif [[ $1 = --no-perf-libs ]]; then
       noPerfLibs=true
       shift
-    elif [[ $1 = --no-spl-token ]]; then
-      noSPLToken=true
+    elif [[ $1 = --no-tpl-token ]]; then
+      noTPLToken=true
       shift
     elif [[ $1 = --help ]]; then
       usage
@@ -139,26 +139,26 @@ cd "$(dirname "$0")"/..
 
 SECONDS=0
 
-source "$SOLANA_ROOT"/scripts/agave-build-lists.sh
+source "$TREZOA_ROOT"/scripts/trezoa-build-lists.sh
 
 BINS=()
 DCOU_BINS=()
 
 # Binary selection
 if [[ -z "$noBuildDCOUBins" && $OSTYPE != msys ]]; then
-  DCOU_BINS+=("${AGAVE_BINS_DCOU[@]}")
+  DCOU_BINS+=("${TREZOA_BINS_DCOU[@]}")
 fi
 if [[ -z "$noBuildDeprecatedBins" ]]; then
-  BINS+=("${AGAVE_BINS_DEPRECATED[@]}")
+  BINS+=("${TREZOA_BINS_DEPRECATED[@]}")
 fi
 if [[ -z "$noBuildDevBins" ]]; then
-  BINS+=("${AGAVE_BINS_DEV[@]}")
+  BINS+=("${TREZOA_BINS_DEV[@]}")
 fi
 if [[ -z "$noBuildEndUserBins" ]]; then
-  BINS+=("${AGAVE_BINS_END_USER[@]}")
+  BINS+=("${TREZOA_BINS_END_USER[@]}")
 fi
 if [[ -z "$noBuildValidatorBins" && $OSTYPE != msys ]]; then
-  BINS+=("${AGAVE_BINS_VAL_OP[@]}")
+  BINS+=("${TREZOA_BINS_VAL_OP[@]}")
 fi
 
 echo "Building binaries: ${BINS[*]} ${DCOU_BINS[*]}"
@@ -186,7 +186,7 @@ check_dcou() {
     grep -q -F '"feature=\"dev-context-only-utils\""'
 }
 
-# Some binaries (like the notable agave-ledger-tool) need to activate
+# Some binaries (like the notable trezoa-ledger-tool) need to activate
 # the dev-context-only-utils feature flag to build.
 # Build those binaries separately to avoid the unwanted feature unification.
 # Note that `--workspace --exclude <dcou tainted packages>` is needed to really
@@ -218,13 +218,13 @@ check_dcou() {
     cargo_build --manifest-path "dev-bins/Cargo.toml" "${dcouBinArgs[@]}"
   fi
 
-  # Exclude `spl-token` if requested
-  if [[ -z "$noSPLToken" ]]; then
-    # shellcheck source=scripts/spl-token-cli-version.sh
-    source "$SOLANA_ROOT"/scripts/spl-token-cli-version.sh
+  # Exclude `tpl-token` if requested
+  if [[ -z "$noTPLToken" ]]; then
+    # shellcheck source=scripts/tpl-token-cli-version.sh
+    source "$TREZOA_ROOT"/scripts/tpl-token-cli-version.sh
 
     # shellcheck disable=SC2086
-    "$cargo" $maybeRustVersion install --locked spl-token-cli --root "$installDir" $maybeSplTokenCliVersionArg
+    "$cargo" $maybeRustVersion install --locked tpl-token-cli --root "$installDir" $maybeSplTokenCliVersionArg
   fi
 )
 
@@ -257,7 +257,7 @@ fi
   set -x
   # deps dir can be empty
   shopt -s nullglob
-  for dep in target/"$buildProfile"/deps/libsolana*program.*; do
+  for dep in target/"$buildProfile"/deps/libtrezoa*program.*; do
     cp -fv "$dep" "$installDir"/bin/deps
   done
 )

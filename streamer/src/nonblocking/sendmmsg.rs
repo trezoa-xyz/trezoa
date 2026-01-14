@@ -61,8 +61,8 @@ mod tests {
             sendmmsg::SendPktsError,
         },
         assert_matches::assert_matches,
-        solana_net_utils::sockets::{bind_to_localhost_async, bind_to_unspecified_async},
-        solana_packet::PACKET_DATA_SIZE,
+        trezoa_net_utils::sockets::{bind_to_localhost_async, bind_to_unspecified_async},
+        trezoa_packet::PACKET_DATA_SIZE,
         std::{
             io::ErrorKind,
             net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr},

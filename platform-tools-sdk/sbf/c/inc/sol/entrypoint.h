@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana program entrypoint
+ * @brief Trezoa program entrypoint
  */
 
 #include <sol/constants.h>

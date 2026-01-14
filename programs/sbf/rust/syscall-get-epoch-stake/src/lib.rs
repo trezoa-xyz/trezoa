@@ -2,17 +2,17 @@
 //! syscall.
 
 use {
-    solana_account_info::AccountInfo,
-    solana_msg::msg,
-    solana_program::{
+    trezoa_account_info::AccountInfo,
+    trezoa_msg::msg,
+    trezoa_program::{
         epoch_stake::{get_epoch_stake_for_vote_account, get_epoch_total_stake},
         program::set_return_data,
     },
-    solana_program_error::ProgramResult,
-    solana_pubkey::Pubkey,
+    trezoa_program_error::ProgramResult,
+    trezoa_pubkey::Pubkey,
 };
 
-solana_program_entrypoint::entrypoint_no_alloc!(process_instruction);
+trezoa_program_entrypoint::entrypoint_no_alloc!(process_instruction);
 pub fn process_instruction(
     _program_id: &Pubkey,
     accounts: &[AccountInfo],

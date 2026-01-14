@@ -3,9 +3,9 @@ use {
         transaction_accounts::AccountRefMut, IndexOfAccount, TransactionContext,
         MAX_ACCOUNT_DATA_GROWTH_PER_INSTRUCTION,
     },
-    solana_account::{ReadableAccount, WritableAccount},
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
+    trezoa_account::{ReadableAccount, WritableAccount},
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
 };
 
 /// Contains account meta data which varies between instruction.
@@ -86,7 +86,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Assignes the owner of this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn set_owner(&mut self, pubkey: &[u8]) -> Result<(), InstructionError> {
         // Only the owner can assign a new owner
         if !self.is_owned_by_current_program() {
@@ -116,7 +116,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Overwrites the number of lamports of this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn set_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
         // An account not owned by the program cannot have its balance decrease
         if !self.is_owned_by_current_program() && lamports < self.get_lamports() {
@@ -143,7 +143,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Adds lamports to this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn checked_add_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
         self.set_lamports(
             self.get_lamports()
@@ -153,7 +153,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Subtracts lamports from this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn checked_sub_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
         self.set_lamports(
             self.get_lamports()
@@ -169,7 +169,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Returns a writable slice of the account data (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn get_data_mut(&mut self) -> Result<&mut [u8], InstructionError> {
         self.can_data_be_changed()?;
         self.touch()?;
@@ -181,7 +181,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     ///
     /// Call this when you have a slice of data you do not own and want to
     /// replace the account data with it.
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn set_data_from_slice(&mut self, data: &[u8]) -> Result<(), InstructionError> {
         self.can_data_be_resized(data.len())?;
         self.touch()?;
@@ -198,7 +198,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     /// Resizes the account data (transaction wide)
     ///
     /// Fills it with zeros at the end if is extended or truncates at the end otherwise.
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn set_data_length(&mut self, new_length: usize) -> Result<(), InstructionError> {
         self.can_data_be_resized(new_length)?;
         // don't touch the account if the length does not change
@@ -212,7 +212,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Appends all elements in a slice to the account
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn extend_from_slice(&mut self, data: &[u8]) -> Result<(), InstructionError> {
         let new_len = self.get_data().len().saturating_add(data.len());
         self.can_data_be_resized(new_len)?;
@@ -238,12 +238,12 @@ impl BorrowedInstructionAccount<'_, '_> {
     ///
     /// During account serialization, if an account is shared it'll get mapped as CoW, else it'll
     /// get mapped directly as writable.
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn is_shared(&self) -> bool {
         self.account.is_shared()
     }
 
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     fn make_data_mut(&mut self) {
         // if the account is still shared, it means this is the first time we're
         // about to write into it. Make the account mutable by copying it in a
@@ -257,13 +257,13 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Deserializes the account data into a state
-    #[cfg(all(not(target_os = "solana"), feature = "bincode"))]
+    #[cfg(all(not(target_os = "trezoa"), feature = "bincode"))]
     pub fn get_state<T: serde::de::DeserializeOwned>(&self) -> Result<T, InstructionError> {
         bincode::deserialize(self.account.data()).map_err(|_| InstructionError::InvalidAccountData)
     }
 
     /// Serializes a state into the account data
-    #[cfg(all(not(target_os = "solana"), feature = "bincode"))]
+    #[cfg(all(not(target_os = "trezoa"), feature = "bincode"))]
     pub fn set_state<T: serde::Serialize>(&mut self, state: &T) -> Result<(), InstructionError> {
         let data = self.get_data_mut()?;
         let serialized_size =
@@ -277,7 +277,7 @@ impl BorrowedInstructionAccount<'_, '_> {
 
     // Returns whether or the lamports currently in the account is sufficient for rent exemption should the
     // data be resized to the given size
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn is_rent_exempt_at_data_length(&self, data_length: usize) -> bool {
         self.transaction_context
             .rent
@@ -293,7 +293,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Configures whether this account is executable (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn set_executable(&mut self, is_executable: bool) -> Result<(), InstructionError> {
         // To become executable an account must be rent exempt
         if !self
@@ -322,7 +322,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Returns the rent epoch of this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     #[inline]
     pub fn get_rent_epoch(&self) -> u64 {
         self.account.rent_epoch()
@@ -347,7 +347,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Returns an error if the account data can not be mutated by the current program
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn can_data_be_changed(&self) -> Result<(), InstructionError> {
         // and only if the account is writable
         if !self.is_writable() {
@@ -361,7 +361,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 
     /// Returns an error if the account data can not be resized to the given length
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn can_data_be_resized(&self, new_len: usize) -> Result<(), InstructionError> {
         let old_len = self.get_data().len();
         // Only the owner can change the length of the data
@@ -374,14 +374,14 @@ impl BorrowedInstructionAccount<'_, '_> {
         self.can_data_be_changed()
     }
 
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     fn touch(&self) -> Result<(), InstructionError> {
         self.transaction_context
             .accounts
             .touch(self.instruction_account.index_in_transaction)
     }
 
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     fn update_accounts_resize_delta(&mut self, new_len: usize) -> Result<(), InstructionError> {
         self.transaction_context
             .accounts
@@ -389,7 +389,7 @@ impl BorrowedInstructionAccount<'_, '_> {
     }
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 fn is_zeroed(buf: &[u8]) -> bool {
     const ZEROS_LEN: usize = 1024;
     const ZEROS: [u8; ZEROS_LEN] = [0; ZEROS_LEN];

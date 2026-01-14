@@ -1,6 +1,6 @@
 use {
     crate::{commands, commands::run::args::pub_sub_config},
-    agave_snapshots::{
+    trezoa_snapshots::{
         snapshot_config::{
             DEFAULT_FULL_SNAPSHOT_ARCHIVE_INTERVAL_SLOTS,
             DEFAULT_INCREMENTAL_SNAPSHOT_ARCHIVE_INTERVAL_SLOTS,
@@ -10,37 +10,37 @@ use {
         SnapshotVersion, DEFAULT_ARCHIVE_COMPRESSION,
     },
     clap::{crate_description, crate_name, App, AppSettings, Arg, ArgMatches, SubCommand},
-    solana_accounts_db::accounts_db::{
+    trezoa_accounts_db::accounts_db::{
         DEFAULT_ACCOUNTS_SHRINK_OPTIMIZE_TOTAL_SPACE, DEFAULT_ACCOUNTS_SHRINK_RATIO,
     },
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         hidden_unless_forced,
         input_validators::{
             is_parsable, is_pubkey, is_pubkey_or_keypair, is_slot, is_url_or_moniker,
         },
     },
-    solana_clock::Slot,
-    solana_core::{
+    trezoa_clock::Slot,
+    trezoa_core::{
         banking_trace::BANKING_TRACE_DIR_DEFAULT_BYTE_LIMIT, validator::TransactionStructure,
     },
-    solana_epoch_schedule::MINIMUM_SLOTS_PER_EPOCH,
-    solana_faucet::faucet::{self, FAUCET_PORT},
-    solana_hash::Hash,
-    solana_net_utils::{MINIMUM_VALIDATOR_PORT_RANGE_WIDTH, VALIDATOR_PORT_RANGE},
-    solana_send_transaction_service::send_transaction_service::{self},
-    solana_streamer::quic::{
+    trezoa_epoch_schedule::MINIMUM_SLOTS_PER_EPOCH,
+    trezoa_faucet::faucet::{self, FAUCET_PORT},
+    trezoa_hash::Hash,
+    trezoa_net_utils::{MINIMUM_VALIDATOR_PORT_RANGE_WIDTH, VALIDATOR_PORT_RANGE},
+    trezoa_send_transaction_service::send_transaction_service::{self},
+    trezoa_streamer::quic::{
         DEFAULT_MAX_CONNECTIONS_PER_IPADDR_PER_MINUTE,
         DEFAULT_MAX_QUIC_CONNECTIONS_PER_STAKED_PEER,
         DEFAULT_MAX_QUIC_CONNECTIONS_PER_UNSTAKED_PEER, DEFAULT_MAX_STAKED_CONNECTIONS,
         DEFAULT_MAX_STREAMS_PER_MS, DEFAULT_MAX_UNSTAKED_CONNECTIONS, DEFAULT_QUIC_ENDPOINTS,
     },
-    solana_tpu_client::tpu_client::{DEFAULT_TPU_CONNECTION_POOL_SIZE, DEFAULT_VOTE_USE_QUIC},
+    trezoa_tpu_client::tpu_client::{DEFAULT_TPU_CONNECTION_POOL_SIZE, DEFAULT_VOTE_USE_QUIC},
     std::{cmp::Ordering, path::PathBuf, str::FromStr},
 };
 
 pub mod thread_args;
 use {
-    solana_core::banking_stage::BankingStage,
+    trezoa_core::banking_stage::BankingStage,
     thread_args::{thread_args, DefaultThreadArgs},
 };
 
@@ -312,7 +312,7 @@ pub fn port_validator(port: String) -> Result<(), String> {
 }
 
 pub fn port_range_validator(port_range: String) -> Result<(), String> {
-    if let Some((start, end)) = solana_net_utils::parse_port_range(&port_range) {
+    if let Some((start, end)) = trezoa_net_utils::parse_port_range(&port_range) {
         if end - start < MINIMUM_VALIDATOR_PORT_RANGE_WIDTH {
             Err(format!(
                 "Port range is too small.  Try --dynamic-port-range {}-{}",
@@ -335,7 +335,7 @@ pub(crate) fn hash_validator(hash: String) -> Result<(), String> {
 
 /// Test validator
 pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<'a, 'a> {
-    App::new("solana-test-validator")
+    App::new("trezoa-test-validator")
         .about("Test Validator")
         .version(version)
         .arg({
@@ -345,7 +345,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .value_name("PATH")
                 .takes_value(true)
                 .help("Configuration file to use");
-            if let Some(ref config_file) = *solana_cli_config::CONFIG_FILE {
+            if let Some(ref config_file) = *trezoa_cli_config::CONFIG_FILE {
                 arg.default_value(config_file)
             } else {
                 arg
@@ -359,7 +359,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .takes_value(true)
                 .validator(is_url_or_moniker)
                 .help(
-                    "URL for Solana's JSON RPC or moniker (or their first letter): [mainnet-beta, \
+                    "URL for Trezoa's JSON RPC or moniker (or their first letter): [mainnet-beta, \
                      testnet, devnet, localhost]",
                 ),
         )
@@ -415,7 +415,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .long("account-index")
                 .takes_value(true)
                 .multiple(true)
-                .possible_values(&["program-id", "spl-token-owner", "spl-token-mint"])
+                .possible_values(&["program-id", "tpl-token-owner", "tpl-token-mint"])
                 .value_name("INDEX")
                 .help("Enable an accounts index, indexed by the selected account field"),
         )
@@ -460,7 +460,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .value_name("INSTANCE_NAME")
                 .takes_value(true)
                 .hidden(hidden_unless_forced())
-                .default_value("solana-ledger")
+                .default_value("trezoa-ledger")
                 .help("Name of BigTable instance to target"),
         )
         .arg(
@@ -469,7 +469,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .value_name("APP_PROFILE_ID")
                 .takes_value(true)
                 .hidden(hidden_unless_forced())
-                .default_value(solana_storage_bigtable::DEFAULT_APP_PROFILE_ID)
+                .default_value(trezoa_storage_bigtable::DEFAULT_APP_PROFILE_ID)
                 .help("Application profile id to use in Bigtable requests"),
         )
         .arg(
@@ -508,7 +508,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .allow_hyphen_values(true)
                 .multiple(true)
                 .help(
-                    "Load an account from the provided JSON file (see `solana account --help` on \
+                    "Load an account from the provided JSON file (see `trezoa account --help` on \
                      how to dump an account to file). Files are searched for relatively to CWD \
                      and tests/fixtures. If ADDRESS is omitted via the `-` placeholder, the one \
                      in the file will be used. If the ledger already exists then this parameter \
@@ -622,7 +622,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .long("bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(trezoa_net_utils::is_host)
                 .default_value("127.0.0.1")
                 .help(
                     "IP address to bind the validator ports. Can be repeated. The first \
@@ -642,7 +642,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .long("advertised-ip")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(trezoa_net_utils::is_host)
                 .hidden(hidden_unless_forced())
                 .help(
                     "Use when running a validator behind a NAT. DNS name or IP address for this \
@@ -741,7 +741,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .value_name("SOL")
                 .default_value(default_args.faucet_sol.as_str())
                 .help(
-                    "Give the faucet address this much SOL in genesis. If the ledger already \
+                    "Give the faucet address this much TRZ in genesis. If the ledger already \
                      exists then this parameter is silently ignored",
                 ),
         )
@@ -760,7 +760,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .value_name("SOL")
                 .min_values(0)
                 .max_values(1)
-                .help("Per-time slice limit for faucet requests, in SOL"),
+                .help("Per-time slice limit for faucet requests, in TRZ"),
         )
         .arg(
             Arg::with_name("faucet_per_request_sol_cap")
@@ -769,7 +769,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .value_name("SOL")
                 .min_values(0)
                 .max_values(1)
-                .help("Per-request limit for faucet requests, in SOL"),
+                .help("Per-request limit for faucet requests, in TRZ"),
         )
         .arg(
             Arg::with_name("geyser_plugin_config")
@@ -849,7 +849,7 @@ impl DefaultTestArgs {
             faucet_port: FAUCET_PORT.to_string(),
             /* 10,000 was derived empirically by watching the size
              * of the rocksdb/ directory self-limit itself to the
-             * 40MB-150MB range when running `solana-test-validator`
+             * 40MB-150MB range when running `trezoa-test-validator`
              */
             limit_ledger_size: 10_000.to_string(),
             faucet_sol: (1_000_000.).to_string(),

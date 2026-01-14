@@ -1,6 +1,6 @@
-//! The `faucet` module provides an object for launching a Solana Faucet,
+//! The `faucet` module provides an object for launching a Trezoa Faucet,
 //! which is the custodian of any remaining lamports in a mint.
-//! The Solana Faucet builds and sends airdrop transactions,
+//! The Trezoa Faucet builds and sends airdrop transactions,
 //! checking requests against a single-request cap and a per-IP limit
 //! for a given time time_slice.
 
@@ -9,17 +9,17 @@ use {
     crossbeam_channel::Sender,
     log::*,
     serde::{Deserialize, Serialize},
-    solana_cli_output::display::build_balance_message,
-    solana_hash::Hash,
-    solana_instruction::Instruction,
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_metrics::datapoint_info,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_system_interface::instruction::transfer,
-    solana_transaction::Transaction,
+    trezoa_cli_output::display::build_balance_message,
+    trezoa_hash::Hash,
+    trezoa_instruction::Instruction,
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_metrics::datapoint_info,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction::transfer,
+    trezoa_transaction::Transaction,
     std::{
         collections::{HashMap, HashSet},
         io::{Read, Write},
@@ -124,7 +124,7 @@ impl Faucet {
         if let Some((per_request_cap, per_time_cap)) = per_request_cap.zip(per_time_cap) {
             if per_time_cap < per_request_cap {
                 warn!(
-                    "per_time_cap {} SOL < per_request_cap {} SOL; maximum single requests will \
+                    "per_time_cap {} TRZ < per_request_cap {} TRZ; maximum single requests will \
                      fail",
                     build_balance_message(per_time_cap, false, false),
                     build_balance_message(per_request_cap, false, false),
@@ -170,7 +170,7 @@ impl Faucet {
     /// Checks per-request and per-time-ip limits; if both pass, this method returns a signed
     /// SystemProgram::Transfer transaction from the faucet keypair to the requested recipient. If
     /// the request exceeds this per-request limit, this method returns a signed SPL Memo
-    /// transaction with the memo: `"request too large; req: <REQUEST> SOL cap: <CAP> SOL"`
+    /// transaction with the memo: `"request too large; req: <REQUEST> TRZ cap: <CAP> TRZ"`
     pub fn build_airdrop_transaction(
         &mut self,
         req: FaucetRequest,
@@ -185,7 +185,7 @@ impl Faucet {
             } => {
                 let mint_pubkey = self.faucet_keypair.pubkey();
                 info!(
-                    "Requesting airdrop of {} SOL to {:?}",
+                    "Requesting airdrop of {} TRZ to {:?}",
                     build_balance_message(lamports, false, false),
                     to
                 );
@@ -267,7 +267,7 @@ impl Faucet {
 
 impl Drop for Faucet {
     fn drop(&mut self) {
-        solana_metrics::flush();
+        trezoa_metrics::flush();
     }
 }
 
@@ -385,7 +385,7 @@ pub fn run_local_faucet_with_unique_port_for_tests(keypair: Keypair) -> SocketAd
     run_local_faucet_for_tests(
         keypair,
         None, /* per_time_cap */
-        solana_net_utils::sockets::unique_port_range_for_tests(1).start,
+        trezoa_net_utils::sockets::unique_port_range_for_tests(1).start,
     )
 }
 
@@ -529,7 +529,7 @@ impl LimitByTime for Pubkey {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_system_interface::instruction::SystemInstruction, std::time::Duration};
+    use {super::*, trezoa_system_interface::instruction::SystemInstruction, std::time::Duration};
 
     #[test]
     fn test_check_time_request_limit() {
@@ -686,7 +686,7 @@ mod tests {
 
     #[test]
     fn test_process_faucet_request() {
-        let to = solana_pubkey::new_rand();
+        let to = trezoa_pubkey::new_rand();
         let blockhash = Hash::new_from_array(to.to_bytes());
         let lamports = 50;
         let req = FaucetRequest::GetAirdrop {

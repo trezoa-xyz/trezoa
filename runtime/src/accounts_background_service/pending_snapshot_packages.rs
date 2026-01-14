@@ -2,7 +2,7 @@ use {
     crate::snapshot_package::{
         are_snapshot_packages_the_same_kind, cmp_snapshot_packages_by_priority, SnapshotPackage,
     },
-    agave_snapshots::{SnapshotArchiveKind, SnapshotKind},
+    trezoa_snapshots::{SnapshotArchiveKind, SnapshotKind},
     log::*,
     std::cmp::Ordering::Greater,
 };
@@ -122,7 +122,7 @@ impl PendingSnapshotPackages {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_clock::Slot};
+    use {super::*, trezoa_clock::Slot};
 
     fn new(snapshot_kind: SnapshotKind, slot: Slot) -> SnapshotPackage {
         SnapshotPackage {

@@ -1,7 +1,7 @@
 [package]
-name = "solana-rpc-test"
-description = "Solana RPC Test"
-documentation = "https://docs.rs/solana-rpc-test"
+name = "trezoa-rpc-test"
+description = "Trezoa RPC Test"
+documentation = "https://docs.rs/trezoa-rpc-test"
 publish = false
 version = { workspace = true }
 authors = { workspace = true }
@@ -14,7 +14,7 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 async-trait = { workspace = true }
@@ -26,30 +26,30 @@ log = { workspace = true }
 reqwest = { workspace = true, features = ["blocking", "brotli", "deflate", "gzip", "rustls-tls", "json"] }
 serde = { workspace = true }
 serde_json = { workspace = true }
-solana-account-decoder = { workspace = true }
-solana-client = { workspace = true }
-solana-net-utils = { workspace = true }
-solana-pubsub-client = { workspace = true }
-solana-rpc = { workspace = true }
-solana-rpc-client = { workspace = true }
-solana-rpc-client-api = { workspace = true }
-solana-test-validator = { workspace = true }
-solana-tpu-client = { workspace = true }
-solana-tpu-client-next = { workspace = true }
-solana-transaction-status = { workspace = true }
+trezoa-account-decoder = { workspace = true }
+trezoa-client = { workspace = true }
+trezoa-net-utils = { workspace = true }
+trezoa-pubsub-client = { workspace = true }
+trezoa-rpc = { workspace = true }
+trezoa-rpc-client = { workspace = true }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-test-validator = { workspace = true }
+trezoa-tpu-client = { workspace = true }
+trezoa-tpu-client-next = { workspace = true }
+trezoa-transaction-status = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
-agave-logger = { workspace = true }
-solana-client = { workspace = true, features = ["dev-context-only-utils"] }
-solana-clock = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-connection-cache = { workspace = true }
-solana-hash = { workspace = true }
-solana-keypair = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-rent = { workspace = true }
-solana-signature = { workspace = true }
-solana-signer = { workspace = true }
-solana-system-transaction = { workspace = true }
-solana-transaction = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-client = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-clock = { workspace = true }
+trezoa-commitment-config = { workspace = true }
+trezoa-connection-cache = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-rent = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-system-transaction = { workspace = true }
+trezoa-transaction = { workspace = true }

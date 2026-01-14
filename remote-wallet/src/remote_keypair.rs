@@ -7,10 +7,10 @@ use {
             RemoteWalletType,
         },
     },
-    solana_derivation_path::DerivationPath,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_signer::{Signer, SignerError},
+    trezoa_derivation_path::DerivationPath,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_signer::{Signer, SignerError},
 };
 
 pub struct RemoteKeypair {

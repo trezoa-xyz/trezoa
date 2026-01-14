@@ -1,12 +1,12 @@
 use {
     crate::{request, response},
-    solana_transaction_error::TransportError,
+    trezoa_transaction_error::TransportError,
     std::io,
     thiserror::Error as ThisError,
 };
 pub use {
     anyhow::Error as AnyhowError, reqwest, serde_json::error::Error as SerdeJsonError,
-    solana_signer::SignerError, solana_transaction_error::TransactionError,
+    trezoa_signer::SignerError, trezoa_transaction_error::TransactionError,
 };
 
 #[derive(ThisError, Debug)]

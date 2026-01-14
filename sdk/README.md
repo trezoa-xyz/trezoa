@@ -1,3 +1,3 @@
-# PLEASE READ: This repo no longer contains the Solana SDK
+# PLEASE READ: This repo no longer contains the Trezoa SDK
 
-The solana-sdk is currently developed at https://github.com/anza-xyz/solana-sdk
+The trezoa-sdk is currently developed at https://github.com/trezoa-xyz/trezoa-sdk

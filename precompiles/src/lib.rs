@@ -1,18 +1,18 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 use {
-    agave_feature_set::{enable_secp256r1_precompile, FeatureSet},
-    solana_message::compiled_instruction::CompiledInstruction,
-    solana_precompile_error::PrecompileError,
-    solana_pubkey::Pubkey,
+    trezoa_feature_set::{enable_secp256r1_precompile, FeatureSet},
+    trezoa_message::compiled_instruction::CompiledInstruction,
+    trezoa_precompile_error::PrecompileError,
+    trezoa_pubkey::Pubkey,
     std::sync::LazyLock,
 };
 
@@ -65,17 +65,17 @@ impl Precompile {
 static PRECOMPILES: LazyLock<Vec<Precompile>> = LazyLock::new(|| {
     vec![
         Precompile::new(
-            solana_sdk_ids::secp256k1_program::id(),
+            trezoa_sdk_ids::secp256k1_program::id(),
             None, // always enabled
             secp256k1::verify,
         ),
         Precompile::new(
-            solana_sdk_ids::ed25519_program::id(),
+            trezoa_sdk_ids::ed25519_program::id(),
             None, // always enabled
             ed25519::verify,
         ),
         Precompile::new(
-            solana_sdk_ids::secp256r1_program::id(),
+            trezoa_sdk_ids::secp256r1_program::id(),
             Some(enable_secp256r1_precompile::id()),
             secp256r1::verify,
         ),

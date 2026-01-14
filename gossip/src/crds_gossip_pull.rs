@@ -28,14 +28,14 @@ use {
     },
     rayon::{prelude::*, ThreadPool},
     serde::{Deserialize, Serialize},
-    solana_bloom::bloom::{Bloom, ConcurrentBloom},
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
+    trezoa_bloom::bloom::{Bloom, ConcurrentBloom},
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
     std::{
         collections::{HashMap, HashSet, VecDeque},
         convert::TryInto,
@@ -82,8 +82,8 @@ impl Default for CrdsFilter {
     }
 }
 
-impl solana_sanitize::Sanitize for CrdsFilter {
-    fn sanitize(&self) -> std::result::Result<(), solana_sanitize::SanitizeError> {
+impl trezoa_sanitize::Sanitize for CrdsFilter {
+    fn sanitize(&self) -> std::result::Result<(), trezoa_sanitize::SanitizeError> {
         self.filter.sanitize()?;
         Ok(())
     }
@@ -683,12 +683,12 @@ pub(crate) mod tests {
         rand::{prelude::IndexedRandom as _, SeedableRng},
         rand_chacha::ChaChaRng,
         rayon::ThreadPoolBuilder,
-        solana_hash::HASH_BYTES,
-        solana_keypair::keypair_from_seed,
-        solana_packet::PACKET_DATA_SIZE,
-        solana_perf::test_tx::new_test_vote_tx,
-        solana_sha256_hasher::hash,
-        solana_time_utils::timestamp,
+        trezoa_hash::HASH_BYTES,
+        trezoa_keypair::keypair_from_seed,
+        trezoa_packet::PACKET_DATA_SIZE,
+        trezoa_perf::test_tx::new_test_vote_tx,
+        trezoa_sha256_hasher::hash,
+        trezoa_time_utils::timestamp,
         std::{
             net::{IpAddr, Ipv6Addr},
             time::Instant,
@@ -797,7 +797,7 @@ pub(crate) mod tests {
         );
         let hash_values: Vec<_> = repeat_with(|| {
             let buf: [u8; 32] = rng.random();
-            solana_sha256_hasher::hashv(&[&buf])
+            trezoa_sha256_hasher::hashv(&[&buf])
         })
         .take(1024)
         .collect();
@@ -967,7 +967,7 @@ pub(crate) mod tests {
             Err(CrdsGossipError::NoPeers)
         );
         let now = 1625029781069;
-        let mut new = ContactInfo::new_localhost(&solana_pubkey::new_rand(), now);
+        let mut new = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), now);
         new.set_gossip(([127, 0, 0, 1], 8020)).unwrap();
         ping_cache
             .lock()
@@ -994,7 +994,7 @@ pub(crate) mod tests {
         let peers: Vec<_> = req.unwrap().into_iter().map(|(node, _)| node).collect();
         assert_eq!(peers, vec![new.contact_info().unwrap().clone()]);
 
-        let mut offline = ContactInfo::new_localhost(&solana_pubkey::new_rand(), now);
+        let mut offline = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), now);
         offline.set_gossip(([127, 0, 0, 1], 8021)).unwrap();
         let offline = CrdsValue::new_unsigned(CrdsData::from(offline));
         crds.write()
@@ -1033,13 +1033,13 @@ pub(crate) mod tests {
         )));
         let node = CrdsGossipPull::default();
         crds.insert(entry, now, GossipRoute::LocalMessage).unwrap();
-        let mut old = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut old = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         old.set_gossip(([127, 0, 0, 1], 8020)).unwrap();
         ping_cache.mock_pong(*old.pubkey(), old.gossip().unwrap(), Instant::now());
         let old = CrdsValue::new_unsigned(CrdsData::from(old));
         crds.insert(old.clone(), now, GossipRoute::LocalMessage)
             .unwrap();
-        let mut new = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut new = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         new.set_gossip(([127, 0, 0, 1], 8021)).unwrap();
         ping_cache.mock_pong(*new.pubkey(), new.gossip().unwrap(), Instant::now());
         let new = CrdsValue::new_unsigned(CrdsData::from(new));
@@ -1095,7 +1095,7 @@ pub(crate) mod tests {
         node_crds
             .insert(entry, now, GossipRoute::LocalMessage)
             .unwrap();
-        let new = ContactInfo::new_localhost(&solana_pubkey::new_rand(), now);
+        let new = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), now);
         ping_cache.mock_pong(*new.pubkey(), new.gossip().unwrap(), Instant::now());
         let new = CrdsValue::new_unsigned(CrdsData::from(new));
         node_crds
@@ -1142,7 +1142,7 @@ pub(crate) mod tests {
 
         let now = now + CRDS_GOSSIP_PULL_CRDS_TIMEOUT_MS;
         let new = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             now,
         )));
         dest_crds
@@ -1213,13 +1213,13 @@ pub(crate) mod tests {
             .insert(entry, 0, GossipRoute::LocalMessage)
             .unwrap();
         let mut ping_cache = new_ping_cache();
-        let new = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 1);
+        let new = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 1);
         ping_cache.mock_pong(*new.pubkey(), new.gossip().unwrap(), Instant::now());
         let new = CrdsValue::new_unsigned(CrdsData::from(new));
         node_crds.insert(new, 0, GossipRoute::LocalMessage).unwrap();
 
         let mut dest_crds = Crds::default();
-        let new_id = solana_pubkey::new_rand();
+        let new_id = trezoa_pubkey::new_rand();
         let same_key = ContactInfo::new_localhost(&new_id, 0);
         let new = ContactInfo::new_localhost(&new_id, 1);
         ping_cache.mock_pong(*new.pubkey(), new.gossip().unwrap(), Instant::now());
@@ -1323,7 +1323,7 @@ pub(crate) mod tests {
         let thread_pool = ThreadPoolBuilder::new().build().unwrap();
         let mut node_crds = Crds::default();
         let entry = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         let node_label = entry.label();
@@ -1333,7 +1333,7 @@ pub(crate) mod tests {
             .insert(entry, 0, GossipRoute::LocalMessage)
             .unwrap();
         let old = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         node_crds
@@ -1458,7 +1458,7 @@ pub(crate) mod tests {
         let node_crds = RwLock::<Crds>::default();
         let node = CrdsGossipPull::default();
 
-        let peer_pubkey = solana_pubkey::new_rand();
+        let peer_pubkey = trezoa_pubkey::new_rand();
         let peer_entry =
             CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(&peer_pubkey, 0)));
         let stakes = HashMap::from([(peer_pubkey, 1u64)]);

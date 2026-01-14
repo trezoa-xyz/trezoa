@@ -4,7 +4,7 @@ use {
         commands::{FromClapArgMatches, Result},
     },
     clap::{value_t, Arg, ArgMatches},
-    solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+    trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
     std::sync::LazyLock,
 };
 
@@ -106,7 +106,7 @@ mod tests {
         crate::commands::run::args::{
             tests::verify_args_struct_by_command_run_with_identity_setup, RunArgs,
         },
-        solana_pubkey::Pubkey,
+        trezoa_pubkey::Pubkey,
         std::{
             collections::HashSet,
             net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -164,7 +164,7 @@ mod tests {
                     8000,
                 )],
                 rpc_bootstrap_config: RpcBootstrapConfig {
-                    check_vote_account: Some("https://api.mainnet-beta.solana.com".to_string()),
+                    check_vote_account: Some("https://api.mainnet-beta.trezoa.com".to_string()),
                     ..RpcBootstrapConfig::default()
                 },
                 ..default_run_args.clone()
@@ -176,7 +176,7 @@ mod tests {
                     "--entrypoint",
                     "127.0.0.1:8000",
                     "--check-vote-account",
-                    "https://api.mainnet-beta.solana.com",
+                    "https://api.mainnet-beta.trezoa.com",
                 ],
                 expected_args,
             );

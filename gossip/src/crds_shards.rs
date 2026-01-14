@@ -138,7 +138,7 @@ mod test {
             crds_value::CrdsValue,
         },
         rand::{rng, Rng},
-        solana_time_utils::timestamp,
+        trezoa_time_utils::timestamp,
         std::{collections::HashSet, iter::repeat_with, ops::Index},
     };
 

@@ -7,39 +7,39 @@
     allow(dead_code, unused_imports)
 )]
 
-use {solana_keypair::Keypair, std::slice};
+use {trezoa_keypair::Keypair, std::slice};
 
 extern crate test;
 
 use {
-    agave_syscalls::create_program_runtime_environment_v1,
+    trezoa_syscalls::create_program_runtime_environment_v1,
     byteorder::{ByteOrder, LittleEndian, WriteBytesExt},
-    solana_account::AccountSharedData,
-    solana_bpf_loader_program::create_vm,
-    solana_client_traits::SyncClient,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_measure::measure::Measure,
-    solana_message::Message,
-    solana_program_entrypoint::SUCCESS,
-    solana_program_runtime::{
+    trezoa_account::AccountSharedData,
+    trezoa_bpf_loader_program::create_vm,
+    trezoa_client_traits::SyncClient,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_measure::measure::Measure,
+    trezoa_message::Message,
+    trezoa_program_entrypoint::SUCCESS,
+    trezoa_program_runtime::{
         execution_budget::SVMTransactionExecutionBudget, invoke_context::InvokeContext,
         serialization::serialize_parameters,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_client::BankClient,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         loader_utils::{load_program_from_file, load_program_of_loader_v4},
     },
-    solana_sbpf::{
+    trezoa_sbpf::{
         ebpf::MM_INPUT_START, elf::Executable, memory_region::MemoryRegion,
         verifier::RequisiteVerifier, vm::ContextObject,
     },
-    solana_sdk_ids::{bpf_loader, native_loader},
-    solana_signer::Signer,
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_transaction_context::instruction_accounts::InstructionAccount,
+    trezoa_sdk_ids::{bpf_loader, native_loader},
+    trezoa_signer::Signer,
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_transaction_context::instruction_accounts::InstructionAccount,
     std::{mem, sync::Arc},
     test::Bencher,
 };
@@ -62,7 +62,7 @@ macro_rules! with_mock_invoke_context {
             ),
         ];
         let instruction_accounts = vec![InstructionAccount::new(2, false, true)];
-        solana_program_runtime::with_mock_invoke_context!(
+        trezoa_program_runtime::with_mock_invoke_context!(
             $invoke_context,
             transaction_context,
             transaction_accounts

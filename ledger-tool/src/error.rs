@@ -1,4 +1,4 @@
-use {solana_ledger::blockstore::BlockstoreError, thiserror::Error};
+use {trezoa_ledger::blockstore::BlockstoreError, thiserror::Error};
 
 pub type Result<T> = std::result::Result<T, LedgerToolError>;
 
@@ -11,7 +11,7 @@ pub enum LedgerToolError {
     SerdeJson(#[from] serde_json::Error),
 
     #[error("{0}")]
-    TransactionEncode(#[from] solana_transaction_status::EncodeError),
+    TransactionEncode(#[from] trezoa_transaction_status::EncodeError),
 
     #[error("{0}")]
     Io(#[from] std::io::Error),

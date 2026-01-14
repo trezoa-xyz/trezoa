@@ -1,8 +1,8 @@
 use {
-    solana_clock::{Epoch, DEFAULT_MS_PER_SLOT},
-    solana_epoch_schedule::EpochSchedule,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_clock::{Epoch, DEFAULT_MS_PER_SLOT},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_forks::{BankForks, ReadOnlyAtomicSlot},
     },
@@ -86,8 +86,8 @@ fn get_epoch_duration(bank: &Bank) -> Duration {
 mod tests {
     use {
         super::*,
-        solana_clock::Slot,
-        solana_runtime::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_clock::Slot,
+        trezoa_runtime::genesis_utils::{create_genesis_config, GenesisConfigInfo},
     };
 
     #[test]

@@ -3,19 +3,19 @@ use {
         instruction::SVMInstruction, message_address_table_lookup::SVMMessageAddressTableLookup,
     },
     core::fmt::Debug,
-    solana_hash::Hash,
-    solana_message::AccountKeys,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{ed25519_program, secp256k1_program, secp256r1_program, system_program},
+    trezoa_hash::Hash,
+    trezoa_message::AccountKeys,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{ed25519_program, secp256k1_program, secp256r1_program, system_program},
 };
 
 mod sanitized_message;
 mod sanitized_transaction;
-// inlined to avoid solana-nonce dep
+// inlined to avoid trezoa-nonce dep
 #[cfg(test)]
 static_assertions::const_assert_eq!(
     NONCED_TX_MARKER_IX_INDEX,
-    solana_nonce::NONCED_TX_MARKER_IX_INDEX
+    trezoa_nonce::NONCED_TX_MARKER_IX_INDEX
 );
 const NONCED_TX_MARKER_IX_INDEX: u8 = 0;
 

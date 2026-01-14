@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-iter"
+name = "trezoa-sbf-rust-iter"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -12,8 +12,8 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-solana-program = { workspace = true }
-solana-program-entrypoint = { workspace = true }
+trezoa-program = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
 
 [lints]
 workspace = true

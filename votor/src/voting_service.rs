@@ -5,17 +5,17 @@ use {
         staked_validators_cache::StakedValidatorsCache,
         vote_history_storage::{SavedVoteHistoryVersions, VoteHistoryStorage},
     },
-    agave_votor_messages::consensus_message::{Certificate, ConsensusMessage},
+    trezoa_votor_messages::consensus_message::{Certificate, ConsensusMessage},
     bincode::serialize,
     crossbeam_channel::Receiver,
-    solana_client::connection_cache::ConnectionCache,
-    solana_clock::Slot,
-    solana_connection_cache::client_connection::ClientConnection,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::BankForks,
-    solana_transaction_error::TransportError,
+    trezoa_client::connection_cache::ConnectionCache,
+    trezoa_clock::Slot,
+    trezoa_connection_cache::client_connection::ClientConnection,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::BankForks,
+    trezoa_transaction_error::TransportError,
     std::{
         collections::HashMap,
         net::SocketAddr,
@@ -262,23 +262,23 @@ mod tests {
         crate::vote_history_storage::{
             NullVoteHistoryStorage, SavedVoteHistory, SavedVoteHistoryVersions,
         },
-        agave_votor_messages::{
+        trezoa_votor_messages::{
             consensus_message::{Certificate, CertificateType, ConsensusMessage, VoteMessage},
             vote::Vote,
         },
-        solana_bls_signatures::Signature as BLSSignature,
-        solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-        solana_keypair::Keypair,
-        solana_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
-        solana_runtime::{
+        trezoa_bls_signatures::Signature as BLSSignature,
+        trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+        trezoa_keypair::Keypair,
+        trezoa_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
+        trezoa_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             genesis_utils::{
                 create_genesis_config_with_alpenglow_vote_accounts, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
-        solana_streamer::{
+        trezoa_signer::Signer,
+        trezoa_streamer::{
             nonblocking::swqos::SwQosConfig,
             quic::{spawn_stake_wighted_qos_server, QuicStreamerConfig, SpawnServerResult},
             streamer::StakedNodes,
@@ -355,7 +355,7 @@ mod tests {
         bitmap: Vec::new(),
     }))]
     fn test_send_message(bls_op: BLSOp, expected_message: ConsensusMessage) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (bls_sender, bls_receiver) = crossbeam_channel::unbounded();
         // Create listener thread on a random port we allocated and return SocketAddr to create VotingService
 

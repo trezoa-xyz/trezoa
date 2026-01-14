@@ -1,19 +1,19 @@
-pub use solana_connection_cache::connection_cache::Protocol;
+pub use trezoa_connection_cache::connection_cache::Protocol;
 use {
-    solana_connection_cache::{
+    trezoa_connection_cache::{
         client_connection::ClientConnection,
         connection_cache::{
             BaseClientConnection, ConnectionCache as BackendConnectionCache, ConnectionPool,
             NewConnectionConfig,
         },
     },
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
-    solana_quic_definitions::NotifyKeyUpdate,
-    solana_streamer::streamer::StakedNodes,
-    solana_transaction_error::TransportResult,
-    solana_udp_client::{UdpConfig, UdpConnectionManager, UdpPool},
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
+    trezoa_quic_definitions::NotifyKeyUpdate,
+    trezoa_streamer::streamer::StakedNodes,
+    trezoa_transaction_error::TransportResult,
+    trezoa_udp_client::{UdpConfig, UdpConnectionManager, UdpPool},
     std::{
         net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket},
         sync::{Arc, RwLock},
@@ -79,7 +79,7 @@ impl ConnectionCache {
         Self::new_with_client_options(
             name,
             connection_pool_size,
-            Some(solana_net_utils::sockets::bind_to_localhost_unique().unwrap()),
+            Some(trezoa_net_utils::sockets::bind_to_localhost_unique().unwrap()),
             None,
             None,
         )
@@ -183,7 +183,7 @@ impl ClientConnection for BlockingClientConnection {
 }
 
 #[async_trait::async_trait]
-impl solana_connection_cache::nonblocking::client_connection::ClientConnection
+impl trezoa_connection_cache::nonblocking::client_connection::ClientConnection
     for NonblockingClientConnection
 {
     dispatch!(fn server_addr(&self) -> &SocketAddr);
@@ -208,7 +208,7 @@ mod tests {
     use {
         super::*,
         crate::connection_cache::ConnectionCache,
-        solana_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
+        trezoa_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
         std::net::{IpAddr, Ipv4Addr, SocketAddr},
     };
 

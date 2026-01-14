@@ -14,21 +14,21 @@ use {
     },
     crossbeam_channel::{unbounded, Receiver, RecvError, RecvTimeoutError, Sender},
     itertools::Itertools,
-    solana_clock::Slot,
-    solana_gossip::{
+    trezoa_clock::Slot,
+    trezoa_gossip::{
         cluster_info::{ClusterInfo, ClusterInfoError},
         contact_info::Protocol,
     },
-    solana_keypair::Keypair,
-    solana_ledger::{blockstore::Blockstore, shred::Shred},
-    solana_measure::measure::Measure,
-    solana_metrics::{inc_new_counter_error, inc_new_counter_info},
-    solana_net_utils::SocketAddrSpace,
-    solana_poh::poh_recorder::WorkingBankEntry,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::MAX_LEADER_SCHEDULE_STAKES, bank_forks::BankForks},
-    solana_streamer::sendmmsg::{batch_send, SendPktsError},
-    solana_time_utils::{timestamp, AtomicInterval},
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{blockstore::Blockstore, shred::Shred},
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::{inc_new_counter_error, inc_new_counter_info},
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_poh::poh_recorder::WorkingBankEntry,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::MAX_LEADER_SCHEDULE_STAKES, bank_forks::BankForks},
+    trezoa_streamer::sendmmsg::{batch_send, SendPktsError},
+    trezoa_time_utils::{timestamp, AtomicInterval},
     std::{
         collections::{HashMap, HashSet},
         net::UdpSocket,
@@ -50,7 +50,7 @@ mod fail_entry_verification_broadcast_run;
 pub(crate) mod standard_broadcast_run;
 
 const _: () = const {
-    // From https://github.com/anza-xyz/agave/pull/1735#discussion_r1644899183:
+    // From https://github.com/trezoa-xyz/trezoa/pull/1735#discussion_r1644899183:
     // 1. There must be at least two epochs because near an epoch boundary you might receive
     //    shreds from the other side of the epoch boundary.
     // 2. It does not make sense to have capacity more than the number of epoch-stakes in Bank.
@@ -66,9 +66,9 @@ pub(crate) type TransmitReceiver = Receiver<(Arc<Vec<Shred>>, Option<BroadcastSh
 #[derive(Debug, Error)]
 pub enum Error {
     #[error(transparent)]
-    Blockstore(#[from] solana_ledger::blockstore::BlockstoreError),
+    Blockstore(#[from] trezoa_ledger::blockstore::BlockstoreError),
     #[error(transparent)]
-    ClusterInfo(#[from] solana_gossip::cluster_info::ClusterInfoError),
+    ClusterInfo(#[from] trezoa_gossip::cluster_info::ClusterInfoError),
     #[error("Duplicate slot broadcast: {0}")]
     DuplicateSlotBroadcast(Slot),
     #[error("Invalid Merkle root, slot: {slot}, index: {index}")]
@@ -88,7 +88,7 @@ pub enum Error {
     #[error("Shred not found, slot: {slot}, index: {index}")]
     ShredNotFound { slot: Slot, index: u64 },
     #[error(transparent)]
-    TransportError(#[from] solana_transaction_error::TransportError),
+    TransportError(#[from] trezoa_transaction_error::TransportError),
     #[error("Unknown last index, slot: {0}")]
     UnknownLastIndex(Slot),
     #[error("Unknown slot meta, slot: {0}")]
@@ -360,7 +360,7 @@ impl BroadcastStage {
                     sock_variant,
                     &bank_forks,
                 );
-                if let Some(res) = Self::handle_error(res, "solana-broadcaster-transmit") {
+                if let Some(res) = Self::handle_error(res, "trezoa-broadcaster-transmit") {
                     return res;
                 }
             };
@@ -376,7 +376,7 @@ impl BroadcastStage {
             let blockstore = blockstore.clone();
             let run_record = move || loop {
                 let res = broadcast_stage_run.record(&blockstore_receiver, &blockstore);
-                let res = Self::handle_error(res, "solana-broadcaster-record");
+                let res = Self::handle_error(res, "trezoa-broadcaster-record");
                 if let Some(res) = res {
                     return res;
                 }
@@ -396,7 +396,7 @@ impl BroadcastStage {
                         &retransmit_slots_receiver,
                         &socket_sender,
                     ),
-                    "solana-broadcaster-retransmit-check_retransmit_signals",
+                    "trezoa-broadcaster-retransmit-check_retransmit_signals",
                 ) {
                     return res;
                 }
@@ -557,18 +557,18 @@ pub mod test {
         super::*,
         crossbeam_channel::unbounded,
         rand::Rng,
-        solana_entry::entry::create_ticks,
-        solana_gossip::{cluster_info::ClusterInfo, node::Node},
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_entry::entry::create_ticks,
+        trezoa_gossip::{cluster_info::ClusterInfo, node::Node},
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::Blockstore,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
             shred::{max_ticks_per_n_shreds, ProcessShredsStats, ReedSolomonCache, Shredder},
         },
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
         std::{
             path::Path,
             sync::{atomic::AtomicBool, Arc},
@@ -748,7 +748,7 @@ pub mod test {
 
     #[test]
     fn test_broadcast_ledger() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
 
         // Create the leader scheduler

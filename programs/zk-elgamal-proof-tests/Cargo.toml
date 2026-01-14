@@ -1,5 +1,5 @@
 [package]
-name = "solana-zk-elgamal-proof-program-tests"
+name = "trezoa-zk-elgamal-proof-program-tests"
 publish = false
 version = { workspace = true }
 authors = { workspace = true }
@@ -8,19 +8,19 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dev-dependencies]
 bytemuck = { workspace = true }
-solana-account = { workspace = true }
-solana-compute-budget = { workspace = true }
-solana-compute-budget-interface = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keypair = { workspace = true }
-solana-program-test = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-signer = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-transaction = { workspace = true }
-solana-transaction-error = { workspace = true }
-solana-zk-sdk = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-compute-budget = { workspace = true }
+trezoa-compute-budget-interface = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-program-test = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-transaction-error = { workspace = true }
+trezoa-zk-sdk = { workspace = true }

@@ -1,4 +1,4 @@
-# Agave Release process
+# Trezoa-team Release process
 
 ## Branches and Tags
 
@@ -75,7 +75,7 @@ for at least one full minor version before removal.
 1. Determine the new branch name.  The name should be "v" + the first 2 version fields
    from Cargo.toml.  For example, a Cargo.toml with version = "0.9.0" implies
    the next branch name is "v0.9".
-1. Create the new branch and push this branch to the `agave` repository:
+1. Create the new branch and push this branch to the `trezoa` repository:
     ```
     git checkout -b <branchname>
     git push -u origin <branchname>
@@ -103,25 +103,25 @@ Alternatively use the Github UI.
 
 ### Update the Changelog
 
-Create a PR that makes the following updates to [CHANGELOG.md](https://github.com/anza-xyz/agave/blob/master/CHANGELOG.md) in master:
+Create a PR that makes the following updates to [CHANGELOG.md](https://github.com/trezoa-xyz/trezoa/blob/master/CHANGELOG.md) in master:
 * Advance the channel links with the newly created branch becoming beta.
 * Add a new section `X.Y.0-Unreleased` for the new master version.
 * Remove the `Unreleased` annotation for the section that has now become beta.
 
 ### Miscellaneous Clean up
 
-1. Pin the spl-token-cli version in the newly promoted stable branch by setting `splTokenCliVersion` in scripts/spl-token-cli-version.sh to the latest release that depends on the stable branch (usually this will be the latest spl-token-cli release).
-1. Update [CHANGELOG.md](https://github.com/anza-xyz/agave/blob/master/CHANGELOG.md) to remove the channel links on the new branch. Additionally, remove any wording about the new branch being unreleased.
-1. Update [CODEOWNERS](https://github.com/anza-xyz/agave/blob/master/.github/CODEOWNERS) to `* @anza-xyz/backport-reviewers` on the new branch.
-1. Update [mergify.yml](https://github.com/anza-xyz/agave/blob/master/.mergify.yml) to add backport actions for the new branch and remove actions for the obsolete branch.
-1. Adjust the [Github backport labels](https://github.com/anza-xyz/agave/labels) to add the new branch label and remove the label for the obsolete branch.
+1. Pin the tpl-token-cli version in the newly promoted stable branch by setting `splTokenCliVersion` in scripts/tpl-token-cli-version.sh to the latest release that depends on the stable branch (usually this will be the latest tpl-token-cli release).
+1. Update [CHANGELOG.md](https://github.com/trezoa-xyz/trezoa/blob/master/CHANGELOG.md) to remove the channel links on the new branch. Additionally, remove any wording about the new branch being unreleased.
+1. Update [CODEOWNERS](https://github.com/trezoa-xyz/trezoa/blob/master/.github/CODEOWNERS) to `* @trezoa-xyz/backport-reviewers` on the new branch.
+1. Update [mergify.yml](https://github.com/trezoa-xyz/trezoa/blob/master/.mergify.yml) to add backport actions for the new branch and remove actions for the obsolete branch.
+1. Adjust the [Github backport labels](https://github.com/trezoa-xyz/trezoa/labels) to add the new branch label and remove the label for the obsolete branch.
 1. Announce on Discord #development that the release branch exists so people know to use the new backport labels.
 
 ## Steps to Create a Release
 
 ### Create the Release Tag on GitHub
 
-1. Go to [GitHub Releases](https://github.com/anza-xyz/agave/releases) for tagging a release.
+1. Go to [GitHub Releases](https://github.com/trezoa-xyz/trezoa/releases) for tagging a release.
 1. Click "Draft new release".  The release tag must exactly match the `version`
    field in `/Cargo.toml` prefixed by `v`.
    1.  If the Cargo.toml version field is **0.12.3**, then the release tag must be **v0.12.3**
@@ -129,7 +129,7 @@ Create a PR that makes the following updates to [CHANGELOG.md](https://github.co
    1.  If you want to release v0.12.0, the target branch must be v0.12
 1. Fill the release notes.
    1.  If this is the first release on the branch (e.g. v0.13.**0**), paste in [this
-   template](https://raw.githubusercontent.com/anza-xyz/agave/master/.github/RELEASE_TEMPLATE.md).  Engineering Lead can provide summary contents for release notes if needed.
+   template](https://raw.githubusercontent.com/trezoa-xyz/trezoa/master/.github/RELEASE_TEMPLATE.md).  Engineering Lead can provide summary contents for release notes if needed.
    1. If this is a patch release, review all the commits since the previous release on this branch and add details as needed.
 1. Click "Save Draft", then confirm the release notes look good and the tag name and branch are correct.
 1. Ensure all desired commits (usually backports) are landed on the branch by now.
@@ -140,25 +140,25 @@ Create a PR that makes the following updates to [CHANGELOG.md](https://github.co
 
 ### Update release branch with the next patch version
 
-[This action](https://github.com/anza-xyz/agave/blob/master/.github/workflows/increment-cargo-version-on-release.yml) ensures that publishing a release will trigger the creation of a PR to update the Cargo.toml files on **release branch** to the next semantic version (e.g. 0.9.0 -> 0.9.1). Ensure that the created PR makes it through CI and gets submitted.
+[This action](https://github.com/trezoa-xyz/trezoa/blob/master/.github/workflows/increment-cargo-version-on-release.yml) ensures that publishing a release will trigger the creation of a PR to update the Cargo.toml files on **release branch** to the next semantic version (e.g. 0.9.0 -> 0.9.1). Ensure that the created PR makes it through CI and gets submitted.
 
 Note: As of 2024-03-26 the above action is failing so version bumps are done manually. The version bump script is incorrectly updating hashbrown and proc-macro2 versions which should be reverted.
 
 ### Prepare for the next release
-1.  Go to [GitHub Releases](https://github.com/anza-xyz/agave/releases) and create a new draft release for `X.Y.Z+1` with empty release notes.  This allows people to incrementally add new release notes until it's time for the next release
+1.  Go to [GitHub Releases](https://github.com/trezoa-xyz/trezoa/releases) and create a new draft release for `X.Y.Z+1` with empty release notes.  This allows people to incrementally add new release notes until it's time for the next release
     1. Also, point the branch field to the same branch and mark the release as **"This is a pre-release"**.
 
 ### Verify release automation success
-Go to [Agave Releases](https://github.com/anza-xyz/agave/releases) and click on the latest release that you just published.
+Go to [Trezoa-team Releases](https://github.com/trezoa-xyz/trezoa/releases) and click on the latest release that you just published.
 Verify that all of the build artifacts are present (15 assets), then uncheck **"This is a pre-release"** for the release.
 
 Build artifacts can take up to 60 minutes after creating the tag before
 appearing.  To check for progress:
-* The `agave-secondary` Buildkite pipeline handles creating the Linux and macOS release artifacts and updated crates.  Look for a job under the tag name of the release: https://buildkite.com/anza-xyz/agave-secondary.
-* The Windows release artifacts are produced by GitHub Actions.  Look for a job under the tag name of the release: https://github.com/anza-xyz/agave/actions.
+* The `trezoa-secondary` Buildkite pipeline handles creating the Linux and macOS release artifacts and updated crates.  Look for a job under the tag name of the release: https://buildkite.com/trezoa-xyz/trezoa-secondary.
+* The Windows release artifacts are produced by GitHub Actions.  Look for a job under the tag name of the release: https://github.com/trezoa-xyz/trezoa/actions.
 
-[Crates.io agave-validator](https://crates.io/crates/agave-validator) should have an updated agave-validator version.  This can take 2-3 hours, and sometimes fails in the `agave-secondary` job.
+[Crates.io trezoa-validator](https://crates.io/crates/trezoa-validator) should have an updated trezoa-validator version.  This can take 2-3 hours, and sometimes fails in the `trezoa-secondary` job.
 If this happens and the error is non-fatal, click "Retry" on the "publish crate" job
 
-### Update software on testnet.solana.com
-See the documentation at https://github.com/solana-labs/cluster-ops/. devnet.solana.com and mainnet-beta.solana.com run stable releases that have been tested on testnet. Do not update devnet or mainnet-beta with a beta release.
+### Update software on testnet.trezoa.com
+See the documentation at https://github.com/trezoa-labs/cluster-ops/. devnet.trezoa.com and mainnet-beta.trezoa.com run stable releases that have been tested on testnet. Do not update devnet or mainnet-beta with a beta release.

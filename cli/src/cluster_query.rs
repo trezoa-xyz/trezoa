@@ -11,15 +11,15 @@ use {
     console::style,
     crossbeam_channel::unbounded,
     serde::{Deserialize, Serialize},
-    solana_account::{from_account, state_traits::StateMut},
-    solana_clap_utils::{
+    trezoa_account::{from_account, state_traits::StateMut},
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit, COMPUTE_UNIT_PRICE_ARG},
         input_parsers::*,
         input_validators::*,
         keypair::DefaultSigner,
         offline::{blockhash_arg, BLOCKHASH_ARG},
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         cli_version::CliVersion,
         display::{
             build_balance_message, format_labeled_address, new_spinner_progress_bar,
@@ -27,22 +27,22 @@ use {
         },
         *,
     },
-    solana_clock::{self as clock, Clock, Epoch, Slot},
-    solana_commitment_config::CommitmentConfig,
-    solana_connection_cache::connection_cache::{
+    trezoa_clock::{self as clock, Clock, Epoch, Slot},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_connection_cache::connection_cache::{
         ConnectionManager, ConnectionPool, NewConnectionConfig,
     },
-    solana_hash::Hash,
-    solana_message::Message,
-    solana_nonce::state::State as NonceState,
-    solana_pubkey::Pubkey,
-    solana_pubsub_client::pubsub_client::PubsubClient,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rent::Rent,
-    solana_rpc_client::{
+    trezoa_hash::Hash,
+    trezoa_message::Message,
+    trezoa_nonce::state::State as NonceState,
+    trezoa_pubkey::Pubkey,
+    trezoa_pubsub_client::pubsub_client::PubsubClient,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rent::Rent,
+    trezoa_rpc_client::{
         nonblocking::rpc_client::RpcClient, rpc_client::GetConfirmedSignaturesForAddress2Config,
     },
-    solana_rpc_client_api::{
+    trezoa_rpc_client_api::{
         client_error::ErrorKind as ClientErrorKind,
         config::{
             RpcAccountInfoConfig, RpcBlockConfig, RpcGetVoteAccountsConfig,
@@ -53,17 +53,17 @@ use {
         request::DELINQUENT_VALIDATOR_SLOT_DISTANCE,
         response::{RpcPerfSample, RpcPrioritizationFee, SlotInfo},
     },
-    solana_sdk_ids::sysvar::{self, stake_history},
-    solana_signature::Signature,
-    solana_slot_history::{self as slot_history, SlotHistory},
-    solana_stake_interface::{self as stake, state::StakeStateV2},
-    solana_system_interface::{instruction as system_instruction, MAX_PERMITTED_DATA_LENGTH},
-    solana_tpu_client::nonblocking::tpu_client::TpuClient,
-    solana_transaction::Transaction,
-    solana_transaction_status::{
+    trezoa_sdk_ids::sysvar::{self, stake_history},
+    trezoa_signature::Signature,
+    trezoa_slot_history::{self as slot_history, SlotHistory},
+    trezoa_stake_interface::{self as stake, state::StakeStateV2},
+    trezoa_system_interface::{instruction as system_instruction, MAX_PERMITTED_DATA_LENGTH},
+    trezoa_tpu_client::nonblocking::tpu_client::TpuClient,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_status::{
         EncodableWithMeta, EncodedConfirmedTransactionWithStatusMeta, UiTransactionEncoding,
     },
-    solana_vote_program::vote_state::VoteStateV4,
+    trezoa_vote_program::vote_state::VoteStateV4,
     std::{
         collections::{BTreeMap, HashMap, HashSet, VecDeque},
         fmt,
@@ -237,7 +237,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("supply")
-                .about("Get information about the cluster supply of SOL")
+                .about("Get information about the cluster supply of TRZ")
                 .arg(
                     Arg::with_name("print_accounts")
                         .long("print-accounts")
@@ -247,7 +247,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("total-supply")
-                .about("Get total number of SOL")
+                .about("Get total number of TRZ")
                 .setting(AppSettings::Hidden),
         )
         .subcommand(
@@ -348,7 +348,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(pubkey!(
                     Arg::with_name("vote_account_pubkeys")
@@ -373,7 +373,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(
                     Arg::with_name("number")
@@ -508,7 +508,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display rent in lamports instead of SOL"),
+                        .help("Display rent in lamports instead of TRZ"),
                 ),
         )
     }
@@ -887,7 +887,7 @@ pub async fn process_catchup(
     let mut total_sleep_interval = Duration::ZERO;
     loop {
         // humbly retry; the reference node (rpc_client) could be spotty,
-        // especially if pointing to api.meinnet-beta.solana.com at times
+        // especially if pointing to api.meinnet-beta.trezoa.com at times
         let rpc_slot: i64 = get_slot_while_retrying(
             rpc_client,
             config.commitment,
@@ -1487,7 +1487,7 @@ pub async fn process_total_supply(
 ) -> ProcessResult {
     let supply = rpc_client.supply().await?.value;
     Ok(format!(
-        "{} SOL",
+        "{} TRZ",
         build_balance_message(supply.total, false, false)
     ))
 }
@@ -1947,7 +1947,7 @@ pub async fn process_show_stakes(
 
     let mut program_accounts_config = RpcProgramAccountsConfig {
         account_config: RpcAccountInfoConfig {
-            encoding: Some(solana_account_decoder::UiAccountEncoding::Base64),
+            encoding: Some(trezoa_account_decoder::UiAccountEncoding::Base64),
             ..RpcAccountInfoConfig::default()
         },
         ..RpcProgramAccountsConfig::default()
@@ -1994,7 +1994,7 @@ pub async fn process_show_stakes(
     })?;
     let new_rate_activation_epoch = get_feature_activation_epoch(
         rpc_client,
-        &agave_feature_set::reduce_stake_warmup_cooldown::id(),
+        &trezoa_feature_set::reduce_stake_warmup_cooldown::id(),
     )
     .await?;
     stake_account_progress_bar.finish_and_clear();
@@ -2430,7 +2430,7 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_keypair::{write_keypair, Keypair},
+        trezoa_keypair::{write_keypair, Keypair},
         std::str::FromStr,
         tempfile::NamedTempFile,
     };

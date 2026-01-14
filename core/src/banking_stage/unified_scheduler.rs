@@ -11,7 +11,7 @@
 //! handler threads.
 //!
 //! Aside from some limited abstraction leakage to make `select!` work at the
-//! solana-unified-scheduler-pool crate, almost all of these preprocessing are intentionally
+//! trezoa-unified-scheduler-pool crate, almost all of these preprocessing are intentionally
 //! encapsulated into this module, at the cost of dynamic dispatch per each BankingPacketBatch to
 //! retain the unified scheduler agnostic scheduler over scheduling mode (block verification vs
 //! block production) as much as possible.
@@ -34,25 +34,25 @@ use {
         transaction_scheduler::receive_and_buffer::calculate_priority_and_cost,
     },
     crate::banking_trace::Channels,
-    agave_banking_stage_ingress_types::BankingPacketBatch,
-    solana_accounts_db::account_locks::validate_account_locks,
-    solana_address_lookup_table_interface::state::estimate_last_valid_slot,
-    solana_clock::Slot,
-    solana_message::{v0::LoadedAddresses, SimpleAddressLoader},
-    solana_poh::{poh_recorder::PohRecorder, transaction_recorder::TransactionRecorder},
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_runtime_transaction::{
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_accounts_db::account_locks::validate_account_locks,
+    trezoa_address_lookup_table_interface::state::estimate_last_valid_slot,
+    trezoa_clock::Slot,
+    trezoa_message::{v0::LoadedAddresses, SimpleAddressLoader},
+    trezoa_poh::{poh_recorder::PohRecorder, transaction_recorder::TransactionRecorder},
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_runtime_transaction::{
         runtime_transaction::RuntimeTransaction, transaction_meta::StaticMeta,
     },
-    solana_svm_transaction::{
+    trezoa_svm_transaction::{
         message_address_table_lookup::SVMMessageAddressTableLookup, svm_message::SVMMessage,
     },
-    solana_transaction::{
+    trezoa_transaction::{
         sanitized::{MessageHash, SanitizedTransaction},
         versioned::{sanitized::SanitizedVersionedTransaction, VersionedTransaction},
     },
-    solana_transaction_error::AddressLoaderError,
-    solana_unified_scheduler_pool::{BankingStageHelper, DefaultSchedulerPool},
+    trezoa_transaction_error::AddressLoaderError,
+    trezoa_unified_scheduler_pool::{BankingStageHelper, DefaultSchedulerPool},
     std::{
         num::NonZeroUsize,
         ops::Deref,

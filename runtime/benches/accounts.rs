@@ -4,18 +4,18 @@
 extern crate test;
 
 use {
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_genesis_config::create_genesis_config,
-    solana_instruction::error::LamportsError,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank::*,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_genesis_config::create_genesis_config,
+    trezoa_instruction::error::LamportsError,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank::*,
     std::{path::PathBuf, sync::Arc},
     test::Bencher,
 };
 
 fn deposit_many(bank: &Bank, pubkeys: &mut Vec<Pubkey>, num: usize) -> Result<(), LamportsError> {
     for t in 0..num {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let account =
             AccountSharedData::new((t + 1) as u64, 0, AccountSharedData::default().owner());
         pubkeys.push(pubkey);

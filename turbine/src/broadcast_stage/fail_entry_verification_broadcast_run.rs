@@ -1,9 +1,9 @@
 use {
     super::*,
     crate::cluster_nodes::ClusterNodesCache,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
     std::{thread::sleep, time::Duration},
 };
 

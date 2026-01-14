@@ -20,25 +20,25 @@ spl() {
     )
     set -x
     rm -rf spl
-    git clone https://github.com/solana-labs/solana-program-library.git spl
-    # copy toolchain file to use solana's rust version
-    cp "$SOLANA_DIR"/rust-toolchain.toml spl/
+    git clone https://github.com/trezoa-labs/trezoa-program-library.git spl
+    # copy toolchain file to use trezoa's rust version
+    cp "$TREZOA_DIR"/rust-toolchain.toml spl/
     cd spl || exit 1
 
-    project_used_solana_version=$(sed -nE 's/solana-sdk = \"[>=<~]*(.*)\"/\1/p' <"token/program/Cargo.toml")
-    echo "used solana version: $project_used_solana_version"
-    if semverGT "$project_used_solana_version" "$SOLANA_VER"; then
+    project_used_trezoa_version=$(sed -nE 's/trezoa-sdk = \"[>=<~]*(.*)\"/\1/p' <"token/program/Cargo.toml")
+    echo "used trezoa version: $project_used_trezoa_version"
+    if semverGT "$project_used_trezoa_version" "$TREZOA_VER"; then
       echo "skip"
       return
     fi
 
-    ./patch.crates-io.sh "$SOLANA_DIR"
+    ./patch.crates-io.sh "$TREZOA_DIR"
 
     for program in "${PROGRAMS[@]}"; do
       $CARGO_TEST_SBF --manifest-path "$program"/Cargo.toml
     done
 
-    # TODO better: `build.rs` for spl-token-cli doesn't seem to properly build
+    # TODO better: `build.rs` for tpl-token-cli doesn't seem to properly build
     # the required programs to run the tests, so instead we run the tests
     # after we know programs have been built
     cargo build

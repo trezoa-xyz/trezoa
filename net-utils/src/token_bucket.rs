@@ -5,7 +5,7 @@
 use {
     cfg_if::cfg_if,
     dashmap::{mapref::entry::Entry, DashMap},
-    solana_svm_type_overrides::sync::atomic::{AtomicU64, AtomicUsize, Ordering},
+    trezoa_svm_type_overrides::sync::atomic::{AtomicU64, AtomicUsize, Ordering},
     std::{borrow::Borrow, cmp::Reverse, hash::Hash, time::Instant},
 };
 
@@ -370,7 +370,7 @@ where
 pub mod test {
     use {
         super::*,
-        solana_svm_type_overrides::thread,
+        trezoa_svm_type_overrides::thread,
         std::{
             net::{IpAddr, Ipv4Addr},
             time::Duration,

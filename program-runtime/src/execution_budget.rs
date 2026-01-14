@@ -1,6 +1,6 @@
 use {
-    solana_fee_structure::FeeDetails, solana_program_entrypoint::HEAP_LENGTH,
-    solana_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH, std::num::NonZeroU32,
+    trezoa_fee_structure::FeeDetails, trezoa_program_entrypoint::HEAP_LENGTH,
+    trezoa_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH, std::num::NonZeroU32,
 };
 
 /// Max instruction stack depth. This is the maximum nesting of instructions that can happen during
@@ -72,7 +72,7 @@ pub struct SVMTransactionExecutionBudget {
     pub max_call_depth: usize,
     /// Size of a stack frame in bytes, must match the size specified in the LLVM SBF backend
     pub stack_frame_size: usize,
-    /// program heap region size, default: solana_program_entrypoint::HEAP_LENGTH
+    /// program heap region size, default: trezoa_program_entrypoint::HEAP_LENGTH
     pub heap_size: u32,
 }
 
@@ -92,7 +92,7 @@ impl SVMTransactionExecutionBudget {
             sha256_max_slices: 20_000,
             max_call_depth: MAX_CALL_DEPTH,
             stack_frame_size: STACK_FRAME_SIZE,
-            heap_size: u32::try_from(solana_program_entrypoint::HEAP_LENGTH).unwrap(),
+            heap_size: u32::try_from(trezoa_program_entrypoint::HEAP_LENGTH).unwrap(),
         }
     }
 }

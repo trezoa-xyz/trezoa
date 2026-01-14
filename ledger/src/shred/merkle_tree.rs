@@ -1,5 +1,5 @@
 use {
-    crate::shred::Error, solana_hash::Hash, solana_sha256_hasher::hashv,
+    crate::shred::Error, trezoa_hash::Hash, trezoa_sha256_hasher::hashv,
     static_assertions::const_assert_eq, std::iter::successors,
 };
 
@@ -14,8 +14,8 @@ pub(crate) const PROOF_ENTRIES_FOR_32_32_BATCH: u8 = 6;
 // https://en.wikipedia.org/wiki/Merkle_tree#Second_preimage_attack
 // Following Certificate Transparency, 0x00 and 0x01 bytes are prepended to
 // hash data when computing leaf and internal node hashes respectively.
-pub(crate) const MERKLE_HASH_PREFIX_LEAF: &[u8] = b"\x00SOLANA_MERKLE_SHREDS_LEAF";
-pub(crate) const MERKLE_HASH_PREFIX_NODE: &[u8] = b"\x01SOLANA_MERKLE_SHREDS_NODE";
+pub(crate) const MERKLE_HASH_PREFIX_LEAF: &[u8] = b"\x00TREZOA_MERKLE_SHREDS_LEAF";
+pub(crate) const MERKLE_HASH_PREFIX_NODE: &[u8] = b"\x01TREZOA_MERKLE_SHREDS_NODE";
 
 pub(crate) type MerkleProofEntry = [u8; 20];
 

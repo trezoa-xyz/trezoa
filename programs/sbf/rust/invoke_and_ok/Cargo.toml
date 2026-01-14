@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-invoke-and-ok"
+name = "trezoa-sbf-rust-invoke-and-ok"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -12,12 +12,12 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-solana-account-info = { workspace = true }
-solana-instruction = { workspace = true }
-solana-program = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-error = { workspace = true }
-solana-pubkey = { workspace = true }
+trezoa-account-info = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-program = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-pubkey = { workspace = true }
 
 [lints]
 workspace = true

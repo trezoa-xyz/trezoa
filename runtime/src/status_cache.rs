@@ -4,9 +4,9 @@ use {
     ahash::{HashMap, HashMapExt as _},
     log::*,
     serde::Serialize,
-    solana_accounts_db::ancestors::Ancestors,
-    solana_clock::{Slot, MAX_RECENT_BLOCKHASHES},
-    solana_hash::Hash,
+    trezoa_accounts_db::ancestors::Ancestors,
+    trezoa_clock::{Slot, MAX_RECENT_BLOCKHASHES},
+    trezoa_hash::Hash,
     std::collections::{hash_map::Entry, HashSet},
 };
 #[cfg(not(feature = "shuttle-test"))]
@@ -311,7 +311,7 @@ impl<T: Serialize + Clone> StatusCache<T> {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_sha256_hasher::hash, solana_signature::Signature};
+    use {super::*, trezoa_sha256_hasher::hash, trezoa_signature::Signature};
 
     type BankStatusCache = StatusCache<()>;
 

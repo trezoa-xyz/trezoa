@@ -1,6 +1,6 @@
 use {
-    crate::svm_transaction::SVMTransaction, solana_signature::Signature,
-    solana_transaction::sanitized::SanitizedTransaction,
+    crate::svm_transaction::SVMTransaction, trezoa_signature::Signature,
+    trezoa_transaction::sanitized::SanitizedTransaction,
 };
 
 impl SVMTransaction for SanitizedTransaction {

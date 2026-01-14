@@ -1,27 +1,27 @@
 #![cfg(test)]
 use {
-    solana_account::{Account, ReadableAccount},
-    solana_clock::MAX_PROCESSING_AGE,
-    solana_compute_budget::compute_budget_limits::MAX_BUILTIN_ALLOCATION_COMPUTE_UNIT_LIMIT,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_cost_model::cost_model::CostModel,
-    solana_genesis_config::{create_genesis_config, GenesisConfig},
-    solana_instruction::{error::InstructionError, AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_message::Message,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_runtime::bank::Bank,
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_sdk_ids::{bpf_loader_upgradeable, secp256k1_program},
-    solana_signer::Signer,
-    solana_svm::transaction_processor::ExecutionRecordingConfig,
-    solana_svm_timings::ExecuteTimings,
-    solana_system_interface::instruction as system_instruction,
-    solana_transaction::Transaction,
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_account::{Account, ReadableAccount},
+    trezoa_clock::MAX_PROCESSING_AGE,
+    trezoa_compute_budget::compute_budget_limits::MAX_BUILTIN_ALLOCATION_COMPUTE_UNIT_LIMIT,
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_cost_model::cost_model::CostModel,
+    trezoa_genesis_config::{create_genesis_config, GenesisConfig},
+    trezoa_instruction::{error::InstructionError, AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_message::Message,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_runtime::bank::Bank,
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_sdk_ids::{bpf_loader_upgradeable, secp256k1_program},
+    trezoa_signer::Signer,
+    trezoa_svm::transaction_processor::ExecutionRecordingConfig,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
 };
 
 #[derive(Debug, Eq, PartialEq)]
@@ -50,7 +50,7 @@ impl TestSetup {
     }
 
     fn install_memo_program_account(&mut self) {
-        let (pubkey, account) = solana_program_binaries::by_id(
+        let (pubkey, account) = trezoa_program_binaries::by_id(
             &spl_memo_interface::v3::id(),
             &self.genesis_config.rent,
         )
@@ -147,7 +147,7 @@ impl TestSetup {
         let payer_address = self.mint_keypair.pubkey();
         let upgrade_authority_address = payer_address;
 
-        let (_, memo) = solana_program_binaries::by_id(
+        let (_, memo) = trezoa_program_binaries::by_id(
             &spl_memo_interface::v3::id(),
             &self.genesis_config.rent,
         )
@@ -198,7 +198,7 @@ impl TestSetup {
             );
         }
 
-        solana_loader_v3_interface::instruction::deploy_with_max_program_len(
+        trezoa_loader_v3_interface::instruction::deploy_with_max_program_len(
             &payer_address,
             &program_address,
             &buffer_address,
@@ -248,8 +248,8 @@ fn test_builtin_ix_cost_adjustment_with_cu_limit_high() {
     // Result: adjustment = 500_000 - 150 -150
     let expected = TestResult {
         cost_adjustment: cu_limit as i64
-            - solana_system_program::system_processor::DEFAULT_COMPUTE_UNITS as i64
-            - solana_compute_budget_program::DEFAULT_COMPUTE_UNITS as i64,
+            - trezoa_system_program::system_processor::DEFAULT_COMPUTE_UNITS as i64
+            - trezoa_compute_budget_program::DEFAULT_COMPUTE_UNITS as i64,
         execution_status: Ok(()),
     };
 
@@ -293,8 +293,8 @@ fn test_builtin_ix_cost_adjustment_with_memo_and_cu_limit() {
     let (memo_ix, memo_ix_cost) = test_setup.memo_ix();
     // request exact amount CUs needed to execute a transafer, compute_budget and a memo ix
     let cu_limit = memo_ix_cost
-        + solana_system_program::system_processor::DEFAULT_COMPUTE_UNITS as u32
-        + solana_compute_budget_program::DEFAULT_COMPUTE_UNITS as u32;
+        + trezoa_system_program::system_processor::DEFAULT_COMPUTE_UNITS as u32
+        + trezoa_compute_budget_program::DEFAULT_COMPUTE_UNITS as u32;
 
     // A simple transfer ix, and a bpf ix (memo_ix) that needs 356_963 CUs,
     // and a compute-budget instruction that requests exact amount CUs.
@@ -324,8 +324,8 @@ fn test_builtin_ix_cost_adjustment_with_bpf_v3_no_cu_limit() {
     // Result: adjustment = 3_000 - 2_370 - 150 = 480
     let expected = TestResult {
         cost_adjustment: MAX_BUILTIN_ALLOCATION_COMPUTE_UNIT_LIMIT as i64
-            - solana_bpf_loader_program::UPGRADEABLE_LOADER_COMPUTE_UNITS as i64
-            - solana_system_program::system_processor::DEFAULT_COMPUTE_UNITS as i64,
+            - trezoa_bpf_loader_program::UPGRADEABLE_LOADER_COMPUTE_UNITS as i64
+            - trezoa_system_program::system_processor::DEFAULT_COMPUTE_UNITS as i64,
         execution_status: Ok(()),
     };
 
@@ -337,9 +337,9 @@ fn test_builtin_ix_cost_adjustment_with_bpf_v3_no_cu_limit() {
 #[test]
 fn test_builtin_ix_cost_adjustment_with_bpf_v3_and_cu_limit_high() {
     let cu_limit = 500_000;
-    let tx_execution_cost = solana_bpf_loader_program::UPGRADEABLE_LOADER_COMPUTE_UNITS
-        + solana_system_program::system_processor::DEFAULT_COMPUTE_UNITS
-        + solana_compute_budget_program::DEFAULT_COMPUTE_UNITS;
+    let tx_execution_cost = trezoa_bpf_loader_program::UPGRADEABLE_LOADER_COMPUTE_UNITS
+        + trezoa_system_program::system_processor::DEFAULT_COMPUTE_UNITS
+        + trezoa_compute_budget_program::DEFAULT_COMPUTE_UNITS;
 
     // A BPF Loader v3 ix only, that CPIs into System instructions; and a compute-budget
     // instruction requests enough CU Limit
@@ -370,7 +370,7 @@ fn test_builtin_ix_set_cu_price_only() {
     // Result: adjustment = 3_000 - 150 = 2_850
     let expected = TestResult {
         cost_adjustment: MAX_BUILTIN_ALLOCATION_COMPUTE_UNIT_LIMIT as i64
-            - solana_compute_budget_program::DEFAULT_COMPUTE_UNITS as i64,
+            - trezoa_compute_budget_program::DEFAULT_COMPUTE_UNITS as i64,
         execution_status: Ok(()),
     };
     assert_eq!(

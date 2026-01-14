@@ -1,4 +1,4 @@
-use {solana_pubkey::Pubkey, solana_signer::Signer};
+use {trezoa_pubkey::Pubkey, trezoa_signer::Signer};
 
 pub struct SenderStakeArgs {
     pub stake_account_address: Pubkey,
@@ -22,7 +22,7 @@ pub struct DistributeTokensArgs {
     pub sender_keypair: Box<dyn Signer>,
     pub fee_payer: Box<dyn Signer>,
     pub stake_args: Option<StakeArgs>,
-    pub spl_token_args: Option<SplTokenArgs>,
+    pub tpl_token_args: Option<SplTokenArgs>,
     pub transfer_amount: Option<u64>,
 }
 
@@ -35,7 +35,7 @@ pub struct SplTokenArgs {
 
 pub struct BalancesArgs {
     pub input_csv: String,
-    pub spl_token_args: Option<SplTokenArgs>,
+    pub tpl_token_args: Option<SplTokenArgs>,
 }
 
 pub struct TransactionLogArgs {

@@ -1,6 +1,6 @@
 use {
-    solana_transaction_context::TransactionReturnData,
-    solana_transaction_error::{TransactionError, TransportError},
+    trezoa_transaction_context::TransactionReturnData,
+    trezoa_transaction_error::{TransactionError, TransportError},
     std::io,
     tarpc::client::RpcError,
     thiserror::Error,

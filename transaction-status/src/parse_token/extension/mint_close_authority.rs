@@ -1,4 +1,4 @@
-use {super::*, solana_program_option::COption, solana_pubkey::Pubkey};
+use {super::*, trezoa_program_option::COption, trezoa_pubkey::Pubkey};
 
 pub(in crate::parse_token) fn parse_initialize_mint_close_authority_instruction(
     close_authority: COption<Pubkey>,
@@ -18,8 +18,8 @@ pub(in crate::parse_token) fn parse_initialize_mint_close_authority_instruction(
 #[cfg(test)]
 mod test {
     use {
-        super::*, serde_json::Value, solana_message::Message, solana_pubkey::Pubkey,
-        spl_token_2022_interface::instruction::*,
+        super::*, serde_json::Value, trezoa_message::Message, trezoa_pubkey::Pubkey,
+        tpl_token_2022_interface::instruction::*,
     };
 
     #[test]
@@ -27,7 +27,7 @@ mod test {
         let mint_pubkey = Pubkey::new_unique();
         let close_authority = Pubkey::new_unique();
         let mint_close_authority_ix = initialize_mint_close_authority(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &mint_pubkey,
             Some(&close_authority),
         )
@@ -50,7 +50,7 @@ mod test {
         );
 
         let mint_close_authority_ix =
-            initialize_mint_close_authority(&spl_token_2022_interface::id(), &mint_pubkey, None)
+            initialize_mint_close_authority(&tpl_token_2022_interface::id(), &mint_pubkey, None)
                 .unwrap();
         let message = Message::new(&[mint_close_authority_ix], None);
         let compiled_instruction = &message.instructions[0];

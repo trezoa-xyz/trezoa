@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -16,26 +16,26 @@
 
 pub use {
     crate::error::BanksClientError,
-    solana_banks_interface::{BanksClient as TarpcClient, TransactionStatus},
+    trezoa_banks_interface::{BanksClient as TarpcClient, TransactionStatus},
 };
 use {
     borsh::BorshDeserialize,
     futures::future::join_all,
-    solana_account::{from_account, Account},
-    solana_banks_interface::{
+    trezoa_account::{from_account, Account},
+    trezoa_banks_interface::{
         BanksRequest, BanksResponse, BanksTransactionResultWithMetadata,
         BanksTransactionResultWithSimulation,
     },
-    solana_clock::Slot,
-    solana_commitment_config::CommitmentLevel,
-    solana_hash::Hash,
-    solana_message::Message,
-    solana_program_pack::Pack,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_signature::Signature,
-    solana_sysvar::SysvarSerialize,
-    solana_transaction::versioned::VersionedTransaction,
+    trezoa_clock::Slot,
+    trezoa_commitment_config::CommitmentLevel,
+    trezoa_hash::Hash,
+    trezoa_message::Message,
+    trezoa_program_pack::Pack,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_signature::Signature,
+    trezoa_sysvar::SysvarSerialize,
+    trezoa_transaction::versioned::VersionedTransaction,
     tarpc::{
         client::{self, NewClient, RequestDispatch},
         context::{self, Context},
@@ -49,7 +49,7 @@ use {
 mod error;
 
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 
 // This exists only for backward compatibility
@@ -541,14 +541,14 @@ pub async fn start_tcp_client<T: ToSocketAddrs>(addr: T) -> Result<BanksClient, 
 mod tests {
     use {
         super::*,
-        solana_banks_server::banks_server::start_local_server,
-        solana_runtime::{
+        trezoa_banks_server::banks_server::start_local_server,
+        trezoa_runtime::{
             bank::Bank, bank_forks::BankForks, commitment::BlockCommitmentCache,
             genesis_utils::create_genesis_config,
         },
-        solana_signer::Signer,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::Transaction,
+        trezoa_signer::Signer,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::Transaction,
         std::sync::{Arc, RwLock},
         tarpc::transport,
         tokio::{
@@ -578,7 +578,7 @@ mod tests {
         ));
         let bank_forks = BankForks::new_rw_arc(bank);
 
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let mint_pubkey = genesis.mint_keypair.pubkey();
         let instruction = system_instruction::transfer(&mint_pubkey, &bob_pubkey, 1);
         let message = Message::new(&[instruction], Some(&mint_pubkey));
@@ -618,7 +618,7 @@ mod tests {
         let bank_forks = BankForks::new_rw_arc(bank);
 
         let mint_pubkey = &genesis.mint_keypair.pubkey();
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let instruction = system_instruction::transfer(mint_pubkey, &bob_pubkey, 1);
         let message = Message::new(&[instruction], Some(mint_pubkey));
 

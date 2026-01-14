@@ -12,16 +12,16 @@ use {
         voting_service::BLSOp,
         votor::Votor,
     },
-    agave_votor_messages::consensus_message::{Certificate, ConsensusMessage},
+    trezoa_votor_messages::consensus_message::{Certificate, ConsensusMessage},
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender, TrySendError},
-    solana_clock::Slot,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_ledger::{
         blockstore::Blockstore, leader_schedule_cache::LeaderScheduleCache,
         leader_schedule_utils::last_of_consecutive_leader_slots,
     },
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, bank_forks::SharableBanks},
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, bank_forks::SharableBanks},
     stats::Stats,
     std::{
         sync::{
@@ -423,25 +423,25 @@ mod tests {
     use {
         super::*,
         crate::common::DELTA_STANDSTILL,
-        agave_votor_messages::{
+        trezoa_votor_messages::{
             consensus_message::{CertificateType, VoteMessage, BLS_KEYPAIR_DERIVE_SEED},
             vote::Vote,
         },
         crossbeam_channel::Sender,
-        solana_bls_signatures::{
+        trezoa_bls_signatures::{
             keypair::Keypair as BLSKeypair, signature::Signature as BLSSignature,
         },
-        solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-        solana_hash::Hash,
-        solana_ledger::get_tmp_ledger_path_auto_delete,
-        solana_net_utils::SocketAddrSpace,
-        solana_runtime::{
+        trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+        trezoa_hash::Hash,
+        trezoa_ledger::get_tmp_ledger_path_auto_delete,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_runtime::{
             bank_forks::{BankForks, SharableBanks},
             genesis_utils::{
                 create_genesis_config_with_alpenglow_vote_accounts, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
+        trezoa_signer::Signer,
         std::sync::{Arc, Mutex},
         test_case::test_case,
     };
@@ -549,7 +549,7 @@ mod tests {
 
     #[test]
     fn test_receive_and_send_consensus_message() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let setup_result = setup(None);
 
         // validator 0 to 7 send Notarize on slot 2

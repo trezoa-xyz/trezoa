@@ -5,8 +5,8 @@ use {
         accounts_file::{AccountsFile, AccountsFileError, AccountsFileProvider, StorageAccess},
         obsolete_accounts::ObsoleteAccounts,
     },
-    solana_clock::Slot,
-    solana_nohash_hasher::IntSet,
+    trezoa_clock::Slot,
+    trezoa_nohash_hasher::IntSet,
     std::{
         path::Path,
         sync::{

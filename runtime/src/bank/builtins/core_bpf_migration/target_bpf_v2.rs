@@ -2,10 +2,10 @@
 use {
     super::error::CoreBpfMigrationError,
     crate::bank::Bank,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_loader_v3_interface::get_program_data_address,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_loader_v3_interface::get_program_data_address,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader,
 };
 
 /// The account details of a Loader v2 BPF program slated to be upgraded.
@@ -66,7 +66,7 @@ impl TargetBpfV2 {
 mod tests {
     use {
         super::*, crate::bank::tests::create_simple_test_bank, assert_matches::assert_matches,
-        solana_account::WritableAccount, solana_sdk_ids::bpf_loader,
+        trezoa_account::WritableAccount, trezoa_sdk_ids::bpf_loader,
     };
 
     fn store_account(bank: &Bank, address: &Pubkey, data: &[u8], owner: &Pubkey, executable: bool) {

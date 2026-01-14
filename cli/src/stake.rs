@@ -14,8 +14,8 @@ use {
         spend_utils::{resolve_spend_tx_and_check_account_balances, SpendAmount},
     },
     clap::{value_t, App, AppSettings, Arg, ArgGroup, ArgMatches, SubCommand},
-    solana_account::{from_account, state_traits::StateMut, Account},
-    solana_clap_utils::{
+    trezoa_account::{from_account, state_traits::StateMut, Account},
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit, COMPUTE_UNIT_PRICE_ARG},
         fee_payer::{fee_payer_arg, FEE_PAYER_ARG},
         hidden_unless_forced,
@@ -27,30 +27,30 @@ use {
         offline::*,
         ArgConstant,
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         self, display::BuildBalanceMessageConfig, return_signers_with_config, CliBalance,
         CliEpochReward, CliStakeHistory, CliStakeHistoryEntry, CliStakeState, CliStakeType,
         OutputFormat, ReturnSignersConfig,
     },
-    solana_clock::{Clock, Epoch, UnixTimestamp, SECONDS_PER_DAY},
-    solana_commitment_config::CommitmentConfig,
-    solana_epoch_schedule::EpochSchedule,
-    solana_message::Message,
-    solana_native_token::Sol,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_clock::{Clock, Epoch, UnixTimestamp, SECONDS_PER_DAY},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_message::Message,
+    trezoa_native_token::Sol,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         config::RpcGetVoteAccountsConfig,
         request::DELINQUENT_VALIDATOR_SLOT_DISTANCE,
         response::{RpcInflationReward, RpcVoteAccountStatus},
     },
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_sdk_ids::{
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_sdk_ids::{
         system_program,
         sysvar::{clock, stake_history},
     },
-    solana_stake_interface::{
+    trezoa_stake_interface::{
         self as stake,
         error::StakeError,
         instruction::{self as stake_instruction, LockupArgs},
@@ -58,8 +58,8 @@ use {
         state::{Authorized, Lockup, Meta, StakeActivationStatus, StakeAuthorize, StakeStateV2},
         tools::{acceptable_reference_epoch_credits, eligible_for_deactivate_delinquent},
     },
-    solana_system_interface::{error::SystemError, instruction as system_instruction},
-    solana_transaction::Transaction,
+    trezoa_system_interface::{error::SystemError, instruction as system_instruction},
+    trezoa_transaction::Transaction,
     std::{ops::Deref, rc::Rc},
 };
 
@@ -158,7 +158,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .validator(is_amount_or_all)
                         .required(true)
                         .help(
-                            "The amount to send to the stake account, in SOL; accepts keyword ALL",
+                            "The amount to send to the stake account, in TRZ; accepts keyword ALL",
                         ),
                 )
                 .arg(pubkey!(
@@ -251,7 +251,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .validator(is_amount_or_all)
                         .required(true)
                         .help(
-                            "The amount to send to the stake account, in SOL; accepts keyword ALL",
+                            "The amount to send to the stake account, in TRZ; accepts keyword ALL",
                         ),
                 )
                 .arg(
@@ -490,7 +490,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount)
                         .required(true)
-                        .help("The amount to move into the new stake account, in SOL"),
+                        .help("The amount to move into the new stake account, in TRZ"),
                 )
                 .arg(
                     Arg::with_name("seed")
@@ -515,7 +515,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount)
                         .help(
-                            "The rent-exempt amount to move into the new stake account, in SOL. \
+                            "The rent-exempt amount to move into the new stake account, in TRZ. \
                              Required for offline signing.",
                         ),
                 ),
@@ -547,7 +547,7 @@ impl StakeSubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("withdraw-stake")
-                .about("Withdraw the unstaked SOL from the stake account")
+                .about("Withdraw the unstaked TRZ from the stake account")
                 .arg(pubkey!(
                     Arg::with_name("stake_account_pubkey")
                         .index(1)
@@ -571,7 +571,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .validator(is_amount_or_all_or_available)
                         .required(true)
                         .help(
-                            "The amount to withdraw from the stake account, in SOL; accepts \
+                            "The amount to withdraw from the stake account, in TRZ; accepts \
                              keywords ALL or AVAILABLE",
                         ),
                 )
@@ -724,7 +724,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(
                     Arg::with_name("with_rewards")
@@ -768,7 +768,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(
                     Arg::with_name("limit")
@@ -790,7 +790,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display minimum delegation in lamports instead of SOL"),
+                        .help("Display minimum delegation in lamports instead of TRZ"),
                 ),
         )
     }
@@ -1512,7 +1512,7 @@ pub async fn process_create_stake_account(
 
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1666,7 +1666,7 @@ pub async fn process_stake_authorize(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1836,7 +1836,7 @@ pub async fn process_deactivate_stake_account(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1955,7 +1955,7 @@ pub async fn process_withdraw_stake(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -2159,7 +2159,7 @@ pub async fn process_split_stake(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -2284,7 +2284,7 @@ pub async fn process_merge_stake(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -2395,7 +2395,7 @@ pub async fn process_stake_set_lockup(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -2697,7 +2697,7 @@ pub async fn process_show_stake_account(
 pub async fn get_account_stake_state(
     rpc_client: &RpcClient,
     stake_account_address: &Pubkey,
-    stake_account: solana_account::Account,
+    stake_account: trezoa_account::Account,
     use_lamports_unit: bool,
     with_rewards: Option<usize>,
     use_csv: bool,
@@ -2720,7 +2720,7 @@ pub async fn get_account_stake_state(
             })?;
             let new_rate_activation_epoch = get_feature_activation_epoch(
                 rpc_client,
-                &agave_feature_set::reduce_stake_warmup_cooldown::id(),
+                &trezoa_feature_set::reduce_stake_warmup_cooldown::id(),
             )
             .await?;
 
@@ -2917,7 +2917,7 @@ pub async fn process_delegate_stake(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -2971,11 +2971,11 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_hash::Hash,
-        solana_keypair::{keypair_from_seed, read_keypair_file, write_keypair, Keypair},
-        solana_presigner::Presigner,
-        solana_rpc_client_nonce_utils::nonblocking::blockhash_query::Source,
-        solana_signer::Signer,
+        trezoa_hash::Hash,
+        trezoa_keypair::{keypair_from_seed, read_keypair_file, write_keypair, Keypair},
+        trezoa_presigner::Presigner,
+        trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::Source,
+        trezoa_signer::Signer,
         tempfile::NamedTempFile,
     };
 
@@ -4055,9 +4055,9 @@ mod tests {
         );
 
         // Test CreateStakeAccount SubCommand
-        let custodian = solana_pubkey::new_rand();
+        let custodian = trezoa_pubkey::new_rand();
         let custodian_string = format!("{custodian}");
-        let authorized = solana_pubkey::new_rand();
+        let authorized = trezoa_pubkey::new_rand();
         let authorized_string = format!("{authorized}");
         let test_create_stake_account = test_commands.clone().get_matches_from(vec![
             "test",
@@ -4260,7 +4260,7 @@ mod tests {
         );
 
         // Test DelegateStake Subcommand
-        let vote_account_pubkey = solana_pubkey::new_rand();
+        let vote_account_pubkey = trezoa_pubkey::new_rand();
         let vote_account_string = vote_account_pubkey.to_string();
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
             "test",
@@ -4290,7 +4290,7 @@ mod tests {
         );
 
         // Test DelegateStake Subcommand w/ authority
-        let vote_account_pubkey = solana_pubkey::new_rand();
+        let vote_account_pubkey = trezoa_pubkey::new_rand();
         let vote_account_string = vote_account_pubkey.to_string();
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
             "test",
@@ -4416,7 +4416,7 @@ mod tests {
         );
 
         // Test Delegate Subcommand w/ absent fee payer
-        let key1 = solana_pubkey::new_rand();
+        let key1 = trezoa_pubkey::new_rand();
         let sig1 = Keypair::new().sign_message(&[0u8]);
         let signer1 = format!("{key1}={sig1}");
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
@@ -4456,7 +4456,7 @@ mod tests {
         );
 
         // Test Delegate Subcommand w/ absent fee payer and absent nonce authority
-        let key2 = solana_pubkey::new_rand();
+        let key2 = trezoa_pubkey::new_rand();
         let sig2 = Keypair::new().sign_message(&[0u8]);
         let signer2 = format!("{key2}={sig2}");
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
@@ -4911,7 +4911,7 @@ mod tests {
         );
 
         // Test Deactivate Subcommand w/ absent fee payer
-        let key1 = solana_pubkey::new_rand();
+        let key1 = trezoa_pubkey::new_rand();
         let sig1 = Keypair::new().sign_message(&[0u8]);
         let signer1 = format!("{key1}={sig1}");
         let test_deactivate_stake = test_commands.clone().get_matches_from(vec![
@@ -4950,7 +4950,7 @@ mod tests {
         );
 
         // Test Deactivate Subcommand w/ absent fee payer and nonce authority
-        let key2 = solana_pubkey::new_rand();
+        let key2 = trezoa_pubkey::new_rand();
         let sig2 = Keypair::new().sign_message(&[0u8]);
         let signer2 = format!("{key2}={sig2}");
         let test_deactivate_stake = test_commands.clone().get_matches_from(vec![
@@ -5143,7 +5143,7 @@ mod tests {
         let stake_account_keypair = Keypair::new();
         write_keypair(&stake_account_keypair, tmp_file.as_file_mut()).unwrap();
 
-        let source_stake_account_pubkey = solana_pubkey::new_rand();
+        let source_stake_account_pubkey = trezoa_pubkey::new_rand();
         let test_merge_stake_account = test_commands.clone().get_matches_from(vec![
             "test",
             "merge-stake",

@@ -11,14 +11,14 @@ use {
         },
         feature::{status_from_account, CliFeatureStatus},
     },
-    agave_feature_set::{raise_cpi_nesting_limit_to_8, FeatureSet, FEATURE_NAMES},
-    agave_syscalls::create_program_runtime_environment_v1,
+    trezoa_feature_set::{raise_cpi_nesting_limit_to_8, FeatureSet, FEATURE_NAMES},
+    trezoa_syscalls::create_program_runtime_environment_v1,
     bip39::{Language, Mnemonic, MnemonicType, Seed},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     log::*,
-    solana_account::state_traits::StateMut,
-    solana_account_decoder::{UiAccount, UiAccountEncoding, UiDataSliceConfig},
-    solana_clap_utils::{
+    trezoa_account::state_traits::StateMut,
+    trezoa_account_decoder::{UiAccount, UiAccountEncoding, UiDataSliceConfig},
+    trezoa_clap_utils::{
         self,
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit},
         fee_payer::{fee_payer_arg, FEE_PAYER_ARG},
@@ -28,48 +28,48 @@ use {
         keypair::*,
         offline::{OfflineArgs, DUMP_TRANSACTION_MESSAGE, SIGN_ONLY_ARG},
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         return_signers_with_config, CliProgram, CliProgramAccountType, CliProgramAuthority,
         CliProgramBuffer, CliProgramId, CliUpgradeableBuffer, CliUpgradeableBuffers,
         CliUpgradeableProgram, CliUpgradeableProgramClosed, CliUpgradeableProgramExtended,
         CliUpgradeableProgramMigrated, CliUpgradeablePrograms, ReturnSignersConfig,
     },
-    solana_client::{
+    trezoa_client::{
         connection_cache::ConnectionCache,
         send_and_confirm_transactions_in_parallel::{
             send_and_confirm_transactions_in_parallel_v2, SendAndConfirmConfigV2,
         },
     },
-    solana_commitment_config::CommitmentConfig,
-    solana_instruction::{error::InstructionError, Instruction},
-    solana_keypair::{keypair_from_seed, read_keypair_file, Keypair},
-    solana_loader_v3_interface::{
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_instruction::{error::InstructionError, Instruction},
+    trezoa_keypair::{keypair_from_seed, read_keypair_file, Keypair},
+    trezoa_loader_v3_interface::{
         get_program_data_address, instruction as loader_v3_instruction,
         state::UpgradeableLoaderState,
     },
-    solana_message::Message,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_program_runtime::{
+    trezoa_message::Message,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_program_runtime::{
         execution_budget::SVMTransactionExecutionBudget, invoke_context::InvokeContext,
     },
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         client_error::ErrorKind as ClientErrorKind,
         config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
         filter::{Memcmp, RpcFilterType},
         request::MAX_MULTIPLE_ACCOUNTS,
     },
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_sbpf::{elf::Executable, verifier::RequisiteVerifier},
-    solana_sdk_ids::{bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, compute_budget},
-    solana_signature::Signature,
-    solana_signer::Signer,
-    solana_system_interface::{error::SystemError, MAX_PERMITTED_DATA_LENGTH},
-    solana_tpu_client::tpu_client::TpuClientConfig,
-    solana_transaction::Transaction,
-    solana_transaction_error::TransactionError,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_sbpf::{elf::Executable, verifier::RequisiteVerifier},
+    trezoa_sdk_ids::{bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, compute_budget},
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
+    trezoa_system_interface::{error::SystemError, MAX_PERMITTED_DATA_LENGTH},
+    trezoa_tpu_client::tpu_client::TpuClientConfig,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionError,
     std::{
         fs::File,
         io::{Read, Write},
@@ -262,7 +262,7 @@ impl ProgramSubCommands for App<'_, '_> {
                                 .takes_value(false)
                                 .help(
                                     "Use the designated program id even if the account already \
-                                     holds a large balance of SOL (Obsolete)",
+                                     holds a large balance of TRZ (Obsolete)",
                                 ),
                         )
                         .arg(
@@ -551,7 +551,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("lamports")
                                 .long("lamports")
                                 .takes_value(false)
-                                .help("Display balance in lamports instead of SOL"),
+                                .help("Display balance in lamports instead of TRZ"),
                         ),
                 )
                 .subcommand(
@@ -614,7 +614,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("lamports")
                                 .long("lamports")
                                 .takes_value(false)
-                                .help("Display balance in lamports instead of SOL"),
+                                .help("Display balance in lamports instead of TRZ"),
                         )
                         .arg(
                             Arg::with_name("bypass_warning")
@@ -678,7 +678,7 @@ impl ProgramSubCommands for App<'_, '_> {
         .subcommand(
             SubCommand::with_name("deploy")
                 .about(
-                    "Deploy has been removed. Use `solana program deploy` instead to deploy \
+                    "Deploy has been removed. Use `trezoa program deploy` instead to deploy \
                      upgradeable programs",
                 )
                 .setting(AppSettings::Hidden),
@@ -1439,7 +1439,7 @@ async fn process_program_deploy(
     };
 
     if !skip_feature_verification
-        && feature_set.is_active(&agave_feature_set::enable_loader_v4::id())
+        && feature_set.is_active(&trezoa_feature_set::enable_loader_v4::id())
     {
         warn!("Loader-v4 is available now. Please migrate your program.");
     }
@@ -2527,7 +2527,7 @@ async fn process_extend_program(
     let feature_set = fetch_feature_set(rpc_client).await?;
 
     let instruction =
-        if feature_set.is_active(&agave_feature_set::enable_extend_program_checked::id()) {
+        if feature_set.is_active(&trezoa_feature_set::enable_extend_program_checked::id()) {
             loader_v3_instruction::extend_program_checked(
                 &program_pubkey,
                 &upgrade_authority_address,
@@ -3139,7 +3139,7 @@ async fn extend_program_data_if_needed(
 
     let feature_set = fetch_feature_set(rpc_client).await?;
     let instruction =
-        if feature_set.is_active(&agave_feature_set::enable_extend_program_checked::id()) {
+        if feature_set.is_active(&trezoa_feature_set::enable_extend_program_checked::id()) {
             loader_v3_instruction::extend_program_checked(
                 program_id,
                 &upgrade_authority_address,
@@ -3318,7 +3318,7 @@ async fn send_deploy_messages(
             };
             let transaction_errors = match connection_cache {
                 ConnectionCache::Udp(cache) => {
-                    solana_tpu_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
+                    trezoa_tpu_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
                         rpc_client.clone(),
                         &config.websocket_url,
                         TpuClientConfig::default(),
@@ -3332,8 +3332,8 @@ async fn send_deploy_messages(
                     .await
                 }
                 ConnectionCache::Quic(cache) => {
-                    // `solana_client` type currently required by `send_and_confirm_transactions_in_parallel_v2`
-                    let tpu_client_fut = solana_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
+                    // `trezoa_client` type currently required by `send_and_confirm_transactions_in_parallel_v2`
+                    let tpu_client_fut = trezoa_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
                         rpc_client.clone(),
                         config.websocket_url.as_str(),
                         TpuClientConfig::default(),
@@ -3419,12 +3419,12 @@ fn report_ephemeral_mnemonic(words: usize, mnemonic: bip39::Mnemonic, ephemeral_
     let phrase: &str = mnemonic.phrase();
     let divider = String::from_utf8(vec![b'='; phrase.len()]).unwrap();
     eprintln!("{divider}\nRecover the intermediate account's ephemeral keypair file with");
-    eprintln!("`solana-keygen recover` and the following {words}-word seed phrase:");
+    eprintln!("`trezoa-keygen recover` and the following {words}-word seed phrase:");
     eprintln!("{divider}\n{phrase}\n{divider}");
     eprintln!("To resume a deploy, pass the recovered keypair as the");
-    eprintln!("[BUFFER_SIGNER] to `solana program deploy` or `solana program write-buffer'.");
+    eprintln!("[BUFFER_SIGNER] to `trezoa program deploy` or `trezoa program write-buffer'.");
     eprintln!("Or to recover the account's lamports, use:");
-    eprintln!("{divider}\nsolana program close {ephemeral_pubkey}\n{divider}");
+    eprintln!("{divider}\ntrezoa program close {ephemeral_pubkey}\n{divider}");
 }
 
 async fn fetch_feature_set(
@@ -3463,9 +3463,9 @@ mod tests {
             cli::{parse_command, process_command},
         },
         serde_json::Value,
-        solana_cli_output::OutputFormat,
-        solana_hash::Hash,
-        solana_keypair::write_keypair_file,
+        trezoa_cli_output::OutputFormat,
+        trezoa_hash::Hash,
+        trezoa_keypair::write_keypair_file,
     };
 
     fn make_tmp_path(name: &str) -> String {
@@ -4640,7 +4640,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_cli_keypair_file() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let default_keypair = Keypair::new();
         let program_pubkey = Keypair::new();

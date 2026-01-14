@@ -4,11 +4,11 @@ use {
     itertools::Itertools,
     rand::Rng,
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
-    solana_serde_varint as serde_varint,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
+    trezoa_serde_varint as serde_varint,
     thiserror::Error,
 };
 
@@ -111,7 +111,7 @@ impl RestartLastVotedForkSlots {
 
     /// New random Version for tests and benchmarks.
     pub(crate) fn new_rand<R: Rng>(rng: &mut R, pubkey: Option<Pubkey>) -> Self {
-        let pubkey = pubkey.unwrap_or_else(solana_pubkey::new_rand);
+        let pubkey = pubkey.unwrap_or_else(trezoa_pubkey::new_rand);
         let num_slots = rng.random_range(2..20);
         let slots = std::iter::repeat_with(|| 47825632 + rng.random_range(0..512))
             .take(num_slots)
@@ -147,7 +147,7 @@ impl Sanitize for RestartHeaviestFork {
 
 impl RestartHeaviestFork {
     pub(crate) fn new_rand<R: Rng>(rng: &mut R, from: Option<Pubkey>) -> Self {
-        let from = from.unwrap_or_else(solana_pubkey::new_rand);
+        let from = from.unwrap_or_else(trezoa_pubkey::new_rand);
         Self {
             from,
             wallclock: new_rand_timestamp(rng),
@@ -226,9 +226,9 @@ mod test {
             protocol::MAX_CRDS_OBJECT_SIZE,
         },
         bincode::serialized_size,
-        solana_keypair::Keypair,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
+        trezoa_keypair::Keypair,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
         std::iter::repeat_with,
     };
 

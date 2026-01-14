@@ -967,14 +967,14 @@ mod tests {
         super::*,
         crate::StoredConfirmedBlock,
         prost::Message,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::v0::LoadedAddresses,
-        solana_storage_proto::convert::generated,
-        solana_system_transaction as system_transaction,
-        solana_transaction::versioned::VersionedTransaction,
-        solana_transaction_context::TransactionReturnData,
-        solana_transaction_status::{
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::v0::LoadedAddresses,
+        trezoa_storage_proto::convert::generated,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::versioned::VersionedTransaction,
+        trezoa_transaction_context::TransactionReturnData,
+        trezoa_transaction_status::{
             ConfirmedBlock, TransactionStatusMeta, TransactionWithStatusMeta,
             VersionedTransactionWithStatusMeta,
         },
@@ -1009,7 +1009,7 @@ mod tests {
     #[test]
     fn test_deserialize_protobuf_or_bincode_cell_data() {
         let from = Keypair::new();
-        let recipient = solana_pubkey::new_rand();
+        let recipient = trezoa_pubkey::new_rand();
         let transaction = system_transaction::transfer(&from, &recipient, 42, Hash::default());
         let with_meta = TransactionWithStatusMeta::Complete(VersionedTransactionWithStatusMeta {
             transaction: VersionedTransaction::from(transaction),

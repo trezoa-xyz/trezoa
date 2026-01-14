@@ -10,8 +10,8 @@ use {
             TieredStorageResult,
         },
     },
-    solana_account::AccountSharedData,
-    solana_pubkey::Pubkey,
+    trezoa_account::AccountSharedData,
+    trezoa_pubkey::Pubkey,
     std::path::Path,
 };
 

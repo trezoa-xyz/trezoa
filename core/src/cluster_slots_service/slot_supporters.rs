@@ -1,6 +1,6 @@
 use {
     crate::{consensus::Stake, replay_stage::DUPLICATE_THRESHOLD},
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
     std::{
         collections::HashMap,
         hash::RandomState,
@@ -12,7 +12,7 @@ use {
     },
 };
 
-//This is intended to be switched to solana_pubkey::PubkeyHasherBuilder
+//This is intended to be switched to trezoa_pubkey::PubkeyHasherBuilder
 type PubkeyHasherBuilder = RandomState;
 pub(crate) type IndexMap =
     HashMap</*node:*/ Pubkey, /*index*/ usize, PubkeyHasherBuilder>;

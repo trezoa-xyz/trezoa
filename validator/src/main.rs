@@ -2,7 +2,7 @@
 #[cfg(not(any(target_env = "msvc", target_os = "freebsd")))]
 use jemallocator::Jemalloc;
 use {
-    agave_validator::{
+    trezoa_validator::{
         cli::{app, warn_for_deprecated_arguments, DefaultArgs},
         commands,
     },
@@ -16,8 +16,8 @@ static GLOBAL: Jemalloc = Jemalloc;
 
 pub fn main() {
     let default_args = DefaultArgs::new();
-    let solana_version = solana_version::version!();
-    let cli_app = app(solana_version, &default_args);
+    let trezoa_version = trezoa_version::version!();
+    let cli_app = app(trezoa_version, &default_args);
     let matches = cli_app.get_matches();
     warn_for_deprecated_arguments(&matches);
 
@@ -26,14 +26,14 @@ pub fn main() {
     match matches.subcommand() {
         ("init", _) => commands::run::execute(
             &matches,
-            solana_version,
+            trezoa_version,
             commands::run::execute::Operation::Initialize,
         )
         .inspect_err(|err| error!("Failed to initialize validator: {err}"))
         .map_err(commands::Error::Dynamic),
         ("", _) | ("run", _) => commands::run::execute(
             &matches,
-            solana_version,
+            trezoa_version,
             commands::run::execute::Operation::Run,
         )
         .inspect_err(|err| error!("Failed to start validator: {err}"))

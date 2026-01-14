@@ -1,9 +1,9 @@
 use {
     crate::geyser_plugin_manager::GeyserPluginManager,
-    agave_geyser_plugin_interface::geyser_plugin_interface::SlotStatus,
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::SlotStatus,
     log::*,
-    solana_clock::Slot,
-    solana_rpc::slot_status_notifier::SlotStatusNotifierInterface,
+    trezoa_clock::Slot,
+    trezoa_rpc::slot_status_notifier::SlotStatusNotifierInterface,
     std::sync::{Arc, RwLock},
 };
 

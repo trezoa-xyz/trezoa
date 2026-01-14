@@ -1,10 +1,10 @@
 use {
     crate::{crds_gossip::CrdsGossip, crds_value::CrdsValue, protocol::Protocol},
     itertools::Itertools,
-    solana_clock::Slot,
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
+    trezoa_clock::Slot,
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
     std::{
         cmp::Reverse,
         collections::HashMap,

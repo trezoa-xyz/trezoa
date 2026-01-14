@@ -1,5 +1,5 @@
 #![allow(clippy::arithmetic_side_effects)]
-pub use solana_test_validator as test_validator;
+pub use trezoa_test_validator as test_validator;
 use {
     console::style,
     fd_lock::{RwLock, RwLockWriteGuard},

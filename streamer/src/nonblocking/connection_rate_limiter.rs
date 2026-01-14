@@ -1,5 +1,5 @@
 use {
-    solana_net_utils::token_bucket::{KeyedRateLimiter, TokenBucket},
+    trezoa_net_utils::token_bucket::{KeyedRateLimiter, TokenBucket},
     std::net::IpAddr,
 };
 

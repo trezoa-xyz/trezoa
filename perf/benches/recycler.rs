@@ -1,10 +1,10 @@
 use {
     bencher::{benchmark_group, benchmark_main, Bencher},
-    solana_perf::{packet::PacketBatchRecycler, recycler::Recycler},
+    trezoa_perf::{packet::PacketBatchRecycler, recycler::Recycler},
 };
 
 fn bench_recycler(b: &mut Bencher) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let recycler: PacketBatchRecycler = Recycler::default();
 

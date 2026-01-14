@@ -1,23 +1,23 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
-pub use solana_file_download::DownloadProgressRecord;
+pub use trezoa_file_download::DownloadProgressRecord;
 use {
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths as snapshot_paths, snapshot_hash::SnapshotHash, ArchiveFormat, SnapshotArchiveKind,
         ZstdConfig,
     },
     log::*,
-    solana_clock::Slot,
-    solana_file_download::{download_file, DownloadProgressCallbackOption},
-    solana_genesis_config::DEFAULT_GENESIS_ARCHIVE,
-    solana_runtime::snapshot_utils,
+    trezoa_clock::Slot,
+    trezoa_file_download::{download_file, DownloadProgressCallbackOption},
+    trezoa_genesis_config::DEFAULT_GENESIS_ARCHIVE,
+    trezoa_runtime::snapshot_utils,
     std::{
         fs,
         net::SocketAddr,

@@ -1,6 +1,6 @@
 use {
-    crate::bank::Bank, core::ops::Deref, solana_svm_transaction::svm_message::SVMMessage,
-    solana_transaction_error::TransactionResult as Result,
+    crate::bank::Bank, core::ops::Deref, trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_transaction_error::TransactionResult as Result,
 };
 
 pub enum OwnedOrBorrowed<'a, T> {
@@ -115,11 +115,11 @@ mod tests {
     use {
         super::*,
         crate::genesis_utils::{create_genesis_config_with_leader, GenesisConfigInfo},
-        solana_keypair::Keypair,
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_system_transaction as system_transaction,
-        solana_transaction::sanitized::SanitizedTransaction,
-        solana_transaction_error::TransactionError,
+        trezoa_keypair::Keypair,
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::sanitized::SanitizedTransaction,
+        trezoa_transaction_error::TransactionError,
         test_case::test_case,
     };
 
@@ -198,7 +198,7 @@ mod tests {
         insert_conflicting_tx: bool,
         relax_intrabatch_account_locks: bool,
     ) -> (Bank, Vec<RuntimeTransaction<SanitizedTransaction>>) {
-        let dummy_leader_pubkey = solana_pubkey::new_rand();
+        let dummy_leader_pubkey = trezoa_pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -206,12 +206,12 @@ mod tests {
         } = create_genesis_config_with_leader(500, &dummy_leader_pubkey, 100);
         let mut bank = Bank::new_for_tests(&genesis_config);
         if !relax_intrabatch_account_locks {
-            bank.deactivate_feature(&agave_feature_set::relax_intrabatch_account_locks::id());
+            bank.deactivate_feature(&trezoa_feature_set::relax_intrabatch_account_locks::id());
         }
 
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let keypair2 = Keypair::new();
-        let pubkey2 = solana_pubkey::new_rand();
+        let pubkey2 = trezoa_pubkey::new_rand();
 
         let mut txs = vec![RuntimeTransaction::from_transaction_for_tests(
             system_transaction::transfer(&mint_keypair, &pubkey, 1, genesis_config.hash()),

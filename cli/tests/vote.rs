@@ -1,22 +1,22 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    solana_account::ReadableAccount,
-    solana_cli::{
+    trezoa_account::ReadableAccount,
+    trezoa_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
         spend_utils::SpendAmount,
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_client::nonblocking::blockhash_query::Source,
-    solana_commitment_config::CommitmentConfig,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_keypair::Keypair,
-    solana_net_utils::SocketAddrSpace,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_signer::{null_signer::NullSigner, Signer},
-    solana_test_validator::TestValidator,
-    solana_vote_program::vote_state::{VoteAuthorize, VoteStateV4},
+    trezoa_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    trezoa_client::nonblocking::blockhash_query::Source,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_signer::{null_signer::NullSigner, Signer},
+    trezoa_test_validator::TestValidator,
+    trezoa_vote_program::vote_state::{VoteAuthorize, VoteStateV4},
     test_case::test_case,
 };
 
@@ -81,7 +81,7 @@ async fn test_vote_authorize_and_withdraw(compute_unit_price: Option<u64>) {
         .max(1);
     check_balance!(expected_balance, &rpc_client, &vote_account_pubkey);
 
-    // Transfer in some more SOL
+    // Transfer in some more TRZ
     config.signers = vec![&default_signer];
     config.command = CliCommand::Transfer {
         amount: SpendAmount::Some(10_000),
@@ -182,7 +182,7 @@ async fn test_vote_authorize_and_withdraw(compute_unit_price: Option<u64>) {
     assert_eq!(authorized_withdrawer, withdraw_authority.pubkey());
 
     // Withdraw from vote account
-    let destination_account = solana_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = trezoa_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     config.signers = vec![&default_signer, &withdraw_authority];
     config.command = CliCommand::WithdrawFromVoteAccount {
         vote_account_pubkey,
@@ -222,7 +222,7 @@ async fn test_vote_authorize_and_withdraw(compute_unit_price: Option<u64>) {
     process_command(&config).await.unwrap();
 
     // Close vote account
-    let destination_account = solana_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = trezoa_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     config.signers = vec![&default_signer, &withdraw_authority];
     config.command = CliCommand::CloseVoteAccount {
         vote_account_pubkey,
@@ -322,7 +322,7 @@ async fn test_offline_vote_authorize_and_withdraw(compute_unit_price: Option<u64
         .max(1);
     check_balance!(expected_balance, &rpc_client, &vote_account_pubkey);
 
-    // Transfer in some more SOL
+    // Transfer in some more TRZ
     config_payer.signers = vec![&default_signer];
     config_payer.command = CliCommand::Transfer {
         amount: SpendAmount::Some(10_000),
@@ -397,7 +397,7 @@ async fn test_offline_vote_authorize_and_withdraw(compute_unit_price: Option<u64
     assert_eq!(authorized_withdrawer, withdraw_authority.pubkey());
 
     // Withdraw from vote account offline
-    let destination_account = solana_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = trezoa_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     let blockhash = rpc_client.get_latest_blockhash().await.unwrap();
     let fee_payer_null_signer = NullSigner::new(&default_signer.pubkey());
     config_offline.signers = vec![&fee_payer_null_signer, &withdraw_authority];
@@ -488,7 +488,7 @@ async fn test_offline_vote_authorize_and_withdraw(compute_unit_price: Option<u64
 
     // Close vote account offline. Must use WithdrawFromVoteAccount and specify amount, since
     // CloseVoteAccount requires RpcClient
-    let destination_account = solana_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = trezoa_pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     config_offline.signers = vec![&fee_payer_null_signer, &withdraw_authority];
     config_offline.command = CliCommand::WithdrawFromVoteAccount {
         vote_account_pubkey,

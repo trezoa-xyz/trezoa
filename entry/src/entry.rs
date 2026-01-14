@@ -9,13 +9,13 @@ use {
     log::*,
     rayon::{prelude::*, ThreadPool},
     serde::{Deserialize, Serialize},
-    solana_hash::Hash,
-    solana_merkle_tree::MerkleTree,
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
-    solana_transaction::{
+    trezoa_hash::Hash,
+    trezoa_merkle_tree::MerkleTree,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_transaction::{
         versioned::VersionedTransaction, Transaction, TransactionVerificationMode,
     },
-    solana_transaction_error::TransactionResult as Result,
+    trezoa_transaction_error::TransactionResult as Result,
     std::{
         ffi::OsStr,
         iter::repeat_with,
@@ -40,8 +40,8 @@ fn init(name: &OsStr) {
     info!("Loading {name:?}");
     INIT_HOOK.call_once(|| {
         let path;
-        let lib_name = if let Some(perf_libs_path) = solana_perf::perf_libs::locate_perf_libs() {
-            solana_perf::perf_libs::append_to_ld_library_path(
+        let lib_name = if let Some(perf_libs_path) = trezoa_perf::perf_libs::locate_perf_libs() {
+            trezoa_perf::perf_libs::append_to_ld_library_path(
                 perf_libs_path.to_str().unwrap_or("").to_string(),
             );
             path = perf_libs_path.join(name);
@@ -93,17 +93,17 @@ pub struct Api<'a> {
 /// a Verifiable Delay Function (VDF) and a Proof of Work (not to be confused with Proof of
 /// Work consensus!)
 ///
-/// The solana core protocol currently requires an `Entry` to contain `transactions` that are
+/// The trezoa core protocol currently requires an `Entry` to contain `transactions` that are
 /// executable in parallel. Implemented in:
 ///
-/// * For TPU: `solana_core::banking_stage::BankingStage::process_and_record_transactions()`
-/// * For TVU: `solana_core::replay_stage::ReplayStage::replay_blockstore_into_bank()`
+/// * For TPU: `trezoa_core::banking_stage::BankingStage::process_and_record_transactions()`
+/// * For TVU: `trezoa_core::replay_stage::ReplayStage::replay_blockstore_into_bank()`
 ///
 /// Until SIMD83 is activated:
 /// All transactions in the `transactions` field have to follow the read/write locking restrictions
 /// with regard to the accounts they reference. A single account can be either written by a single
 /// transaction, or read by one or more transactions, but not both.
-/// This enforcement is done via a call to `solana_runtime::accounts::Accounts::lock_accounts()`
+/// This enforcement is done via a call to `trezoa_runtime::accounts::Accounts::lock_accounts()`
 /// with the `txs` argument holding all the `transactions` in the `Entry`.
 #[derive(Serialize, Deserialize, Debug, Default, PartialEq, Eq, Clone, SchemaWrite, SchemaRead)]
 pub struct Entry {
@@ -410,7 +410,7 @@ impl EntrySlice for [Entry] {
         simd_len: usize,
         thread_pool: &ThreadPool,
     ) -> EntryVerificationState {
-        use solana_hash::HASH_BYTES;
+        use trezoa_hash::HASH_BYTES;
         let now = Instant::now();
         let genesis = [Entry {
             num_hashes: 0,
@@ -593,24 +593,24 @@ pub fn thread_pool_for_benches() -> ThreadPool {
 mod tests {
     use {
         super::*,
-        agave_reserved_account_keys::ReservedAccountKeys,
+        trezoa_reserved_account_keys::ReservedAccountKeys,
         rand::{rng, Rng},
         rayon::ThreadPoolBuilder,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_measure::measure::Measure,
-        solana_message::SimpleAddressLoader,
-        solana_perf::test_tx::test_tx,
-        solana_pubkey::Pubkey,
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_sha256_hasher::hash,
-        solana_signer::Signer,
-        solana_system_transaction as system_transaction,
-        solana_transaction::{
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_measure::measure::Measure,
+        trezoa_message::SimpleAddressLoader,
+        trezoa_perf::test_tx::test_tx,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_sha256_hasher::hash,
+        trezoa_signer::Signer,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::{
             sanitized::{MessageHash, SanitizedTransaction},
             versioned::VersionedTransaction,
         },
-        solana_transaction_error::TransactionResult as Result,
+        trezoa_transaction_error::TransactionResult as Result,
     };
 
     fn create_random_ticks(num_ticks: u64, max_hashes_per_tick: u64, mut hash: Hash) -> Vec<Entry> {
@@ -728,7 +728,7 @@ mod tests {
     fn test_transaction_signing() {
         let thread_pool = thread_pool_for_tests();
 
-        use solana_signature::Signature;
+        use trezoa_signature::Signature;
         let zero = Hash::default();
 
         let keypair = Keypair::new();
@@ -789,7 +789,7 @@ mod tests {
 
     #[test]
     fn test_verify_slice1() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let thread_pool = thread_pool_for_tests();
 
         let zero = Hash::default();
@@ -817,7 +817,7 @@ mod tests {
 
     #[test]
     fn test_verify_slice_with_hashes1() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let thread_pool = thread_pool_for_tests();
 
         let zero = Hash::default();
@@ -848,7 +848,7 @@ mod tests {
 
     #[test]
     fn test_verify_slice_with_hashes_and_transactions() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let thread_pool = thread_pool_for_tests();
 
         let zero = Hash::default();
@@ -1005,7 +1005,7 @@ mod tests {
 
     #[test]
     fn test_poh_verify_fuzz() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         for _ in 0..100 {
             let mut time = Measure::start("ticks");
             let num_ticks = rng().random_range(1..100);

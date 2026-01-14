@@ -1,5 +1,5 @@
 use {
-    agave_io_uring::{Ring, RingOp},
+    trezoa_io_uring::{Ring, RingOp},
     std::{
         alloc::{alloc, Layout, LayoutError},
         io,

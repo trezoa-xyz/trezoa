@@ -1,13 +1,13 @@
-//! Solana SVM Rent Calculator.
+//! Trezoa SVM Rent Calculator.
 //!
 //! Rent management for SVM.
 
 use {
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_transaction_context::{IndexOfAccount, TransactionContext},
-    solana_transaction_error::{TransactionError, TransactionResult},
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_transaction_context::{IndexOfAccount, TransactionContext},
+    trezoa_transaction_error::{TransactionError, TransactionResult},
 };
 
 /// When rent is collected from an exempt account, rent_epoch is set to this
@@ -15,7 +15,7 @@ use {
 /// This enables us to get rid of the field completely.
 pub const RENT_EXEMPT_RENT_EPOCH: Epoch = Epoch::MAX;
 
-/// Rent state of a Solana account.
+/// Rent state of a Trezoa account.
 #[derive(Debug, PartialEq, Eq)]
 pub enum RentState {
     /// account.lamports == 0
@@ -64,7 +64,7 @@ pub fn check_rent_state_with_account(
     address: &Pubkey,
     account_index: IndexOfAccount,
 ) -> TransactionResult<()> {
-    if !solana_sdk_ids::incinerator::check_id(address)
+    if !trezoa_sdk_ids::incinerator::check_id(address)
         && !transition_allowed(pre_rent_state, post_rent_state)
     {
         let account_index = account_index as u8;

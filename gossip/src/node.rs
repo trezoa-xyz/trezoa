@@ -6,7 +6,7 @@ use {
             Protocol::{QUIC, UDP},
         },
     },
-    solana_net_utils::{
+    trezoa_net_utils::{
         find_available_ports_in_range,
         multihomed_sockets::BindIpAddrs,
         sockets::{
@@ -15,9 +15,9 @@ use {
             SocketConfiguration as SocketConfig,
         },
     },
-    solana_pubkey::Pubkey,
-    solana_streamer::quic::DEFAULT_QUIC_ENDPOINTS,
-    solana_time_utils::timestamp,
+    trezoa_pubkey::Pubkey,
+    trezoa_streamer::quic::DEFAULT_QUIC_ENDPOINTS,
+    trezoa_time_utils::timestamp,
     std::{
         io,
         iter::once,
@@ -48,7 +48,7 @@ pub struct Node {
 impl Node {
     /// create localhost node for tests
     pub fn new_localhost() -> Self {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         Self::new_localhost_with_pubkey(&pubkey)
     }
 
@@ -415,7 +415,7 @@ mod multihoming {
             contact_info::Protocol::{QUIC, UDP},
             node::{MultihomingAddresses, Node},
         },
-        solana_net_utils::multihomed_sockets::BindIpAddrs,
+        trezoa_net_utils::multihomed_sockets::BindIpAddrs,
         std::{
             net::{IpAddr, UdpSocket},
             sync::Arc,
@@ -534,7 +534,7 @@ mod tests {
     /// using tpu_forwards_port (UDP) instead of tpu_forwards_quic_port (QUIC)
     #[test]
     fn test_tpu_forwards_quic_uses_correct_port() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let node = Node::new_localhost_with_pubkey(&pubkey);
 
         let tpu_forwards_quic = node.info.tpu_forwards(QUIC).unwrap();

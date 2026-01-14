@@ -1,12 +1,12 @@
 use {
     crate::consensus::{tower_vote_state::TowerVoteState, Stake},
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, Sender},
-    solana_clock::Slot,
-    solana_measure::measure::Measure,
-    solana_metrics::datapoint_info,
-    solana_pubkey::Pubkey,
-    solana_rpc::rpc_subscriptions::RpcSubscriptions,
-    solana_runtime::{
+    trezoa_clock::Slot,
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::datapoint_info,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc::rpc_subscriptions::RpcSubscriptions,
+    trezoa_runtime::{
         bank::Bank,
         commitment::{BlockCommitment, BlockCommitmentCache, CommitmentSlots, VOTE_THRESHOLD_SIZE},
     },
@@ -271,16 +271,16 @@ impl AggregateCommitmentService {
 mod tests {
     use {
         super::*,
-        solana_account::{state_traits::StateMut, Account, ReadableAccount},
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_pubkey::Pubkey,
-        solana_runtime::{
+        trezoa_account::{state_traits::StateMut, Account, ReadableAccount},
+        trezoa_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{
             genesis_utils::{create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs},
             stake_utils,
         },
-        solana_signer::Signer,
-        solana_vote::vote_transaction,
-        solana_vote_program::vote_state::{
+        trezoa_signer::Signer,
+        trezoa_vote::vote_transaction,
+        trezoa_vote_program::vote_state::{
             self, process_slot_vote_unchecked, TowerSync, VoteStateV4, VoteStateVersions,
             MAX_LOCKOUT_HISTORY,
         },
@@ -399,10 +399,10 @@ mod tests {
 
         let rooted_stake_amount = 40;
 
-        let sk1 = solana_pubkey::new_rand();
-        let pk1 = solana_pubkey::new_rand();
+        let sk1 = trezoa_pubkey::new_rand();
+        let pk1 = trezoa_pubkey::new_rand();
         let mut vote_account1 = vote_state::create_v4_account_with_authorized(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &pk1,
             &pk1,
             None,
@@ -416,10 +416,10 @@ mod tests {
             &genesis_config.rent,
             100,
         );
-        let sk2 = solana_pubkey::new_rand();
-        let pk2 = solana_pubkey::new_rand();
+        let sk2 = trezoa_pubkey::new_rand();
+        let pk2 = trezoa_pubkey::new_rand();
         let mut vote_account2 = vote_state::create_v4_account_with_authorized(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &pk2,
             &pk2,
             None,
@@ -428,10 +428,10 @@ mod tests {
         );
         let stake_account2 =
             stake_utils::create_stake_account(&sk2, &pk2, &vote_account2, &genesis_config.rent, 50);
-        let sk3 = solana_pubkey::new_rand();
-        let pk3 = solana_pubkey::new_rand();
+        let sk3 = trezoa_pubkey::new_rand();
+        let pk3 = trezoa_pubkey::new_rand();
         let mut vote_account3 = vote_state::create_v4_account_with_authorized(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &pk3,
             &pk3,
             None,
@@ -445,10 +445,10 @@ mod tests {
             &genesis_config.rent,
             rooted_stake_amount,
         );
-        let sk4 = solana_pubkey::new_rand();
-        let pk4 = solana_pubkey::new_rand();
+        let sk4 = trezoa_pubkey::new_rand();
+        let pk4 = trezoa_pubkey::new_rand();
         let mut vote_account4 = vote_state::create_v4_account_with_authorized(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &pk4,
             &pk4,
             None,
@@ -513,7 +513,7 @@ mod tests {
             pk1
         } else {
             // Use some random pubkey as dummy to suppress the override.
-            solana_pubkey::new_rand()
+            trezoa_pubkey::new_rand()
         };
 
         let (commitment, rooted_stake) = AggregateCommitmentService::aggregate_commitment(

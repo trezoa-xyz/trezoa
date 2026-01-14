@@ -1,13 +1,13 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
-//! Core types for solana-transaction-status
+//! Core types for trezoa-transaction-status
 use {
     crate::option_serializer::OptionSerializer,
     base64::{prelude::BASE64_STANDARD, Engine},
@@ -18,19 +18,19 @@ use {
         Deserialize, Deserializer, Serialize,
     },
     serde_json::{from_value, Value},
-    solana_account_decoder_client_types::token::UiTokenAmount,
-    solana_commitment_config::CommitmentConfig,
-    solana_instruction::error::InstructionError,
-    solana_message::{
+    trezoa_account_decoder_client_types::token::UiTokenAmount,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_instruction::error::InstructionError,
+    trezoa_message::{
         compiled_instruction::CompiledInstruction,
         v0::{LoadedAddresses, MessageAddressTableLookup},
         MessageHeader,
     },
-    solana_reward_info::RewardType,
-    solana_signature::Signature,
-    solana_transaction::versioned::{TransactionVersion, VersionedTransaction},
-    solana_transaction_context::TransactionReturnData,
-    solana_transaction_error::{TransactionError, TransactionResult},
+    trezoa_reward_info::RewardType,
+    trezoa_signature::Signature,
+    trezoa_transaction::versioned::{TransactionVersion, VersionedTransaction},
+    trezoa_transaction_context::TransactionReturnData,
+    trezoa_transaction_error::{TransactionError, TransactionResult},
     thiserror::Error,
 };
 pub mod option_serializer;
@@ -330,7 +330,7 @@ impl<'de> DeserializeTrait<'de> for UiTransactionError {
 #[serde(rename_all = "camelCase")]
 pub struct UiTransactionStatusMeta {
     pub err: Option<UiTransactionError>,
-    pub status: Result<(), UiTransactionError>, // This field is deprecated.  See https://github.com/solana-labs/solana/issues/9302
+    pub status: Result<(), UiTransactionError>, // This field is deprecated.  See https://github.com/trezoa-labs/trezoa/issues/9302
     pub fee: u64,
     pub pre_balances: Vec<u64>,
     pub post_balances: Vec<u64>,

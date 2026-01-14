@@ -1,7 +1,7 @@
 [package]
-name = "solana-svm"
-description = "Solana SVM"
-documentation = "https://docs.rs/solana-svm"
+name = "trezoa-svm"
+description = "Trezoa SVM"
+documentation = "https://docs.rs/trezoa-svm"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,24 +14,24 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "solana_svm"
+name = "trezoa_svm"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = [
     "dep:qualifier_attr",
-    "solana-program-runtime/dev-context-only-utils",
+    "trezoa-program-runtime/dev-context-only-utils",
 ]
 frozen-abi = [
-    "dep:solana-frozen-abi",
-    "dep:solana-frozen-abi-macro",
-    "solana-program-runtime/frozen-abi",
+    "dep:trezoa-frozen-abi",
+    "dep:trezoa-frozen-abi-macro",
+    "trezoa-program-runtime/frozen-abi",
 ]
 shuttle-test = [
-    "solana-bpf-loader-program/shuttle-test",
-    "solana-loader-v4-program/shuttle-test",
-    "solana-program-runtime/shuttle-test",
-    "solana-svm-type-overrides/shuttle-test",
+    "trezoa-bpf-loader-program/shuttle-test",
+    "trezoa-loader-v4-program/shuttle-test",
+    "trezoa-program-runtime/shuttle-test",
+    "trezoa-svm-type-overrides/shuttle-test",
 ]
 svm-internal = ["dep:qualifier_attr"]
 
@@ -41,47 +41,47 @@ log = { workspace = true }
 percentage = { workspace = true }
 qualifier_attr = { workspace = true, optional = true }
 serde = { workspace = true, features = ["rc"] }
-solana-account = { workspace = true }
-solana-clock = { workspace = true }
-solana-fee-structure = { workspace = true }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-account = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-fee-structure = { workspace = true }
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-frozen-abi-macro = { workspace = true, optional = true, features = [
+trezoa-frozen-abi-macro = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-hash = { workspace = true }
-solana-instruction = { workspace = true, features = ["std"] }
-solana-instructions-sysvar = { workspace = true }
-solana-loader-v3-interface = { workspace = true, features = ["bincode"] }
-solana-loader-v4-interface = { workspace = true }
-solana-loader-v4-program = { workspace = true }
-solana-message = { workspace = true }
-solana-nonce = { workspace = true }
-solana-nonce-account = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-pack = { workspace = true }
-solana-program-runtime = { workspace = true, features = ["metrics"] }
-solana-pubkey = { workspace = true }
-solana-rent = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-svm-callback = { workspace = true }
-solana-svm-feature-set = { workspace = true }
-solana-svm-log-collector = { workspace = true }
-solana-svm-measure = { workspace = true }
-solana-svm-timings = { workspace = true }
-solana-svm-transaction = { workspace = true }
-solana-svm-type-overrides = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-sysvar-id = { workspace = true }
-solana-transaction-context = { workspace = true }
-solana-transaction-error = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-instruction = { workspace = true, features = ["std"] }
+trezoa-instructions-sysvar = { workspace = true }
+trezoa-loader-v3-interface = { workspace = true, features = ["bincode"] }
+trezoa-loader-v4-interface = { workspace = true }
+trezoa-loader-v4-program = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-nonce = { workspace = true }
+trezoa-nonce-account = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-pack = { workspace = true }
+trezoa-program-runtime = { workspace = true, features = ["metrics"] }
+trezoa-pubkey = { workspace = true }
+trezoa-rent = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-svm-callback = { workspace = true }
+trezoa-svm-feature-set = { workspace = true }
+trezoa-svm-log-collector = { workspace = true }
+trezoa-svm-measure = { workspace = true }
+trezoa-svm-timings = { workspace = true }
+trezoa-svm-transaction = { workspace = true }
+trezoa-svm-type-overrides = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-sysvar-id = { workspace = true }
+trezoa-transaction-context = { workspace = true }
+trezoa-transaction-error = { workspace = true }
 spl-generic-token = { workspace = true }
 thiserror = { workspace = true }
 
 [dev-dependencies]
-agave-logger = { workspace = true }
-agave-syscalls = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-syscalls = { workspace = true }
 assert_matches = { workspace = true }
 bincode = { workspace = true }
 ed25519-dalek = { workspace = true }
@@ -89,34 +89,34 @@ libsecp256k1 = { workspace = true }
 openssl = { workspace = true }
 rand0-7 = { workspace = true }
 shuttle = { workspace = true }
-solana-bpf-loader-program = { workspace = true }
-solana-clock = { workspace = true }
-solana-compute-budget = { workspace = true }
-solana-compute-budget-interface = { workspace = true }
-solana-compute-budget-program = { workspace = true }
-solana-ed25519-program = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-fee-calculator = { workspace = true }
-solana-keypair = { workspace = true }
-solana-native-token = { workspace = true }
-solana-precompile-error = { workspace = true }
-solana-program-binaries = { workspace = true }
-solana-program-runtime = { workspace = true, features = ["dev-context-only-utils"] }
-solana-pubkey = { workspace = true, features = ["rand"] }
-solana-rent = { workspace = true }
-solana-sbpf = { workspace = true, features = ["jit"] }
-solana-secp256k1-program = { workspace = true, features = ["bincode"] }
-solana-secp256r1-program = { workspace = true, features = ["openssl-vendored"] }
-solana-signature = { workspace = true, features = ["rand"] }
-solana-signer = { workspace = true }
+trezoa-bpf-loader-program = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-compute-budget = { workspace = true }
+trezoa-compute-budget-interface = { workspace = true }
+trezoa-compute-budget-program = { workspace = true }
+trezoa-ed25519-program = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-fee-calculator = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-precompile-error = { workspace = true }
+trezoa-program-binaries = { workspace = true }
+trezoa-program-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-pubkey = { workspace = true, features = ["rand"] }
+trezoa-rent = { workspace = true }
+trezoa-sbpf = { workspace = true, features = ["jit"] }
+trezoa-secp256k1-program = { workspace = true, features = ["bincode"] }
+trezoa-secp256r1-program = { workspace = true, features = ["openssl-vendored"] }
+trezoa-signature = { workspace = true, features = ["rand"] }
+trezoa-signer = { workspace = true }
 # See order-crates-for-publishing.py for using this unusual `path = "."`
-solana-svm = { path = ".", features = ["agave-unstable-api", "dev-context-only-utils", "svm-internal"] }
-solana-system-program = { workspace = true }
-solana-system-transaction = { workspace = true }
-solana-sysvar = { workspace = true }
-solana-transaction = { workspace = true, features = ["dev-context-only-utils"] }
-solana-transaction-context = { workspace = true, features = ["dev-context-only-utils"] }
-spl-token-interface = { workspace = true }
+trezoa-svm = { path = ".", features = ["trezoa-unstable-api", "dev-context-only-utils", "svm-internal"] }
+trezoa-system-program = { workspace = true }
+trezoa-system-transaction = { workspace = true }
+trezoa-sysvar = { workspace = true }
+trezoa-transaction = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-transaction-context = { workspace = true, features = ["dev-context-only-utils"] }
+tpl-token-interface = { workspace = true }
 test-case = { workspace = true }
 
 [lints]

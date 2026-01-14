@@ -8,21 +8,21 @@ use {
     crate::bank::{builtins::core_bpf_migration::target_bpf_v2::TargetBpfV2, Bank},
     error::CoreBpfMigrationError,
     num_traits::{CheckedAdd, CheckedSub},
-    solana_account::{AccountSharedData, ReadableAccount, WritableAccount},
-    solana_builtins::core_bpf_migration::CoreBpfMigrationConfig,
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_hash::Hash,
-    solana_instruction::error::InstructionError,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_program_runtime::{
+    trezoa_account::{AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_builtins::core_bpf_migration::CoreBpfMigrationConfig,
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_hash::Hash,
+    trezoa_instruction::error::InstructionError,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_program_runtime::{
         invoke_context::{EnvironmentConfig, InvokeContext},
         loaded_programs::ProgramCacheForTxBatch,
         sysvar_cache::SysvarCache,
     },
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader_upgradeable,
-    solana_svm_callback::InvokeContextCallback,
-    solana_transaction_context::TransactionContext,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader_upgradeable,
+    trezoa_svm_callback::InvokeContextCallback,
+    trezoa_transaction_context::TransactionContext,
     source_buffer::SourceBuffer,
     std::{cmp::Ordering, sync::atomic::Ordering::Relaxed},
     target_builtin::TargetBuiltin,
@@ -184,7 +184,7 @@ impl Bank {
                 compute_budget.to_cost(),
             );
 
-            let load_program_metrics = solana_bpf_loader_program::deploy_program(
+            let load_program_metrics = trezoa_bpf_loader_program::deploy_program(
                 dummy_invoke_context.get_log_collector(),
                 dummy_invoke_context.program_cache_for_tx_batch,
                 program_runtime_environments.program_runtime_v1.clone(),
@@ -301,7 +301,7 @@ impl Bank {
     /// `apply_new_feature_activations` function, similar to below.
     ///
     /// ```ignore
-    /// if new_feature_activations.contains(&agave_feature_set::test_upgrade_program::id()) {
+    /// if new_feature_activations.contains(&trezoa_feature_set::test_upgrade_program::id()) {
     ///     self.upgrade_core_bpf_program(
     ///        &core_bpf_program_address,
     ///        &source_buffer_address,
@@ -376,7 +376,7 @@ impl Bank {
     /// `apply_feature_activations` function, similar to below.
     ///
     /// ```ignore
-    /// if new_feature_activations.contains(&agave_feature_set::test_upgrade_program::id()) {
+    /// if new_feature_activations.contains(&trezoa_feature_set::test_upgrade_program::id()) {
     ///     self.upgrade_loader_v2_program_with_loader_v3_program(
     ///        &bpf_loader_v2_program_address,
     ///        &source_buffer_address,
@@ -491,31 +491,31 @@ pub(crate) mod tests {
             snapshot_bank_utils::{bank_from_snapshot_archives, bank_to_full_snapshot_archive},
             snapshot_utils::create_tmp_accounts_dir_for_tests,
         },
-        agave_feature_set::FeatureSet,
-        agave_snapshots::snapshot_config::SnapshotConfig,
+        trezoa_feature_set::FeatureSet,
+        trezoa_snapshots::snapshot_config::SnapshotConfig,
         assert_matches::assert_matches,
-        solana_account::{
+        trezoa_account::{
             state_traits::StateMut, AccountSharedData, ReadableAccount, WritableAccount,
         },
-        solana_accounts_db::accounts_db::ACCOUNTS_DB_CONFIG_FOR_TESTING,
-        solana_builtins::{
+        trezoa_accounts_db::accounts_db::ACCOUNTS_DB_CONFIG_FOR_TESTING,
+        trezoa_builtins::{
             core_bpf_migration::{CoreBpfMigrationConfig, CoreBpfMigrationTargetType},
             prototype::{BuiltinPrototype, StatelessBuiltinPrototype},
             BUILTINS,
         },
-        solana_clock::Slot,
-        solana_epoch_schedule::EpochSchedule,
-        solana_feature_gate_interface::{self as feature, Feature},
-        solana_instruction::{AccountMeta, Instruction},
-        solana_keypair::Keypair,
-        solana_loader_v3_interface::{get_program_data_address, state::UpgradeableLoaderState},
-        solana_message::Message,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_program_runtime::loaded_programs::{ProgramCacheEntry, ProgramCacheEntryType},
-        solana_pubkey::Pubkey,
-        solana_sdk_ids::{bpf_loader, bpf_loader_upgradeable, native_loader},
-        solana_signer::Signer,
-        solana_transaction::Transaction,
+        trezoa_clock::Slot,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_feature_gate_interface::{self as feature, Feature},
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_keypair::Keypair,
+        trezoa_loader_v3_interface::{get_program_data_address, state::UpgradeableLoaderState},
+        trezoa_message::Message,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_program_runtime::loaded_programs::{ProgramCacheEntry, ProgramCacheEntryType},
+        trezoa_pubkey::Pubkey,
+        trezoa_sdk_ids::{bpf_loader, bpf_loader_upgradeable, native_loader},
+        trezoa_signer::Signer,
+        trezoa_transaction::Transaction,
         std::{fs::File, io::Read, sync::Arc},
         test_case::test_case,
     };
@@ -842,7 +842,7 @@ pub(crate) mod tests {
         let expected_hash = {
             let data = test_elf();
             let end_offset = data.iter().rposition(|&x| x != 0).map_or(0, |i| i + 1);
-            solana_sha256_hasher::hash(&data[..end_offset])
+            trezoa_sha256_hasher::hash(&data[..end_offset])
         };
         let core_bpf_migration_config = CoreBpfMigrationConfig {
             source_buffer_address,
@@ -1231,7 +1231,7 @@ pub(crate) mod tests {
     // CPI mockup to test CPI to newly migrated programs.
     mod cpi_mockup {
         use {
-            solana_instruction::Instruction, solana_program_runtime::declare_process_instruction,
+            trezoa_instruction::Instruction, trezoa_program_runtime::declare_process_instruction,
         };
 
         declare_process_instruction!(Entrypoint, 0, |invoke_context| {
@@ -1395,7 +1395,7 @@ pub(crate) mod tests {
     // See program_runtime::compute_budget_processor::process_compute_budget_instructions`.`
     // It also can't test the `bpf_loader_upgradeable` program, as it's used in
     // the SVM's loader to invoke programs.
-    // See `solana_svm::account_loader::load_transaction_accounts`.
+    // See `trezoa_svm::account_loader::load_transaction_accounts`.
     #[test_case(TestPrototype::Builtin(&BUILTINS[0]); "system")]
     #[test_case(TestPrototype::Builtin(&BUILTINS[1]); "vote")]
     #[test_case(TestPrototype::Builtin(&BUILTINS[2]); "bpf_loader_deprecated")]
@@ -1910,7 +1910,7 @@ pub(crate) mod tests {
     }
 
     #[test]
-    fn test_replace_spl_token_with_p_token_e2e() {
+    fn test_replace_tpl_token_with_p_token_e2e() {
         let (mut genesis_config, mint_keypair) =
             create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
         let slots_per_epoch = 32;
@@ -1919,10 +1919,10 @@ pub(crate) mod tests {
 
         let mut root_bank = Bank::new_for_tests(&genesis_config);
 
-        let feature_id = agave_feature_set::replace_spl_token_with_p_token::id();
-        let program_id = agave_feature_set::replace_spl_token_with_p_token::SPL_TOKEN_PROGRAM_ID;
+        let feature_id = trezoa_feature_set::replace_tpl_token_with_p_token::id();
+        let program_id = trezoa_feature_set::replace_tpl_token_with_p_token::SPL_TOKEN_PROGRAM_ID;
         let source_buffer_address =
-            agave_feature_set::replace_spl_token_with_p_token::PTOKEN_PROGRAM_BUFFER;
+            trezoa_feature_set::replace_tpl_token_with_p_token::PTOKEN_PROGRAM_BUFFER;
 
         // Set up a mock BPF loader v2 program.
         {
@@ -1969,14 +1969,14 @@ pub(crate) mod tests {
     // Here we want to see that the bank handles the failure gracefully and
     // advances to the next epoch without issue.
     #[test]
-    fn test_replace_spl_token_with_p_token_e2e_failure() {
+    fn test_replace_tpl_token_with_p_token_e2e_failure() {
         let (genesis_config, _mint_keypair) = create_genesis_config(0);
         let mut root_bank = Bank::new_for_tests(&genesis_config);
 
-        let feature_id = &agave_feature_set::replace_spl_token_with_p_token::id();
-        let program_id = &agave_feature_set::replace_spl_token_with_p_token::SPL_TOKEN_PROGRAM_ID;
+        let feature_id = &trezoa_feature_set::replace_tpl_token_with_p_token::id();
+        let program_id = &trezoa_feature_set::replace_tpl_token_with_p_token::SPL_TOKEN_PROGRAM_ID;
         let source_buffer_address =
-            &agave_feature_set::replace_spl_token_with_p_token::PTOKEN_PROGRAM_BUFFER;
+            &trezoa_feature_set::replace_tpl_token_with_p_token::PTOKEN_PROGRAM_BUFFER;
 
         // Set up a mock BPF loader v2 program.
         {
@@ -2039,7 +2039,7 @@ pub(crate) mod tests {
     // Simulate creating a bank from a snapshot after p-token migration feature was
     // activated and the migration was successful.
     #[test]
-    fn test_startup_from_snapshot_after_replace_spl_token_with_p_token() {
+    fn test_startup_from_snapshot_after_replace_tpl_token_with_p_token() {
         let (genesis_config, _mint_keypair) = create_genesis_config(0);
         let mut bank = Bank::new_for_tests(&genesis_config);
 

@@ -3,10 +3,10 @@ use {
         parse_account_data::{ParsableAccount, ParseAccountError, SplTokenAdditionalDataV2},
         parse_token_extension::parse_extension,
     },
-    solana_program_option::COption,
-    solana_program_pack::Pack,
-    solana_pubkey::Pubkey,
-    spl_token_2022_interface::{
+    trezoa_program_option::COption,
+    trezoa_program_pack::Pack,
+    trezoa_pubkey::Pubkey,
+    tpl_token_2022_interface::{
         extension::{BaseStateWithExtensions, StateWithExtensions},
         generic_token_account::GenericTokenAccount,
         state::{Account, AccountState, Mint, Multisig},
@@ -14,11 +14,11 @@ use {
     std::str::FromStr,
 };
 pub use {
-    solana_account_decoder_client_types::token::{
+    trezoa_account_decoder_client_types::token::{
         real_number_string, real_number_string_trimmed, TokenAccountType, UiAccountState, UiMint,
         UiMultisig, UiTokenAccount, UiTokenAmount,
     },
-    spl_generic_token::{is_known_spl_token_id, spl_token_ids},
+    spl_generic_token::{is_known_tpl_token_id, tpl_token_ids},
 };
 
 pub fn parse_token_v3(
@@ -28,7 +28,7 @@ pub fn parse_token_v3(
     if let Ok(account) = StateWithExtensions::<Account>::unpack(data) {
         let additional_data = additional_data.as_ref().ok_or_else(|| {
             ParseAccountError::AdditionalDataMissing(
-                "no mint_decimals provided to parse spl-token account".to_string(),
+                "no mint_decimals provided to parse tpl-token account".to_string(),
             )
         })?;
         let extension_types = account.get_extension_types().unwrap_or_default();
@@ -174,9 +174,9 @@ mod test {
     use {
         super::*,
         crate::parse_token_extension::{UiMemoTransfer, UiMintCloseAuthority},
-        solana_account_decoder_client_types::token::UiExtension,
+        trezoa_account_decoder_client_types::token::UiExtension,
         spl_pod::optional_keys::OptionalNonZeroPubkey,
-        spl_token_2022_interface::extension::{
+        tpl_token_2022_interface::extension::{
             immutable_owner::ImmutableOwner, interest_bearing_mint::InterestBearingConfig,
             memo_transfer::MemoTransfer, mint_close_authority::MintCloseAuthority,
             scaled_ui_amount::ScaledUiAmountConfig, BaseStateWithExtensionsMut, ExtensionType,

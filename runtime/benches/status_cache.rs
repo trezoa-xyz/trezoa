@@ -4,11 +4,11 @@ extern crate test;
 use {
     bincode::serialize,
     rand::{rngs::SmallRng, Rng, SeedableRng},
-    solana_accounts_db::ancestors::Ancestors,
-    solana_hash::{Hash, HASH_BYTES},
-    solana_runtime::{bank::BankStatusCache, status_cache::*},
-    solana_sha256_hasher::hash,
-    solana_signature::{Signature, SIGNATURE_BYTES},
+    trezoa_accounts_db::ancestors::Ancestors,
+    trezoa_hash::{Hash, HASH_BYTES},
+    trezoa_runtime::{bank::BankStatusCache, status_cache::*},
+    trezoa_sha256_hasher::hash,
+    trezoa_signature::{Signature, SIGNATURE_BYTES},
     test::Bencher,
 };
 

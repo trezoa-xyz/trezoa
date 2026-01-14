@@ -2,14 +2,14 @@ use {
     crate::crds_data::sanitize_wallclock,
     itertools::Itertools,
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_ledger::{
         blockstore::BlockstoreError,
         blockstore_meta::{DuplicateSlotProof, ErasureMeta},
         shred::{self, Shred, ShredType},
     },
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
     std::{
         collections::{hash_map::Entry, HashMap},
         convert::TryFrom,
@@ -197,7 +197,7 @@ where
     // erasure sets. However this is not technically exhaustive, as any 2 shreds with
     // different but overlapping erasure sets can be considered duplicate and need not be
     // a part of the same fec set. Further work to enhance detection is planned in
-    // https://github.com/solana-labs/solana/issues/33037
+    // https://github.com/trezoa-labs/trezoa/issues/33037
     if shred1.fec_set_index() == shred2.fec_set_index()
         && !ErasureMeta::check_erasure_consistency(shred1, shred2)
     {
@@ -341,13 +341,13 @@ pub(crate) mod tests {
     use {
         super::*,
         rand::Rng,
-        solana_entry::entry::Entry,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
-        solana_signature::Signature,
-        solana_signer::Signer,
-        solana_system_transaction::transfer,
+        trezoa_entry::entry::Entry,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
+        trezoa_signature::Signature,
+        trezoa_signer::Signer,
+        trezoa_system_transaction::transfer,
         std::sync::Arc,
     };
 

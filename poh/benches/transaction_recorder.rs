@@ -1,24 +1,24 @@
 use {
-    agave_votor_messages::migration::MigrationStatus,
+    trezoa_votor_messages::migration::MigrationStatus,
     criterion::{criterion_group, criterion_main, Criterion},
     crossbeam_channel::bounded,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore::Blockstore, genesis_utils::create_genesis_config,
         get_tmp_ledger_path_auto_delete, leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_poh::{
+    trezoa_poh::{
         poh_controller::PohController,
         poh_recorder::PohRecorder,
         poh_service::{PohService, DEFAULT_HASHES_PER_BATCH, DEFAULT_PINNED_CPU_CORE},
         record_channels::record_channels,
         transaction_recorder::TransactionRecorder,
     },
-    solana_poh_config::PohConfig,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, installed_scheduler_pool::BankWithScheduler},
-    solana_transaction::versioned::VersionedTransaction,
+    trezoa_poh_config::PohConfig,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, installed_scheduler_pool::BankWithScheduler},
+    trezoa_transaction::versioned::VersionedTransaction,
     std::{
         sync::{atomic::AtomicBool, Arc, RwLock},
         time::{Duration, Instant},
@@ -36,13 +36,13 @@ fn bench_record_transactions(c: &mut Criterion) {
 
     // Setup the PohService.
     let mut genesis_config_info = create_genesis_config(2);
-    genesis_config_info.genesis_config.ticks_per_slot = solana_clock::DEFAULT_TICKS_PER_SLOT;
+    genesis_config_info.genesis_config.ticks_per_slot = trezoa_clock::DEFAULT_TICKS_PER_SLOT;
     genesis_config_info.genesis_config.poh_config = PohConfig {
         target_tick_duration: Duration::from_micros(
-            solana_clock::DEFAULT_MS_PER_SLOT * 1_000 / solana_clock::DEFAULT_TICKS_PER_SLOT,
+            trezoa_clock::DEFAULT_MS_PER_SLOT * 1_000 / trezoa_clock::DEFAULT_TICKS_PER_SLOT,
         ),
         target_tick_count: None,
-        hashes_per_tick: Some(solana_clock::DEFAULT_HASHES_PER_TICK),
+        hashes_per_tick: Some(trezoa_clock::DEFAULT_HASHES_PER_TICK),
     };
     let exit = Arc::new(AtomicBool::new(false));
     let mut bank = Arc::new(Bank::new_for_tests(&genesis_config_info.genesis_config));
@@ -67,7 +67,7 @@ fn bench_record_transactions(c: &mut Criterion) {
 
     let txs: Vec<_> = (0..NUM_TRANSACTIONS)
         .map(|_| {
-            VersionedTransaction::from(solana_system_transaction::transfer(
+            VersionedTransaction::from(trezoa_system_transaction::transfer(
                 &Keypair::new(),
                 &Pubkey::new_unique(),
                 1,

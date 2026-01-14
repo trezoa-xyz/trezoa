@@ -116,10 +116,10 @@ mod tests {
             sigverify,
             test_tx::test_tx,
         },
-        agave_random::range::random_u64_range,
+        trezoa_random::range::random_u64_range,
         rand::SeedableRng as _,
         rand_chacha::ChaChaRng,
-        solana_packet::{Meta, PACKET_DATA_SIZE},
+        trezoa_packet::{Meta, PACKET_DATA_SIZE},
         test_case::test_case,
     };
 

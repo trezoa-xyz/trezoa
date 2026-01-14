@@ -1,16 +1,16 @@
 use {
-    solana_instruction::error::InstructionError,
-    solana_nonce::{
+    trezoa_instruction::error::InstructionError,
+    trezoa_nonce::{
         self as nonce,
         state::{DurableNonce, State},
         versions::{AuthorizeNonceError, Versions},
     },
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_pubkey::Pubkey,
-    solana_svm_log_collector::ic_msg,
-    solana_system_interface::error::SystemError,
-    solana_sysvar::rent::Rent,
-    solana_transaction_context::{
+    trezoa_program_runtime::invoke_context::InvokeContext,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_log_collector::ic_msg,
+    trezoa_system_interface::error::SystemError,
+    trezoa_sysvar::rent::Rent,
+    trezoa_transaction_context::{
         instruction::InstructionContext, instruction_accounts::BorrowedInstructionAccount,
         IndexOfAccount,
     },
@@ -249,13 +249,13 @@ mod test {
     use {
         super::*,
         assert_matches::assert_matches,
-        solana_account::AccountSharedData,
-        solana_nonce::{self as nonce, state::State},
-        solana_nonce_account::{create_account, verify_nonce_account},
-        solana_program_runtime::with_mock_invoke_context,
-        solana_sdk_ids::system_program,
-        solana_sha256_hasher::hash,
-        solana_transaction_context::instruction_accounts::InstructionAccount,
+        trezoa_account::AccountSharedData,
+        trezoa_nonce::{self as nonce, state::State},
+        trezoa_nonce_account::{create_account, verify_nonce_account},
+        trezoa_program_runtime::with_mock_invoke_context,
+        trezoa_sdk_ids::system_program,
+        trezoa_sha256_hasher::hash,
+        trezoa_transaction_context::instruction_accounts::InstructionAccount,
     };
 
     pub const NONCE_ACCOUNT_INDEX: IndexOfAccount = 0;

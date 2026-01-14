@@ -7,9 +7,9 @@ use {
         is_zero_lamport::IsZeroLamport,
         utils::create_account_shared_data,
     },
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_clock::{Epoch, Slot},
-    solana_pubkey::Pubkey,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_pubkey::Pubkey,
     std::{
         cmp::Ordering,
         sync::{Arc, RwLock},
@@ -369,7 +369,7 @@ pub mod tests {
             accounts_file::AccountsFileProvider,
         },
         rand::Rng,
-        solana_account::{accounts_equal, AccountSharedData},
+        trezoa_account::{accounts_equal, AccountSharedData},
         std::sync::Arc,
     };
 

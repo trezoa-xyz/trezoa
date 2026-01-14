@@ -1,11 +1,11 @@
 use {
     crate::commands::{Error, FromClapArgMatches, Result},
     clap::{value_t, Arg, ArgMatches},
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         hidden_unless_forced,
         input_validators::{is_parsable, is_within_range},
     },
-    solana_send_transaction_service::send_transaction_service::{
+    trezoa_send_transaction_service::send_transaction_service::{
         Config as SendTransactionServiceConfig, MAX_BATCH_SEND_RATE_MS, MAX_TRANSACTION_BATCH_SIZE,
         MAX_TRANSACTION_SENDS_PER_SECOND,
     },
@@ -72,7 +72,7 @@ impl FromClapArgMatches for SendTransactionServiceConfig {
 
         let tpu_peers = matches
             .values_of("rpc_send_transaction_tpu_peer")
-            .map(|values| values.map(solana_net_utils::parse_host_port).collect())
+            .map(|values| values.map(trezoa_net_utils::parse_host_port).collect())
             .transpose()
             .map_err(|e| {
                 Error::Dynamic(Box::<dyn std::error::Error>::from(format!(
@@ -142,7 +142,7 @@ pub(crate) fn args<'a, 'b>() -> Vec<Arg<'a, 'b>> {
             .number_of_values(1)
             .multiple(true)
             .value_name("HOST:PORT")
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help("Peer(s) to broadcast transactions to instead of the current leader"),
         Arg::with_name("rpc_send_transaction_default_max_retries")
             .long("rpc-send-default-max-retries")

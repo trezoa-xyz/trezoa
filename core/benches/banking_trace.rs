@@ -3,8 +3,8 @@
 extern crate test;
 
 use {
-    agave_banking_stage_ingress_types::BankingPacketBatch,
-    solana_core::banking_trace::{
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_core::banking_trace::{
         for_test::{
             drop_and_clean_temp_dir_unless_suppressed, sample_packet_batch, terminate_tracer,
         },

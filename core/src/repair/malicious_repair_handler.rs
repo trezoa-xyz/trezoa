@@ -1,11 +1,11 @@
 use {
     super::{repair_handler::RepairHandler, repair_response::repair_response_packet_from_bytes},
-    solana_clock::Slot,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_ledger::{
         blockstore::Blockstore,
         shred::{Nonce, SIZE_OF_DATA_SHRED_HEADERS},
     },
-    solana_perf::packet::{Packet, PacketBatch, PacketBatchRecycler},
+    trezoa_perf::packet::{Packet, PacketBatch, PacketBatchRecycler},
     std::{net::SocketAddr, sync::Arc},
 };
 

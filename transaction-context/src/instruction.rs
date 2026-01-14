@@ -8,9 +8,9 @@ use {
         vm_slice::VmSlice,
         IndexOfAccount, InstructionAccount, TransactionContext,
     },
-    solana_account::ReadableAccount,
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
+    trezoa_account::ReadableAccount,
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
     std::collections::HashSet,
 };
 

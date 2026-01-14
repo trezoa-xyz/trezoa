@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -13,9 +13,9 @@
 #![cfg_attr(feature = "frozen-abi", feature(min_specialization))]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 use {
-    agave_feature_set::{self as feature_set, FeatureSet},
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{
+    trezoa_feature_set::{self as feature_set, FeatureSet},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{
         address_lookup_table, bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable,
         compute_budget, config, ed25519_program, feature, loader_v4, native_loader,
         secp256k1_program, secp256r1_program, stake, system_program, sysvar, vote,
@@ -27,7 +27,7 @@ use {
 // ReservedAccountKeys is not serialized into or deserialized from bank
 // snapshots but the bank requires this trait to be implemented anyways.
 #[cfg(feature = "frozen-abi")]
-impl ::solana_frozen_abi::abi_example::AbiExample for ReservedAccountKeys {
+impl ::trezoa_frozen_abi::abi_example::AbiExample for ReservedAccountKeys {
     fn example() -> Self {
         // ReservedAccountKeys is not Serialize so just rely on Default.
         ReservedAccountKeys::default()

@@ -1,57 +1,57 @@
 #!/usr/bin/env bash
-# Defines reusable lists of Agave binary names for use across scripts.
+# Defines reusable lists of Trezoa-team binary names for use across scripts.
 
 # Source this file to access the arrays
 # Example:
-#   source "scripts/agave-build-lists.sh"
-#   printf '%s\n' "${AGAVE_BINS_DEV[@]}"
+#   source "scripts/trezoa-build-lists.sh"
+#   printf '%s\n' "${TREZOA_BINS_DEV[@]}"
 
 
 # Groups with binary names to be built, based on their intended audience
 # Keep names in sync with build/install scripts that consume these lists.
 
 # shellcheck disable=SC2034
-AGAVE_BINS_DEV=(
+TREZOA_BINS_DEV=(
   cargo-build-sbf
   cargo-test-sbf
-  solana-test-validator
+  trezoa-test-validator
 )
 
-AGAVE_BINS_END_USER=(
-  agave-install
-  solana
-  solana-keygen
+TREZOA_BINS_END_USER=(
+  trezoa-install
+  trezoa
+  trezoa-keygen
 )
 
-AGAVE_BINS_VAL_OP=(
-  agave-validator
-  agave-watchtower
-  solana-gossip
-  solana-genesis
-  solana-faucet
+TREZOA_BINS_VAL_OP=(
+  trezoa-validator
+  trezoa-watchtower
+  trezoa-gossip
+  trezoa-genesis
+  trezoa-faucet
 )
 
-AGAVE_BINS_DCOU=(
-  agave-ledger-tool
-  solana-bench-tps
+TREZOA_BINS_DCOU=(
+  trezoa-ledger-tool
+  trezoa-bench-tps
 )
 
 # These bins are deprecated and will be removed in a future release
-AGAVE_BINS_DEPRECATED=(
-  solana-stake-accounts
-  solana-tokens
-  agave-install-init
+TREZOA_BINS_DEPRECATED=(
+  trezoa-stake-accounts
+  trezoa-tokens
+  trezoa-install-init
 )
 
 DCOU_TAINTED_PACKAGES=(
-  agave-ledger-tool
-  agave-store-histogram
-  agave-store-tool
-  solana-accounts-cluster-bench
-  solana-banking-bench
-  solana-bench-tps
-  solana-dos
-  solana-local-cluster
-  solana-transaction-dos
-  solana-vortexor
+  trezoa-ledger-tool
+  trezoa-store-histogram
+  trezoa-store-tool
+  trezoa-accounts-cluster-bench
+  trezoa-banking-bench
+  trezoa-bench-tps
+  trezoa-dos
+  trezoa-local-cluster
+  trezoa-transaction-dos
+  trezoa-vortexor
 )

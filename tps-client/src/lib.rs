@@ -1,28 +1,28 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 use {
     log::debug,
-    solana_account::Account,
-    solana_clock::DEFAULT_MS_PER_SLOT,
-    solana_commitment_config::CommitmentConfig,
-    solana_epoch_info::EpochInfo,
-    solana_hash::Hash,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_api::{client_error::Error as ClientError, config::RpcBlockConfig},
-    solana_signature::Signature,
-    solana_tpu_client::tpu_client::TpuSenderError,
-    solana_transaction::Transaction,
-    solana_transaction_error::{TransactionResult as Result, TransportError},
-    solana_transaction_status::UiConfirmedBlock,
+    trezoa_account::Account,
+    trezoa_clock::DEFAULT_MS_PER_SLOT,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_epoch_info::EpochInfo,
+    trezoa_hash::Hash,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_api::{client_error::Error as ClientError, config::RpcBlockConfig},
+    trezoa_signature::Signature,
+    trezoa_tpu_client::tpu_client::TpuSenderError,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::{TransactionResult as Result, TransportError},
+    trezoa_transaction_status::UiConfirmedBlock,
     std::{
         thread::sleep,
         time::{Duration, Instant},

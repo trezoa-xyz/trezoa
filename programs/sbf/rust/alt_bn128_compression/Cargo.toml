@@ -1,6 +1,6 @@
 [package]
-name = "solana-sbf-rust-alt-bn128-compression"
-description = "Solana BPF test program written in Rust"
+name = "trezoa-sbf-rust-alt-bn128-compression"
+description = "Trezoa BPF test program written in Rust"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -13,9 +13,9 @@ crate-type = ["cdylib"]
 
 [dependencies]
 array-bytes = { workspace = true }
-solana-bn254 = { workspace = true }
-solana-msg = { workspace = true }
-solana-program-entrypoint = { workspace = true }
+trezoa-bn254 = { workspace = true }
+trezoa-msg = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
 
 [lints]
 workspace = true

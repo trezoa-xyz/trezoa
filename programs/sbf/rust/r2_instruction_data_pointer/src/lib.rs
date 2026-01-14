@@ -9,10 +9,10 @@ pub unsafe extern "C" fn entrypoint(_input: *mut u8, instruction_data_addr: *con
     let instruction_data =
         core::slice::from_raw_parts(instruction_data_addr, instruction_data_len as usize);
 
-    solana_cpi::set_return_data(instruction_data);
+    trezoa_cpi::set_return_data(instruction_data);
 
-    solana_program_entrypoint::SUCCESS
+    trezoa_program_entrypoint::SUCCESS
 }
 
-solana_program_entrypoint::custom_heap_default!();
-solana_program_entrypoint::custom_panic_default!();
+trezoa_program_entrypoint::custom_heap_default!();
+trezoa_program_entrypoint::custom_panic_default!();

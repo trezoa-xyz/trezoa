@@ -1,7 +1,7 @@
 [package]
-name = "solana-bloom"
-description = "Solana bloom filter"
-documentation = "https://docs.rs/solana-bloom"
+name = "trezoa-bloom"
+description = "Trezoa bloom filter"
+documentation = "https://docs.rs/trezoa-bloom"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,14 +14,14 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "solana_bloom"
+name = "trezoa_bloom"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 frozen-abi = [
-    "dep:solana-frozen-abi",
-    "dep:solana-frozen-abi-macro",
-    "solana-hash/frozen-abi",
+    "dep:trezoa-frozen-abi",
+    "dep:trezoa-frozen-abi-macro",
+    "trezoa-hash/frozen-abi",
 ]
 
 [dependencies]
@@ -29,22 +29,22 @@ bv = { workspace = true, features = ["serde"] }
 fnv = { workspace = true }
 rand = { workspace = true }
 serde = { workspace = true, features = ["rc"] }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-frozen-abi-macro = { workspace = true, optional = true, features = [
+trezoa-frozen-abi-macro = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-sanitize = { workspace = true }
-solana-time-utils = { workspace = true }
+trezoa-sanitize = { workspace = true }
+trezoa-time-utils = { workspace = true }
 
 [dev-dependencies]
 bencher = { workspace = true }
 rayon = { workspace = true }
-solana-bloom = { path = ".", features = ["agave-unstable-api"] }
-solana-hash = { workspace = true }
-solana-sha256-hasher = { workspace = true }
-solana-signature = { workspace = true, features = ["std"] }
+trezoa-bloom = { path = ".", features = ["trezoa-unstable-api"] }
+trezoa-hash = { workspace = true }
+trezoa-sha256-hasher = { workspace = true }
+trezoa-signature = { workspace = true, features = ["std"] }
 
 [[bench]]
 name = "bloom"

@@ -30,7 +30,7 @@ env:
 
 jobs:
   clippy-nightly:
-    if: github.repository == 'anza-xyz/agave'
+    if: github.repository == 'trezoa-xyz/trezoa'
     strategy:
       matrix:
         os:

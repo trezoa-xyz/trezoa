@@ -1,6 +1,6 @@
 use {
     super::*,
-    solana_message::AccountKeys,
+    trezoa_message::AccountKeys,
     std::{cmp::max, time::Instant},
 };
 
@@ -516,11 +516,11 @@ pub mod tests {
             blockstore::tests::make_slot_entries_with_transactions, get_tmp_ledger_path_auto_delete,
         },
         bincode::serialize,
-        solana_entry::entry::next_entry_mut,
-        solana_hash::Hash,
-        solana_message::Message,
-        solana_sha256_hasher::hash,
-        solana_transaction::Transaction,
+        trezoa_entry::entry::next_entry_mut,
+        trezoa_hash::Hash,
+        trezoa_message::Message,
+        trezoa_sha256_hasher::hash,
+        trezoa_transaction::Transaction,
         test_case::test_case,
     };
 

@@ -2,16 +2,16 @@
 use {
     crate::shred,
     rayon::{prelude::*, ThreadPool},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_nohash_hasher::BuildNoHashHasher,
-    solana_perf::packet::{PacketBatch, PacketRef},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_nohash_hasher::BuildNoHashHasher,
+    trezoa_perf::packet::{PacketBatch, PacketRef},
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
     std::{collections::HashMap, sync::RwLock},
 };
 #[cfg(test)]
-use {solana_keypair::Keypair, solana_perf::packet::PacketRefMut, solana_signer::Signer};
+use {trezoa_keypair::Keypair, trezoa_perf::packet::PacketRefMut, trezoa_signer::Signer};
 
 pub type LruCache = lazy_lru::LruCache<(Signature, Pubkey, /*merkle root:*/ Hash), ()>;
 
@@ -106,14 +106,14 @@ mod tests {
         itertools::Itertools,
         rand::{seq::SliceRandom, Rng},
         rayon::ThreadPoolBuilder,
-        solana_entry::entry::Entry,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_packet::Packet,
-        solana_perf::packet::RecycledPacketBatch,
-        solana_signer::Signer,
-        solana_system_transaction as system_transaction,
-        solana_transaction::Transaction,
+        trezoa_entry::entry::Entry,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_packet::Packet,
+        trezoa_perf::packet::RecycledPacketBatch,
+        trezoa_signer::Signer,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::Transaction,
         std::iter::{once, repeat_with},
         test_case::test_case,
     };
@@ -129,7 +129,7 @@ mod tests {
     }
 
     fn run_test_sigverify_shred_cpu(slot: Slot) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut packet = Packet::default();
         let cache = RwLock::new(LruCache::new(/*capacity:*/ 128));
         let shredder = Shredder::new(slot, slot.saturating_sub(1), 0, 0).unwrap();
@@ -168,7 +168,7 @@ mod tests {
     }
 
     fn run_test_sigverify_shreds_cpu(thread_pool: &ThreadPool, slot: Slot) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cache = RwLock::new(LruCache::new(/*capacity:*/ 128));
         let keypair = Keypair::new();
         let batch = make_packet_batch(&keypair, slot);
@@ -202,7 +202,7 @@ mod tests {
     }
 
     fn run_test_sigverify_shreds(thread_pool: &ThreadPool, slot: Slot) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cache = RwLock::new(LruCache::new(/*capacity:*/ 128));
 
         let keypair = Keypair::new();
@@ -269,7 +269,7 @@ mod tests {
 
     fn make_transaction<R: Rng>(rng: &mut R) -> Transaction {
         let block = rng.random::<[u8; 32]>();
-        let recent_blockhash = solana_sha256_hasher::hashv(&[&block]);
+        let recent_blockhash = trezoa_sha256_hasher::hashv(&[&block]);
         system_transaction::transfer(
             &Keypair::new(),       // from
             &Pubkey::new_unique(), // to
@@ -289,7 +289,7 @@ mod tests {
     }
 
     fn make_entries<R: Rng>(rng: &mut R, num_entries: usize) -> Vec<Entry> {
-        let prev_hash = solana_sha256_hasher::hashv(&[&rng.random::<[u8; 32]>()]);
+        let prev_hash = trezoa_sha256_hasher::hashv(&[&rng.random::<[u8; 32]>()]);
         let entry = make_entry(rng, &prev_hash);
         std::iter::successors(Some(entry), |entry| Some(make_entry(rng, &entry.hash)))
             .take(num_entries)

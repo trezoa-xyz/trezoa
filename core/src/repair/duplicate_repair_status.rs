@@ -1,9 +1,9 @@
 use {
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_ledger::blockstore::Blockstore,
-    solana_pubkey::Pubkey,
-    solana_time_utils::timestamp,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_ledger::blockstore::Blockstore,
+    trezoa_pubkey::Pubkey,
+    trezoa_time_utils::timestamp,
     std::{
         collections::HashMap,
         net::SocketAddr,
@@ -531,7 +531,7 @@ pub mod tests {
     use {
         super::*,
         rand::{self, rng, seq::SliceRandom},
-        solana_ledger::get_tmp_ledger_path_auto_delete,
+        trezoa_ledger::get_tmp_ledger_path_auto_delete,
         std::{collections::BTreeMap, net::IpAddr},
         tempfile::TempDir,
         trees::tr,

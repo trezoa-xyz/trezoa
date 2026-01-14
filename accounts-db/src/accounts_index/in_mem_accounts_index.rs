@@ -10,10 +10,10 @@ use {
     },
     crate::pubkey_bins::PubkeyBinCalculator24,
     rand::{rng, Rng},
-    solana_bucket_map::bucket_api::BucketApi,
-    solana_clock::Slot,
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
+    trezoa_bucket_map::bucket_api::BucketApi,
+    trezoa_clock::Slot,
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
     std::{
         cmp,
         collections::{hash_map::Entry, HashMap, HashSet},
@@ -1472,7 +1472,7 @@ mod tests {
     #[test]
     fn test_get_or_create_index_entry_for_pubkey_insert_new() {
         let accounts_index = new_for_test::<u64>();
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let slot = 0;
 
         let mut callback_called = false;
@@ -1497,7 +1497,7 @@ mod tests {
     #[test]
     fn test_get_or_create_index_entry_for_pubkey_existing_in_mem() {
         let accounts_index = new_for_test::<u64>();
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
 
         // Insert an entry manually
         let entry = Box::new(AccountMapEntry::new(
@@ -1525,7 +1525,7 @@ mod tests {
     #[test]
     fn test_get_or_create_index_entry_for_pubkey_existing_on_disk() {
         let accounts_index = new_disk_buckets_for_test::<u64>();
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let slot = 0;
 
         // Simulate an entry on disk
@@ -1566,10 +1566,10 @@ mod tests {
     #[test]
     fn test_flush_internal() {
         let accounts_index = new_disk_buckets_for_test::<u64>();
-        let pubkey_clean_new = solana_pubkey::new_rand();
-        let pubkey_clean_old = solana_pubkey::new_rand();
-        let pubkey_dirty_new = solana_pubkey::new_rand();
-        let pubkey_dirty_old = solana_pubkey::new_rand();
+        let pubkey_clean_new = trezoa_pubkey::new_rand();
+        let pubkey_clean_old = trezoa_pubkey::new_rand();
+        let pubkey_dirty_new = trezoa_pubkey::new_rand();
+        let pubkey_dirty_old = trezoa_pubkey::new_rand();
         let slot = 123;
         let info = 42;
 
@@ -1685,7 +1685,7 @@ mod tests {
     )]
     fn test_get_or_create_index_entry_for_pubkey_empty_slot_list_assertion() {
         let accounts_index = new_for_test::<u64>();
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
 
         accounts_index.get_or_create_index_entry_for_pubkey(&pubkey, |_entry| {
             // Do not modify the slot list, which should trigger the assertion
@@ -1694,7 +1694,7 @@ mod tests {
 
     #[test]
     fn test_update_slot_list_other_populate_reclaims() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let reclaim = UpsertReclaim::PopulateReclaims;
         let new_slot = 5;
         let info = 1;
@@ -2128,7 +2128,7 @@ mod tests {
 
     #[test]
     fn test_age() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let test = new_for_test::<u64>();
         assert!(test.get_should_age(test.storage.current_age()));
         assert_eq!(test.storage.count_buckets_flushed(), 0);
@@ -2151,7 +2151,7 @@ mod tests {
 
     #[test]
     fn test_update_slot_list_other_reclaim_old_slots() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let reclaim = UpsertReclaim::ReclaimOldSlots;
         let new_slot = 5;
         let info = 1;
@@ -2386,8 +2386,8 @@ mod tests {
 
     #[test]
     fn test_remove_if_slot_list_empty_entry() {
-        let key = solana_pubkey::new_rand();
-        let unknown_key = solana_pubkey::new_rand();
+        let key = trezoa_pubkey::new_rand();
+        let unknown_key = trezoa_pubkey::new_rand();
 
         let test = new_for_test::<u64>();
 

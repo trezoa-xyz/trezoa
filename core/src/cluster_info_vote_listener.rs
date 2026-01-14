@@ -7,25 +7,25 @@ use {
         result::{Error, Result},
         sigverify,
     },
-    agave_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, Select, Sender},
     log::*,
-    solana_clock::{Slot, DEFAULT_MS_PER_SLOT},
-    solana_gossip::{
+    trezoa_clock::{Slot, DEFAULT_MS_PER_SLOT},
+    trezoa_gossip::{
         cluster_info::{ClusterInfo, GOSSIP_SLEEP_MILLIS},
         crds::Cursor,
     },
-    solana_hash::Hash,
-    solana_ledger::blockstore::Blockstore,
-    solana_measure::measure::Measure,
-    solana_metrics::inc_new_counter_debug,
-    solana_perf::packet::{self, PacketBatch},
-    solana_pubkey::Pubkey,
-    solana_rpc::{
+    trezoa_hash::Hash,
+    trezoa_ledger::blockstore::Blockstore,
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::inc_new_counter_debug,
+    trezoa_perf::packet::{self, PacketBatch},
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc::{
         optimistically_confirmed_bank_tracker::{BankNotification, BankNotificationSenderConfig},
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    trezoa_runtime::{
         bank::Bank,
         bank_forks::{BankForks, SharableBanks},
         bank_hash_cache::{BankHashCache, DumpedSlotSubscription},
@@ -33,10 +33,10 @@ use {
         epoch_stakes::VersionedEpochStakes,
         vote_sender_types::ReplayVoteReceiver,
     },
-    solana_signature::Signature,
-    solana_time_utils::AtomicInterval,
-    solana_transaction::Transaction,
-    solana_vote::{
+    trezoa_signature::Signature,
+    trezoa_time_utils::AtomicInterval,
+    trezoa_transaction::Transaction,
+    trezoa_vote::{
         vote_parser::{self, ParsedVote},
         vote_transaction::VoteTransaction,
     },
@@ -744,12 +744,12 @@ mod tests {
     use {
         super::*,
         itertools::Itertools,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_perf::packet,
-        solana_pubkey::Pubkey,
-        solana_rpc::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
-        solana_runtime::{
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_perf::packet,
+        trezoa_pubkey::Pubkey,
+        trezoa_rpc::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
+        trezoa_runtime::{
             bank::Bank,
             commitment::BlockCommitmentCache,
             genesis_utils::{
@@ -757,10 +757,10 @@ mod tests {
             },
             vote_sender_types::ReplayVoteSender,
         },
-        solana_signature::Signature,
-        solana_signer::Signer,
-        solana_vote::vote_transaction,
-        solana_vote_program::vote_state::{TowerSync, Vote, MAX_LOCKOUT_HISTORY},
+        trezoa_signature::Signature,
+        trezoa_signer::Signer,
+        trezoa_vote::vote_transaction,
+        trezoa_vote_program::vote_state::{TowerSync, Vote, MAX_LOCKOUT_HISTORY},
         std::{
             collections::BTreeSet,
             iter::repeat_with,
@@ -770,7 +770,7 @@ mod tests {
 
     #[test]
     fn test_max_vote_tx_fits() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let node_keypair = Keypair::new();
         let vote_keypair = Keypair::new();
         let tower_sync = TowerSync::new_from_slot(MAX_LOCKOUT_HISTORY as u64, Hash::default());
@@ -798,7 +798,7 @@ mod tests {
         } = setup();
 
         // Check outdated slots are purged with new root
-        let new_voter = solana_pubkey::new_rand();
+        let new_voter = trezoa_pubkey::new_rand();
         // Make separate copy so the original doesn't count toward
         // the ref count, which would prevent cleanup
         let new_voter_ = new_voter;
@@ -1504,7 +1504,7 @@ mod tests {
 
     #[test]
     fn test_verify_votes_empty() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let bank = Bank::new_for_tests(&genesis_config);
         let bank_forks = BankForks::new_rw_arc(bank);

@@ -5,10 +5,10 @@ use {
         is_zero_lamport::IsZeroLamport,
         storable_accounts::{AccountForStorage, StorableAccounts},
     },
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_reward_info::RewardType,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_reward_info::RewardType,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -72,17 +72,17 @@ impl<'a> StorableAccounts<'a> for (Slot, &'a [StakeReward]) {
 #[cfg(feature = "dev-context-only-utils")]
 use {
     rand::Rng,
-    solana_account::{state_traits::StateMut, WritableAccount},
-    solana_clock::Epoch,
-    solana_keypair::Keypair,
-    solana_rent::Rent,
-    solana_signer::Signer,
-    solana_stake_interface::{
+    trezoa_account::{state_traits::StateMut, WritableAccount},
+    trezoa_clock::Epoch,
+    trezoa_keypair::Keypair,
+    trezoa_rent::Rent,
+    trezoa_signer::Signer,
+    trezoa_stake_interface::{
         program as stake_program,
         stake_flags::StakeFlags,
         state::{Authorized, Delegation, Meta, Stake, StakeStateV2},
     },
-    solana_vote_program::vote_state,
+    trezoa_vote_program::vote_state,
 };
 
 // These functions/fields are only usable from a dev context (i.e. tests and benches)
@@ -93,7 +93,7 @@ impl StakeReward {
 
         let rent = Rent::free();
 
-        let validator_pubkey = solana_pubkey::new_rand();
+        let validator_pubkey = trezoa_pubkey::new_rand();
         let validator_stake_lamports = 20;
         let validator_staking_keypair = Keypair::new();
         let validator_voting_keypair = Keypair::new();
@@ -119,7 +119,7 @@ impl StakeReward {
         Self {
             stake_pubkey: Pubkey::new_unique(),
             stake_reward_info: StakeRewardInfo {
-                reward_type: solana_reward_info::RewardType::Staking,
+                reward_type: trezoa_reward_info::RewardType::Staking,
                 lamports: reward_lamports,
                 post_balance: 0,     /* unused atm */
                 commission: Some(0), /* unused but tests require some value */

@@ -1,7 +1,7 @@
 use {
-    solana_clock::Slot, solana_hash::Hash, solana_signature::Signature,
-    solana_transaction::versioned::VersionedTransaction,
-    solana_transaction_status::TransactionStatusMeta, std::sync::Arc,
+    trezoa_clock::Slot, trezoa_hash::Hash, trezoa_signature::Signature,
+    trezoa_transaction::versioned::VersionedTransaction,
+    trezoa_transaction_status::TransactionStatusMeta, std::sync::Arc,
 };
 
 pub trait TransactionNotifier {

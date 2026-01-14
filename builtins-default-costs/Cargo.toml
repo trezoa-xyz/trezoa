@@ -1,7 +1,7 @@
 [package]
-name = "solana-builtins-default-costs"
-description = "Solana builtins default costs"
-documentation = "https://docs.rs/solana-builtins-default-costs"
+name = "trezoa-builtins-default-costs"
+description = "Trezoa builtins default costs"
+documentation = "https://docs.rs/trezoa-builtins-default-costs"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -15,28 +15,28 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "solana_builtins_default_costs"
+name = "trezoa_builtins_default_costs"
 
 [features]
-agave-unstable-api = []
-frozen-abi = ["dep:solana-frozen-abi", "solana-vote-program/frozen-abi"]
+trezoa-unstable-api = []
+frozen-abi = ["dep:trezoa-frozen-abi", "trezoa-vote-program/frozen-abi"]
 dev-context-only-utils = ["dep:qualifier_attr"]
 
 [dependencies]
-agave-feature-set = { workspace = true }
+trezoa-feature-set = { workspace = true }
 ahash = { workspace = true }
 log = { workspace = true }
 qualifier_attr = { workspace = true, optional = true }
-solana-bpf-loader-program = { workspace = true }
-solana-compute-budget-program = { workspace = true }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-bpf-loader-program = { workspace = true }
+trezoa-compute-budget-program = { workspace = true }
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-loader-v4-program = { workspace = true, features = ["agave-unstable-api"] }
-solana-pubkey = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-system-program = { workspace = true }
-solana-vote-program = { workspace = true }
+trezoa-loader-v4-program = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-pubkey = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-system-program = { workspace = true }
+trezoa-vote-program = { workspace = true }
 
 [dev-dependencies]
 rand = { workspace = true }

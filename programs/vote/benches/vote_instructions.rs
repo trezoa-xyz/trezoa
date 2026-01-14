@@ -1,21 +1,21 @@
 use {
-    agave_feature_set::{deprecate_legacy_vote_ixs, FeatureSet},
+    trezoa_feature_set::{deprecate_legacy_vote_ixs, FeatureSet},
     bincode::serialize,
     criterion::{criterion_group, criterion_main, Criterion},
-    solana_account::{self as account, create_account_for_test, Account, AccountSharedData},
-    solana_clock::{Clock, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_hash::Hash,
-    solana_instruction::{error::InstructionError, AccountMeta},
-    solana_program_runtime::invoke_context::{
+    trezoa_account::{self as account, create_account_for_test, Account, AccountSharedData},
+    trezoa_clock::{Clock, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_hash::Hash,
+    trezoa_instruction::{error::InstructionError, AccountMeta},
+    trezoa_program_runtime::invoke_context::{
         mock_process_instruction, mock_process_instruction_with_feature_set,
     },
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::{sysvar, vote::id},
-    solana_slot_hashes::{SlotHashes, MAX_ENTRIES},
-    solana_transaction_context::transaction_accounts::KeyedAccountSharedData,
-    solana_vote_program::{
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::{sysvar, vote::id},
+    trezoa_slot_hashes::{SlotHashes, MAX_ENTRIES},
+    trezoa_transaction_context::transaction_accounts::KeyedAccountSharedData,
+    trezoa_vote_program::{
         vote_instruction::VoteInstruction,
         vote_processor::Entrypoint,
         vote_state::{
@@ -73,14 +73,14 @@ fn create_accounts() -> (
         Account {
             lamports: 1,
             data: vote_account_data,
-            owner: solana_vote_program::id(),
+            owner: trezoa_vote_program::id(),
             executable: false,
             rent_epoch: 0,
         }
     };
 
     let transaction_accounts = vec![
-        (solana_vote_program::id(), AccountSharedData::default()),
+        (trezoa_vote_program::id(), AccountSharedData::default()),
         (vote_pubkey, AccountSharedData::from(vote_account)),
         (
             sysvar::slot_hashes::id(),
@@ -130,11 +130,11 @@ fn create_accounts() -> (
 fn create_test_account() -> (Pubkey, AccountSharedData) {
     let rent = Rent::default();
     let balance = rent.minimum_balance(VoteStateV3::size_of());
-    let vote_pubkey = solana_pubkey::new_rand();
+    let vote_pubkey = trezoa_pubkey::new_rand();
     (
         vote_pubkey,
         create_v4_account_with_authorized(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &vote_pubkey,
             &vote_pubkey,
             None,
@@ -145,16 +145,16 @@ fn create_test_account() -> (Pubkey, AccountSharedData) {
 }
 
 fn create_test_account_with_authorized() -> (Pubkey, Pubkey, Pubkey, AccountSharedData) {
-    let vote_pubkey = solana_pubkey::new_rand();
-    let authorized_voter = solana_pubkey::new_rand();
-    let authorized_withdrawer = solana_pubkey::new_rand();
+    let vote_pubkey = trezoa_pubkey::new_rand();
+    let authorized_voter = trezoa_pubkey::new_rand();
+    let authorized_withdrawer = trezoa_pubkey::new_rand();
 
     (
         vote_pubkey,
         authorized_voter,
         authorized_withdrawer,
         create_v4_account_with_authorized(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             &authorized_voter,
             &authorized_withdrawer,
             None,
@@ -214,7 +214,7 @@ struct BenchAuthorize {
 impl BenchAuthorize {
     fn new() -> Self {
         let (vote_pubkey, vote_account) = create_test_account();
-        let authorized_voter_pubkey = solana_pubkey::new_rand();
+        let authorized_voter_pubkey = trezoa_pubkey::new_rand();
         let clock = Clock {
             epoch: 1,
             leader_schedule_epoch: 2,
@@ -268,9 +268,9 @@ struct BenchInitializeAccount {
 
 impl BenchInitializeAccount {
     fn new() -> Self {
-        let vote_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
         let vote_account = AccountSharedData::new(100, VoteStateV3::size_of(), &id());
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let node_account = AccountSharedData::default();
         let instruction_data = serialize(&VoteInstruction::InitializeAccount(VoteInit {
             node_pubkey,
@@ -378,7 +378,7 @@ struct BenchWithdraw {
 impl BenchWithdraw {
     pub fn new() -> Self {
         let (vote_pubkey, vote_account) = create_test_account();
-        let authorized_withdrawer_pubkey = solana_pubkey::new_rand();
+        let authorized_withdrawer_pubkey = trezoa_pubkey::new_rand();
         let transaction_accounts = vec![
             (vote_pubkey, vote_account.clone()),
             (sysvar::clock::id(), create_default_clock_account()),
@@ -432,7 +432,7 @@ impl BenchUpdateValidatorIdentity {
         let (vote_pubkey, _authorized_voter, authorized_withdrawer, vote_account) =
             create_test_account_with_authorized();
 
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let instruction_data = serialize(&VoteInstruction::UpdateValidatorIdentity).unwrap();
         let transaction_accounts = vec![
             (vote_pubkey, vote_account),

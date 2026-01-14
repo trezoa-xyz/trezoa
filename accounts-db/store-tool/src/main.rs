@@ -5,10 +5,10 @@ use {
         ArgMatches, SubCommand,
     },
     rayon::prelude::*,
-    solana_account::ReadableAccount,
-    solana_accounts_db::append_vec::AppendVec,
-    solana_pubkey::Pubkey,
-    solana_system_interface::MAX_PERMITTED_DATA_LENGTH,
+    trezoa_account::ReadableAccount,
+    trezoa_accounts_db::append_vec::AppendVec,
+    trezoa_pubkey::Pubkey,
+    trezoa_system_interface::MAX_PERMITTED_DATA_LENGTH,
     std::{
         fs, io,
         mem::ManuallyDrop,
@@ -23,7 +23,7 @@ const CMD_SEARCH: &str = "search";
 fn main() {
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .global_setting(AppSettings::ArgRequiredElseHelp)
         .global_setting(AppSettings::ColoredHelp)
         .global_setting(AppSettings::InferSubcommands)

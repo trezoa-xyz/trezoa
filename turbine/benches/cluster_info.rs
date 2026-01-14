@@ -1,20 +1,20 @@
 use {
     bencher::{benchmark_group, benchmark_main, Bencher},
     rand::{rng, Rng},
-    solana_entry::entry::Entry,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo, node::Node},
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_entry::entry::Entry,
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo, node::Node},
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
     },
-    solana_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
-    solana_pubkey as pubkey,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_signer::Signer,
-    solana_time_utils::{timestamp, AtomicInterval},
-    solana_turbine::{
+    trezoa_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
+    trezoa_pubkey as pubkey,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_signer::Signer,
+    trezoa_time_utils::{timestamp, AtomicInterval},
+    trezoa_turbine::{
         broadcast_stage::{
             broadcast_metrics::TransmitShredsStats, broadcast_shreds, BroadcastSocket,
             BroadcastStage,
@@ -25,7 +25,7 @@ use {
 };
 
 fn broadcast_shreds_bench(b: &mut Bencher) {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let leader_keypair = Arc::new(Keypair::new());
     let leader_info = Node::new_localhost_with_pubkey(&leader_keypair.pubkey());
     let cluster_info = ClusterInfo::new(

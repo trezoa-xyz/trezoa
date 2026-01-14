@@ -1,36 +1,36 @@
 #![allow(unused)]
 
 #[allow(deprecated)]
-use solana_sysvar::recent_blockhashes::{Entry as BlockhashesEntry, RecentBlockhashes};
+use trezoa_sysvar::recent_blockhashes::{Entry as BlockhashesEntry, RecentBlockhashes};
 use {
-    agave_syscalls::{
+    trezoa_syscalls::{
         SyscallAbort, SyscallGetClockSysvar, SyscallGetEpochScheduleSysvar, SyscallGetRentSysvar,
         SyscallInvokeSignedRust, SyscallLog, SyscallMemcmp, SyscallMemcpy, SyscallMemmove,
         SyscallMemset, SyscallSetReturnData,
     },
-    solana_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
-    solana_clock::{Clock, Slot, UnixTimestamp},
-    solana_epoch_schedule::EpochSchedule,
-    solana_fee_structure::{FeeDetails, FeeStructure},
-    solana_loader_v3_interface::{self as bpf_loader_upgradeable, state::UpgradeableLoaderState},
-    solana_program_runtime::{
+    trezoa_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_clock::{Clock, Slot, UnixTimestamp},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_fee_structure::{FeeDetails, FeeStructure},
+    trezoa_loader_v3_interface::{self as bpf_loader_upgradeable, state::UpgradeableLoaderState},
+    trezoa_program_runtime::{
         execution_budget::{SVMTransactionExecutionBudget, SVMTransactionExecutionCost},
         invoke_context::InvokeContext,
         loaded_programs::{BlockRelation, ForkGraph, ProgramCacheEntry},
-        solana_sbpf::{
+        trezoa_sbpf::{
             program::{BuiltinProgram, SBPFVersion},
             vm::Config,
         },
     },
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::{bpf_loader, bpf_loader_deprecated, compute_budget, loader_v4},
-    solana_svm::transaction_processor::TransactionBatchProcessor,
-    solana_svm_callback::{AccountState, InvokeContextCallback, TransactionProcessingCallback},
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_svm_type_overrides::sync::{Arc, RwLock},
-    solana_sysvar_id::SysvarId,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::{bpf_loader, bpf_loader_deprecated, compute_budget, loader_v4},
+    trezoa_svm::transaction_processor::TransactionBatchProcessor,
+    trezoa_svm_callback::{AccountState, InvokeContextCallback, TransactionProcessingCallback},
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_svm_type_overrides::sync::{Arc, RwLock},
+    trezoa_sysvar_id::SysvarId,
     std::{
         cmp::Ordering,
         collections::HashMap,
@@ -114,7 +114,7 @@ impl MockBankCallback {
         let account_data = AccountSharedData::from(Account {
             lamports: 5000,
             data: name.as_bytes().to_vec(),
-            owner: solana_sdk_ids::native_loader::id(),
+            owner: trezoa_sdk_ids::native_loader::id(),
             executable: true,
             rent_epoch: 0,
         });
@@ -232,7 +232,7 @@ pub fn deploy_program_with_upgrade_authority(
     let mut account_data = AccountSharedData::default();
     let buffer = bincode::serialize(&state).unwrap();
     account_data.set_lamports(rent.minimum_balance(buffer.len()));
-    account_data.set_owner(solana_sdk_ids::bpf_loader_upgradeable::id());
+    account_data.set_owner(trezoa_sdk_ids::bpf_loader_upgradeable::id());
     account_data.set_executable(true);
     account_data.set_data(buffer);
     mock_bank
@@ -258,7 +258,7 @@ pub fn deploy_program_with_upgrade_authority(
     header.append(&mut complement);
     header.append(&mut buffer);
     account_data.set_lamports(rent.minimum_balance(header.len()));
-    account_data.set_owner(solana_sdk_ids::bpf_loader_upgradeable::id());
+    account_data.set_owner(trezoa_sdk_ids::bpf_loader_upgradeable::id());
     account_data.set_data(header);
     mock_bank
         .account_shared_data
@@ -276,20 +276,20 @@ pub fn register_builtins(
 ) {
     const DEPLOYMENT_SLOT: u64 = 0;
     // We must register LoaderV3 as a loadable account, otherwise programs won't execute.
-    let loader_v3_name = "solana_bpf_loader_upgradeable_program";
+    let loader_v3_name = "trezoa_bpf_loader_upgradeable_program";
     mock_bank.add_builtin(
         batch_processor,
-        solana_sdk_ids::bpf_loader_upgradeable::id(),
+        trezoa_sdk_ids::bpf_loader_upgradeable::id(),
         loader_v3_name,
         ProgramCacheEntry::new_builtin(
             DEPLOYMENT_SLOT,
             loader_v3_name.len(),
-            solana_bpf_loader_program::Entrypoint::vm,
+            trezoa_bpf_loader_program::Entrypoint::vm,
         ),
     );
 
     // Other loaders are needed for testing program cache behavior.
-    let loader_v1_name = "solana_bpf_loader_deprecated_program";
+    let loader_v1_name = "trezoa_bpf_loader_deprecated_program";
     mock_bank.add_builtin(
         batch_processor,
         bpf_loader_deprecated::id(),
@@ -297,11 +297,11 @@ pub fn register_builtins(
         ProgramCacheEntry::new_builtin(
             DEPLOYMENT_SLOT,
             loader_v1_name.len(),
-            solana_bpf_loader_program::Entrypoint::vm,
+            trezoa_bpf_loader_program::Entrypoint::vm,
         ),
     );
 
-    let loader_v2_name = "solana_bpf_loader_program";
+    let loader_v2_name = "trezoa_bpf_loader_program";
     mock_bank.add_builtin(
         batch_processor,
         bpf_loader::id(),
@@ -309,12 +309,12 @@ pub fn register_builtins(
         ProgramCacheEntry::new_builtin(
             DEPLOYMENT_SLOT,
             loader_v2_name.len(),
-            solana_bpf_loader_program::Entrypoint::vm,
+            trezoa_bpf_loader_program::Entrypoint::vm,
         ),
     );
 
     if with_loader_v4 {
-        let loader_v4_name = "solana_loader_v4_program";
+        let loader_v4_name = "trezoa_loader_v4_program";
         mock_bank.add_builtin(
             batch_processor,
             loader_v4::id(),
@@ -322,7 +322,7 @@ pub fn register_builtins(
             ProgramCacheEntry::new_builtin(
                 DEPLOYMENT_SLOT,
                 loader_v4_name.len(),
-                solana_loader_v4_program::Entrypoint::vm,
+                trezoa_loader_v4_program::Entrypoint::vm,
             ),
         );
     }
@@ -332,12 +332,12 @@ pub fn register_builtins(
     let system_program_name = "system_program";
     mock_bank.add_builtin(
         batch_processor,
-        solana_system_program::id(),
+        trezoa_system_program::id(),
         system_program_name,
         ProgramCacheEntry::new_builtin(
             DEPLOYMENT_SLOT,
             system_program_name.len(),
-            solana_system_program::system_processor::Entrypoint::vm,
+            trezoa_system_program::system_processor::Entrypoint::vm,
         ),
     );
 
@@ -350,7 +350,7 @@ pub fn register_builtins(
         ProgramCacheEntry::new_builtin(
             DEPLOYMENT_SLOT,
             compute_budget_program_name.len(),
-            solana_compute_budget_program::Entrypoint::vm,
+            trezoa_compute_budget_program::Entrypoint::vm,
         ),
     );
 }

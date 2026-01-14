@@ -1,27 +1,27 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 #![no_std]
 
-//! Messages passed between agave and an external pack process.
+//! Messages passed between trezoa and an external pack process.
 //! Messages are passed via `shaq::Consumer/Producer`.
 //!
 //! Memory freeing is responsibility of the external pack process,
 //! and is done via `rts-alloc` crate. It is also possible the external
-//! pack process allocates memory to pass to agave, BUT it will still be
+//! pack process allocates memory to pass to trezoa, BUT it will still be
 //! the responsibility of the external pack process to free that memory.
 //!
 //! Setting up the shared memory allocator and queues is done outside of
-//! agave - it can be done by the external pack process or another
-//! process. agave will just `join` shared memory regions, but not
+//! trezoa - it can be done by the external pack process or another
+//! process. trezoa will just `join` shared memory regions, but not
 //! create them.
-//! Similarly, agave will not delete files used for shared memory regions.
+//! Similarly, trezoa will not delete files used for shared memory regions.
 //! See `shaq` and `rts-alloc` crates for details.
 //!
 //! The basic architecture is as follows:
@@ -47,11 +47,11 @@
 //!   external scheduler process. This passes information about leader status
 //!   and slot progress to the external scheduler process.
 //! - [`PackToWorkerMessage`] are sent from the external scheduler process
-//!   to worker threads within agave. This passes a batch of transactions
+//!   to worker threads within trezoa. This passes a batch of transactions
 //!   to be processed by the worker threads. This processing can also involve
 //!   resolving the transactions' addresses, or similar operations beyond
 //!   execution.
-//! - [`WorkerToPackMessage`] are sent from worker threads within agave
+//! - [`WorkerToPackMessage`] are sent from worker threads within trezoa
 //!   back to the external scheduler process. This passes back the results
 //!   of processing the transactions.
 //!
@@ -89,7 +89,7 @@ pub struct SharablePubkeys {
 /// 1. External pack process allocates memory for
 ///    `num_transactions` [`SharableTransactionRegion`].
 /// 2. External pack sends a [`PackToWorkerMessage`] with `batch`.
-/// 3. agave processes the transactions and sends back a [`WorkerToPackMessage`]
+/// 3. trezoa processes the transactions and sends back a [`WorkerToPackMessage`]
 ///    with the same `batch`.
 /// 4. External pack process frees all transaction memory pointed to by the
 ///    [`SharableTransactionRegion`] in the batch, then frees the memory for
@@ -107,8 +107,8 @@ pub struct SharableTransactionBatchRegion {
 }
 /// Reference to an array of response messages.
 /// General flow:
-/// 1. agave allocates memory for `num_transaction_responses` inner messages.
-/// 2. agave sends a [`WorkerToPackMessage`] with `responses`.
+/// 1. trezoa allocates memory for `num_transaction_responses` inner messages.
+/// 2. trezoa sends a [`WorkerToPackMessage`] with `responses`.
 /// 3. External pack process processes the inner messages. Potentially freeing
 ///    any memory within each inner message (see [`worker_message_types`] for details).
 #[cfg_attr(
@@ -172,8 +172,8 @@ pub const IS_NOT_LEADER: u8 = 0;
 /// Indicates the node is leader.
 pub const IS_LEADER: u8 = 1;
 
-/// Message: [Agave -> Pack]
-/// Agave passes leader status to the external pack process.
+/// Message: [Trezoa-team -> Pack]
+/// Trezoa-team passes leader status to the external pack process.
 #[cfg_attr(
     feature = "dev-context-only-utils",
     derive(Debug, Clone, Copy, PartialEq, Eq)
@@ -210,7 +210,7 @@ pub struct ProgressMessage {
 }
 
 /// Maximum number of transactions allowed in a [`PackToWorkerMessage`].
-/// If the number of transactions exceeds this value, agave will
+/// If the number of transactions exceeds this value, trezoa will
 /// not process the message.
 //
 // The reason for this constraint is because rts-alloc currently only
@@ -220,7 +220,7 @@ pub struct ProgressMessage {
 pub const MAX_TRANSACTIONS_PER_MESSAGE: usize = 64;
 
 /// Message: [Pack -> Worker]
-/// External pack processe passes transactions to worker threads within agave.
+/// External pack processe passes transactions to worker threads within trezoa.
 ///
 /// These messages do not transfer ownership of the transactions.
 /// The external pack process is still responsible for freeing the memory.
@@ -240,7 +240,7 @@ pub struct PackToWorkerMessage {
     pub max_working_slot: u64,
     /// Offset and number of transactions in the batch.
     /// See [`SharableTransactionBatchRegion`] for details.
-    /// Agave will return this batch in the response message, it is
+    /// Trezoa-team will return this batch in the response message, it is
     /// the responsibility of the external pack process to free the memory
     /// ONLY after receiving the response message.
     pub batch: SharableTransactionBatchRegion,
@@ -310,7 +310,7 @@ pub struct WorkerToPackMessage {
     /// See [`SharableTransactionBatchRegion`] for details.
     /// Once the external pack process receives this message,
     /// it is responsible for freeing the memory for this batch,
-    /// and is safe to do so - agave will hold no references to this memory
+    /// and is safe to do so - trezoa will hold no references to this memory
     /// after sending this message.
     pub batch: SharableTransactionBatchRegion,
     /// See [`processed_codes`] for accepted values.
@@ -439,7 +439,7 @@ pub mod worker_message_types {
         /// Program cache hit max limit.
         pub const PROGRAM_CACHE_HIT_MAX_LIMIT: u8 = 101;
 
-        // This error in agave is only internal, and to avoid updating the sdk
+        // This error in trezoa is only internal, and to avoid updating the sdk
         // it is reused for mapping into `ALL_OR_NOTHING_BATCH_FAILURE`.
         // /// Commit cancelled internally.
         // pub const COMMIT_CANCELLED: u8 = 102;

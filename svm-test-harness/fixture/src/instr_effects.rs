@@ -1,6 +1,6 @@
 //! Instruction effects (output).
 
-use {solana_account::Account, solana_instruction_error::InstructionError, solana_pubkey::Pubkey};
+use {trezoa_account::Account, trezoa_instruction_error::InstructionError, trezoa_pubkey::Pubkey};
 
 /// Represents the effects of a single instruction.
 pub struct InstrEffects {

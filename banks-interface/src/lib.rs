@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -11,20 +11,20 @@
 
 use {
     serde::{Deserialize, Serialize},
-    solana_account::Account,
-    solana_clock::Slot,
-    solana_commitment_config::CommitmentLevel,
-    solana_hash::Hash,
-    solana_message::{inner_instruction::InnerInstructions, Message},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_transaction::versioned::VersionedTransaction,
-    solana_transaction_context::TransactionReturnData,
-    solana_transaction_error::TransactionError,
+    trezoa_account::Account,
+    trezoa_clock::Slot,
+    trezoa_commitment_config::CommitmentLevel,
+    trezoa_hash::Hash,
+    trezoa_message::{inner_instruction::InnerInstructions, Message},
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_transaction::versioned::VersionedTransaction,
+    trezoa_transaction_context::TransactionReturnData,
+    trezoa_transaction_error::TransactionError,
 };
 
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

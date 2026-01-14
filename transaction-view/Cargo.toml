@@ -1,7 +1,7 @@
 [package]
-name = "agave-transaction-view"
-description = "Agave TranactionView"
-documentation = "https://docs.rs/agave-transaction-view"
+name = "trezoa-transaction-view"
+description = "Trezoa-team TranactionView"
+documentation = "https://docs.rs/trezoa-transaction-view"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,32 +10,32 @@ license = { workspace = true }
 edition = "2024"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 
 [dependencies]
-solana-hash = { workspace = true }
-solana-message = { workspace = true }
-solana-packet = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-short-vec = { workspace = true }
-solana-signature = { workspace = true }
-solana-svm-transaction = { workspace = true }
-solana-transaction-context = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-packet = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-short-vec = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-svm-transaction = { workspace = true }
+trezoa-transaction-context = { workspace = true }
 
 [dev-dependencies]
 # See order-crates-for-publishing.py for using this unusual `path = "."`
-agave-transaction-view = { path = ".", features = ["agave-unstable-api", "dev-context-only-utils"] }
+trezoa-transaction-view = { path = ".", features = ["trezoa-unstable-api", "dev-context-only-utils"] }
 bincode = { workspace = true }
 criterion = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keypair = { workspace = true }
-solana-message = { workspace = true, features = ["serde"] }
-solana-signature = { workspace = true, features = ["serde"] }
-solana-signer = { workspace = true }
-solana-system-interface = { workspace = true, features = ["bincode"] }
-solana-transaction = { workspace = true, features = ["bincode"] }
+trezoa-instruction = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-message = { workspace = true, features = ["serde"] }
+trezoa-signature = { workspace = true, features = ["serde"] }
+trezoa-signer = { workspace = true }
+trezoa-system-interface = { workspace = true, features = ["bincode"] }
+trezoa-transaction = { workspace = true, features = ["bincode"] }
 
 [[bench]]
 name = "bytes"

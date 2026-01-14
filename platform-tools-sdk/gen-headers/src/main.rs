@@ -87,7 +87,7 @@ fn transform(inc: &PathBuf) {
              gen-headers` */",
             inc.display()
         );
-        let ifndef = format!("#ifndef SOL_SBPFV3\n{ty} {func}({args});");
+        let ifndef = format!("#ifndef TRZ_SBPFV3\n{ty} {func}({args});");
         let hash = sys_hash(func);
         let typedef_statement = format!("typedef {ty}(*{func}_pointer_type)({args});");
         let mut arg = 0;

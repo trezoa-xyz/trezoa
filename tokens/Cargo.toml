@@ -1,6 +1,6 @@
 [package]
-name = "solana-tokens"
-documentation = "https://docs.rs/solana-tokens"
+name = "trezoa-tokens"
+documentation = "https://docs.rs/trezoa-tokens"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -11,9 +11,9 @@ edition = { workspace = true }
 
 [features]
 default = ["remote-wallet-hidraw"]
-agave-unstable-api = []
-remote-wallet-hidraw = ["solana-remote-wallet/linux-static-hidraw"]
-remote-wallet-libusb = ["solana-remote-wallet/linux-static-libusb"]
+trezoa-unstable-api = []
+remote-wallet-hidraw = ["trezoa-remote-wallet/linux-static-hidraw"]
+remote-wallet-libusb = ["trezoa-remote-wallet/linux-static-libusb"]
 
 [dependencies]
 chrono = { workspace = true, features = ["default", "serde"] }
@@ -25,39 +25,39 @@ indexmap = { workspace = true }
 indicatif = { workspace = true }
 pickledb = { workspace = true, features = ["yaml"] }
 serde = { workspace = true }
-solana-account-decoder = { workspace = true }
-solana-clap-utils = { workspace = true }
-solana-cli-config = { workspace = true }
-solana-cli-output = { workspace = true }
-solana-clock = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-hash = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keypair = { workspace = true }
-solana-message = { workspace = true }
-solana-native-token = { workspace = true }
-solana-net-utils = { workspace = true }
-solana-program-error = { workspace = true }
-solana-program-pack = { workspace = true }
-solana-pubkey = { workspace = true, features = ["rand"] }
-solana-remote-wallet = { workspace = true }
-solana-rpc-client = { workspace = true, features = ["default"] }
-solana-rpc-client-api = { workspace = true }
-solana-signature = { workspace = true }
-solana-signer = { workspace = true }
-solana-stake-interface = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-transaction = { workspace = true }
-solana-transaction-status = { workspace = true }
-solana-version = { workspace = true }
+trezoa-account-decoder = { workspace = true }
+trezoa-clap-utils = { workspace = true }
+trezoa-cli-config = { workspace = true }
+trezoa-cli-output = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-commitment-config = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-net-utils = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-program-pack = { workspace = true }
+trezoa-pubkey = { workspace = true, features = ["rand"] }
+trezoa-remote-wallet = { workspace = true }
+trezoa-rpc-client = { workspace = true, features = ["default"] }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-stake-interface = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-transaction-status = { workspace = true }
+trezoa-version = { workspace = true }
 spl-associated-token-account-interface = { version = "=2.0.0" }
-spl-token-interface = { workspace = true }
+tpl-token-interface = { workspace = true }
 tempfile = { workspace = true }
 thiserror = { workspace = true }
 
 [dev-dependencies]
-agave-logger = { workspace = true }
+trezoa-logger = { workspace = true }
 assert_matches = { workspace = true }
 bincode = { workspace = true }
-solana-test-validator = { workspace = true }
-solana-transaction-error = { workspace = true }
+trezoa-test-validator = { workspace = true }
+trezoa-transaction-error = { workspace = true }

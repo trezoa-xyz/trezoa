@@ -17,22 +17,22 @@ use {
         poh_controller::PohController, poh_service::PohService, record_channels::record_channels,
         transaction_recorder::TransactionRecorder,
     },
-    agave_votor_messages::migration::MigrationStatus,
+    trezoa_votor_messages::migration::MigrationStatus,
     arc_swap::ArcSwap,
     crossbeam_channel::{bounded, unbounded, Receiver, SendError, Sender, TrySendError},
     log::*,
-    solana_clock::{BankId, Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
-    solana_entry::{
+    trezoa_clock::{BankId, Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
+    trezoa_entry::{
         entry::Entry,
         poh::{Poh, PohEntry},
     },
-    solana_hash::Hash,
-    solana_ledger::{blockstore::Blockstore, leader_schedule_cache::LeaderScheduleCache},
-    solana_measure::measure_us,
-    solana_poh_config::PohConfig,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, installed_scheduler_pool::BankWithScheduler},
-    solana_transaction::versioned::VersionedTransaction,
+    trezoa_hash::Hash,
+    trezoa_ledger::{blockstore::Blockstore, leader_schedule_cache::LeaderScheduleCache},
+    trezoa_measure::measure_us,
+    trezoa_poh_config::PohConfig,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, installed_scheduler_pool::BankWithScheduler},
+    trezoa_transaction::versioned::VersionedTransaction,
     std::{
         cmp,
         sync::{
@@ -1115,15 +1115,15 @@ mod tests {
     use {
         super::*,
         crossbeam_channel::bounded,
-        solana_clock::DEFAULT_TICKS_PER_SLOT,
-        solana_ledger::{
+        trezoa_clock::DEFAULT_TICKS_PER_SLOT,
+        trezoa_ledger::{
             blockstore::Blockstore,
             blockstore_meta::SlotMeta,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
         },
-        solana_perf::test_tx::test_tx,
-        solana_sha256_hasher::hash,
+        trezoa_perf::test_tx::test_tx,
+        trezoa_sha256_hasher::hash,
     };
 
     #[test]
@@ -1602,7 +1602,7 @@ mod tests {
 
     #[test]
     fn test_reset_to_new_value() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path())
@@ -1685,7 +1685,7 @@ mod tests {
 
     #[test]
     fn test_poh_recorder_record_sets_start_slot() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path())
             .expect("Expected to be able to open database ledger");
@@ -1773,7 +1773,7 @@ mod tests {
 
     #[test]
     fn test_reached_leader_tick() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // Setup genesis.
         let GenesisConfigInfo {
@@ -1810,9 +1810,9 @@ mod tests {
             consecutive_leader_slots,
         ));
         let mut leader_schedule_cache = LeaderScheduleCache::new_from_bank(&bank);
-        let fixed_schedule = solana_ledger::leader_schedule::FixedSchedule {
+        let fixed_schedule = trezoa_ledger::leader_schedule::FixedSchedule {
             leader_schedule: Arc::new(Box::new(
-                solana_ledger::leader_schedule::IdentityKeyedLeaderSchedule::new_from_schedule(
+                trezoa_ledger::leader_schedule::IdentityKeyedLeaderSchedule::new_from_schedule(
                     slot_leaders,
                 ),
             )),
@@ -1951,7 +1951,7 @@ mod tests {
 
     #[test]
     fn test_reached_leader_slot() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path())

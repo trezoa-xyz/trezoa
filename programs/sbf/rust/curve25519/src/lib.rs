@@ -1,9 +1,9 @@
 //! @brief curve25519 syscall tests
 
 use {
-    solana_curve25519::{edwards, ristretto, scalar},
-    solana_msg::msg,
-    solana_program_entrypoint::{custom_heap_default, custom_panic_default},
+    trezoa_curve25519::{edwards, ristretto, scalar},
+    trezoa_msg::msg,
+    trezoa_program_entrypoint::{custom_heap_default, custom_panic_default},
 };
 
 #[no_mangle]

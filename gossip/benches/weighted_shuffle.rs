@@ -2,7 +2,7 @@ use {
     criterion::{criterion_group, criterion_main, Criterion},
     rand::{Rng, SeedableRng},
     rand_chacha::ChaChaRng,
-    solana_gossip::weighted_shuffle::WeightedShuffle,
+    trezoa_gossip::weighted_shuffle::WeightedShuffle,
     std::{hint::black_box, iter::repeat_with},
 };
 

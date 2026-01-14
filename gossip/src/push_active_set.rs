@@ -2,9 +2,9 @@ use {
     crate::weighted_shuffle::WeightedShuffle,
     indexmap::IndexMap,
     rand::Rng,
-    solana_bloom::bloom::{Bloom, ConcurrentBloom},
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_pubkey::Pubkey,
+    trezoa_bloom::bloom::{Bloom, ConcurrentBloom},
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_pubkey::Pubkey,
     std::collections::HashMap,
 };
 
@@ -89,7 +89,7 @@ impl PushActiveSet {
                     // min stake of {...} is a proxy for how much we care about
                     // the link, and tries to mirror similar logic on the
                     // receiving end when pruning incoming links:
-                    // https://github.com/solana-labs/solana/blob/81394cf92/gossip/src/received_cache.rs#L100-L105
+                    // https://github.com/trezoa-labs/trezoa/blob/81394cf92/gossip/src/received_cache.rs#L100-L105
                     let bucket = bucket.min(k) as u64;
                     bucket.saturating_add(1).saturating_pow(2)
                 })
@@ -177,7 +177,7 @@ fn get_stake_bucket(stake: Option<&u64>) -> usize {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, agave_random::range::random_u64_range, itertools::iproduct, rand::SeedableRng,
+        super::*, trezoa_random::range::random_u64_range, itertools::iproduct, rand::SeedableRng,
         rand_chacha::ChaChaRng, std::iter::repeat_with,
     };
 

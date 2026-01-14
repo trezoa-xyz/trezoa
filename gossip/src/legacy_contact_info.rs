@@ -3,8 +3,8 @@ use crate::{socketaddr, socketaddr_any};
 use {
     crate::crds_data::reject_deserialize,
     serde::Serialize,
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
     std::net::SocketAddr,
 };
 

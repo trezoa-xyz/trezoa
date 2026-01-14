@@ -8,13 +8,13 @@ if sudo true; then
 fi
 
 echo "pwd: $(pwd)"
-for pid in solana/*.pid; do
+for pid in trezoa/*.pid; do
   pgid=$(ps opgid= "$(cat "$pid")" | tr -d '[:space:]')
   if [[ -n $pgid ]]; then
     $sudo kill -- -"$pgid"
   fi
 done
-for pattern in validator.sh boostrap-leader.sh solana- remote- iftop validator client node; do
+for pattern in validator.sh boostrap-leader.sh trezoa- remote- iftop validator client node; do
   echo "killing $pattern"
   pkill -f $pattern
 done

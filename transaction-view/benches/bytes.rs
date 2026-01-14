@@ -1,9 +1,9 @@
 use {
-    agave_transaction_view::bytes::{optimized_read_compressed_u16, read_compressed_u16},
+    trezoa_transaction_view::bytes::{optimized_read_compressed_u16, read_compressed_u16},
     bincode::{DefaultOptions, Options, serialize_into},
     criterion::{Criterion, Throughput, criterion_group, criterion_main},
-    solana_packet::PACKET_DATA_SIZE,
-    solana_short_vec::{ShortU16, decode_shortu16_len},
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_short_vec::{ShortU16, decode_shortu16_len},
     std::hint::black_box,
 };
 
@@ -32,7 +32,7 @@ fn bench_u16_parsing(c: &mut Criterion) {
         values_serialized_lengths_and_buffers.len() as u64,
     ));
 
-    // Benchmark the decode_shortu16_len function from `solana-sdk`
+    // Benchmark the decode_shortu16_len function from `trezoa-sdk`
     group.bench_function("short_u16_decode", |c| {
         c.iter(|| {
             decode_shortu16_len_iter(&values_serialized_lengths_and_buffers);

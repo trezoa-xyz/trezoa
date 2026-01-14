@@ -18,21 +18,21 @@ use {
     },
     log::debug,
     percentage::Percentage,
-    solana_account::{state_traits::StateMut, AccountSharedData, ReadableAccount, PROGRAM_OWNERS},
-    solana_clock::{Epoch, Slot},
-    solana_hash::Hash,
-    solana_instruction::TRANSACTION_LEVEL_STACK_HEIGHT,
-    solana_message::{
+    trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount, PROGRAM_OWNERS},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_hash::Hash,
+    trezoa_instruction::TRANSACTION_LEVEL_STACK_HEIGHT,
+    trezoa_message::{
         compiled_instruction::CompiledInstruction,
         inner_instruction::{InnerInstruction, InnerInstructionsList},
     },
-    solana_nonce::{
+    trezoa_nonce::{
         state::{DurableNonce, State as NonceState},
         versions::Versions as NonceVersions,
         NONCED_TX_MARKER_IX_INDEX,
     },
-    solana_nonce_account::verify_nonce_account,
-    solana_program_runtime::{
+    trezoa_nonce_account::verify_nonce_account,
+    trezoa_program_runtime::{
         execution_budget::{
             SVMTransactionExecutionAndFeeBudgetLimits, SVMTransactionExecutionCost,
         },
@@ -43,17 +43,17 @@ use {
         },
         sysvar_cache::SysvarCache,
     },
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_svm_callback::TransactionProcessingCallback,
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_log_collector::LogCollector,
-    solana_svm_measure::{measure::Measure, measure_us},
-    solana_svm_timings::{ExecuteTimingType, ExecuteTimings},
-    solana_svm_transaction::{svm_message::SVMMessage, svm_transaction::SVMTransaction},
-    solana_svm_type_overrides::sync::{atomic::Ordering, Arc, RwLock, RwLockReadGuard},
-    solana_transaction_context::{ExecutionRecord, TransactionContext},
-    solana_transaction_error::{TransactionError, TransactionResult},
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_svm_callback::TransactionProcessingCallback,
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_log_collector::LogCollector,
+    trezoa_svm_measure::{measure::Measure, measure_us},
+    trezoa_svm_timings::{ExecuteTimingType, ExecuteTimings},
+    trezoa_svm_transaction::{svm_message::SVMMessage, svm_transaction::SVMTransaction},
+    trezoa_svm_type_overrides::sync::{atomic::Ordering, Arc, RwLock, RwLockReadGuard},
+    trezoa_transaction_context::{ExecutionRecord, TransactionContext},
+    trezoa_transaction_error::{TransactionError, TransactionResult},
     std::{
         collections::{HashMap, HashSet},
         fmt::{Debug, Formatter},
@@ -63,9 +63,9 @@ use {
 #[cfg(feature = "dev-context-only-utils")]
 use {
     qualifier_attr::{field_qualifiers, qualifiers},
-    solana_program_runtime::{
+    trezoa_program_runtime::{
         loaded_programs::ProgramRuntimeEnvironment,
-        solana_sbpf::{program::BuiltinProgram, vm::Config as VmConfig},
+        trezoa_sbpf::{program::BuiltinProgram, vm::Config as VmConfig},
     },
     std::sync::Weak,
 };
@@ -1177,7 +1177,7 @@ impl<FG: ForkGraph> TransactionBatchProcessor<FG> {
 #[cfg(test)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sysvar::fees::Fees;
+    use trezoa_sysvar::fees::Fees;
     use {
         super::*,
         crate::{
@@ -1189,30 +1189,30 @@ mod tests {
             rent_calculator::RENT_EXEMPT_RENT_EPOCH,
             rollback_accounts::RollbackAccounts,
         },
-        solana_account::{create_account_shared_data_for_test, WritableAccount},
-        solana_clock::Clock,
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_epoch_schedule::EpochSchedule,
-        solana_fee_calculator::FeeCalculator,
-        solana_fee_structure::FeeDetails,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::{LegacyMessage, Message, MessageHeader, SanitizedMessage},
-        solana_nonce as nonce,
-        solana_program_runtime::{
+        trezoa_account::{create_account_shared_data_for_test, WritableAccount},
+        trezoa_clock::Clock,
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_fee_calculator::FeeCalculator,
+        trezoa_fee_structure::FeeDetails,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::{LegacyMessage, Message, MessageHeader, SanitizedMessage},
+        trezoa_nonce as nonce,
+        trezoa_program_runtime::{
             execution_budget::{
                 SVMTransactionExecutionAndFeeBudgetLimits, SVMTransactionExecutionBudget,
             },
             loaded_programs::{BlockRelation, ProgramCacheEntryType},
         },
-        solana_rent::Rent,
-        solana_sdk_ids::{bpf_loader, loader_v4, system_program, sysvar},
-        solana_signature::Signature,
-        solana_svm_callback::{AccountState, InvokeContextCallback},
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
-        solana_transaction_context::TransactionContext,
-        solana_transaction_error::TransactionError,
+        trezoa_rent::Rent,
+        trezoa_sdk_ids::{bpf_loader, loader_v4, system_program, sysvar},
+        trezoa_signature::Signature,
+        trezoa_svm_callback::{AccountState, InvokeContextCallback},
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_transaction_context::TransactionContext,
+        trezoa_transaction_error::TransactionError,
         std::collections::HashMap,
         test_case::test_case,
     };

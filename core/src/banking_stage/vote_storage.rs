@@ -1,16 +1,16 @@
 use {
     super::latest_validator_vote_packet::{LatestValidatorVote, VoteSource},
     crate::banking_stage::transaction_scheduler::transaction_state_container::SharedBytes,
-    agave_feature_set as feature_set,
-    agave_transaction_view::transaction_view::SanitizedTransactionView,
+    trezoa_feature_set as feature_set,
+    trezoa_transaction_view::transaction_view::SanitizedTransactionView,
     ahash::HashMap,
     itertools::Itertools,
     rand::{rng, Rng},
-    solana_account::from_account,
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, epoch_stakes::VersionedEpochStakes},
-    solana_sysvar::{self as sysvar, slot_hashes::SlotHashes},
+    trezoa_account::from_account,
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, epoch_stakes::VersionedEpochStakes},
+    trezoa_sysvar::{self as sysvar, slot_hashes::SlotHashes},
     std::cmp,
 };
 
@@ -61,7 +61,7 @@ impl VoteStorage {
 
     #[cfg(test)]
     pub fn new_for_tests(vote_pubkeys_to_stake: &[Pubkey]) -> Self {
-        use solana_vote::vote_account::VoteAccount;
+        use trezoa_vote::vote_account::VoteAccount;
 
         let vote_accounts = vote_pubkeys_to_stake
             .iter()
@@ -328,14 +328,14 @@ impl VoteStorage {
     }
 
     #[cfg(test)]
-    pub fn get_latest_vote_slot(&self, pubkey: Pubkey) -> Option<solana_clock::Slot> {
+    pub fn get_latest_vote_slot(&self, pubkey: Pubkey) -> Option<trezoa_clock::Slot> {
         self.latest_vote_per_vote_pubkey
             .get(&pubkey)
             .map(|l| l.slot())
     }
 
     #[cfg(test)]
-    fn get_latest_timestamp(&self, pubkey: Pubkey) -> Option<solana_clock::UnixTimestamp> {
+    fn get_latest_timestamp(&self, pubkey: Pubkey) -> Option<trezoa_clock::UnixTimestamp> {
         self.latest_vote_per_vote_pubkey
             .get(&pubkey)
             .and_then(|l| l.timestamp())
@@ -346,15 +346,15 @@ impl VoteStorage {
 pub(crate) mod tests {
     use {
         super::*,
-        solana_clock::UnixTimestamp,
-        solana_epoch_schedule::MINIMUM_SLOTS_PER_EPOCH,
-        solana_genesis_config::GenesisConfig,
-        solana_hash::Hash,
-        solana_perf::packet::{BytesPacket, PacketFlags},
-        solana_runtime::genesis_utils::{self, ValidatorVoteKeypairs},
-        solana_signer::Signer,
-        solana_vote::vote_transaction::new_tower_sync_transaction,
-        solana_vote_program::vote_state::TowerSync,
+        trezoa_clock::UnixTimestamp,
+        trezoa_epoch_schedule::MINIMUM_SLOTS_PER_EPOCH,
+        trezoa_genesis_config::GenesisConfig,
+        trezoa_hash::Hash,
+        trezoa_perf::packet::{BytesPacket, PacketFlags},
+        trezoa_runtime::genesis_utils::{self, ValidatorVoteKeypairs},
+        trezoa_signer::Signer,
+        trezoa_vote::vote_transaction::new_tower_sync_transaction,
+        trezoa_vote_program::vote_state::TowerSync,
         std::sync::Arc,
     };
 

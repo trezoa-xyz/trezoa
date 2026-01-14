@@ -1,10 +1,10 @@
 use {
-    solana_account_decoder::{
+    trezoa_account_decoder::{
         parse_account_data::SplTokenAdditionalDataV2, parse_token::token_amount_to_ui_amount_v3,
     },
-    solana_runtime::bank::TransactionBalancesSet,
-    solana_svm::transaction_balances::{BalanceCollector, SvmTokenInfo},
-    solana_transaction_status::{
+    trezoa_runtime::bank::TransactionBalancesSet,
+    trezoa_svm::transaction_balances::{BalanceCollector, SvmTokenInfo},
+    trezoa_transaction_status::{
         token_balances::TransactionTokenBalancesSet, TransactionTokenBalance,
     },
 };
@@ -66,8 +66,8 @@ pub fn svm_token_info_to_token_balance(svm_info: SvmTokenInfo) -> TransactionTok
 mod tests {
     use {
         super::*,
-        solana_account_decoder::parse_token::UiTokenAmount,
-        solana_pubkey::Pubkey,
+        trezoa_account_decoder::parse_token::UiTokenAmount,
+        trezoa_pubkey::Pubkey,
         spl_generic_token::{token, token_2022},
     };
 

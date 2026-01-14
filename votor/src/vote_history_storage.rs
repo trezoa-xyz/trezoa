@@ -2,9 +2,9 @@ use {
     super::vote_history::*,
     log::trace,
     serde::{Deserialize, Serialize},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_signer::Signer,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
     std::{
         fs::{self, File},
         io::{self, BufReader},
@@ -172,11 +172,11 @@ impl VoteHistoryStorage for FileVoteHistoryStorage {
 
 #[cfg(test)]
 mod test {
-    use {super::*, agave_votor_messages::vote::Vote, solana_keypair::Keypair, tempfile::TempDir};
+    use {super::*, trezoa_votor_messages::vote::Vote, trezoa_keypair::Keypair, tempfile::TempDir};
 
     #[test]
     fn test_file_vote_history_storage() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let tmp_dir = TempDir::new().unwrap();
         let storage = FileVoteHistoryStorage::new(tmp_dir.path().to_path_buf());
         let keypair = Keypair::new();

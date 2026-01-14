@@ -5,16 +5,16 @@ use {
     },
     chrono::DateTime,
     clap::ArgMatches,
-    solana_bls_signatures::{Pubkey as BLSPubkey, PubkeyCompressed as BLSPubkeyCompressed},
-    solana_clock::UnixTimestamp,
-    solana_cluster_type::ClusterType,
-    solana_commitment_config::CommitmentConfig,
-    solana_keypair::{read_keypair_file, Keypair},
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_signature::Signature,
-    solana_signer::Signer,
+    trezoa_bls_signatures::{Pubkey as BLSPubkey, PubkeyCompressed as BLSPubkeyCompressed},
+    trezoa_clock::UnixTimestamp,
+    trezoa_cluster_type::ClusterType,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_keypair::{read_keypair_file, Keypair},
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
     std::{io, num::ParseIntError, rc::Rc, str::FromStr},
 };
 
@@ -199,7 +199,7 @@ pub fn resolve_signer(
     )
 }
 
-/// Convert a SOL amount string to lamports.
+/// Convert a TRZ amount string to lamports.
 ///
 /// Accepts plain or decimal strings ("50", "0.03", ".5", "1.").
 /// Any decimal places beyond 9 are truncated.
@@ -272,8 +272,8 @@ mod tests {
     use {
         super::*,
         clap::{App, Arg},
-        solana_bls_signatures::{keypair::Keypair as BLSKeypair, Pubkey as BLSPubkey},
-        solana_keypair::write_keypair_file,
+        trezoa_bls_signatures::{keypair::Keypair as BLSKeypair, Pubkey as BLSPubkey},
+        trezoa_keypair::write_keypair_file,
         std::fs,
     };
 
@@ -302,8 +302,8 @@ mod tests {
         assert_eq!(values_of(&matches, "multiple"), Some(vec![50, 39]));
         assert_eq!(values_of::<u64>(&matches, "single"), None);
 
-        let pubkey0 = solana_pubkey::new_rand();
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey0 = trezoa_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
         let matches = app().get_matches_from(vec![
             "test",
             "--multiple",
@@ -323,7 +323,7 @@ mod tests {
         assert_eq!(value_of(&matches, "single"), Some(50));
         assert_eq!(value_of::<u64>(&matches, "multiple"), None);
 
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let matches = app().get_matches_from(vec!["test", "--single", &pubkey.to_string()]);
         assert_eq!(value_of(&matches, "single"), Some(pubkey));
     }
@@ -389,8 +389,8 @@ mod tests {
 
     #[test]
     fn test_pubkeys_sigs_of() {
-        let key1 = solana_pubkey::new_rand();
-        let key2 = solana_pubkey::new_rand();
+        let key1 = trezoa_pubkey::new_rand();
+        let key2 = trezoa_pubkey::new_rand();
         let sig1 = Keypair::new().sign_message(&[0u8]);
         let sig2 = Keypair::new().sign_message(&[1u8]);
         let signer1 = format!("{key1}={sig1}");
@@ -406,7 +406,7 @@ mod tests {
     #[test]
     #[ignore = "historical reference; shows float behavior fixed in pull #4988"]
     fn test_lamports_of_sol_origin() {
-        use solana_native_token::sol_str_to_lamports;
+        use trezoa_native_token::sol_str_to_lamports;
         pub fn lamports_of_sol(matches: &ArgMatches<'_>, name: &str) -> Option<u64> {
             matches.value_of(name).and_then(sol_str_to_lamports)
         }

@@ -11,11 +11,11 @@
 //! vote program.
 
 use {
-    solana_clock::{Clock, Epoch, Slot, UnixTimestamp},
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
-    solana_transaction_context::instruction_accounts::BorrowedInstructionAccount,
-    solana_vote_interface::{
+    trezoa_clock::{Clock, Epoch, Slot, UnixTimestamp},
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_transaction_context::instruction_accounts::BorrowedInstructionAccount,
+    trezoa_vote_interface::{
         authorized_voters::AuthorizedVoters,
         error::VoteError,
         state::{
@@ -1033,16 +1033,16 @@ mod tests {
     use {
         super::*,
         crate::id,
-        solana_account::AccountSharedData,
-        solana_clock::Clock,
-        solana_epoch_schedule::MAX_LEADER_SCHEDULE_EPOCH_OFFSET,
-        solana_pubkey::Pubkey,
-        solana_rent::Rent,
-        solana_sdk_ids::native_loader,
-        solana_transaction_context::{
+        trezoa_account::AccountSharedData,
+        trezoa_clock::Clock,
+        trezoa_epoch_schedule::MAX_LEADER_SCHEDULE_EPOCH_OFFSET,
+        trezoa_pubkey::Pubkey,
+        trezoa_rent::Rent,
+        trezoa_sdk_ids::native_loader,
+        trezoa_transaction_context::{
             instruction_accounts::InstructionAccount, TransactionContext,
         },
-        solana_vote_interface::{
+        trezoa_vote_interface::{
             authorized_voters::AuthorizedVoters,
             state::{BlockTimestamp, VoteInit, MAX_EPOCH_CREDITS_HISTORY, MAX_LOCKOUT_HISTORY},
         },
@@ -2045,7 +2045,7 @@ mod tests {
         };
 
         // V0_23_5
-        // NOTE: On target_os = "solana", VoteState0_23_5::deserialize should
+        // NOTE: On target_os = "trezoa", VoteState0_23_5::deserialize should
         // fail, but we can't replicate that in these unit tests. This should
         // be tested in the program's processor tests.
 

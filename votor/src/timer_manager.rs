@@ -10,7 +10,7 @@ use {
     },
     crossbeam_channel::Sender,
     parking_lot::RwLock as PlRwLock,
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},

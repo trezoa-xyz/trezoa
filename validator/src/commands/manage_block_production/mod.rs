@@ -5,7 +5,7 @@ use {
         commands::{FromClapArgMatches, Result},
     },
     clap::{value_t, App, Arg, ArgMatches, SubCommand},
-    solana_core::{
+    trezoa_core::{
         banking_stage::BankingStage,
         validator::{BlockProductionMethod, SchedulerPacing, TransactionStructure},
     },
@@ -119,7 +119,7 @@ pub fn execute(matches: &ArgMatches, ledger_path: &Path) -> Result<()> {
 mod tests {
     use {
         super::*,
-        solana_core::banking_stage::transaction_scheduler::scheduler_controller::SchedulerConfig,
+        trezoa_core::banking_stage::transaction_scheduler::scheduler_controller::SchedulerConfig,
         std::num::NonZeroU64,
     };
 

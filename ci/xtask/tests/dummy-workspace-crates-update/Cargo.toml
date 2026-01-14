@@ -13,4 +13,4 @@ edition = "2021"
 a = { path = "a", version = "=1.2.3" }
 b = { path = "b", version = "=1.2.3" }
 c = { path = "c", version = "=1.2.3" }
-solana-frozen-abi = "3.0.0"
+trezoa-frozen-abi = "3.0.0"

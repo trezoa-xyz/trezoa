@@ -9,9 +9,9 @@ use {
             AncestorHashesReplayUpdate, AncestorHashesReplayUpdateSender,
         },
     },
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_ledger::blockstore::Blockstore,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_ledger::blockstore::Blockstore,
     std::collections::{BTreeMap, BTreeSet, HashMap},
 };
 
@@ -955,7 +955,7 @@ mod test {
         super::*,
         crate::{consensus::progress_map::ProgressMap, replay_stage::tests::setup_forks_from_tree},
         crossbeam_channel::unbounded,
-        solana_runtime::bank_forks::BankForks,
+        trezoa_runtime::bank_forks::BankForks,
         std::{
             collections::{HashMap, HashSet},
             sync::{Arc, RwLock},

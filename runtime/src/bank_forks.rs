@@ -9,15 +9,15 @@ use {
         },
         snapshot_controller::SnapshotController,
     },
-    agave_feature_set,
-    agave_votor_messages::migration::MigrationStatus,
+    trezoa_feature_set,
+    trezoa_votor_messages::migration::MigrationStatus,
     arc_swap::ArcSwap,
     log::*,
-    solana_clock::{BankId, Slot},
-    solana_hash::Hash,
-    solana_measure::measure::Measure,
-    solana_program_runtime::loaded_programs::{BlockRelation, ForkGraph},
-    solana_unified_scheduler_logic::SchedulingMode,
+    trezoa_clock::{BankId, Slot},
+    trezoa_hash::Hash,
+    trezoa_measure::measure::Measure,
+    trezoa_program_runtime::loaded_programs::{BlockRelation, ForkGraph},
+    trezoa_unified_scheduler_logic::SchedulingMode,
     std::{
         collections::{hash_map::Entry, HashMap, HashSet},
         ops::Index,
@@ -177,7 +177,7 @@ impl BankForks {
         let root_epoch = epoch_schedule.get_epoch(root_bank.slot());
         let ff_activation_slot = root_bank
             .feature_set
-            .activated_slot(&agave_feature_set::alpenglow::id());
+            .activated_slot(&trezoa_feature_set::alpenglow::id());
         let genesis_cert = root_bank.get_alpenglow_genesis_certificate();
 
         MigrationStatus::initialize(root_epoch, ff_activation_slot, genesis_cert, epoch_schedule)
@@ -771,12 +771,12 @@ mod tests {
             },
         },
         assert_matches::assert_matches,
-        solana_clock::UnixTimestamp,
-        solana_epoch_schedule::EpochSchedule,
-        solana_keypair::Keypair,
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
-        solana_vote_program::vote_state::BlockTimestamp,
+        trezoa_clock::UnixTimestamp,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_keypair::Keypair,
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
+        trezoa_vote_program::vote_state::BlockTimestamp,
     };
 
     // This test verifies that BankForks::new_rw_arc() doesn't create a reference cycle.
@@ -884,7 +884,7 @@ mod tests {
 
     #[test]
     fn test_bank_forks_different_set_root() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let leader_keypair = Keypair::new();
         let GenesisConfigInfo {
             mut genesis_config,

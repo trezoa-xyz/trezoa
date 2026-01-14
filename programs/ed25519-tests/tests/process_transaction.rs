@@ -1,9 +1,9 @@
 use {
     assert_matches::assert_matches, ed25519_dalek::ed25519::signature::Signer as EdSigner,
-    solana_ed25519_program::new_ed25519_instruction_with_signature,
-    solana_instruction::error::InstructionError, solana_precompile_error::PrecompileError,
-    solana_program_test::*, solana_signer::Signer, solana_transaction::Transaction,
-    solana_transaction_error::TransactionError,
+    trezoa_ed25519_program::new_ed25519_instruction_with_signature,
+    trezoa_instruction::error::InstructionError, trezoa_precompile_error::PrecompileError,
+    trezoa_program_test::*, trezoa_signer::Signer, trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionError,
 };
 
 // Since ed25519_dalek is still using the old version of rand, this test

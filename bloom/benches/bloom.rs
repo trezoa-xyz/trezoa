@@ -5,10 +5,10 @@ use {
     bv::BitVec,
     fnv::FnvHasher,
     rand::Rng,
-    solana_bloom::bloom::{Bloom, BloomHashIndex, ConcurrentBloom},
-    solana_hash::Hash,
-    solana_sha256_hasher::hash,
-    solana_signature::Signature,
+    trezoa_bloom::bloom::{Bloom, BloomHashIndex, ConcurrentBloom},
+    trezoa_hash::Hash,
+    trezoa_sha256_hasher::hash,
+    trezoa_signature::Signature,
     std::{collections::HashSet, hash::Hasher},
 };
 

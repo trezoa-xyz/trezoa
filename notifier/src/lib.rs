@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -28,7 +28,7 @@
 ///
 /// To receive a Twilio SMS notification on failure, having a Twilio account,
 /// and a sending number owned by that account,
-/// define environment variable before running `agave-watchtower`:
+/// define environment variable before running `trezoa-watchtower`:
 /// ```bash
 /// export TWILIO_CONFIG='ACCOUNT=<account>,TOKEN=<securityToken>,TO=<receivingNumber>,FROM=<sendingNumber>'
 /// ```
@@ -36,7 +36,7 @@ use log::*;
 use {
     reqwest::{blocking::Client, StatusCode},
     serde_json::json,
-    solana_hash::Hash,
+    trezoa_hash::Hash,
     std::{env, str::FromStr, thread::sleep, time::Duration},
 };
 
@@ -216,7 +216,7 @@ impl Notifier {
                         NotificationType::Resolve { incident } => incident.clone().to_string(),
                     };
 
-                    let data = json!({"payload":{"summary":msg,"source":"agave-watchtower","severity":"critical"},"routing_key":routing_key,"event_action":event_action,"dedup_key":dedup_key});
+                    let data = json!({"payload":{"summary":msg,"source":"trezoa-watchtower","severity":"critical"},"routing_key":routing_key,"event_action":event_action,"dedup_key":dedup_key});
                     let url = "https://events.pagerduty.com/v2/enqueue";
 
                     if let Err(err) = self.client.post(url).json(&data).send() {

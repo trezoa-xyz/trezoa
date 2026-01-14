@@ -6,8 +6,8 @@ use {
         account_storage::stored_account_info::StoredAccountInfo,
         tiered_storage::hot::RENT_EXEMPT_RENT_EPOCH,
     },
-    solana_account::{Account, AccountSharedData, ReadableAccount},
-    solana_pubkey::Pubkey,
+    trezoa_account::{Account, AccountSharedData, ReadableAccount},
+    trezoa_pubkey::Pubkey,
 };
 
 /// Create a test account based on the specified seed.

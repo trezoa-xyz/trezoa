@@ -4,8 +4,8 @@ use {
     },
     bincode::deserialize,
     serde_json::json,
-    solana_message::{compiled_instruction::CompiledInstruction, AccountKeys},
-    solana_vote_interface::instruction::VoteInstruction,
+    trezoa_message::{compiled_instruction::CompiledInstruction, AccountKeys},
+    trezoa_vote_interface::instruction::VoteInstruction,
 };
 
 pub fn parse_vote(
@@ -338,11 +338,11 @@ fn check_num_vote_accounts(accounts: &[u8], num: usize) -> Result<(), ParseInstr
 mod test {
     use {
         super::*,
-        solana_hash::Hash,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_sdk_ids::sysvar,
-        solana_vote_interface::{
+        trezoa_hash::Hash,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_sdk_ids::sysvar,
+        trezoa_vote_interface::{
             instruction::{self as vote_instruction, CommissionKind},
             state::{
                 TowerSync, Vote, VoteAuthorize, VoteInit, VoteInitV2, VoteStateUpdate, VoteStateV4,

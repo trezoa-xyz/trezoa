@@ -19,18 +19,18 @@ use {
         stake_utils,
         stakes::Stakes,
     },
-    agave_feature_set as feature_set,
+    trezoa_feature_set as feature_set,
     log::{debug, info},
     rayon::{
         iter::{IndexedParallelIterator, ParallelIterator},
         ThreadPool,
     },
-    solana_clock::{Epoch, Slot},
-    solana_measure::{measure::Measure, measure_us},
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::{stake_history::StakeHistory, state::Delegation},
-    solana_sysvar::epoch_rewards::EpochRewards,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_measure::{measure::Measure, measure_us},
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::{stake_history::StakeHistory, state::Delegation},
+    trezoa_sysvar::epoch_rewards::EpochRewards,
     std::sync::{atomic::Ordering::Relaxed, Arc},
 };
 
@@ -386,7 +386,7 @@ impl Bank {
         {
             let min_stake_delegation = stake_utils::get_minimum_delegation(
                 self.feature_set
-                    .is_active(&agave_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
+                    .is_active(&trezoa_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
             )
             .max(LAMPORTS_PER_SOL);
             Some(min_stake_delegation)
@@ -531,7 +531,7 @@ impl Bank {
         let new_warmup_cooldown_rate_epoch = self.new_warmup_cooldown_rate_epoch();
         let delay_commission_updates = self
             .feature_set
-            .is_active(&agave_feature_set::delay_commission_updates::id());
+            .is_active(&trezoa_feature_set::delay_commission_updates::id());
 
         let mut measure_redeem_rewards = Measure::start("redeem-rewards");
         // For N stake delegations, where N is >1,000,000, we produce:
@@ -640,7 +640,7 @@ impl Bank {
             ..
         } = cached_vote_accounts;
 
-        let solana_vote_program: Pubkey = solana_vote_program::id();
+        let trezoa_vote_program: Pubkey = trezoa_vote_program::id();
         let new_warmup_cooldown_rate_epoch = self.new_warmup_cooldown_rate_epoch();
         let (points, measure_us) = measure_us!(thread_pool.install(|| {
             stake_delegations
@@ -653,7 +653,7 @@ impl Bank {
                     else {
                         return 0;
                     };
-                    if vote_account.owner() != &solana_vote_program {
+                    if vote_account.owner() != &trezoa_vote_program {
                         return 0;
                     }
 
@@ -775,22 +775,22 @@ mod tests {
             stake_utils,
             stakes::{tests::create_staked_node_accounts, Stakes},
         },
-        agave_feature_set::{delay_commission_updates, FeatureSet},
+        trezoa_feature_set::{delay_commission_updates, FeatureSet},
         rayon::ThreadPoolBuilder,
-        solana_account::{
+        trezoa_account::{
             accounts_equal, state_traits::StateMut, AccountSharedData, ReadableAccount,
         },
-        solana_accounts_db::partitioned_rewards::PartitionedEpochRewardsConfig,
-        solana_epoch_schedule::EpochSchedule,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_reward_info::RewardType,
-        solana_signer::Signer,
-        solana_stake_interface::{
+        trezoa_accounts_db::partitioned_rewards::PartitionedEpochRewardsConfig,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_reward_info::RewardType,
+        trezoa_signer::Signer,
+        trezoa_stake_interface::{
             stake_flags::StakeFlags,
             state::{Authorized, Delegation, Meta, Stake, StakeStateV2},
         },
-        solana_vote_interface::state::{VoteInit, VoteStateV4, VoteStateVersions},
-        solana_vote_program::vote_state,
+        trezoa_vote_interface::state::{VoteInit, VoteStateV4, VoteStateVersions},
+        trezoa_vote_program::vote_state,
         std::{
             collections::HashSet,
             sync::{Arc, RwLockReadGuard},
@@ -875,11 +875,11 @@ mod tests {
     #[test]
     /// Test rewards computation and partitioned rewards distribution at the epoch boundary
     fn test_rewards_computation() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
-        // Delegations with sufficient stake to get rewards (2 SOL).
+        // Delegations with sufficient stake to get rewards (2 TRZ).
         let delegations_with_rewards = 100;
-        // Delegations with insufficient stake (0.5 SOL).
+        // Delegations with insufficient stake (0.5 TRZ).
         let delegations_without_rewards = 10;
         let stakes = (0..delegations_with_rewards)
             .map(|_| 2_000_000_000)
@@ -943,7 +943,7 @@ mod tests {
 
     #[test]
     fn test_rewards_point_calculation() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let expected_num_delegations = 100;
         let RewardBank { bank, .. } =
@@ -977,7 +977,7 @@ mod tests {
 
     #[test]
     fn test_rewards_point_calculation_empty() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // bank with no rewards to distribute
         let (genesis_config, _mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
@@ -1050,10 +1050,10 @@ mod tests {
                     },
                     &bank.clock(),
                 )));
-                let mut account = solana_account::AccountSharedData::new(
+                let mut account = trezoa_account::AccountSharedData::new(
                     *balance,
                     VoteStateV4::size_of(),
-                    &solana_vote_program::id(),
+                    &trezoa_vote_program::id(),
                 );
                 account.serialize_data(&vote_state).unwrap();
                 bank.store_account(vote_address, &account);
@@ -1064,7 +1064,7 @@ mod tests {
                 let rent_exempt_reserve = bank.rent_collector().rent.minimum_balance(size);
                 let lamports = rent_exempt_reserve + stake_amount;
                 let mut stake_account =
-                    AccountSharedData::new(lamports, size, &solana_sdk_ids::stake::id());
+                    AccountSharedData::new(lamports, size, &trezoa_sdk_ids::stake::id());
 
                 let meta = Meta {
                     authorized: Authorized::auto(&Pubkey::new_unique()),
@@ -1452,7 +1452,7 @@ mod tests {
 
     #[test]
     fn test_calculate_stake_vote_rewards() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let expected_num_delegations = 1;
         let RewardBank {
@@ -2182,7 +2182,7 @@ mod tests {
         // The sysvar account holds the rent-exempt lamport added after
         // reward calculation, so the bank capitalization exceeds the cached
         // value by this amount.
-        let epoch_rewards_sysvar_balance = bank1.get_balance(&solana_sysvar::epoch_rewards::id());
+        let epoch_rewards_sysvar_balance = bank1.get_balance(&trezoa_sysvar::epoch_rewards::id());
         assert_eq!(epoch_rewards_sysvar_balance, 1);
 
         assert_cached_rewards(

@@ -3,13 +3,13 @@ use {
         block_metadata_notifier_interface::BlockMetadataNotifier,
         geyser_plugin_manager::GeyserPluginManager,
     },
-    agave_geyser_plugin_interface::geyser_plugin_interface::{
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaBlockInfoV4, ReplicaBlockInfoVersions,
     },
     log::*,
-    solana_clock::UnixTimestamp,
-    solana_runtime::bank::KeyedRewardsAndNumPartitions,
-    solana_transaction_status::{Reward, RewardsAndNumPartitions},
+    trezoa_clock::UnixTimestamp,
+    trezoa_runtime::bank::KeyedRewardsAndNumPartitions,
+    trezoa_transaction_status::{Reward, RewardsAndNumPartitions},
     std::sync::{Arc, RwLock},
 };
 

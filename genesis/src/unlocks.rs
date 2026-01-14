@@ -1,6 +1,6 @@
 //! lockups generator
 use {
-    solana_clock::Epoch, solana_epoch_schedule::EpochSchedule, solana_time_utils::years_as_slots,
+    trezoa_clock::Epoch, trezoa_epoch_schedule::EpochSchedule, trezoa_time_utils::years_as_slots,
     std::time::Duration,
 };
 

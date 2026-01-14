@@ -3,9 +3,9 @@ use qualifier_attr::qualifiers;
 use {
     crate::commands::{FromClapArgMatches, Result},
     clap::{value_t, Arg, ArgMatches},
-    solana_clap_utils::input_validators::is_parsable,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_rpc::rpc_pubsub_service::PubSubConfig,
+    trezoa_clap_utils::input_validators::is_parsable,
+    trezoa_rayon_threadlimit::get_thread_count,
+    trezoa_rpc::rpc_pubsub_service::PubSubConfig,
     std::{num::NonZeroUsize, sync::LazyLock},
 };
 
@@ -156,7 +156,7 @@ mod tests {
         crate::commands::run::args::{
             tests::verify_args_struct_by_command_run_with_identity_setup, RunArgs,
         },
-        solana_rpc::rpc::JsonRpcConfig,
+        trezoa_rpc::rpc::JsonRpcConfig,
     };
 
     #[test]

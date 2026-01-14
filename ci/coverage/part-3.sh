@@ -13,7 +13,7 @@ done
 for package in "${PART_2_PACKAGES[@]}"; do
   exclude_packages+=(--exclude "$package")
 done
-exclude_packages+=(--exclude solana-local-cluster)
+exclude_packages+=(--exclude trezoa-local-cluster)
 
 echo "--- coverage: coverage (part 3)"
 "$git_root"/ci/test-coverage.sh \

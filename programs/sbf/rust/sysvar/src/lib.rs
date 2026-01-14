@@ -1,20 +1,20 @@
 //! Example Rust-based SBF program that tests sysvar use
 
 #[allow(deprecated)]
-use solana_sysvar::recent_blockhashes::RecentBlockhashes;
+use trezoa_sysvar::recent_blockhashes::RecentBlockhashes;
 use {
-    solana_account_info::AccountInfo,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_instructions_sysvar as instructions,
-    solana_msg::msg,
-    solana_program_error::{ProgramError, ProgramResult},
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::sysvar,
-    solana_stake_interface::{
+    trezoa_account_info::AccountInfo,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_instructions_sysvar as instructions,
+    trezoa_msg::msg,
+    trezoa_program_error::{ProgramError, ProgramResult},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::sysvar,
+    trezoa_stake_interface::{
         stake_history::{StakeHistory, StakeHistoryGetEntry},
         sysvar::stake_history::StakeHistorySysvar,
     },
-    solana_sysvar::{
+    trezoa_sysvar::{
         clock::Clock,
         epoch_rewards::EpochRewards,
         epoch_schedule::EpochSchedule,
@@ -25,8 +25,8 @@ use {
     },
 };
 
-// Adapted from `solana_sysvar::get_sysvar` (private).
-#[cfg(target_os = "solana")]
+// Adapted from `trezoa_sysvar::get_sysvar` (private).
+#[cfg(target_os = "trezoa")]
 fn sol_get_sysvar_handler<T>(dst: &mut [u8], offset: u64, length: u64) -> Result<(), ProgramError>
 where
     T: SysvarSerialize,
@@ -35,11 +35,11 @@ where
     let var_addr = dst as *mut _ as *mut u8;
 
     let result = unsafe {
-        solana_define_syscall::definitions::sol_get_sysvar(sysvar_id, var_addr, offset, length)
+        trezoa_define_syscall::definitions::sol_get_sysvar(sysvar_id, var_addr, offset, length)
     };
 
     match result {
-        solana_program_entrypoint::SUCCESS => Ok(()),
+        trezoa_program_entrypoint::SUCCESS => Ok(()),
         e => Err(e.into()),
     }
 }
@@ -49,7 +49,7 @@ fn sol_get_sysvar<T>() -> Result<T, ProgramError>
 where
     T: SysvarSerialize,
 {
-    #[cfg(target_os = "solana")]
+    #[cfg(target_os = "trezoa")]
     {
         let len = T::size_of();
         let mut data = vec![0; len];
@@ -58,11 +58,11 @@ where
 
         bincode::deserialize(&data).map_err(|_| ProgramError::InvalidArgument)
     }
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     Err(ProgramError::UnsupportedSysvar)
 }
 
-solana_program_entrypoint::entrypoint_no_alloc!(process_instruction);
+trezoa_program_entrypoint::entrypoint_no_alloc!(process_instruction);
 pub fn process_instruction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -212,7 +212,7 @@ pub fn process_instruction(
         Some(&4) => {
             // Attempt to store the result in the input region instead of the stack or heap
             unsafe {
-                solana_define_syscall::definitions::sol_get_epoch_rewards_sysvar(
+                trezoa_define_syscall::definitions::sol_get_epoch_rewards_sysvar(
                     accounts[2].data.borrow_mut().as_mut_ptr(),
                 )
             };

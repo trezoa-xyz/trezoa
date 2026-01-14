@@ -1,69 +1,69 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    agave_feature_set::{
+    trezoa_feature_set::{
         alpenglow, increase_cpi_account_info_limit, raise_cpi_nesting_limit_to_8, FeatureSet,
         FEATURE_NAMES,
     },
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths::BANK_SNAPSHOTS_DIR, snapshot_config::SnapshotConfig, SnapshotInterval,
     },
     base64::{prelude::BASE64_STANDARD, Engine},
     crossbeam_channel::Receiver,
     log::*,
-    solana_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
-    solana_accounts_db::{
+    trezoa_account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_accounts_db::{
         accounts_db::AccountsDbConfig, accounts_index::AccountsIndexConfig,
         utils::create_accounts_run_and_snapshot_dirs,
     },
-    solana_cli_output::CliAccount,
-    solana_clock::{Slot, DEFAULT_MS_PER_SLOT},
-    solana_commitment_config::CommitmentConfig,
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_core::{
+    trezoa_cli_output::CliAccount,
+    trezoa_clock::{Slot, DEFAULT_MS_PER_SLOT},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_core::{
         admin_rpc_post_init::AdminRpcRequestMetadataPostInit,
         consensus::tower_storage::TowerStorage,
         validator::{Validator, ValidatorConfig, ValidatorStartProgress, ValidatorTpuConfig},
     },
-    solana_epoch_schedule::EpochSchedule,
-    solana_fee_calculator::FeeRateGovernor,
-    solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
-    solana_geyser_plugin_manager::{
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_fee_calculator::FeeRateGovernor,
+    trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+    trezoa_geyser_plugin_manager::{
         geyser_plugin_manager::GeyserPluginManager, GeyserPluginManagerRequest,
     },
-    solana_gossip::{
+    trezoa_gossip::{
         cluster_info::{ClusterInfo, NodeConfig},
         contact_info::Protocol,
         node::Node,
     },
-    solana_inflation::Inflation,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::{read_keypair_file, write_keypair_file, Keypair},
-    solana_ledger::{
+    trezoa_inflation::Inflation,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::{read_keypair_file, write_keypair_file, Keypair},
+    trezoa_ledger::{
         blockstore::create_new_ledger, blockstore_options::LedgerColumnOptions,
         create_new_tmp_ledger,
     },
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_message::Message,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::{
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_message::Message,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::{
         find_available_ports_in_range, multihomed_sockets::BindIpAddrs, PortRange, SocketAddrSpace,
     },
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
-    solana_rpc_client::{nonblocking, rpc_client::RpcClient},
-    solana_rpc_client_api::{
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
+    trezoa_rpc_client::{nonblocking, rpc_client::RpcClient},
+    trezoa_rpc_client_api::{
         client_error::Error as RpcClientError, request::MAX_MULTIPLE_ACCOUNTS,
     },
-    solana_runtime::{
+    trezoa_runtime::{
         bank_forks::BankForks, genesis_utils::create_genesis_config_with_leader_ex,
         runtime_config::RuntimeConfig,
     },
-    solana_sdk_ids::address_lookup_table,
-    solana_signer::Signer,
-    solana_streamer::quic::DEFAULT_QUIC_ENDPOINTS,
-    solana_transaction::{Transaction, TransactionError},
-    solana_validator_exit::Exit,
+    trezoa_sdk_ids::address_lookup_table,
+    trezoa_signer::Signer,
+    trezoa_streamer::quic::DEFAULT_QUIC_ENDPOINTS,
+    trezoa_transaction::{Transaction, TransactionError},
+    trezoa_validator_exit::Exit,
     std::{
         collections::{HashMap, HashSet},
         ffi::OsStr,
@@ -105,9 +105,9 @@ impl Default for TestValidatorNodeConfig {
     fn default() -> Self {
         let bind_ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         #[cfg(not(debug_assertions))]
-        let port_range = solana_net_utils::VALIDATOR_PORT_RANGE;
+        let port_range = trezoa_net_utils::VALIDATOR_PORT_RANGE;
         #[cfg(debug_assertions)]
-        let port_range = solana_net_utils::sockets::localhost_port_range_for_tests();
+        let port_range = trezoa_net_utils::sockets::localhost_port_range_for_tests();
         Self {
             gossip_addr: SocketAddr::new(bind_ip_addr, port_range.0),
             port_range,
@@ -189,7 +189,7 @@ fn try_transform_program_data(
     address: &Pubkey,
     account: &mut AccountSharedData,
 ) -> Result<(), String> {
-    if account.owner() == &solana_sdk_ids::bpf_loader_upgradeable::id() {
+    if account.owner() == &trezoa_sdk_ids::bpf_loader_upgradeable::id() {
         let programdata_offset = UpgradeableLoaderState::size_of_programdata_metadata();
         let programdata_meta = account.data().get(0..programdata_offset).ok_or(format!(
             "Failed to get upgradeable programdata data from {address}"
@@ -504,7 +504,7 @@ impl TestValidatorGenesis {
                 .for_each(|(maybe_account, feature_id)| {
                     if maybe_account
                         .as_ref()
-                        .and_then(solana_feature_gate_interface::from_account)
+                        .and_then(trezoa_feature_gate_interface::from_account)
                         .and_then(|feature| feature.activated_at)
                         .is_none()
                     {
@@ -520,7 +520,7 @@ impl TestValidatorGenesis {
         accounts: &[AccountInfo],
     ) -> Result<&mut Self, String> {
         for account in accounts {
-            let Some(account_path) = solana_program_test::find_file(account.filename) else {
+            let Some(account_path) = trezoa_program_test::find_file(account.filename) else {
                 return Err(format!("Unable to locate {}", account.filename));
             };
             let mut file = File::open(&account_path).unwrap();
@@ -599,8 +599,8 @@ impl TestValidatorGenesis {
             address,
             AccountSharedData::from(Account {
                 lamports,
-                data: solana_program_test::read_file(
-                    solana_program_test::find_file(filename).unwrap_or_else(|| {
+                data: trezoa_program_test::read_file(
+                    trezoa_program_test::find_file(filename).unwrap_or_else(|| {
                         panic!("Unable to locate {filename}");
                     }),
                 ),
@@ -639,12 +639,12 @@ impl TestValidatorGenesis {
     /// `program_name` will also used to locate the SBF shared object in the current or fixtures
     /// directory.
     pub fn add_program(&mut self, program_name: &str, program_id: Pubkey) -> &mut Self {
-        let program_path = solana_program_test::find_file(&format!("{program_name}.so"))
+        let program_path = trezoa_program_test::find_file(&format!("{program_name}.so"))
             .unwrap_or_else(|| panic!("Unable to locate program {program_name}"));
 
         self.upgradeable_programs.push(UpgradeableProgramInfo {
             program_id,
-            loader: solana_sdk_ids::bpf_loader_upgradeable::id(),
+            loader: trezoa_sdk_ids::bpf_loader_upgradeable::id(),
             upgrade_authority: Pubkey::default(),
             program_path,
         });
@@ -936,7 +936,7 @@ impl TestValidator {
         // Only activate features which are not explicitly deactivated.
         let mut feature_set = FeatureSet::all_enabled();
         // TODO: remove after cli change for bls_pubkey_management_in_vote_account is checked in
-        feature_set.deactivate(&agave_feature_set::bls_pubkey_management_in_vote_account::id());
+        feature_set.deactivate(&trezoa_feature_set::bls_pubkey_management_in_vote_account::id());
         for feature in &config.deactivate_feature_set {
             if FEATURE_NAMES.contains_key(feature) {
                 feature_set.deactivate(feature);
@@ -947,18 +947,18 @@ impl TestValidator {
         }
 
         let mut accounts = config.accounts.clone();
-        for (address, account) in solana_program_binaries::spl_programs(&config.rent) {
+        for (address, account) in trezoa_program_binaries::spl_programs(&config.rent) {
             accounts.entry(address).or_insert(account);
         }
         for (address, account) in
-            solana_program_binaries::core_bpf_programs(&config.rent, |feature_id| {
+            trezoa_program_binaries::core_bpf_programs(&config.rent, |feature_id| {
                 feature_set.is_active(feature_id)
             })
         {
             accounts.entry(address).or_insert(account);
         }
         for upgradeable_program in &config.upgradeable_programs {
-            let data = solana_program_test::read_file(&upgradeable_program.program_path);
+            let data = trezoa_program_test::read_file(&upgradeable_program.program_path);
             let (programdata_address, _) = Pubkey::find_program_address(
                 &[upgradeable_program.program_id.as_ref()],
                 &upgradeable_program.loader,
@@ -1007,7 +1007,7 @@ impl TestValidator {
             validator_identity_lamports,
             config.fee_rate_governor.clone(),
             config.rent.clone(),
-            solana_cluster_type::ClusterType::Development,
+            trezoa_cluster_type::ClusterType::Development,
             &feature_set,
             accounts.into_iter().collect(),
         );
@@ -1447,7 +1447,7 @@ impl Drop for TestValidator {
 
 #[cfg(test)]
 mod test {
-    use {super::*, solana_feature_gate_interface::Feature};
+    use {super::*, trezoa_feature_gate_interface::Feature};
 
     #[test]
     fn get_health() {
@@ -1527,10 +1527,10 @@ mod test {
         let mut control = FeatureSet::default().inactive().clone();
         let mut deactivate_features = Vec::new();
         [
-            agave_feature_set::deprecate_rewards_sysvar::id(),
-            agave_feature_set::disable_fees_sysvar::id(),
+            trezoa_feature_set::deprecate_rewards_sysvar::id(),
+            trezoa_feature_set::disable_fees_sysvar::id(),
             alpenglow::id(),
-            agave_feature_set::bls_pubkey_management_in_vote_account::id(),
+            trezoa_feature_set::bls_pubkey_management_in_vote_account::id(),
         ]
         .into_iter()
         .for_each(|feature| {
@@ -1570,8 +1570,8 @@ mod test {
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
     async fn test_override_feature_account() {
-        let with_deactivate_flag = agave_feature_set::deprecate_rewards_sysvar::id();
-        let without_deactivate_flag = agave_feature_set::disable_fees_sysvar::id();
+        let with_deactivate_flag = trezoa_feature_set::deprecate_rewards_sysvar::id();
+        let without_deactivate_flag = trezoa_feature_set::disable_fees_sysvar::id();
 
         let owner = Pubkey::new_unique();
         let account = || AccountSharedData::new(100_000, 0, &owner);
@@ -1601,7 +1601,7 @@ mod test {
 
         // The second one should be a feature account.
         let feature_account = our_accounts[1].as_ref().unwrap();
-        assert_eq!(feature_account.owner, solana_sdk_ids::feature::id());
+        assert_eq!(feature_account.owner, trezoa_sdk_ids::feature::id());
         let feature_state: Feature = bincode::deserialize(feature_account.data()).unwrap();
         assert!(feature_state.activated_at.is_some());
     }
@@ -1614,32 +1614,32 @@ mod test {
 
         let fetched_programs = rpc_client
             .get_multiple_accounts(&[
-                solana_sdk_ids::address_lookup_table::id(),
-                solana_sdk_ids::config::id(),
-                solana_sdk_ids::feature::id(),
-                solana_sdk_ids::stake::id(),
+                trezoa_sdk_ids::address_lookup_table::id(),
+                trezoa_sdk_ids::config::id(),
+                trezoa_sdk_ids::feature::id(),
+                trezoa_sdk_ids::stake::id(),
             ])
             .await
             .unwrap();
 
         // Address lookup table is a BPF program.
         let account = fetched_programs[0].as_ref().unwrap();
-        assert_eq!(account.owner, solana_sdk_ids::bpf_loader_upgradeable::id());
+        assert_eq!(account.owner, trezoa_sdk_ids::bpf_loader_upgradeable::id());
         assert!(account.executable);
 
         // Config is a BPF program.
         let account = fetched_programs[1].as_ref().unwrap();
-        assert_eq!(account.owner, solana_sdk_ids::bpf_loader_upgradeable::id());
+        assert_eq!(account.owner, trezoa_sdk_ids::bpf_loader_upgradeable::id());
         assert!(account.executable);
 
         // Feature Gate is a BPF program.
         let account = fetched_programs[2].as_ref().unwrap();
-        assert_eq!(account.owner, solana_sdk_ids::bpf_loader_upgradeable::id());
+        assert_eq!(account.owner, trezoa_sdk_ids::bpf_loader_upgradeable::id());
         assert!(account.executable);
 
         // Stake is a BPF program.
         let account = fetched_programs[3].as_ref().unwrap();
-        assert_eq!(account.owner, solana_sdk_ids::bpf_loader_upgradeable::id());
+        assert_eq!(account.owner, trezoa_sdk_ids::bpf_loader_upgradeable::id());
         assert!(account.executable);
     }
 
@@ -1663,7 +1663,7 @@ mod test {
         let err = result.unwrap_err();
         assert!(matches!(
             *err.kind,
-            solana_rpc_client_api::client_error::ErrorKind::TransactionError(
+            trezoa_rpc_client_api::client_error::ErrorKind::TransactionError(
                 TransactionError::AccountNotFound
             )
         ));

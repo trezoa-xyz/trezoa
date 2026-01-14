@@ -1,5 +1,5 @@
 use {
-    solana_account::AccountSharedData, solana_pubkey::Pubkey, solana_runtime::bank::Bank,
+    trezoa_account::AccountSharedData, trezoa_pubkey::Pubkey, trezoa_runtime::bank::Bank,
     std::collections::HashMap,
 };
 

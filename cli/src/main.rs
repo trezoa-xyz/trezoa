@@ -1,22 +1,22 @@
 use {
     clap::{crate_description, crate_name, value_t_or_exit, ArgMatches},
     console::style,
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         input_validators::normalize_to_url_if_moniker,
         keypair::{CliSigners, DefaultSigner},
         DisplayError,
     },
-    solana_cli::{
+    trezoa_cli::{
         clap_app::get_clap_app,
         cli::{parse_command, process_command, CliCommandInfo, CliConfig},
     },
-    solana_cli_config::{Config, ConfigInput},
-    solana_cli_output::{
+    trezoa_cli_config::{Config, ConfigInput},
+    trezoa_cli_output::{
         display::{println_name_value, println_name_value_or},
         OutputFormat,
     },
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client_api::config::RpcSendTransactionConfig,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client_api::config::RpcSendTransactionConfig,
     std::{collections::HashMap, error, path::PathBuf, rc::Rc, time::Duration},
 };
 
@@ -231,11 +231,11 @@ pub fn parse_args<'a>(
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn error::Error>> {
-    agave_logger::setup_with_default("off");
+    trezoa_logger::setup_with_default("off");
     let matches = get_clap_app(
         crate_name!(),
         crate_description!(),
-        solana_version::version!(),
+        trezoa_version::version!(),
     )
     .get_matches();
 

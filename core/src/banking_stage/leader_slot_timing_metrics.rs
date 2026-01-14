@@ -1,6 +1,6 @@
 use {
-    solana_clock::Slot, solana_poh::transaction_recorder::RecordTransactionsTimings,
-    solana_svm_timings::ExecuteTimings, std::time::Instant,
+    trezoa_clock::Slot, trezoa_poh::transaction_recorder::RecordTransactionsTimings,
+    trezoa_svm_timings::ExecuteTimings, std::time::Instant,
 };
 
 #[derive(Default, Debug)]

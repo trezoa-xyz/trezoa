@@ -6,7 +6,7 @@ use {
         commands::{run::args::RunArgs, FromClapArgMatches},
         ledger_lockfile, lock_ledger,
     },
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths::BANK_SNAPSHOTS_DIR,
         snapshot_config::{SnapshotConfig, SnapshotUsage},
         ArchiveFormat, SnapshotInterval, SnapshotVersion,
@@ -15,7 +15,7 @@ use {
     crossbeam_channel::unbounded,
     log::*,
     rand::{rng, seq::SliceRandom},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::{AccountShrinkThreshold, AccountsDbConfig, MarkObsoleteAccounts},
         accounts_file::StorageAccess,
         accounts_index::{AccountSecondaryIndexes, AccountsIndexConfig, IndexLimit, ScanFilter},
@@ -24,11 +24,11 @@ use {
             create_and_canonicalize_directory,
         },
     },
-    solana_clap_utils::input_parsers::{
+    trezoa_clap_utils::input_parsers::{
         keypair_of, keypairs_of, parse_cpu_ranges, pubkey_of, value_of, values_of,
     },
-    solana_clock::{Slot, DEFAULT_SLOTS_PER_EPOCH},
-    solana_core::{
+    trezoa_clock::{Slot, DEFAULT_SLOTS_PER_EPOCH},
+    trezoa_core::{
         banking_stage::transaction_scheduler::scheduler_controller::SchedulerConfig,
         banking_trace::DISABLED_BAKING_TRACE_DIR,
         consensus::tower_storage,
@@ -43,32 +43,32 @@ use {
             ValidatorTpuConfig,
         },
     },
-    solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
-    solana_gossip::{
+    trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+    trezoa_gossip::{
         cluster_info::{NodeConfig, DEFAULT_CONTACT_SAVE_INTERVAL_MILLIS},
         contact_info::ContactInfo,
         node::Node,
     },
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore_cleanup_service::{DEFAULT_MAX_LEDGER_SHREDS, DEFAULT_MIN_MAX_LEDGER_SHREDS},
         use_snapshot_archives_at_startup::{self, UseSnapshotArchivesAtStartup},
     },
-    solana_net_utils::multihomed_sockets::BindIpAddrs,
-    solana_poh::poh_service,
-    solana_pubkey::Pubkey,
-    solana_runtime::{runtime_config::RuntimeConfig, snapshot_utils},
-    solana_signer::Signer,
-    solana_streamer::{
+    trezoa_net_utils::multihomed_sockets::BindIpAddrs,
+    trezoa_poh::poh_service,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{runtime_config::RuntimeConfig, snapshot_utils},
+    trezoa_signer::Signer,
+    trezoa_streamer::{
         nonblocking::{simple_qos::SimpleQosConfig, swqos::SwQosConfig},
         quic::{QuicStreamerConfig, SimpleQosQuicStreamerConfig, SwQosQuicStreamerConfig},
     },
-    solana_turbine::{
+    trezoa_turbine::{
         broadcast_stage::BroadcastStageType,
         xdp::{set_cpu_affinity, XdpConfig},
     },
-    solana_validator_exit::Exit,
+    trezoa_validator_exit::Exit,
     std::{
         collections::HashSet,
         env,
@@ -90,7 +90,7 @@ pub enum Operation {
 
 pub fn execute(
     matches: &ArgMatches,
-    solana_version: &str,
+    trezoa_version: &str,
     operation: Operation,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // Debugging panics is easier with a backtrace
@@ -125,16 +125,16 @@ pub fn execute(
         println!("log file: {}", logfile.display());
     }
     let use_progress_bar = logfile.is_none();
-    agave_logger::initialize_logging(logfile.clone());
+    trezoa_logger::initialize_logging(logfile.clone());
 
-    info!("{} {}", crate_name!(), solana_version);
+    info!("{} {}", crate_name!(), trezoa_version);
     info!("Starting validator with: {:#?}", std::env::args_os());
 
-    solana_metrics::set_host_id(identity_keypair.pubkey().to_string());
-    solana_metrics::set_panic_hook("validator", Some(String::from(solana_version)));
-    solana_entry::entry::init_poh();
+    trezoa_metrics::set_host_id(identity_keypair.pubkey().to_string());
+    trezoa_metrics::set_panic_hook("validator", Some(String::from(trezoa_version)));
+    trezoa_entry::entry::init_poh();
 
-    solana_core::validator::report_target_features();
+    trezoa_core::validator::report_target_features();
 
     let authorized_voter_keypairs = keypairs_of(matches, "authorized_voter_keypairs")
         .map(|keypairs| keypairs.into_iter().map(Arc::new).collect())
@@ -216,7 +216,7 @@ pub fn execute(
         let parsed = matches
             .values_of("bind_address")
             .expect("bind_address should always be present due to default")
-            .map(solana_net_utils::parse_host)
+            .map(trezoa_net_utils::parse_host)
             .collect::<Result<Vec<_>, _>>()?;
         BindIpAddrs::new(parsed).map_err(|err| format!("invalid bind_addresses: {err}"))?
     };
@@ -245,10 +245,10 @@ pub fn execute(
     }
 
     let rpc_bind_address = if matches.is_present("rpc_bind_address") {
-        solana_net_utils::parse_host(matches.value_of("rpc_bind_address").unwrap())
+        trezoa_net_utils::parse_host(matches.value_of("rpc_bind_address").unwrap())
             .expect("invalid rpc_bind_address")
     } else if private_rpc {
-        solana_net_utils::parse_host("127.0.0.1").unwrap()
+        trezoa_net_utils::parse_host("127.0.0.1").unwrap()
     } else {
         bind_addresses.active()
     };
@@ -436,7 +436,7 @@ pub fn execute(
         num_foreground_threads: Some(accounts_db_foreground_threads),
         mark_obsolete_accounts,
         use_registered_io_uring_buffers: resource_limits::check_memlock_limit_for_disk_io(
-            solana_accounts_db::accounts_db::TOTAL_IO_URING_BUFFERS_SIZE_LIMIT,
+            trezoa_accounts_db::accounts_db::TOTAL_IO_URING_BUFFERS_SIZE_LIMIT,
         ),
         ..AccountsDbConfig::default()
     };
@@ -529,7 +529,7 @@ pub fn execute(
                 SocketAddr::new(rpc_bind_address, rpc_port + 1),
                 // If additional ports are added, +2 needs to be skipped to avoid a conflict with
                 // the websocket port (which is +2) in web3.js This odd port shifting is tracked at
-                // https://github.com/solana-labs/solana/issues/12250
+                // https://github.com/trezoa-labs/trezoa/issues/12250
             )
         }),
         pubsub_config: run_args.pub_sub_config,
@@ -650,7 +650,7 @@ pub fn execute(
     });
 
     let dynamic_port_range =
-        solana_net_utils::parse_port_range(matches.value_of("dynamic_port_range").unwrap())
+        trezoa_net_utils::parse_port_range(matches.value_of("dynamic_port_range").unwrap())
             .expect("invalid dynamic_port_range");
 
     let maximum_local_snapshot_age = value_t_or_exit!(matches, "maximum_local_snapshot_age", u64);
@@ -684,7 +684,7 @@ pub fn execute(
     let public_rpc_addr = matches
         .value_of("public_rpc_addr")
         .map(|addr| {
-            solana_net_utils::parse_host_port(addr)
+            trezoa_net_utils::parse_host_port(addr)
                 .map_err(|err| format!("failed to parse public rpc address: {err}"))
         })
         .transpose()?;
@@ -694,7 +694,7 @@ pub fn execute(
             info!("OS network limits test passed.");
         } else {
             Err("OS network limit test failed. See \
-                https://docs.anza.xyz/operations/guides/validator-start#system-tuning"
+                https://docs.trezoa.xyz/operations/guides/validator-start#system-tuning"
                 .to_string())?;
         }
     }
@@ -730,7 +730,7 @@ pub fn execute(
     let advertised_ip = matches
         .value_of("advertised_ip")
         .map(|advertised_ip| {
-            solana_net_utils::parse_host(advertised_ip)
+            trezoa_net_utils::parse_host(advertised_ip)
                 .map_err(|err| format!("failed to parse --advertised-ip: {err}"))
         })
         .transpose()?;
@@ -750,7 +750,7 @@ pub fn execute(
                 info!(
                     "Contacting {entrypoint_addr} to determine the validator's public IP address"
                 );
-                solana_net_utils::get_public_ip_addr_with_binding(
+                trezoa_net_utils::get_public_ip_addr_with_binding(
                     entrypoint_addr,
                     bind_addresses.active(),
                 )
@@ -767,14 +767,14 @@ pub fn execute(
         IpAddr::V4(Ipv4Addr::LOCALHOST)
     };
     let gossip_port = value_t!(matches, "gossip_port", u16).or_else(|_| {
-        solana_net_utils::find_available_port_in_range(bind_addresses.active(), (0, 1))
+        trezoa_net_utils::find_available_port_in_range(bind_addresses.active(), (0, 1))
             .map_err(|err| format!("unable to find an available gossip port: {err}"))
     })?;
 
     let public_tpu_addr = matches
         .value_of("public_tpu_addr")
         .map(|public_tpu_addr| {
-            solana_net_utils::parse_host_port(public_tpu_addr)
+            trezoa_net_utils::parse_host_port(public_tpu_addr)
                 .map_err(|err| format!("failed to parse --public-tpu-address: {err}"))
         })
         .transpose()?;
@@ -782,7 +782,7 @@ pub fn execute(
     let public_tpu_forwards_addr = matches
         .value_of("public_tpu_forwards_addr")
         .map(|public_tpu_forwards_addr| {
-            solana_net_utils::parse_host_port(public_tpu_forwards_addr)
+            trezoa_net_utils::parse_host_port(public_tpu_forwards_addr)
                 .map_err(|err| format!("failed to parse --public-tpu-forwards-address: {err}"))
         })
         .transpose()?;
@@ -790,7 +790,7 @@ pub fn execute(
     let public_tvu_addr = matches
         .value_of("public_tvu_addr")
         .map(|public_tvu_addr| {
-            solana_net_utils::parse_host_port(public_tvu_addr)
+            trezoa_net_utils::parse_host_port(public_tvu_addr)
                 .map_err(|err| format!("failed to parse --public-tvu-address: {err}"))
         })
         .transpose()?;
@@ -805,7 +805,7 @@ pub fn execute(
         matches
             .value_of("tpu_vortexor_receiver_address")
             .map(|tpu_vortexor_receiver_address| {
-                solana_net_utils::parse_host_port(tpu_vortexor_receiver_address).unwrap_or_else(
+                trezoa_net_utils::parse_host_port(tpu_vortexor_receiver_address).unwrap_or_else(
                     |err| {
                         eprintln!("Failed to parse --tpu-vortexor-receiver-address: {err}");
                         exit(1);
@@ -1020,7 +1020,7 @@ pub fn execute(
                 Some(&ValidatorError::WenRestartFinished)
             ) {
                 // 200 is a special error code, see
-                // https://github.com/solana-foundation/solana-improvement-documents/pull/46
+                // https://github.com/trezoa-foundation/trezoa-improvement-documents/pull/46
                 error!(
                     "Please remove --wen_restart and use --wait_for_supermajority as instructed \
                      above"
@@ -1079,7 +1079,7 @@ fn get_cluster_shred_version(entrypoints: &[SocketAddr], bind_address: IpAddr) -
         index.into_iter().map(|i| &entrypoints[i])
     };
     for entrypoint in entrypoints {
-        match solana_net_utils::get_cluster_shred_version_with_binding(entrypoint, bind_address) {
+        match trezoa_net_utils::get_cluster_shred_version_with_binding(entrypoint, bind_address) {
             Err(err) => eprintln!("get_cluster_shred_version failed: {entrypoint}, {err}"),
             Ok(0) => eprintln!("entrypoint {entrypoint} returned shred-version zero"),
             Ok(shred_version) => {

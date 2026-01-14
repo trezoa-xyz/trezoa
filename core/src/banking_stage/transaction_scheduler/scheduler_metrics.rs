@@ -1,8 +1,8 @@
 use {
     super::scheduler::SchedulingSummary,
     itertools::MinMaxResult,
-    solana_clock::Slot,
-    solana_time_utils::AtomicInterval,
+    trezoa_clock::Slot,
+    trezoa_time_utils::AtomicInterval,
     std::{
         num::Saturating,
         time::{Duration, Instant},
@@ -198,7 +198,7 @@ impl SchedulerCountMetricsInner {
         if let Some(slot) = slot {
             datapoint.add_field_i64("slot", slot as i64);
         }
-        solana_metrics::submit(datapoint, log::Level::Info);
+        trezoa_metrics::submit(datapoint, log::Level::Info);
     }
 
     fn has_data(&self) -> bool {
@@ -375,7 +375,7 @@ impl SchedulerTimingMetricsInner {
         if let Some(slot) = slot {
             datapoint.add_field_i64("slot", slot as i64);
         }
-        solana_metrics::submit(datapoint, log::Level::Info);
+        trezoa_metrics::submit(datapoint, log::Level::Info);
     }
 
     fn reset(&mut self) {

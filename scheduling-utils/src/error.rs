@@ -1,6 +1,6 @@
 use {
-    agave_scheduler_bindings::worker_message_types::not_included_reasons,
-    solana_transaction_error::TransactionError,
+    trezoa_scheduler_bindings::worker_message_types::not_included_reasons,
+    trezoa_transaction_error::TransactionError,
 };
 
 /// Translate

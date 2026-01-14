@@ -1,16 +1,16 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
 #![cfg_attr(feature = "frozen-abi", feature(min_specialization))]
 #![allow(clippy::arithmetic_side_effects)]
 #![recursion_limit = "2048"]
-//! The `solana` library implements the Solana high-performance blockchain architecture.
+//! The `trezoa` library implements the Trezoa high-performance blockchain architecture.
 //! It includes a full Rust implementation of the architecture (see
 //! [Validator](validator/struct.Validator.html))).  It also includes
 //! command-line tools to spin up validators and a Rust library
@@ -64,11 +64,11 @@ pub mod window_service;
 extern crate log;
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate trezoa_metrics;
 
 #[cfg_attr(feature = "frozen-abi", macro_use)]
 #[cfg(feature = "frozen-abi")]
-extern crate solana_frozen_abi_macro;
+extern crate trezoa_frozen_abi_macro;
 
 #[cfg(test)]
 #[macro_use]

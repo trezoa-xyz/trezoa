@@ -4,8 +4,8 @@ use {
     },
     bincode::deserialize,
     serde_json::json,
-    solana_message::{compiled_instruction::CompiledInstruction, AccountKeys},
-    solana_system_interface::instruction::SystemInstruction,
+    trezoa_message::{compiled_instruction::CompiledInstruction, AccountKeys},
+    trezoa_system_interface::instruction::SystemInstruction,
 };
 
 pub fn parse_system(
@@ -239,8 +239,8 @@ fn check_num_system_accounts(accounts: &[u8], num: usize) -> Result<(), ParseIns
 #[cfg(test)]
 mod test {
     use {
-        super::*, solana_message::Message, solana_pubkey::Pubkey, solana_sdk_ids::sysvar,
-        solana_system_interface::instruction as system_instruction,
+        super::*, trezoa_message::Message, trezoa_pubkey::Pubkey, trezoa_sdk_ids::sysvar,
+        trezoa_system_interface::instruction as system_instruction,
     };
 
     #[test]

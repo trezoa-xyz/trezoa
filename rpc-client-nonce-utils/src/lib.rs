@@ -7,8 +7,8 @@ pub use crate::nonblocking::{
     account_identity_ok, data_from_account, data_from_state, state_from_account, Error,
 };
 use {
-    solana_account::Account, solana_commitment_config::CommitmentConfig, solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
+    trezoa_account::Account, trezoa_commitment_config::CommitmentConfig, trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
 };
 
 /// Get a nonce account from the network.

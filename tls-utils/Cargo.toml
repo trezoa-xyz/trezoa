@@ -1,7 +1,7 @@
 [package]
-name = "solana-tls-utils"
-description = "Solana TLS utilities"
-documentation = "https://docs.rs/solana-tls-utils"
+name = "trezoa-tls-utils"
+description = "Trezoa TLS utilities"
+documentation = "https://docs.rs/trezoa-tls-utils"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,13 +10,13 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 rustls = { workspace = true, features = ["ring"] }
-solana-keypair = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-signer = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-signer = { workspace = true }
 x509-parser = { workspace = true }
 
 [lints]

@@ -1,6 +1,6 @@
 use {
     super::*, crate::translate_mut,
-    solana_program_runtime::execution_budget::SVMTransactionExecutionCost, solana_sbpf::ebpf,
+    trezoa_program_runtime::execution_budget::SVMTransactionExecutionCost, trezoa_sbpf::ebpf,
 };
 
 fn get_sysvar<T: std::fmt::Debug + SysvarSerialize + Clone>(

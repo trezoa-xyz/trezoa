@@ -1,8 +1,8 @@
 use {
-    crate::cli::CliError, solana_cli_output::display::build_balance_message,
-    solana_commitment_config::CommitmentConfig, solana_message::Message, solana_pubkey::Pubkey,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::client_error::Result as ClientResult,
+    crate::cli::CliError, trezoa_cli_output::display::build_balance_message,
+    trezoa_commitment_config::CommitmentConfig, trezoa_message::Message, trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::client_error::Result as ClientResult,
 };
 
 pub async fn check_account_for_fee(
@@ -179,11 +179,11 @@ mod tests {
     use {
         super::*,
         serde_json::json,
-        solana_rpc_client_api::{
+        trezoa_rpc_client_api::{
             request::RpcRequest,
             response::{Response, RpcResponseContext},
         },
-        solana_system_interface::instruction as system_instruction,
+        trezoa_system_interface::instruction as system_instruction,
         std::collections::HashMap,
     };
 
@@ -197,7 +197,7 @@ mod tests {
             },
             value: json!(account_balance),
         });
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
 
         let pubkey0 = Pubkey::from([0; 32]);
         let pubkey1 = Pubkey::from([1; 32]);
@@ -283,7 +283,7 @@ mod tests {
             },
             value: json!(account_balance),
         });
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
 
         let mut mocks = HashMap::new();
         mocks.insert(RpcRequest::GetBalance, account_balance_response);
@@ -354,9 +354,9 @@ mod tests {
 
     #[test]
     fn test_check_unique_pubkeys() {
-        let pubkey0 = solana_pubkey::new_rand();
+        let pubkey0 = trezoa_pubkey::new_rand();
         let pubkey_clone = pubkey0;
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
 
         check_unique_pubkeys((&pubkey0, "foo".to_string()), (&pubkey1, "bar".to_string()))
             .expect("unexpected result");

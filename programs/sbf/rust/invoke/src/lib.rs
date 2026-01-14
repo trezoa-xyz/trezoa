@@ -4,26 +4,26 @@
 #![allow(clippy::arithmetic_side_effects)]
 
 #[cfg(target_feature = "dynamic-frames")]
-use solana_program_memory::sol_memcmp;
+use trezoa_program_memory::sol_memcmp;
 use {
-    solana_account_info::AccountInfo,
-    solana_instruction::Instruction,
-    solana_msg::msg,
-    solana_program::{
+    trezoa_account_info::AccountInfo,
+    trezoa_instruction::Instruction,
+    trezoa_msg::msg,
+    trezoa_program::{
         compute_units::sol_remaining_compute_units,
         program::{get_return_data, invoke, invoke_signed, set_return_data},
         syscalls::{
             MAX_CPI_ACCOUNT_INFOS, MAX_CPI_INSTRUCTION_ACCOUNTS, MAX_CPI_INSTRUCTION_DATA_LEN,
         },
     },
-    solana_program_entrypoint::{ProgramResult, MAX_PERMITTED_DATA_INCREASE},
-    solana_program_error::ProgramError,
-    solana_pubkey::{Pubkey, PubkeyError},
-    solana_sbf_rust_invoke_dep::*,
-    solana_sbf_rust_invoked_dep::*,
-    solana_sbf_rust_realloc_dep::*,
-    solana_sdk_ids::bpf_loader_deprecated,
-    solana_system_interface::{instruction as system_instruction, program as system_program},
+    trezoa_program_entrypoint::{ProgramResult, MAX_PERMITTED_DATA_INCREASE},
+    trezoa_program_error::ProgramError,
+    trezoa_pubkey::{Pubkey, PubkeyError},
+    trezoa_sbf_rust_invoke_dep::*,
+    trezoa_sbf_rust_invoked_dep::*,
+    trezoa_sbf_rust_realloc_dep::*,
+    trezoa_sdk_ids::bpf_loader_deprecated,
+    trezoa_system_interface::{instruction as system_instruction, program as system_program},
     std::{cell::RefCell, mem, rc::Rc, slice},
 };
 
@@ -68,7 +68,7 @@ fn do_nested_invokes(num_nested_invokes: u64, accounts: &[AccountInfo]) -> Progr
     Ok(())
 }
 
-solana_program_entrypoint::entrypoint_no_alloc!(process_instruction);
+trezoa_program_entrypoint::entrypoint_no_alloc!(process_instruction);
 fn process_instruction<'a>(
     program_id: &Pubkey,
     accounts: &[AccountInfo<'a>],
@@ -87,7 +87,7 @@ fn process_instruction<'a>(
                 let from_lamports = accounts[FROM_INDEX].lamports();
                 let to_lamports = accounts[DERIVED_KEY1_INDEX].lamports();
                 assert_eq!(accounts[DERIVED_KEY1_INDEX].data_len(), 0);
-                assert!(solana_system_interface::program::check_id(
+                assert!(trezoa_system_interface::program::check_id(
                     accounts[DERIVED_KEY1_INDEX].owner
                 ));
 
@@ -827,7 +827,7 @@ fn process_instruction<'a>(
                         // pointer past the RcBox or CPI will clobber the length
                         // change when it copies the callee's account data back
                         // into the caller's account data
-                        // https://github.com/solana-labs/solana/blob/fa28958bd69054d1c2348e0a731011e93d44d7af/programs/bpf_loader/src/syscalls/cpi.rs#L1487
+                        // https://github.com/trezoa-labs/trezoa/blob/fa28958bd69054d1c2348e0a731011e93d44d7af/programs/bpf_loader/src/syscalls/cpi.rs#L1487
                         value: RefCell::new(slice::from_raw_parts_mut(
                             account.data.borrow_mut().as_mut_ptr().add(rc_box_size),
                             0,

@@ -1,8 +1,8 @@
 //! Vote data types for use by clients
 use {
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_hash::Hash,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
 };
 
 /// Enum that clients can use to parse and create the vote

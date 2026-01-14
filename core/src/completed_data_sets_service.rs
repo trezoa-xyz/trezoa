@@ -6,10 +6,10 @@
 
 use {
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
-    solana_entry::entry::Entry,
-    solana_ledger::blockstore::{Blockstore, CompletedDataSetInfo},
-    solana_rpc::{max_slots::MaxSlots, rpc_subscriptions::RpcSubscriptions},
-    solana_signature::Signature,
+    trezoa_entry::entry::Entry,
+    trezoa_ledger::blockstore::{Blockstore, CompletedDataSetInfo},
+    trezoa_rpc::{max_slots::MaxSlots, rpc_subscriptions::RpcSubscriptions},
+    trezoa_signature::Signature,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -109,8 +109,8 @@ impl CompletedDataSetsService {
 #[cfg(test)]
 pub mod test {
     use {
-        super::*, solana_hash::Hash, solana_keypair::Keypair, solana_signer::Signer,
-        solana_transaction::Transaction,
+        super::*, trezoa_hash::Hash, trezoa_keypair::Keypair, trezoa_signer::Signer,
+        trezoa_transaction::Transaction,
     };
 
     #[test]

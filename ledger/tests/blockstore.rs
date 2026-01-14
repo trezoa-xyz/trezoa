@@ -1,7 +1,7 @@
 use {
-    solana_entry::entry,
-    solana_hash::Hash,
-    solana_ledger::{
+    trezoa_entry::entry,
+    trezoa_hash::Hash,
+    trezoa_ledger::{
         blockstore::{self, Blockstore},
         get_tmp_ledger_path_auto_delete,
     },

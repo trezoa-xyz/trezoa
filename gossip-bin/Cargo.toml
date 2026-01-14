@@ -1,8 +1,8 @@
 [package]
-name = "solana-gossip-bin"
+name = "trezoa-gossip-bin"
 version = { workspace = true }
 authors = { workspace = true }
-description = "Binary crate providing the Solana Gossip command-line tool."
+description = "Binary crate providing the Trezoa Gossip command-line tool."
 repository = { workspace = true }
 homepage = { workspace = true }
 license = { workspace = true }
@@ -10,19 +10,19 @@ publish = false
 edition = { workspace = true }
 
 [[bin]]
-name = "solana-gossip"
+name = "trezoa-gossip"
 path = "src/main.rs"
 bench = false
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-logger = { workspace = true }
+trezoa-logger = { workspace = true }
 clap = { workspace = true }
 log = { workspace = true }
-solana-clap-utils = { workspace = true }
-solana-gossip = { workspace = true, features = ["agave-unstable-api"] }
-solana-net-utils = { workspace = true, features = ["agave-unstable-api"] }
-solana-pubkey = { version = "=4.0.0", features = ["rand"] }
-solana-version = { workspace = true }
+trezoa-clap-utils = { workspace = true }
+trezoa-gossip = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-net-utils = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-pubkey = { version = "=4.0.0", features = ["rand"] }
+trezoa-version = { workspace = true }

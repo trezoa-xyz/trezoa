@@ -1,7 +1,7 @@
 use {
-    solana_account::{Account, ReadableAccount},
-    solana_program_runtime::sysvar_cache::SysvarCache,
-    solana_pubkey::Pubkey,
+    trezoa_account::{Account, ReadableAccount},
+    trezoa_program_runtime::sysvar_cache::SysvarCache,
+    trezoa_pubkey::Pubkey,
 };
 
 /// Populate a `SysvarCache` via `fill_missing_entries` from any sysvar accounts.

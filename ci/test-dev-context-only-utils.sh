@@ -3,7 +3,7 @@
 set -eo pipefail
 source ./ci/_
 
-(unset RUSTC_WRAPPER; cargo install --force --git https://github.com/anza-xyz/cargo-hack.git --rev 5e59c3ec6c661c02601487c0d4b2a2649fe06c9f cargo-hack)
+(unset RUSTC_WRAPPER; cargo install --force --git https://github.com/trezoa-xyz/cargo-hack.git --rev 5e59c3ec6c661c02601487c0d4b2a2649fe06c9f cargo-hack)
 
 # Here, experimentally switch the sccache storage from GCS to local disk by
 # `unset`-ing gcs credentials so that sccache automatically falls back to the
@@ -21,7 +21,7 @@ export CARGO_INCREMENTAL=0
 _ sccache --show-stats
 
 scripts/check-dev-context-only-utils.sh check-all-targets "$@"
-scripts/check-dev-context-only-utils.sh check-bins-and-lib "$@" --features agave-unstable-api
+scripts/check-dev-context-only-utils.sh check-bins-and-lib "$@" --features trezoa-unstable-api
 
 # This shows final stats while stopping the sccache background server as well
 # for later normal sccache use (if any). Remember that sccache is now

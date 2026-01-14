@@ -9,19 +9,19 @@ use {
     },
     crossbeam_channel::Sender,
     rand::{rng, Rng},
-    solana_client::{connection_cache::ConnectionCache, tpu_client::TpuClientWrapper},
-    solana_keypair::Keypair,
-    solana_net_utils::{SocketAddrSpace, DEFAULT_IP_ECHO_SERVER_THREADS},
-    solana_perf::recycler::Recycler,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_runtime::bank_forks::BankForks,
-    solana_signer::Signer,
-    solana_streamer::{
+    trezoa_client::{connection_cache::ConnectionCache, tpu_client::TpuClientWrapper},
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::{SocketAddrSpace, DEFAULT_IP_ECHO_SERVER_THREADS},
+    trezoa_perf::recycler::Recycler,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_runtime::bank_forks::BankForks,
+    trezoa_signer::Signer,
+    trezoa_streamer::{
         evicting_sender::EvictingSender,
         streamer::{self, StreamerReceiveStats},
     },
-    solana_tpu_client::tpu_client::{TpuClient, TpuClientConfig},
+    trezoa_tpu_client::tpu_client::{TpuClient, TpuClientConfig},
     std::{
         collections::HashSet,
         net::{SocketAddr, TcpListener, UdpSocket},
@@ -199,7 +199,7 @@ pub fn discover_peers(
     }
 
     let _ip_echo_server = ip_echo.map(|tcp_listener| {
-        solana_net_utils::ip_echo_server(
+        trezoa_net_utils::ip_echo_server(
             tcp_listener,
             DEFAULT_IP_ECHO_SERVER_THREADS,
             Some(my_shred_version),
@@ -414,8 +414,8 @@ mod tests {
     fn test_gossip_services_spy() {
         const TIMEOUT: Duration = Duration::from_secs(5);
         let keypair = Keypair::new();
-        let peer0 = solana_pubkey::new_rand();
-        let peer1 = solana_pubkey::new_rand();
+        let peer0 = trezoa_pubkey::new_rand();
+        let peer1 = trezoa_pubkey::new_rand();
         let contact_info = ContactInfo::new_localhost(&keypair.pubkey(), 0);
         let peer0_info = ContactInfo::new_localhost(&peer0, 0);
         let peer1_info = ContactInfo::new_localhost(&peer1, 0);
@@ -447,7 +447,7 @@ mod tests {
             spy_ref.clone(),
             None,
             TIMEOUT,
-            Some(&[solana_pubkey::new_rand()]),
+            Some(&[trezoa_pubkey::new_rand()]),
             &[],
         );
         assert!(!met_criteria);
@@ -461,7 +461,7 @@ mod tests {
             spy_ref.clone(),
             Some(1),
             TIMEOUT,
-            Some(&[solana_pubkey::new_rand()]),
+            Some(&[trezoa_pubkey::new_rand()]),
             &[],
         );
         assert!(!met_criteria);

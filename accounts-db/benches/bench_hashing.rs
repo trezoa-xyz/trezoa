@@ -1,8 +1,8 @@
 use {
     criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput},
-    solana_account::AccountSharedData,
-    solana_accounts_db::accounts_db::AccountsDb,
-    solana_pubkey::Pubkey,
+    trezoa_account::AccountSharedData,
+    trezoa_accounts_db::accounts_db::AccountsDb,
+    trezoa_pubkey::Pubkey,
 };
 
 #[cfg(not(any(target_env = "msvc", target_os = "freebsd")))]

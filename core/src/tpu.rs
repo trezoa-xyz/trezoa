@@ -26,36 +26,36 @@ use {
         vortexor_receiver_adapter::VortexorReceiverAdapter,
     },
     crossbeam_channel::{bounded, unbounded, Receiver},
-    solana_clock::Slot,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore::Blockstore, blockstore_processor::TransactionStatusSender,
         entry_notifier_service::EntryNotifierSender,
     },
-    solana_perf::data_budget::DataBudget,
-    solana_poh::{
+    trezoa_perf::data_budget::DataBudget,
+    trezoa_poh::{
         poh_recorder::{PohRecorder, WorkingBankEntry},
         transaction_recorder::TransactionRecorder,
     },
-    solana_pubkey::Pubkey,
-    solana_rpc::{
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc::{
         optimistically_confirmed_bank_tracker::BankNotificationSenderConfig,
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    trezoa_runtime::{
         bank_forks::BankForks,
         prioritization_fee_cache::PrioritizationFeeCache,
         vote_sender_types::{ReplayVoteReceiver, ReplayVoteSender},
     },
-    solana_streamer::{
+    trezoa_streamer::{
         quic::{
             spawn_simple_qos_server, spawn_stake_wighted_qos_server, SimpleQosQuicStreamerConfig,
             SpawnServerResult, SwQosQuicStreamerConfig,
         },
         streamer::StakedNodes,
     },
-    solana_turbine::{
+    trezoa_turbine::{
         broadcast_stage::{BroadcastStage, BroadcastStageType},
         xdp::XdpSender,
     },

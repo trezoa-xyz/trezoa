@@ -4,24 +4,24 @@ extern crate log;
 
 use {
     rayon::iter::*,
-    solana_gossip::{
+    trezoa_gossip::{
         cluster_info::ClusterInfo,
         contact_info::{ContactInfo, Protocol},
         crds::Cursor,
         gossip_service::GossipService,
         node::Node,
     },
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_net_utils::SocketAddrSpace,
-    solana_perf::packet::Packet,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::BankForks,
-    solana_signer::Signer,
-    solana_streamer::sendmmsg::{multi_target_send, SendPktsError},
-    solana_time_utils::timestamp,
-    solana_transaction::Transaction,
-    solana_vote_program::{vote_instruction, vote_state::Vote},
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_perf::packet::Packet,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::BankForks,
+    trezoa_signer::Signer,
+    trezoa_streamer::sendmmsg::{multi_target_send, SendPktsError},
+    trezoa_time_utils::timestamp,
+    trezoa_transaction::Transaction,
+    trezoa_vote_program::{vote_instruction, vote_state::Vote},
     std::{
         net::UdpSocket,
         sync::{
@@ -153,7 +153,7 @@ fn retransmit_to(
 /// ring a -> b -> c -> d -> e -> a
 #[test]
 fn gossip_ring() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     run_gossip_topo(40, |listen| {
         let num = listen.len();
         for n in 0..num {
@@ -171,7 +171,7 @@ fn gossip_ring() {
 #[test]
 #[ignore]
 fn gossip_ring_large() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     run_gossip_topo(600, |listen| {
         let num = listen.len();
         for n in 0..num {
@@ -187,7 +187,7 @@ fn gossip_ring_large() {
 /// star a -> (b,c,d,e)
 #[test]
 fn gossip_star() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     run_gossip_topo(10, |listen| {
         let num = listen.len();
         for n in 0..(num - 1) {
@@ -206,7 +206,7 @@ fn gossip_star() {
 /// rstar a <- (b,c,d,e)
 #[test]
 fn gossip_rstar() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     run_gossip_topo(10, |listen| {
         let num = listen.len();
         let xd = {
@@ -225,7 +225,7 @@ fn gossip_rstar() {
 
 #[test]
 pub fn cluster_info_retransmit() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let exit = Arc::new(AtomicBool::new(false));
     trace!("c1:");
     let (c1, dr1, tn1) = test_node(exit.clone());
@@ -286,14 +286,14 @@ pub fn cluster_info_retransmit() {
 #[ignore]
 pub fn cluster_info_scale() {
     use {
-        solana_measure::measure::Measure,
-        solana_perf::test_tx::test_tx,
-        solana_runtime::{
+        trezoa_measure::measure::Measure,
+        trezoa_perf::test_tx::test_tx,
+        trezoa_runtime::{
             bank::Bank,
             genesis_utils::{create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs},
         },
     };
-    agave_logger::setup();
+    trezoa_logger::setup();
     let exit = Arc::new(AtomicBool::new(false));
     let num_nodes: usize = std::env::var("NUM_NODES")
         .unwrap_or_else(|_| "10".to_string())

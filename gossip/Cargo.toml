@@ -1,6 +1,6 @@
 [package]
-name = "solana-gossip"
-documentation = "https://docs.rs/solana-gossip"
+name = "trezoa-gossip"
+documentation = "https://docs.rs/trezoa-gossip"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -17,23 +17,23 @@ bench = false
 
 [features]
 frozen-abi = [
-    "dep:solana-frozen-abi",
-    "dep:solana-frozen-abi-macro",
-    "solana-bloom/frozen-abi",
-    "solana-ledger/frozen-abi",
-    "solana-perf/frozen-abi",
-    "solana-runtime/frozen-abi",
-    "solana-short-vec/frozen-abi",
-    "solana-version/frozen-abi",
-    "solana-vote/frozen-abi",
-    "solana-vote-program/frozen-abi",
+    "dep:trezoa-frozen-abi",
+    "dep:trezoa-frozen-abi-macro",
+    "trezoa-bloom/frozen-abi",
+    "trezoa-ledger/frozen-abi",
+    "trezoa-perf/frozen-abi",
+    "trezoa-runtime/frozen-abi",
+    "trezoa-short-vec/frozen-abi",
+    "trezoa-version/frozen-abi",
+    "trezoa-vote/frozen-abi",
+    "trezoa-vote-program/frozen-abi",
 ]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-feature-set = { workspace = true }
-agave-logger = { workspace = true }
-agave-random = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-random = { workspace = true }
 arc-swap = { workspace = true }
 arrayvec = { workspace = true }
 assert_matches = { workspace = true }
@@ -54,47 +54,47 @@ serde = { workspace = true }
 serde-big-array = { workspace = true }
 serde_bytes = { workspace = true }
 siphasher = { workspace = true }
-solana-bloom = { workspace = true }
-solana-clap-utils = { workspace = true }
-solana-client = { workspace = true }
-solana-clock = { workspace = true }
-solana-cluster-type = { workspace = true }
-solana-connection-cache = { workspace = true }
-solana-entry = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-bloom = { workspace = true }
+trezoa-clap-utils = { workspace = true }
+trezoa-client = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-cluster-type = { workspace = true }
+trezoa-connection-cache = { workspace = true }
+trezoa-entry = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-frozen-abi-macro = { workspace = true, optional = true, features = [
+trezoa-frozen-abi-macro = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-hash = { workspace = true }
-solana-keypair = { workspace = true }
-solana-ledger = { workspace = true, features = ["agave-unstable-api"] }
-solana-measure = { workspace = true }
-solana-metrics = { workspace = true }
-solana-native-token = { workspace = true }
-solana-net-utils = { workspace = true, features = ["agave-unstable-api"] }
-solana-packet = { workspace = true }
-solana-perf = { workspace = true }
-solana-pubkey = { workspace = true, features = ["rand"] }
-solana-quic-definitions = { workspace = true }
-solana-rayon-threadlimit = { workspace = true }
-solana-rpc-client = { workspace = true }
-solana-runtime = { workspace = true }
-solana-sanitize = { workspace = true }
-solana-serde-varint = { workspace = true }
-solana-sha256-hasher = { workspace = true }
-solana-short-vec = { workspace = true }
-solana-signature = { workspace = true, default-features = false }
-solana-signer = { workspace = true }
-solana-streamer = { workspace = true }
-solana-time-utils = { workspace = true }
-solana-tpu-client = { workspace = true }
-solana-transaction = { workspace = true }
-solana-version = { workspace = true }
-solana-vote = { workspace = true }
-solana-vote-program = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-ledger = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-measure = { workspace = true }
+trezoa-metrics = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-net-utils = { workspace = true, features = ["trezoa-unstable-api"] }
+trezoa-packet = { workspace = true }
+trezoa-perf = { workspace = true }
+trezoa-pubkey = { workspace = true, features = ["rand"] }
+trezoa-quic-definitions = { workspace = true }
+trezoa-rayon-threadlimit = { workspace = true }
+trezoa-rpc-client = { workspace = true }
+trezoa-runtime = { workspace = true }
+trezoa-sanitize = { workspace = true }
+trezoa-serde-varint = { workspace = true }
+trezoa-sha256-hasher = { workspace = true }
+trezoa-short-vec = { workspace = true }
+trezoa-signature = { workspace = true, default-features = false }
+trezoa-signer = { workspace = true }
+trezoa-streamer = { workspace = true }
+trezoa-time-utils = { workspace = true }
+trezoa-tpu-client = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-version = { workspace = true }
+trezoa-vote = { workspace = true }
+trezoa-vote-program = { workspace = true }
 static_assertions = { workspace = true }
 thiserror = { workspace = true }
 
@@ -104,13 +104,13 @@ bs58 = { workspace = true }
 criterion = { workspace = true }
 num_cpus = { workspace = true }
 serial_test = { workspace = true }
-solana-gossip = { path = ".", features = ["agave-unstable-api"] }
-solana-net-utils = { workspace = true, features = ["dev-context-only-utils"] }
-solana-perf = { workspace = true, features = ["dev-context-only-utils"] }
-solana-runtime = { workspace = true, features = ["dev-context-only-utils"] }
-solana-signature = { workspace = true, features = ["rand"] }
-solana-system-transaction = { workspace = true }
-solana-vote-interface = { workspace = true }
+trezoa-gossip = { path = ".", features = ["trezoa-unstable-api"] }
+trezoa-net-utils = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-perf = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-signature = { workspace = true, features = ["rand"] }
+trezoa-system-transaction = { workspace = true }
+trezoa-vote-interface = { workspace = true }
 static_assertions = { workspace = true }
 test-case = { workspace = true }
 

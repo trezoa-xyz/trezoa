@@ -1,13 +1,13 @@
 use {
     crate::{broadcast_stage::BroadcastStage, retransmit_stage::RetransmitStage},
-    agave_feature_set::{self as feature_set},
+    trezoa_feature_set::{self as feature_set},
     itertools::Either,
     lazy_lru::LruCache,
     rand::{seq::SliceRandom, Rng, RngCore, SeedableRng},
     rand_chacha::{ChaCha8Rng, ChaChaRng},
-    solana_clock::{Epoch, Slot},
-    solana_cluster_type::ClusterType,
-    solana_gossip::{
+    trezoa_clock::{Epoch, Slot},
+    trezoa_cluster_type::ClusterType,
+    trezoa_gossip::{
         cluster_info::ClusterInfo,
         contact_info::{ContactInfo as GossipContactInfo, Protocol},
         crds::GossipRoute,
@@ -16,14 +16,14 @@ use {
         crds_value::CrdsValue,
         weighted_shuffle::WeightedShuffle,
     },
-    solana_keypair::Keypair,
-    solana_ledger::shred::ShredId,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank::Bank,
-    solana_signer::Signer,
-    solana_time_utils::timestamp,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::ShredId,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank::Bank,
+    trezoa_signer::Signer,
+    trezoa_time_utils::timestamp,
     std::{
         any::TypeId,
         cell::RefCell,
@@ -678,7 +678,7 @@ pub fn make_test_cluster<R: Rng>(
 ) {
     let (unstaked_numerator, unstaked_denominator) = unstaked_ratio.unwrap_or((1, 7));
     let mut nodes: Vec<_> = repeat_with(|| {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         GossipContactInfo::new_localhost(&pubkey, /*wallclock:*/ timestamp())
     })
     .take(num_nodes)
@@ -737,8 +737,8 @@ mod tests {
         super::*,
         itertools::Itertools,
         rand::prelude::IndexedRandom as _,
-        solana_hash::Hash as SolanaHash,
-        solana_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
+        trezoa_hash::Hash as TrezoaHash,
+        trezoa_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
         std::{collections::VecDeque, fmt::Debug, hash::Hash},
         test_case::test_case,
     };
@@ -768,7 +768,7 @@ mod tests {
                 &Keypair::new(),
                 &[],
                 true,
-                SolanaHash::default(),
+                TrezoaHash::default(),
                 0,
                 0,
                 &ReedSolomonCache::default(),

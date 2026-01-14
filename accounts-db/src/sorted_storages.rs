@@ -1,8 +1,8 @@
 use {
     crate::account_storage_entry::AccountStorageEntry,
     log::*,
-    solana_clock::Slot,
-    solana_measure::measure::Measure,
+    trezoa_clock::Slot,
+    trezoa_measure::measure::Measure,
     std::{
         collections::HashMap,
         ops::{Bound, Range, RangeBounds},

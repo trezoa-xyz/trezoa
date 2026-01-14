@@ -21,9 +21,9 @@ use {
     bytemuck_derive::{Pod, Zeroable},
     memmap2::{Mmap, MmapOptions},
     modular_bitfield::prelude::*,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
     std::{io::Write, option::Option, path::Path, sync::Arc},
 };
 
@@ -34,7 +34,7 @@ pub const RENT_EXEMPT_RENT_EPOCH: Epoch = Epoch::MAX;
 #[cfg(test)]
 static_assertions::const_assert_eq!(
     RENT_EXEMPT_RENT_EPOCH,
-    solana_svm::rent_calculator::RENT_EXEMPT_RENT_EPOCH
+    trezoa_svm::rent_calculator::RENT_EXEMPT_RENT_EPOCH
 );
 
 pub const HOT_FORMAT: TieredStorageFormat = TieredStorageFormat {
@@ -848,10 +848,10 @@ mod tests {
         assert_matches::assert_matches,
         memoffset::offset_of,
         rand::Rng,
-        solana_account::ReadableAccount,
-        solana_clock::{Epoch, Slot},
-        solana_hash::Hash,
-        solana_pubkey::Pubkey,
+        trezoa_account::ReadableAccount,
+        trezoa_clock::{Epoch, Slot},
+        trezoa_hash::Hash,
+        trezoa_pubkey::Pubkey,
         std::path::PathBuf,
         tempfile::TempDir,
     };

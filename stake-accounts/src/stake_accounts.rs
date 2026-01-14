@@ -1,10 +1,10 @@
 use {
-    solana_account::{state_traits::StateMut, ReadableAccount},
-    solana_clock::SECONDS_PER_DAY,
-    solana_instruction::Instruction,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::{
+    trezoa_account::{state_traits::StateMut, ReadableAccount},
+    trezoa_clock::SECONDS_PER_DAY,
+    trezoa_instruction::Instruction,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::{
         self as stake,
         instruction::{self as stake_instruction, LockupArgs},
         state::{Authorized, Lockup, StakeAuthorize, StakeStateV2},
@@ -293,14 +293,14 @@ pub(crate) fn move_stake_accounts(
 mod tests {
     use {
         super::*,
-        solana_account::{AccountSharedData, ReadableAccount},
-        solana_client_traits::SyncClient,
-        solana_genesis_config::create_genesis_config,
-        solana_keypair::Keypair,
-        solana_runtime::{bank::Bank, bank_client::BankClient, bank_forks::BankForks},
-        solana_signer::Signer,
-        solana_stake_interface::state::StakeStateV2,
-        solana_sysvar::epoch_rewards::EpochRewards,
+        trezoa_account::{AccountSharedData, ReadableAccount},
+        trezoa_client_traits::SyncClient,
+        trezoa_genesis_config::create_genesis_config,
+        trezoa_keypair::Keypair,
+        trezoa_runtime::{bank::Bank, bank_client::BankClient, bank_forks::BankForks},
+        trezoa_signer::Signer,
+        trezoa_stake_interface::state::StakeStateV2,
+        trezoa_sysvar::epoch_rewards::EpochRewards,
         std::sync::{Arc, RwLock},
     };
 
@@ -310,10 +310,10 @@ mod tests {
 
     fn create_bank(lamports: u64) -> (Arc<Bank>, Arc<RwLock<BankForks>>, Keypair, u64, u64) {
         let (mut genesis_config, mint_keypair) = create_genesis_config(lamports);
-        genesis_config.fee_rate_governor = solana_fee_calculator::FeeRateGovernor::new(0, 0);
+        genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
 
         for (pubkey, account) in
-            solana_program_binaries::by_id(&stake::program::id(), &genesis_config.rent)
+            trezoa_program_binaries::by_id(&stake::program::id(), &genesis_config.rent)
                 .unwrap()
                 .into_iter()
         {
@@ -396,8 +396,8 @@ mod tests {
         let base_keypair = Keypair::new();
         let base_pubkey = base_keypair.pubkey();
         let lamports = stake_rent + 1;
-        let stake_authority_pubkey = solana_pubkey::new_rand();
-        let withdraw_authority_pubkey = solana_pubkey::new_rand();
+        let stake_authority_pubkey = trezoa_pubkey::new_rand();
+        let withdraw_authority_pubkey = trezoa_pubkey::new_rand();
 
         let message = new_stake_account(
             &fee_payer_pubkey,
@@ -455,8 +455,8 @@ mod tests {
             .send_and_confirm_message(&signers, message)
             .unwrap();
 
-        let new_stake_authority_pubkey = solana_pubkey::new_rand();
-        let new_withdraw_authority_pubkey = solana_pubkey::new_rand();
+        let new_stake_authority_pubkey = trezoa_pubkey::new_rand();
+        let new_withdraw_authority_pubkey = trezoa_pubkey::new_rand();
         let messages = authorize_stake_accounts(
             &fee_payer_pubkey,
             &base_pubkey,
@@ -674,8 +674,8 @@ mod tests {
 
         let new_base_keypair = Keypair::new();
         let new_base_pubkey = new_base_keypair.pubkey();
-        let new_stake_authority_pubkey = solana_pubkey::new_rand();
-        let new_withdraw_authority_pubkey = solana_pubkey::new_rand();
+        let new_stake_authority_pubkey = trezoa_pubkey::new_rand();
+        let new_withdraw_authority_pubkey = trezoa_pubkey::new_rand();
         let balances = get_balances(&bank_client, &base_pubkey, num_accounts);
         let messages = move_stake_accounts(
             &fee_payer_pubkey,

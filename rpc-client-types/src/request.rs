@@ -1,9 +1,9 @@
-pub use solana_address::Address;
+pub use trezoa_address::Address;
 use {
     crate::response::RpcSimulateTransactionResult,
     serde::{Deserialize, Serialize},
     serde_json::{json, Value},
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::fmt,
     thiserror::Error,
 };
@@ -230,7 +230,7 @@ mod tests {
     use {
         super::*,
         crate::config::RpcTokenAccountsFilter,
-        solana_commitment_config::{CommitmentConfig, CommitmentLevel},
+        trezoa_commitment_config::{CommitmentConfig, CommitmentLevel},
     };
 
     #[test]
@@ -293,7 +293,7 @@ mod tests {
 
         // Test request with CommitmentConfig and params
         let test_request = RpcRequest::GetTokenAccountsByOwner;
-        let mint = solana_pubkey::new_rand();
+        let mint = trezoa_pubkey::new_rand();
         let token_account_filter = RpcTokenAccountsFilter::Mint(mint.to_string());
         let request = test_request
             .build_request_json(1, json!([addr, token_account_filter, commitment_config]));

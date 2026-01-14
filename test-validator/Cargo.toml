@@ -1,5 +1,5 @@
 [package]
-name = "solana-test-validator"
+name = "trezoa-test-validator"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -12,53 +12,53 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-feature-set = { workspace = true }
-agave-snapshots = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-snapshots = { workspace = true }
 base64 = { workspace = true }
 bincode = { workspace = true }
 crossbeam-channel = { workspace = true }
 log = { workspace = true }
 serde_json = { workspace = true }
-solana-account = { workspace = true }
-solana-accounts-db = { workspace = true }
-solana-cli-output = { workspace = true }
-solana-clock = { workspace = true }
-solana-cluster-type = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-compute-budget = { workspace = true }
-solana-core = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-feature-gate-interface = { workspace = true }
-solana-fee-calculator = { workspace = true }
-solana-genesis-utils = { workspace = true }
-solana-geyser-plugin-manager = { workspace = true }
-solana-gossip = { workspace = true }
-solana-inflation = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keypair = { workspace = true }
-solana-ledger = { workspace = true }
-solana-loader-v3-interface = { workspace = true }
-solana-message = { workspace = true }
-solana-native-token = { workspace = true }
-solana-net-utils = { workspace = true }
-solana-program-binaries = { workspace = true }
-solana-program-test = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-rent = { workspace = true }
-solana-rpc = { workspace = true }
-solana-rpc-client = { workspace = true }
-solana-rpc-client-api = { workspace = true }
-solana-runtime = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-signer = { workspace = true }
-solana-streamer = { workspace = true }
-solana-tpu-client = { workspace = true }
-solana-transaction = { workspace = true }
-solana-validator-exit = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-accounts-db = { workspace = true }
+trezoa-cli-output = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-cluster-type = { workspace = true }
+trezoa-commitment-config = { workspace = true }
+trezoa-compute-budget = { workspace = true }
+trezoa-core = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-feature-gate-interface = { workspace = true }
+trezoa-fee-calculator = { workspace = true }
+trezoa-genesis-utils = { workspace = true }
+trezoa-geyser-plugin-manager = { workspace = true }
+trezoa-gossip = { workspace = true }
+trezoa-inflation = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-ledger = { workspace = true }
+trezoa-loader-v3-interface = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-net-utils = { workspace = true }
+trezoa-program-binaries = { workspace = true }
+trezoa-program-test = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-rent = { workspace = true }
+trezoa-rpc = { workspace = true }
+trezoa-rpc-client = { workspace = true }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-runtime = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-streamer = { workspace = true }
+trezoa-tpu-client = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-validator-exit = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
-solana-sdk-ids = { workspace = true }
+trezoa-sdk-ids = { workspace = true }

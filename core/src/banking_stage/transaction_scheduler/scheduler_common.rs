@@ -8,12 +8,12 @@ use {
     crate::banking_stage::scheduler_messages::{
         ConsumeWork, FinishedConsumeWork, MaxAge, TransactionBatchId, TransactionId,
     },
-    agave_scheduling_utils::thread_aware_account_locks::{
+    trezoa_scheduling_utils::thread_aware_account_locks::{
         ThreadAwareAccountLocks, ThreadId, ThreadSet, MAX_THREADS,
     },
     crossbeam_channel::{Receiver, Sender, TryRecvError},
     itertools::izip,
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
 };
 
 pub struct Batches<Tx> {
@@ -301,12 +301,12 @@ mod tests {
             transaction_scheduler::transaction_state_container::TransactionStateContainer,
         },
         crossbeam_channel::unbounded,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_pubkey::Pubkey,
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_system_transaction as system_transaction,
-        solana_transaction::sanitized::SanitizedTransaction,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::sanitized::SanitizedTransaction,
         test_case::test_case,
     };
 

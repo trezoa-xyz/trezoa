@@ -15,7 +15,7 @@ use {
     },
     async_trait::async_trait,
     quinn::{ClientConfig, Endpoint},
-    solana_keypair::Keypair,
+    trezoa_keypair::Keypair,
     std::{
         net::{SocketAddr, UdpSocket},
         sync::Arc,
@@ -55,7 +55,7 @@ pub enum ConnectionWorkersSchedulerError {
 /// be targeted when sending transactions and connecting.
 ///
 /// Note, that the unit is number of leaders per
-/// [`solana_clock::NUM_CONSECUTIVE_LEADER_SLOTS`]. It means that if the leader schedule is
+/// [`trezoa_clock::NUM_CONSECUTIVE_LEADER_SLOTS`]. It means that if the leader schedule is
 /// [L1, L1, L1, L1, L1, L1, L1, L1, L2, L2, L2, L2], the leaders per
 /// consecutive leader slots are [L1, L1, L2], so there are 3 of them.
 ///

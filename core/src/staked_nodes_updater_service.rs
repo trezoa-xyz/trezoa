@@ -1,7 +1,7 @@
 use {
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::BankForks,
-    solana_streamer::streamer::StakedNodes,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::BankForks,
+    trezoa_streamer::streamer::StakedNodes,
     std::{
         collections::HashMap,
         sync::{

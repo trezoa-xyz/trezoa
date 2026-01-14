@@ -1,26 +1,26 @@
 #[allow(deprecated)]
-use solana_sysvar::{fees::Fees, recent_blockhashes::RecentBlockhashes};
+use trezoa_sysvar::{fees::Fees, recent_blockhashes::RecentBlockhashes};
 use {
     crate::invoke_context::InvokeContext,
     serde::de::DeserializeOwned,
-    solana_clock::Clock,
-    solana_epoch_rewards::EpochRewards,
-    solana_epoch_schedule::EpochSchedule,
-    solana_instruction::error::InstructionError,
-    solana_last_restart_slot::LastRestartSlot,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_sdk_ids::sysvar,
-    solana_slot_hashes::SlotHashes,
-    solana_stake_interface::stake_history::StakeHistory,
-    solana_svm_type_overrides::sync::Arc,
-    solana_sysvar::SysvarSerialize,
-    solana_sysvar_id::SysvarId,
-    solana_transaction_context::{instruction::InstructionContext, IndexOfAccount},
+    trezoa_clock::Clock,
+    trezoa_epoch_rewards::EpochRewards,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_instruction::error::InstructionError,
+    trezoa_last_restart_slot::LastRestartSlot,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_sdk_ids::sysvar,
+    trezoa_slot_hashes::SlotHashes,
+    trezoa_stake_interface::stake_history::StakeHistory,
+    trezoa_svm_type_overrides::sync::Arc,
+    trezoa_sysvar::SysvarSerialize,
+    trezoa_sysvar_id::SysvarId,
+    trezoa_transaction_context::{instruction::InstructionContext, IndexOfAccount},
 };
 
 #[cfg(feature = "frozen-abi")]
-impl ::solana_frozen_abi::abi_example::AbiExample for SysvarCache {
+impl ::trezoa_frozen_abi::abi_example::AbiExample for SysvarCache {
     fn example() -> Self {
         // SysvarCache is not Serialize so just rely on Default.
         SysvarCache::default()

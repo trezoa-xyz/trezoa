@@ -1,10 +1,10 @@
 use {
     super::*,
-    solana_entry::entry::Entry,
-    solana_gossip::contact_info::ContactInfo,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::shred::{self, ProcessShredsStats, ReedSolomonCache, Shredder},
+    trezoa_entry::entry::Entry,
+    trezoa_gossip::contact_info::ContactInfo,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::{self, ProcessShredsStats, ReedSolomonCache, Shredder},
 };
 
 #[derive(Clone)]
@@ -190,8 +190,8 @@ impl BroadcastRun for BroadcastFakeShredsRun {
 mod tests {
     use {
         super::*,
-        solana_net_utils::SocketAddrSpace,
-        solana_signer::Signer,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_signer::Signer,
         std::net::{IpAddr, Ipv4Addr, SocketAddr},
     };
 

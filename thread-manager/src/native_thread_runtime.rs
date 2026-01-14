@@ -6,7 +6,7 @@ use {
     anyhow::bail,
     log::warn,
     serde::{Deserialize, Serialize},
-    solana_metrics::datapoint_info,
+    trezoa_metrics::datapoint_info,
     std::{
         ops::Deref,
         sync::{

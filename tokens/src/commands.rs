@@ -4,7 +4,7 @@ use {
             BalancesArgs, DistributeTokensArgs, SenderStakeArgs, StakeArgs, TransactionLogArgs,
         },
         db::{self, TransactionInfo},
-        spl_token::{build_spl_token_instructions, check_spl_token_balances, print_token_balances},
+        tpl_token::{build_tpl_token_instructions, check_tpl_token_balances, print_token_balances},
         token_display::Token,
     },
     chrono::prelude::*,
@@ -14,30 +14,30 @@ use {
     indicatif::{ProgressBar, ProgressStyle},
     pickledb::PickleDb,
     serde::{Deserialize, Serialize},
-    solana_account_decoder::parse_token::real_number_string,
-    solana_cli_output::display::build_balance_message,
-    solana_clock::Slot,
-    solana_commitment_config::CommitmentConfig,
-    solana_hash::Hash,
-    solana_instruction::Instruction,
-    solana_message::Message,
-    solana_native_token::sol_str_to_lamports,
-    solana_program_error::ProgramError,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_account_decoder::parse_token::real_number_string,
+    trezoa_cli_output::display::build_balance_message,
+    trezoa_clock::Slot,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_hash::Hash,
+    trezoa_instruction::Instruction,
+    trezoa_message::Message,
+    trezoa_native_token::sol_str_to_lamports,
+    trezoa_program_error::ProgramError,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         client_error::{Error as ClientError, Result as ClientResult},
         config::RpcSendTransactionConfig,
         request::{MAX_GET_SIGNATURE_STATUSES_QUERY_ITEMS, MAX_MULTIPLE_ACCOUNTS},
     },
-    solana_signature::Signature,
-    solana_signer::{unique_signers, Signer},
-    solana_stake_interface::{
+    trezoa_signature::Signature,
+    trezoa_signer::{unique_signers, Signer},
+    trezoa_stake_interface::{
         instruction::{self as stake_instruction, LockupArgs},
         state::{Authorized, Lockup, StakeAuthorize, StakeStateV2},
     },
-    solana_system_interface::instruction as system_instruction,
-    solana_transaction::Transaction,
-    solana_transaction_status::TransactionStatus,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_status::TransactionStatus,
     spl_associated_token_account_interface::address::get_associated_token_address,
     std::{
         cmp::{self},
@@ -139,7 +139,7 @@ pub enum Error {
     ProgramError(#[from] ProgramError),
     #[error("Exit signal received")]
     ExitSignal,
-    #[error("Bad input data for SOL value: {input}")]
+    #[error("Bad input data for TRZ value: {input}")]
     BadInputNumberError { input: String },
 }
 
@@ -210,8 +210,8 @@ fn distribution_instructions(
     lockup_date: Option<DateTime<Utc>>,
     do_create_associated_token_account: bool,
 ) -> Vec<Instruction> {
-    if args.spl_token_args.is_some() {
-        return build_spl_token_instructions(allocation, args, do_create_associated_token_account);
+    if args.tpl_token_args.is_some() {
+        return build_tpl_token_instructions(allocation, args, do_create_associated_token_account);
     }
 
     match &args.stake_args {
@@ -337,14 +337,14 @@ fn build_messages(
     created_accounts: &mut u64,
 ) -> Result<(), Error> {
     let mut existing_associated_token_accounts = vec![];
-    if let Some(spl_token_args) = &args.spl_token_args {
+    if let Some(tpl_token_args) = &args.tpl_token_args {
         let allocation_chunks = allocations.chunks(MAX_MULTIPLE_ACCOUNTS);
         for allocation_chunk in allocation_chunks {
             let associated_token_addresses = allocation_chunk
                 .iter()
                 .map(|x| {
                     let wallet_address = x.recipient;
-                    get_associated_token_address(&wallet_address, &spl_token_args.mint)
+                    get_associated_token_address(&wallet_address, &tpl_token_args.mint)
                 })
                 .collect::<Vec<_>>();
             let mut maybe_accounts = client.get_multiple_accounts(&associated_token_addresses)?;
@@ -360,7 +360,7 @@ fn build_messages(
         let new_stake_account_keypair = Keypair::new();
         let lockup_date = allocation.lockup_date;
 
-        let do_create_associated_token_account = if let Some(spl_token_args) = &args.spl_token_args
+        let do_create_associated_token_account = if let Some(tpl_token_args) = &args.tpl_token_args
         {
             let do_create_associated_token_account =
                 existing_associated_token_accounts[i].is_none();
@@ -370,7 +370,7 @@ fn build_messages(
             println!(
                 "{:<44}  {:>24}",
                 allocation.recipient,
-                real_number_string(allocation.amount, spl_token_args.decimals)
+                real_number_string(allocation.amount, tpl_token_args.decimals)
             );
             do_create_associated_token_account
         } else {
@@ -495,8 +495,8 @@ fn distribute_allocations(
         &mut created_accounts,
     )?;
 
-    if args.spl_token_args.is_some() {
-        check_spl_token_balances(&messages, allocations, client, args, created_accounts)?;
+    if args.tpl_token_args.is_some() {
+        check_tpl_token_balances(&messages, allocations, client, args, created_accounts)?;
     } else {
         check_payer_balances(&messages, allocations, client, args)?;
     }
@@ -531,7 +531,7 @@ fn read_allocations(
             })
             .collect::<Result<Vec<TypedAllocation>, Error>>()?
     } else if with_lockup {
-        // We only support SOL token in "require lockup" mode.
+        // We only support TRZ token in "require lockup" mode.
         rdr.deserialize()
             .map(|recipient| {
                 let (recipient, amount, lockup_date): (String, String, String) = recipient?;
@@ -621,12 +621,12 @@ pub fn process_allocations(
         &args.input_csv,
         args.transfer_amount,
         with_lockup,
-        args.spl_token_args.is_some(),
+        args.tpl_token_args.is_some(),
     )?;
 
     let starting_total_tokens = allocations.iter().map(|x| x.amount).sum();
-    let starting_total_tokens = if let Some(spl_token_args) = &args.spl_token_args {
-        Token::spl_token(starting_total_tokens, spl_token_args.decimals)
+    let starting_total_tokens = if let Some(tpl_token_args) = &args.tpl_token_args {
+        Token::tpl_token(starting_total_tokens, tpl_token_args.decimals)
     } else {
         Token::sol(starting_total_tokens)
     };
@@ -652,10 +652,10 @@ pub fn process_allocations(
     let distributed_tokens = transaction_infos.iter().map(|x| x.amount).sum();
     let undistributed_tokens = allocations.iter().map(|x| x.amount).sum();
     let (distributed_tokens, undistributed_tokens) =
-        if let Some(spl_token_args) = &args.spl_token_args {
+        if let Some(tpl_token_args) = &args.tpl_token_args {
             (
-                Token::spl_token(distributed_tokens, spl_token_args.decimals),
-                Token::spl_token(undistributed_tokens, spl_token_args.decimals),
+                Token::tpl_token(distributed_tokens, tpl_token_args.decimals),
+                Token::tpl_token(undistributed_tokens, tpl_token_args.decimals),
             )
         } else {
             (
@@ -908,11 +908,11 @@ pub fn process_balances(
     exit: Arc<AtomicBool>,
 ) -> Result<(), Error> {
     let allocations: Vec<TypedAllocation> =
-        read_allocations(&args.input_csv, None, false, args.spl_token_args.is_some())?;
+        read_allocations(&args.input_csv, None, false, args.tpl_token_args.is_some())?;
     let allocations = merge_allocations(&allocations);
 
-    let token = if let Some(spl_token_args) = &args.spl_token_args {
-        spl_token_args.mint.to_string()
+    let token = if let Some(tpl_token_args) = &args.tpl_token_args {
+        tpl_token_args.mint.to_string()
     } else {
         "◎".to_string()
     };
@@ -932,8 +932,8 @@ pub fn process_balances(
             return Err(Error::ExitSignal);
         }
 
-        if let Some(spl_token_args) = &args.spl_token_args {
-            print_token_balances(client, allocation, spl_token_args)?;
+        if let Some(tpl_token_args) = &args.tpl_token_args {
+            print_token_balances(client, allocation, tpl_token_args)?;
         } else {
             let address: Pubkey = allocation.recipient;
             let expected = build_balance_message(allocation.amount, false, false);
@@ -958,8 +958,8 @@ pub fn process_transaction_log(args: &TransactionLogArgs) -> Result<(), Error> {
 
 use {
     crate::db::check_output_file,
-    solana_keypair::Keypair,
-    solana_pubkey::{self as pubkey, Pubkey},
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::{self as pubkey, Pubkey},
     tempfile::{tempdir, NamedTempFile},
 };
 
@@ -1021,7 +1021,7 @@ pub fn test_process_distribute_tokens_with_client(
         transaction_db: transaction_db.clone(),
         output_path: Some(output_path.clone()),
         stake_args: None,
-        spl_token_args: None,
+        tpl_token_args: None,
         transfer_amount,
     };
     let confirmations = process_allocations(client, &args, exit.clone()).unwrap();
@@ -1127,7 +1127,7 @@ pub fn test_process_create_stake_with_client(client: &RpcClient, sender_keypair:
         transaction_db: transaction_db.clone(),
         output_path: Some(output_path.clone()),
         stake_args: Some(stake_args),
-        spl_token_args: None,
+        tpl_token_args: None,
         sender_keypair: Box::new(sender_keypair),
         transfer_amount: None,
     };
@@ -1259,7 +1259,7 @@ pub fn test_process_distribute_stake_with_client(client: &RpcClient, sender_keyp
         transaction_db: transaction_db.clone(),
         output_path: Some(output_path.clone()),
         stake_args: Some(stake_args),
-        spl_token_args: None,
+        tpl_token_args: None,
         sender_keypair: Box::new(sender_keypair),
         transfer_amount: None,
     };
@@ -1308,14 +1308,14 @@ pub fn test_process_distribute_stake_with_client(client: &RpcClient, sender_keyp
 mod tests {
     use {
         super::*,
-        solana_instruction::AccountMeta,
-        solana_keypair::{read_keypair_file, write_keypair_file},
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_net_utils::SocketAddrSpace,
-        solana_signer::Signer,
-        solana_stake_interface::instruction::StakeInstruction,
-        solana_test_validator::TestValidator,
-        solana_transaction_status::TransactionConfirmationStatus,
+        trezoa_instruction::AccountMeta,
+        trezoa_keypair::{read_keypair_file, write_keypair_file},
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_signer::Signer,
+        trezoa_stake_interface::instruction::StakeInstruction,
+        trezoa_test_validator::TestValidator,
+        trezoa_transaction_status::TransactionConfirmationStatus,
         std::slice,
     };
 
@@ -1806,7 +1806,7 @@ mod tests {
             transaction_db: "".to_string(),
             output_path: None,
             stake_args: Some(stake_args),
-            spl_token_args: None,
+            tpl_token_args: None,
             sender_keypair: Box::new(Keypair::new()),
             transfer_amount: None,
         };
@@ -1856,7 +1856,7 @@ mod tests {
             transaction_db: "".to_string(),
             output_path: None,
             stake_args,
-            spl_token_args: None,
+            tpl_token_args: None,
             transfer_amount: None,
         };
         (allocations, args)
@@ -1947,7 +1947,7 @@ mod tests {
 
     #[test]
     fn test_check_payer_balances_distribute_tokens_separate_payers() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let alice = Keypair::new();
         let test_validator = simple_test_validator(alice.pubkey());
         let url = test_validator.rpc_url();
@@ -2185,7 +2185,7 @@ mod tests {
 
     #[test]
     fn test_check_payer_balances_distribute_stakes_separate_payers() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let alice = Keypair::new();
         let test_validator = simple_test_validator(alice.pubkey());
         let url = test_validator.rpc_url();
@@ -2308,7 +2308,7 @@ mod tests {
             transaction_db: "".to_string(),
             output_path: None,
             stake_args: None,
-            spl_token_args: None,
+            tpl_token_args: None,
             transfer_amount: None,
         };
         let allocation = TypedAllocation {
@@ -2430,7 +2430,7 @@ mod tests {
             transaction_db: "".to_string(),
             output_path: None,
             stake_args: None,
-            spl_token_args: None,
+            tpl_token_args: None,
             transfer_amount: None,
         };
         let allocation = TypedAllocation {
@@ -2546,7 +2546,7 @@ mod tests {
             transaction_db: "".to_string(),
             output_path: None,
             stake_args: None,
-            spl_token_args: None,
+            tpl_token_args: None,
             transfer_amount: None,
         };
 

@@ -1,11 +1,11 @@
 #[allow(deprecated)]
-use solana_sysvar::recent_blockhashes;
+use trezoa_sysvar::recent_blockhashes;
 use {
     serde::{Deserialize, Serialize},
-    solana_clock::MAX_RECENT_BLOCKHASHES,
-    solana_fee_calculator::FeeCalculator,
-    solana_hash::Hash,
-    solana_time_utils::timestamp,
+    trezoa_clock::MAX_RECENT_BLOCKHASHES,
+    trezoa_fee_calculator::FeeCalculator,
+    trezoa_hash::Hash,
+    trezoa_time_utils::timestamp,
     std::collections::HashMap,
 };
 
@@ -138,7 +138,7 @@ impl BlockhashQueue {
 
     #[deprecated(
         since = "2.0.0",
-        note = "Please use `solana_clock::MAX_PROCESSING_AGE`"
+        note = "Please use `trezoa_clock::MAX_PROCESSING_AGE`"
     )]
     pub fn get_max_age(&self) -> usize {
         #[allow(deprecated)]
@@ -148,10 +148,10 @@ impl BlockhashQueue {
 #[cfg(test)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sysvar::recent_blockhashes::IterItem;
+    use trezoa_sysvar::recent_blockhashes::IterItem;
     use {
-        super::*, bincode::serialize, solana_clock::MAX_RECENT_BLOCKHASHES,
-        solana_sha256_hasher::hash,
+        super::*, bincode::serialize, trezoa_clock::MAX_RECENT_BLOCKHASHES,
+        trezoa_sha256_hasher::hash,
     };
 
     #[test]

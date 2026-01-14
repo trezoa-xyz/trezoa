@@ -1,15 +1,15 @@
 use {
-    solana_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
-    solana_clock::Epoch,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_stake_interface::{
+    trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
+    trezoa_clock::Epoch,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_stake_interface::{
         program as stake_program,
         stake_flags::StakeFlags,
         state::{Authorized, Delegation, Meta, Stake, StakeStateV2},
     },
-    solana_vote_interface::state::VoteStateV4,
+    trezoa_vote_interface::state::VoteStateV4,
 };
 
 /// The minimum stake amount that can be delegated, in lamports.

@@ -1,7 +1,7 @@
 [package]
-name = "solana-net-utils"
-description = "Solana Network Utilities"
-documentation = "https://docs.rs/solana-net-utils"
+name = "trezoa-net-utils"
+description = "Trezoa Network Utilities"
+documentation = "https://docs.rs/trezoa-net-utils"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -13,12 +13,12 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
-name = "solana_net_utils"
+name = "trezoa_net_utils"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = ["dep:pcap-file", "dep:hxdmp"]
-shuttle-test = ["dep:shuttle", "solana-svm-type-overrides/shuttle-test"]
+shuttle-test = ["dep:shuttle", "trezoa-svm-type-overrides/shuttle-test"]
 
 [dependencies]
 anyhow = { workspace = true }
@@ -35,14 +35,14 @@ rand = { workspace = true }
 serde = { workspace = true }
 shuttle = { workspace = true, optional = true }
 socket2 = { workspace = true }
-solana-serde = { workspace = true }
-solana-svm-type-overrides = { workspace = true }
+trezoa-serde = { workspace = true }
+trezoa-svm-type-overrides = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 url = { workspace = true }
 
 [dev-dependencies]
-agave-logger = { workspace = true }
-solana-net-utils = { path = ".", features = ["agave-unstable-api"] }
+trezoa-logger = { workspace = true }
+trezoa-net-utils = { path = ".", features = ["trezoa-unstable-api"] }
 
 [lints]
 workspace = true

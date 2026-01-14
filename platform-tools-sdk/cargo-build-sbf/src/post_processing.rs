@@ -238,7 +238,7 @@ pub(crate) fn post_process(
 
         if !config.debug {
             info!("To deploy this program:");
-            info!("  $ solana program deploy {}", program_so.display());
+            info!("  $ trezoa program deploy {}", program_so.display());
             info!("The program address will default to this keypair (override with --program-id):");
             info!("  {}", deploy_keypair.display());
         }

@@ -4,7 +4,7 @@ use {
         account_storage_entry::AccountStorageEntry,
         accounts_file::{AccountsFile, InternalsForArchive},
     },
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::{
         fs::File,
         io::{self, Read, Seek, SeekFrom},
@@ -146,8 +146,8 @@ mod tests {
             seq::{IndexedMutRandom as _, IndexedRandom},
             SeedableRng,
         },
-        solana_account::AccountSharedData,
-        solana_pubkey::Pubkey,
+        trezoa_account::AccountSharedData,
+        trezoa_pubkey::Pubkey,
         std::iter,
         test_case::test_case,
     };
@@ -239,7 +239,7 @@ mod tests {
         number_of_accounts_to_remove: usize,
         storage_access: StorageAccess,
     ) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (storage, _temp_dirs) =
             create_storage_for_storage_reader(0, AccountsFileProvider::AppendVec, storage_access);
 

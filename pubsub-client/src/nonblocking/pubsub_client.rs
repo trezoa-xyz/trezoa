@@ -1,9 +1,9 @@
 //! A client for subscribing to messages from the RPC server.
 //!
-//! The [`PubsubClient`] implements [Solana WebSocket event
+//! The [`PubsubClient`] implements [Trezoa WebSocket event
 //! subscriptions][spec].
 //!
-//! [spec]: https://solana.com/docs/rpc/websocket
+//! [spec]: https://trezoa.com/docs/rpc/websocket
 //!
 //! This is a nonblocking (async) API. For a blocking API use the synchronous
 //! client in [`crate::pubsub_client`].
@@ -33,12 +33,12 @@
 //! By default the [`block_subscribe`] and [`vote_subscribe`] events are
 //! disabled on RPC nodes. They can be enabled by passing
 //! `--rpc-pubsub-enable-block-subscription` and
-//! `--rpc-pubsub-enable-vote-subscription` to `agave-validator`. When these
+//! `--rpc-pubsub-enable-vote-subscription` to `trezoa-validator`. When these
 //! methods are disabled, the RPC server will return a "Method not found" error
 //! message.
 //!
-//! [`block_subscribe`]: https://docs.rs/solana-rpc/latest/solana_rpc/rpc_pubsub/trait.RpcSolPubSub.html#tymethod.block_subscribe
-//! [`vote_subscribe`]: https://docs.rs/solana-rpc/latest/solana_rpc/rpc_pubsub/trait.RpcSolPubSub.html#tymethod.vote_subscribe
+//! [`block_subscribe`]: https://docs.rs/trezoa-rpc/latest/trezoa_rpc/rpc_pubsub/trait.RpcSolPubSub.html#tymethod.block_subscribe
+//! [`vote_subscribe`]: https://docs.rs/trezoa-rpc/latest/trezoa_rpc/rpc_pubsub/trait.RpcSolPubSub.html#tymethod.vote_subscribe
 //!
 //! # Examples
 //!
@@ -52,7 +52,7 @@
 //! ```
 //! use anyhow::Result;
 //! use futures_util::StreamExt;
-//! use solana_pubsub_client::nonblocking::pubsub_client::PubsubClient;
+//! use trezoa_pubsub_client::nonblocking::pubsub_client::PubsubClient;
 //! use std::sync::Arc;
 //! use tokio::io::AsyncReadExt;
 //! use tokio::sync::mpsc::unbounded_channel;
@@ -175,10 +175,10 @@ use {
     log::*,
     serde::de::DeserializeOwned,
     serde_json::{json, Map, Value},
-    solana_account_decoder_client_types::UiAccount,
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_types::{
+    trezoa_account_decoder_client_types::UiAccount,
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_types::{
         config::{
             RpcAccountInfoConfig, RpcBlockSubscribeConfig, RpcBlockSubscribeFilter,
             RpcProgramAccountsConfig, RpcSignatureSubscribeConfig, RpcTransactionLogsConfig,
@@ -190,7 +190,7 @@ use {
             RpcSignatureResult, RpcVote, SlotInfo, SlotUpdate,
         },
     },
-    solana_signature::Signature,
+    trezoa_signature::Signature,
     std::collections::BTreeMap,
     thiserror::Error,
     tokio::{
@@ -369,7 +369,7 @@ impl PubsubClient {
     ///
     /// This method corresponds directly to the [`accountSubscribe`] RPC method.
     ///
-    /// [`accountSubscribe`]: https://solana.com/docs/rpc/websocket#accountsubscribe
+    /// [`accountSubscribe`]: https://trezoa.com/docs/rpc/websocket#accountsubscribe
     pub async fn account_subscribe(
         &self,
         pubkey: &Pubkey,
@@ -384,13 +384,13 @@ impl PubsubClient {
     /// Receives messages of type [`RpcBlockUpdate`] when a block is confirmed or finalized.
     ///
     /// This method is disabled by default. It can be enabled by passing
-    /// `--rpc-pubsub-enable-block-subscription` to `agave-validator`.
+    /// `--rpc-pubsub-enable-block-subscription` to `trezoa-validator`.
     ///
     /// # RPC Reference
     ///
     /// This method corresponds directly to the [`blockSubscribe`] RPC method.
     ///
-    /// [`blockSubscribe`]: https://solana.com/docs/rpc/websocket#blocksubscribe
+    /// [`blockSubscribe`]: https://trezoa.com/docs/rpc/websocket#blocksubscribe
     pub async fn block_subscribe(
         &self,
         filter: RpcBlockSubscribeFilter,
@@ -407,7 +407,7 @@ impl PubsubClient {
     ///
     /// This method corresponds directly to the [`logsSubscribe`] RPC method.
     ///
-    /// [`logsSubscribe`]: https://solana.com/docs/rpc/websocket#logssubscribe
+    /// [`logsSubscribe`]: https://trezoa.com/docs/rpc/websocket#logssubscribe
     pub async fn logs_subscribe(
         &self,
         filter: RpcTransactionLogsFilter,
@@ -425,7 +425,7 @@ impl PubsubClient {
     ///
     /// This method corresponds directly to the [`programSubscribe`] RPC method.
     ///
-    /// [`programSubscribe`]: https://solana.com/docs/rpc/websocket#programsubscribe
+    /// [`programSubscribe`]: https://trezoa.com/docs/rpc/websocket#programsubscribe
     pub async fn program_subscribe(
         &self,
         pubkey: &Pubkey,
@@ -441,13 +441,13 @@ impl PubsubClient {
     /// votes are observed prior to confirmation and may never be confirmed.
     ///
     /// This method is disabled by default. It can be enabled by passing
-    /// `--rpc-pubsub-enable-vote-subscription` to `agave-validator`.
+    /// `--rpc-pubsub-enable-vote-subscription` to `trezoa-validator`.
     ///
     /// # RPC Reference
     ///
     /// This method corresponds directly to the [`voteSubscribe`] RPC method.
     ///
-    /// [`voteSubscribe`]: https://solana.com/docs/rpc/websocket#votesubscribe
+    /// [`voteSubscribe`]: https://trezoa.com/docs/rpc/websocket#votesubscribe
     pub async fn vote_subscribe(&self) -> SubscribeResult<'_, RpcVote> {
         self.subscribe("vote", json!([])).await
     }
@@ -457,13 +457,13 @@ impl PubsubClient {
     /// Receives messages of type [`Slot`] when a new [root] is set by the
     /// validator.
     ///
-    /// [root]: https://solana.com/docs/terminology#root
+    /// [root]: https://trezoa.com/docs/terminology#root
     ///
     /// # RPC Reference
     ///
     /// This method corresponds directly to the [`rootSubscribe`] RPC method.
     ///
-    /// [`rootSubscribe`]: https://solana.com/docs/rpc/websocket#rootsubscribe
+    /// [`rootSubscribe`]: https://trezoa.com/docs/rpc/websocket#rootsubscribe
     pub async fn root_subscribe(&self) -> SubscribeResult<'_, Slot> {
         self.subscribe("root", json!([])).await
     }
@@ -480,7 +480,7 @@ impl PubsubClient {
     ///
     /// This method corresponds directly to the [`signatureSubscribe`] RPC method.
     ///
-    /// [`signatureSubscribe`]: https://solana.com/docs/rpc/websocket#signaturesubscribe
+    /// [`signatureSubscribe`]: https://trezoa.com/docs/rpc/websocket#signaturesubscribe
     pub async fn signature_subscribe(
         &self,
         signature: &Signature,
@@ -498,7 +498,7 @@ impl PubsubClient {
     ///
     /// This method corresponds directly to the [`slotSubscribe`] RPC method.
     ///
-    /// [`slotSubscribe`]: https://solana.com/docs/rpc/websocket#slotsubscribe
+    /// [`slotSubscribe`]: https://trezoa.com/docs/rpc/websocket#slotsubscribe
     pub async fn slot_subscribe(&self) -> SubscribeResult<'_, SlotInfo> {
         self.subscribe("slot", json!([])).await
     }
@@ -516,7 +516,7 @@ impl PubsubClient {
     ///
     /// This method corresponds directly to the [`slotUpdatesSubscribe`] RPC method.
     ///
-    /// [`slotUpdatesSubscribe`]: https://solana.com/docs/rpc/websocket#slotsupdatessubscribe
+    /// [`slotUpdatesSubscribe`]: https://trezoa.com/docs/rpc/websocket#slotsupdatessubscribe
     pub async fn slot_updates_subscribe(&self) -> SubscribeResult<'_, SlotUpdate> {
         self.subscribe("slotsUpdates", json!([])).await
     }

@@ -1,10 +1,10 @@
 //! This module implements clone-on-write semantics for the SDK's `StakeHistory` to reduce
 //! unnecessary cloning of the underlying vector.
-pub use solana_stake_interface::stake_history::StakeHistoryGetEntry;
+pub use trezoa_stake_interface::stake_history::StakeHistoryGetEntry;
 use {
     serde::{Deserialize, Serialize},
-    solana_clock::Epoch,
-    solana_stake_interface::stake_history::{self, StakeHistoryEntry},
+    trezoa_clock::Epoch,
+    trezoa_stake_interface::stake_history::{self, StakeHistoryEntry},
     std::{
         ops::{Deref, DerefMut},
         sync::Arc,
@@ -40,7 +40,7 @@ impl StakeHistoryGetEntry for StakeHistory {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_stake_interface::stake_history::StakeHistoryEntry};
+    use {super::*, trezoa_stake_interface::stake_history::StakeHistoryEntry};
 
     fn rand_stake_history_entry() -> StakeHistoryEntry {
         StakeHistoryEntry {

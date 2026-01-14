@@ -1,8 +1,8 @@
 /// This is responsible for receiving the verified and deduplicated transactions
 /// from the vortexor and sending down to the banking stage.
 use {
-    solana_perf::{packet::PacketBatchRecycler, recycler::Recycler},
-    solana_streamer::streamer::{self, PacketBatchSender, StreamerReceiveStats},
+    trezoa_perf::{packet::PacketBatchRecycler, recycler::Recycler},
+    trezoa_streamer::streamer::{self, PacketBatchSender, StreamerReceiveStats},
     std::{
         net::UdpSocket,
         sync::{atomic::AtomicBool, Arc},

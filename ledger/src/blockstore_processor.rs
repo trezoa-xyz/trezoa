@@ -8,26 +8,26 @@ use {
         transaction_balances::compile_collected_balances,
         use_snapshot_archives_at_startup::UseSnapshotArchivesAtStartup,
     },
-    agave_snapshots::snapshot_config::SnapshotConfig,
+    trezoa_snapshots::snapshot_config::SnapshotConfig,
     chrono_humanize::{Accuracy, HumanTime, Tense},
     crossbeam_channel::Sender,
     itertools::Itertools,
     log::*,
     rayon::{prelude::*, ThreadPool},
     scopeguard::defer,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::AccountsDbConfig, accounts_update_notifier_interface::AccountsUpdateNotifier,
     },
-    solana_clock::{Slot, MAX_PROCESSING_AGE},
-    solana_cost_model::{cost_model::CostModel, transaction_cost::TransactionCost},
-    solana_entry::entry::{self, create_ticks, Entry, EntrySlice, EntryType},
-    solana_genesis_config::GenesisConfig,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_measure::{measure::Measure, measure_us},
-    solana_metrics::datapoint_error,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_clock::{Slot, MAX_PROCESSING_AGE},
+    trezoa_cost_model::{cost_model::CostModel, transaction_cost::TransactionCost},
+    trezoa_entry::entry::{self, create_ticks, Entry, EntrySlice, EntryType},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_measure::{measure::Measure, measure_us},
+    trezoa_metrics::datapoint_error,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::{Bank, PreCommitResult, TransactionBalancesSet},
         bank_forks::BankForks,
         bank_utils,
@@ -40,24 +40,24 @@ use {
         transaction_batch::{OwnedOrBorrowed, TransactionBatch},
         vote_sender_types::ReplayVoteSender,
     },
-    solana_runtime_transaction::{
+    trezoa_runtime_transaction::{
         runtime_transaction::RuntimeTransaction, transaction_with_meta::TransactionWithMeta,
     },
-    solana_signature::Signature,
-    solana_svm::{
+    trezoa_signature::Signature,
+    trezoa_svm::{
         transaction_commit_result::{TransactionCommitResult, TransactionCommitResultExtensions},
         transaction_processing_result::ProcessedTransaction,
         transaction_processor::ExecutionRecordingConfig,
     },
-    solana_svm_timings::{report_execute_timings, ExecuteTimingType, ExecuteTimings},
-    solana_svm_transaction::{svm_message::SVMMessage, svm_transaction::SVMTransaction},
-    solana_transaction::{
+    trezoa_svm_timings::{report_execute_timings, ExecuteTimingType, ExecuteTimings},
+    trezoa_svm_transaction::{svm_message::SVMMessage, svm_transaction::SVMTransaction},
+    trezoa_transaction::{
         sanitized::SanitizedTransaction, versioned::VersionedTransaction,
         TransactionVerificationMode,
     },
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
-    solana_transaction_status::token_balances::TransactionTokenBalancesSet,
-    solana_vote::vote_account::VoteAccountsHashMap,
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_transaction_status::token_balances::TransactionTokenBalancesSet,
+    trezoa_vote::vote_account::VoteAccountsHashMap,
     std::{
         borrow::Cow,
         collections::{HashMap, HashSet},
@@ -73,7 +73,7 @@ use {
     ExecuteTimingType::{NumExecuteBatches, TotalBatchesLen},
 };
 #[cfg(feature = "dev-context-only-utils")]
-use {qualifier_attr::qualifiers, solana_runtime::bank::HashOverrides};
+use {qualifier_attr::qualifiers, trezoa_runtime::bank::HashOverrides};
 
 pub struct TransactionBatchWithIndexes<'a, 'b, Tx: SVMMessage> {
     pub batch: TransactionBatch<'a, 'b, Tx>,
@@ -211,7 +211,7 @@ pub fn execute_batch<'a>(
                 // hasn't been frozen yet and we're still holding the lock. So, it's okay to pass
                 // down freeze_lock without any introspection here to be unconditionally dropped
                 // after commit_transactions(). This reasoning is same as
-                // solana_core::banking_stage::Consumer::execute_and_commit_transactions_locked()
+                // trezoa_core::banking_stage::Consumer::execute_and_commit_transactions_locked()
                 Ok(Some(freeze_lock))
             }
         }
@@ -1082,7 +1082,7 @@ fn verify_ticks(
 
     if let Some(first_alpenglow_slot) = bank
         .feature_set
-        .activated_slot(&agave_feature_set::alpenglow::id())
+        .activated_slot(&trezoa_feature_set::alpenglow::id())
     {
         if bank.parent_slot() >= first_alpenglow_slot {
             // If both the parent and the bank slot are in an epoch post alpenglow activation,
@@ -1800,7 +1800,7 @@ fn process_next_slots(
 pub fn set_alpenglow_ticks(bank: &Bank) {
     let Some(first_alpenglow_slot) = bank
         .feature_set
-        .activated_slot(&agave_feature_set::alpenglow::id())
+        .activated_slot(&trezoa_feature_set::alpenglow::id())
     else {
         return;
     };
@@ -2324,17 +2324,17 @@ pub mod tests {
         },
         assert_matches::assert_matches,
         rand::{rng, Rng},
-        solana_account::{AccountSharedData, WritableAccount},
-        solana_cost_model::transaction_cost::TransactionCost,
-        solana_entry::entry::{create_ticks, next_entry, next_entry_mut},
-        solana_epoch_schedule::EpochSchedule,
-        solana_hash::Hash,
-        solana_instruction::{error::InstructionError, Instruction},
-        solana_keypair::Keypair,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_program_runtime::declare_process_instruction,
-        solana_pubkey::Pubkey,
-        solana_runtime::{
+        trezoa_account::{AccountSharedData, WritableAccount},
+        trezoa_cost_model::transaction_cost::TransactionCost,
+        trezoa_entry::entry::{create_ticks, next_entry, next_entry_mut},
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_hash::Hash,
+        trezoa_instruction::{error::InstructionError, Instruction},
+        trezoa_keypair::Keypair,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_program_runtime::declare_process_instruction,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{
             bank::bank_hash_details::SlotDetails,
             genesis_utils::{
                 self, create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs,
@@ -2344,14 +2344,14 @@ pub mod tests {
                 SchedulingContext,
             },
         },
-        solana_signer::Signer,
-        solana_svm::transaction_processor::ExecutionRecordingConfig,
-        solana_system_interface::error::SystemError,
-        solana_system_transaction as system_transaction,
-        solana_transaction::Transaction,
-        solana_transaction_error::TransactionError,
-        solana_vote::{vote_account::VoteAccount, vote_transaction},
-        solana_vote_program::{
+        trezoa_signer::Signer,
+        trezoa_svm::transaction_processor::ExecutionRecordingConfig,
+        trezoa_system_interface::error::SystemError,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::Transaction,
+        trezoa_transaction_error::TransactionError,
+        trezoa_vote::{vote_account::VoteAccount, vote_transaction},
+        trezoa_vote_program::{
             self,
             vote_state::{TowerSync, VoteStateV4, VoteStateVersions, MAX_LOCKOUT_HISTORY},
         },
@@ -2416,7 +2416,7 @@ pub mod tests {
 
     // Intentionally make slot 1 faulty and ensure that processing sees it as dead
     fn do_test_process_blockstore_with_missing_hashes(blockstore_access_type: AccessType) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let hashes_per_tick = 2;
         let GenesisConfigInfo {
@@ -2472,7 +2472,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_invalid_slot_tick_count() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2534,7 +2534,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_slot_with_trailing_entry() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             mint_keypair,
@@ -2584,7 +2584,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_incomplete_slot() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2669,7 +2669,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_two_forks_and_squash() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2748,7 +2748,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_two_forks() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2838,7 +2838,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_dead_slot() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2885,7 +2885,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_dead_child() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2945,7 +2945,7 @@ pub mod tests {
 
     #[test]
     fn test_root_with_all_dead_children() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2978,7 +2978,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_epoch_boundary_root() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -3069,7 +3069,7 @@ pub mod tests {
 
     #[test]
     fn test_process_empty_entry_is_registered() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -3099,8 +3099,8 @@ pub mod tests {
 
     #[test]
     fn test_process_ledger_simple() {
-        agave_logger::setup();
-        let leader_pubkey = solana_pubkey::new_rand();
+        trezoa_logger::setup();
+        let leader_pubkey = trezoa_pubkey::new_rand();
         let mint = 100;
         let hashes_per_tick = 10;
         let GenesisConfigInfo {
@@ -3426,7 +3426,7 @@ pub mod tests {
 
     #[test]
     fn test_transaction_result_does_not_affect_bankhash() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -3602,7 +3602,7 @@ pub mod tests {
     fn test_process_entries_2nd_entry_collision_with_self_and_error(
         relax_intrabatch_account_locks: bool,
     ) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -3611,7 +3611,7 @@ pub mod tests {
         } = create_genesis_config(1000);
         let mut bank = Bank::new_for_tests(&genesis_config);
         if !relax_intrabatch_account_locks {
-            bank.deactivate_feature(&agave_feature_set::relax_intrabatch_account_locks::id());
+            bank.deactivate_feature(&trezoa_feature_set::relax_intrabatch_account_locks::id());
         }
         let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
         let keypair1 = Keypair::new();
@@ -3712,7 +3712,7 @@ pub mod tests {
     #[test_case(false; "old")]
     #[test_case(true; "simd83")]
     fn test_process_entry_duplicate_transaction(relax_intrabatch_account_locks: bool) {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -3721,7 +3721,7 @@ pub mod tests {
         } = create_genesis_config(1000);
         let mut bank = Bank::new_for_tests(&genesis_config);
         if !relax_intrabatch_account_locks {
-            bank.deactivate_feature(&agave_feature_set::relax_intrabatch_account_locks::id());
+            bank.deactivate_feature(&trezoa_feature_set::relax_intrabatch_account_locks::id());
         }
         let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
         let keypair1 = Keypair::new();
@@ -3864,7 +3864,7 @@ pub mod tests {
                     bank.last_blockhash(),
                     1,
                     0,
-                    &solana_pubkey::new_rand(),
+                    &trezoa_pubkey::new_rand(),
                 ));
 
                 next_entry_mut(&mut hash, 0, transactions)
@@ -4023,7 +4023,7 @@ pub mod tests {
         let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
         // Make sure instruction errors still update the signature cache
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         bank.transfer(1_000, &mint_keypair, &pubkey).unwrap();
         assert_eq!(bank.transaction_count(), 1);
         assert_eq!(bank.get_balance(&pubkey), 1_000);
@@ -4089,7 +4089,7 @@ pub mod tests {
         } = create_genesis_config(11_000);
         let mut bank = Bank::new_for_tests(&genesis_config);
         if !relax_intrabatch_account_locks {
-            bank.deactivate_feature(&agave_feature_set::relax_intrabatch_account_locks::id());
+            bank.deactivate_feature(&trezoa_feature_set::relax_intrabatch_account_locks::id());
         }
         let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
         let keypair1 = Keypair::new();
@@ -4281,7 +4281,7 @@ pub mod tests {
     fn test_process_entries_stress() {
         // this test throws lots of rayon threads at process_entries()
         //  finds bugs in very low-layer stuff
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -4329,7 +4329,7 @@ pub mod tests {
                             bank.last_blockhash(),
                             100,
                             100,
-                            &solana_pubkey::new_rand(),
+                            &trezoa_pubkey::new_rand(),
                         ));
                         transactions
                     })
@@ -4459,14 +4459,14 @@ pub mod tests {
         // Create array of two transactions which throw different errors
         let account_not_found_tx = system_transaction::transfer(
             &keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             42,
             bank.last_blockhash(),
         );
         let account_not_found_sig = account_not_found_tx.signatures[0];
         let invalid_blockhash_tx = system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             42,
             Hash::default(),
         );
@@ -4505,7 +4505,7 @@ pub mod tests {
             .unwrap()
             .insert(Bank::new_from_parent(
                 bank0.clone(),
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 1,
             ))
             .clone_without_scheduler();
@@ -4604,7 +4604,7 @@ pub mod tests {
         blockstore_root: Option<Slot>,
         blockstore_access_type: AccessType,
     ) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         /*
             Build fork structure:
                  slot 0
@@ -4803,12 +4803,12 @@ pub mod tests {
                     let mut vote_account = AccountSharedData::new(
                         1,
                         VoteStateV4::size_of(),
-                        &solana_vote_program::id(),
+                        &trezoa_vote_program::id(),
                     );
                     let versioned = VoteStateVersions::new_v4(vote_state);
                     VoteStateV4::serialize(&versioned, vote_account.data_as_mut_slice()).unwrap();
                     (
-                        solana_pubkey::new_rand(),
+                        trezoa_pubkey::new_rand(),
                         (stake, VoteAccount::try_from(vote_account).unwrap()),
                     )
                 })
@@ -4868,11 +4868,11 @@ pub mod tests {
         mint_keypair: &Keypair,
         genesis_hash: &Hash,
     ) -> Vec<RuntimeTransaction<SanitizedTransaction>> {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let keypair2 = Keypair::new();
-        let pubkey2 = solana_pubkey::new_rand();
+        let pubkey2 = trezoa_pubkey::new_rand();
         let keypair3 = Keypair::new();
-        let pubkey3 = solana_pubkey::new_rand();
+        let pubkey3 = trezoa_pubkey::new_rand();
 
         vec![
             RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
@@ -5012,8 +5012,8 @@ pub mod tests {
     }
 
     fn do_test_schedule_batches_for_execution(should_succeed: bool) {
-        agave_logger::setup();
-        let dummy_leader_pubkey = solana_pubkey::new_rand();
+        trezoa_logger::setup();
+        let dummy_leader_pubkey = trezoa_pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -5117,8 +5117,8 @@ pub mod tests {
         tx_result: TxResult,
         poh_result: Result<Option<usize>>,
     ) {
-        agave_logger::setup();
-        let dummy_leader_pubkey = solana_pubkey::new_rand();
+        trezoa_logger::setup();
+        let dummy_leader_pubkey = trezoa_pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -5127,7 +5127,7 @@ pub mod tests {
         let bank = Bank::new_for_tests(&genesis_config);
         let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
         let bank = Arc::new(bank);
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let (tx, expected_tx_result) = match tx_result {
             TxResult::ExecutedWithSuccess => (
                 RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
@@ -5356,7 +5356,7 @@ pub mod tests {
 
     #[test]
     fn test_check_block_cost_limit() {
-        let dummy_leader_pubkey = solana_pubkey::new_rand();
+        let dummy_leader_pubkey = trezoa_pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,

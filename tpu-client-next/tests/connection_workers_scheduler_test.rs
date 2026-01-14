@@ -1,13 +1,13 @@
 use {
     crossbeam_channel::Receiver as CrossbeamReceiver,
     futures::future::BoxFuture,
-    solana_keypair::Keypair,
-    solana_net_utils::sockets::{
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::sockets::{
         bind_to, localhost_port_range_for_tests, unique_port_range_for_tests,
     },
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_streamer::{
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_streamer::{
         nonblocking::{
             swqos::SwQosConfig,
             testing_utilities::{make_client_endpoint, setup_quic_server, SpawnTestServerResult},
@@ -16,7 +16,7 @@ use {
         quic::QuicStreamerConfig,
         streamer::StakedNodes,
     },
-    solana_tpu_client_next::{
+    trezoa_tpu_client_next::{
         connection_workers_scheduler::{
             BindTarget, ConnectionWorkersSchedulerConfig, Fanout, StakeIdentity,
         },

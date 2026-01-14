@@ -1,14 +1,14 @@
 use {
     criterion::{criterion_group, criterion_main, Criterion},
-    solana_account::{state_traits::StateMut, AccountSharedData},
-    solana_bpf_loader_program::Entrypoint,
-    solana_instruction::AccountMeta,
-    solana_loader_v3_interface::{
+    trezoa_account::{state_traits::StateMut, AccountSharedData},
+    trezoa_bpf_loader_program::Entrypoint,
+    trezoa_instruction::AccountMeta,
+    trezoa_loader_v3_interface::{
         instruction::UpgradeableLoaderInstruction, state::UpgradeableLoaderState,
     },
-    solana_program_runtime::invoke_context::mock_process_instruction,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader_upgradeable,
+    trezoa_program_runtime::invoke_context::mock_process_instruction,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader_upgradeable,
 };
 
 #[derive(Default)]

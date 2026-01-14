@@ -3,31 +3,31 @@
 
 use {
     crate::next_leader::next_leaders,
-    agave_banking_stage_ingress_types::BankingPacketBatch,
-    agave_transaction_view::transaction_view::SanitizedTransactionView,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_transaction_view::transaction_view::SanitizedTransactionView,
     async_trait::async_trait,
     crossbeam_channel::{Receiver, RecvTimeoutError},
     packet_container::PacketContainer,
-    solana_client::connection_cache::ConnectionCache,
-    solana_connection_cache::client_connection::ClientConnection,
-    solana_cost_model::cost_model::CostModel,
-    solana_fee_structure::{FeeBudgetLimits, FeeDetails},
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::Protocol, node::NodeMultihoming},
-    solana_keypair::Keypair,
-    solana_net_utils::multihomed_sockets::BindIpAddrs,
-    solana_packet as packet,
-    solana_perf::data_budget::DataBudget,
-    solana_poh::poh_recorder::PohRecorder,
-    solana_quic_definitions::NotifyKeyUpdate,
-    solana_runtime::{
+    trezoa_client::connection_cache::ConnectionCache,
+    trezoa_connection_cache::client_connection::ClientConnection,
+    trezoa_cost_model::cost_model::CostModel,
+    trezoa_fee_structure::{FeeBudgetLimits, FeeDetails},
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::Protocol, node::NodeMultihoming},
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::multihomed_sockets::BindIpAddrs,
+    trezoa_packet as packet,
+    trezoa_perf::data_budget::DataBudget,
+    trezoa_poh::poh_recorder::PohRecorder,
+    trezoa_quic_definitions::NotifyKeyUpdate,
+    trezoa_runtime::{
         bank::{Bank, CollectorFeeDetails},
         bank_forks::SharableBanks,
     },
-    solana_runtime_transaction::{
+    trezoa_runtime_transaction::{
         runtime_transaction::RuntimeTransaction, transaction_meta::StaticMeta,
     },
-    solana_streamer::sendmmsg::{batch_send, SendPktsError},
-    solana_tpu_client_next::{
+    trezoa_streamer::sendmmsg::{batch_send, SendPktsError},
+    trezoa_tpu_client_next::{
         connection_workers_scheduler::{
             BindTarget, ConnectionWorkersSchedulerConfig, Fanout, StakeIdentity,
         },
@@ -35,8 +35,8 @@ use {
         transaction_batch::TransactionBatch,
         ConnectionWorkersScheduler,
     },
-    solana_transaction::sanitized::MessageHash,
-    solana_transaction_error::TransportError,
+    trezoa_transaction::sanitized::MessageHash,
+    trezoa_transaction_error::TransportError,
     std::{
         net::{SocketAddr, UdpSocket},
         sync::{Arc, RwLock},
@@ -293,7 +293,7 @@ impl<VoteClient: ForwardingClient, NonVoteClient: ForwardingClient>
     ) {
         let enable_static_instruction_limit = bank
             .feature_set
-            .is_active(&agave_feature_set::static_instruction_limit::id());
+            .is_active(&trezoa_feature_set::static_instruction_limit::id());
         for batch in packet_batches.iter() {
             for packet in batch
                 .iter()
@@ -848,12 +848,12 @@ mod tests {
         super::*,
         crossbeam_channel::unbounded,
         packet::PacketFlags,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_perf::packet::{Packet, PacketBatch, RecycledPacketBatch},
-        solana_pubkey::Pubkey,
-        solana_runtime::genesis_utils::create_genesis_config,
-        solana_system_transaction as system_transaction,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_perf::packet::{Packet, PacketBatch, RecycledPacketBatch},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::genesis_utils::create_genesis_config,
+        trezoa_system_transaction as system_transaction,
         std::sync::{Arc, Mutex},
     };
 

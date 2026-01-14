@@ -1,7 +1,7 @@
 use {
-    solana_clock::Slot,
-    solana_measure::measure_us,
-    solana_pubkey::Pubkey,
+    trezoa_clock::Slot,
+    trezoa_measure::measure_us,
+    trezoa_pubkey::Pubkey,
     std::{collections::HashMap, num::Saturating},
 };
 
@@ -252,11 +252,11 @@ impl PrioritizationFee {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_pubkey::Pubkey};
+    use {super::*, trezoa_pubkey::Pubkey};
 
     #[test]
     fn test_update_compute_unit_price() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let write_account_a = Pubkey::new_unique();
         let write_account_b = Pubkey::new_unique();
         let write_account_c = Pubkey::new_unique();

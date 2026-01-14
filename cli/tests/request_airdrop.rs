@@ -1,13 +1,13 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    solana_cli::cli::{process_command, CliCommand, CliConfig},
-    solana_commitment_config::CommitmentConfig,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_keypair::Keypair,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_test_validator::TestValidator,
+    trezoa_cli::cli::{process_command, CliCommand, CliConfig},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_keypair::Keypair,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_test_validator::TestValidator,
 };
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]

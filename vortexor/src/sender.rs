@@ -2,10 +2,10 @@
 //! validators
 
 use {
-    agave_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
+    trezoa_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
     crossbeam_channel::RecvTimeoutError,
     log::*,
-    solana_streamer::sendmmsg::batch_send,
+    trezoa_streamer::sendmmsg::batch_send,
     std::{
         net::{SocketAddr, UdpSocket},
         sync::{Arc, RwLock},

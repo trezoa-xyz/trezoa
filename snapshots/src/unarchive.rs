@@ -3,7 +3,7 @@ use {
         hardened_unpack::{self, UnpackError},
         ArchiveFormat, ArchiveFormatDecompressor,
     },
-    agave_fs::{buffered_reader, file_io::file_creator, io_setup::IoSetupState, FileInfo},
+    trezoa_fs::{buffered_reader, file_io::file_creator, io_setup::IoSetupState, FileInfo},
     bzip2::bufread::BzDecoder,
     crossbeam_channel::Sender,
     std::{

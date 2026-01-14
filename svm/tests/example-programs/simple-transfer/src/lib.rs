@@ -1,10 +1,10 @@
 use {
-    solana_account_info::{next_account_info, AccountInfo},
-    solana_program::program::invoke,
-    solana_program_entrypoint::entrypoint,
-    solana_program_error::ProgramResult,
-    solana_pubkey::Pubkey,
-    solana_system_interface::instruction as system_instruction,
+    trezoa_account_info::{next_account_info, AccountInfo},
+    trezoa_program::program::invoke,
+    trezoa_program_entrypoint::entrypoint,
+    trezoa_program_error::ProgramResult,
+    trezoa_pubkey::Pubkey,
+    trezoa_system_interface::instruction as system_instruction,
 };
 
 entrypoint!(process_instruction);

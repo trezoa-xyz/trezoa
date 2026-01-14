@@ -1,10 +1,10 @@
 #![allow(clippy::arithmetic_side_effects)]
 
 use {
-    solana_account_info::AccountInfo, solana_program_error::ProgramResult, solana_pubkey::Pubkey,
+    trezoa_account_info::AccountInfo, trezoa_program_error::ProgramResult, trezoa_pubkey::Pubkey,
 };
 
-solana_program_entrypoint::entrypoint_no_alloc!(process_instruction);
+trezoa_program_entrypoint::entrypoint_no_alloc!(process_instruction);
 fn process_instruction(
     _program_id: &Pubkey,
     accounts: &[AccountInfo],

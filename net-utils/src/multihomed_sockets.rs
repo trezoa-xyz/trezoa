@@ -1,4 +1,4 @@
-#![cfg(feature = "agave-unstable-api")]
+#![cfg(feature = "trezoa-unstable-api")]
 use std::{
     net::{IpAddr, Ipv4Addr, UdpSocket},
     ops::Deref,

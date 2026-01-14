@@ -1,8 +1,8 @@
 use {
-    agave_random::weighted::WeightedU64Index,
+    trezoa_random::weighted::WeightedU64Index,
     rand_chacha::{rand_core::SeedableRng, ChaChaRng},
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
     std::{collections::HashMap, convert::identity, ops::Index, sync::Arc},
 };
 
@@ -142,8 +142,8 @@ mod tests {
 
     #[test]
     fn test_sort_stakes_basic() {
-        let pubkey0 = solana_pubkey::new_rand();
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey0 = trezoa_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
         let mut stakes = vec![(&pubkey0, 1), (&pubkey1, 2)];
         sort_stakes(&mut stakes);
         assert_eq!(stakes, vec![(&pubkey1, 2), (&pubkey0, 1)]);
@@ -151,8 +151,8 @@ mod tests {
 
     #[test]
     fn test_sort_stakes_with_dup() {
-        let pubkey0 = solana_pubkey::new_rand();
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey0 = trezoa_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
         let mut stakes = vec![(&pubkey0, 1), (&pubkey1, 2), (&pubkey0, 1)];
         sort_stakes(&mut stakes);
         assert_eq!(stakes, vec![(&pubkey1, 2), (&pubkey0, 1)]);
@@ -161,7 +161,7 @@ mod tests {
     #[test]
     fn test_sort_stakes_with_equal_stakes() {
         let pubkey0 = Pubkey::default();
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
         let mut stakes = vec![(&pubkey0, 1), (&pubkey1, 1)];
         sort_stakes(&mut stakes);
         assert_eq!(stakes, vec![(&pubkey1, 1), (&pubkey0, 1)]);

@@ -1,10 +1,10 @@
 use {
-    agave_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
     assert_matches::assert_matches,
     crossbeam_channel::unbounded,
     itertools::Itertools,
     log::*,
-    solana_core::{
+    trezoa_core::{
         banking_stage::{unified_scheduler::ensure_banking_stage_setup, BankingStage},
         banking_trace::BankingTracer,
         consensus::{
@@ -18,25 +18,25 @@ use {
         replay_stage::{ReplayStage, TowerBFTStructures},
         unfrozen_gossip_verified_vote_hashes::UnfrozenGossipVerifiedVoteHashes,
     },
-    solana_entry::entry::Entry,
-    solana_hash::Hash,
-    solana_ledger::{
+    trezoa_entry::entry::Entry,
+    trezoa_hash::Hash,
+    trezoa_ledger::{
         blockstore::Blockstore, create_new_tmp_ledger_auto_delete,
         genesis_utils::create_genesis_config, leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_perf::packet::to_packet_batches,
-    solana_poh::poh_recorder::create_test_recorder,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_perf::packet::to_packet_batches,
+    trezoa_poh::poh_recorder::create_test_recorder,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank, bank_forks::BankForks, genesis_utils::GenesisConfigInfo,
         installed_scheduler_pool::SchedulingContext,
     },
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_svm_timings::ExecuteTimings,
-    solana_system_transaction as system_transaction,
-    solana_transaction_error::TransactionResult as Result,
-    solana_unified_scheduler_logic::{SchedulingMode, Task},
-    solana_unified_scheduler_pool::{
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_system_transaction as system_transaction,
+    trezoa_transaction_error::TransactionResult as Result,
+    trezoa_unified_scheduler_logic::{SchedulingMode, Task},
+    trezoa_unified_scheduler_pool::{
         DefaultSchedulerPool, DefaultTaskHandler, HandlerContext, PooledScheduler, SchedulerPool,
         TaskHandler,
     },
@@ -50,7 +50,7 @@ use {
 
 #[test]
 fn test_scheduler_waited_by_drop_bank_service() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     static LOCK_TO_STALL: Mutex<()> = Mutex::new(());
 
@@ -106,7 +106,7 @@ fn test_scheduler_waited_by_drop_bank_service() {
 
     let tx = RuntimeTransaction::from_transaction_for_tests(system_transaction::transfer(
         &mint_keypair,
-        &solana_pubkey::new_rand(),
+        &trezoa_pubkey::new_rand(),
         2,
         genesis_config.hash(),
     ));
@@ -200,7 +200,7 @@ fn test_scheduler_waited_by_drop_bank_service() {
 
 #[test]
 fn test_scheduler_producing_blocks() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -252,7 +252,7 @@ fn test_scheduler_producing_blocks() {
     // Create test tx
     let tx = system_transaction::transfer(
         &mint_keypair,
-        &solana_pubkey::new_rand(),
+        &trezoa_pubkey::new_rand(),
         1,
         genesis_config.hash(),
     );

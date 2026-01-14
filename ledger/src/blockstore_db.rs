@@ -28,7 +28,7 @@ use {
         IteratorMode as RocksIteratorMode, LiveFile, Options, WriteBatch as RWriteBatch, DB,
     },
     serde::de::DeserializeOwned,
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::{
         collections::HashSet,
         ffi::{CStr, CString},
@@ -127,7 +127,7 @@ impl Rocks {
             AccessType::ReadOnly => {
                 info!(
                     "Opening Rocks with read only access. This additional access could \
-                     temporarily degrade other accesses, such as by agave-validator"
+                     temporarily degrade other accesses, such as by trezoa-validator"
                 );
                 let error_if_log_file_exists = false;
                 DB::open_cf_descriptors_read_only(
@@ -1334,7 +1334,7 @@ pub mod tests {
 
     #[test]
     fn test_open_unknown_columns() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let temp_dir = tempdir().unwrap();
         let db_path = temp_dir.path();
@@ -1374,7 +1374,7 @@ pub mod tests {
 
     #[test]
     fn test_remove_deprecated_progam_costs_column_compat() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         fn is_program_costs_column_present(path: &Path) -> bool {
             DB::list_cf(&Options::default(), path)

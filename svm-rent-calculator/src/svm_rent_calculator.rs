@@ -1,12 +1,12 @@
-//! Helpers for rent calculation within the Solana VM.
+//! Helpers for rent calculation within the Trezoa VM.
 
 use {
     crate::rent_state::RentState,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_transaction_context::{IndexOfAccount, TransactionContext},
-    solana_transaction_error::{TransactionError, TransactionResult},
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_transaction_context::{IndexOfAccount, TransactionContext},
+    trezoa_transaction_error::{TransactionError, TransactionResult},
 };
 
 /// Check rent state transition for an account in a transaction.
@@ -49,7 +49,7 @@ pub fn check_rent_state_with_account(
     _account_state: &AccountSharedData,
     account_index: IndexOfAccount,
 ) -> TransactionResult<()> {
-    if !solana_sdk_ids::incinerator::check_id(address)
+    if !trezoa_sdk_ids::incinerator::check_id(address)
         && !transition_allowed(pre_rent_state, post_rent_state)
     {
         let account_index = account_index as u8;

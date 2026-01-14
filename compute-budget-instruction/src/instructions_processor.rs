@@ -1,8 +1,8 @@
 use {
-    crate::compute_budget_instruction_details::*, agave_feature_set::FeatureSet,
-    solana_compute_budget::compute_budget_limits::*, solana_pubkey::Pubkey,
-    solana_svm_transaction::instruction::SVMInstruction,
-    solana_transaction_error::TransactionError,
+    crate::compute_budget_instruction_details::*, trezoa_feature_set::FeatureSet,
+    trezoa_compute_budget::compute_budget_limits::*, trezoa_pubkey::Pubkey,
+    trezoa_svm_transaction::instruction::SVMInstruction,
+    trezoa_transaction_error::TransactionError,
 };
 
 /// Processing compute_budget could be part of tx sanitizing, failed to process
@@ -22,17 +22,17 @@ pub fn process_compute_budget_instructions<'a>(
 mod tests {
     use {
         super::*,
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_hash::Hash,
-        solana_instruction::{Instruction, error::InstructionError},
-        solana_keypair::Keypair,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
-        solana_svm_transaction::svm_message::SVMStaticMessage,
-        solana_system_interface::instruction::transfer,
-        solana_transaction::{Transaction, sanitized::SanitizedTransaction},
-        solana_transaction_error::TransactionError,
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_hash::Hash,
+        trezoa_instruction::{Instruction, error::InstructionError},
+        trezoa_keypair::Keypair,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
+        trezoa_svm_transaction::svm_message::SVMStaticMessage,
+        trezoa_system_interface::instruction::transfer,
+        trezoa_transaction::{Transaction, sanitized::SanitizedTransaction},
+        trezoa_transaction_error::TransactionError,
         std::num::NonZeroU32,
     };
 

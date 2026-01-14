@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -36,9 +36,9 @@ pub mod leader_schedule_utils;
 pub mod next_slots_iterator;
 pub mod rooted_slot_iterator;
 
-#[cfg(feature = "agave-unstable-api")]
+#[cfg(feature = "trezoa-unstable-api")]
 pub mod shred;
-#[cfg(not(feature = "agave-unstable-api"))]
+#[cfg(not(feature = "trezoa-unstable-api"))]
 pub(crate) mod shred;
 
 mod shredder;
@@ -53,18 +53,18 @@ pub mod use_snapshot_archives_at_startup;
 extern crate eager;
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate trezoa_metrics;
 
 #[macro_use]
 extern crate log;
 
 #[cfg_attr(feature = "frozen-abi", macro_use)]
 #[cfg(feature = "frozen-abi")]
-extern crate solana_frozen_abi_macro;
+extern crate trezoa_frozen_abi_macro;
 
 mod wire_format_tests;
 
 #[doc(hidden)]
 pub mod macro_reexports {
-    pub use solana_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE;
+    pub use trezoa_genesis_utils::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE;
 }

@@ -3,11 +3,11 @@
 use {
     clap::{crate_description, crate_name, value_t_or_exit, Arg, Command},
     crossbeam_channel::unbounded,
-    solana_net_utils::{
+    trezoa_net_utils::{
         bind_to_unspecified,
         sockets::{multi_bind_in_range_with_config, SocketConfiguration},
     },
-    solana_streamer::{
+    trezoa_streamer::{
         packet::{Packet, PacketBatchRecycler, RecycledPacketBatch, PACKET_DATA_SIZE},
         sendmmsg::batch_send,
         streamer::{receiver, PacketBatchReceiver, StreamerReceiveStats},
@@ -77,7 +77,7 @@ fn sink(exit: Arc<AtomicBool>, rvs: Arc<AtomicUsize>, r: PacketBatchReceiver) ->
 fn main() -> Result<()> {
     let matches = Command::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::new("num-recv-sockets")
                 .long("num-recv-sockets")

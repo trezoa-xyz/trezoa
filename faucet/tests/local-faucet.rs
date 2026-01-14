@@ -1,19 +1,19 @@
 use {
-    solana_faucet::faucet::{
+    trezoa_faucet::faucet::{
         request_airdrop_transaction, run_local_faucet_with_unique_port_for_tests,
     },
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_signer::Signer,
-    solana_system_interface::instruction::transfer,
-    solana_transaction::Transaction,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction::transfer,
+    trezoa_transaction::Transaction,
 };
 
 #[test]
 fn test_local_faucet() {
     let keypair = Keypair::new();
-    let to = solana_pubkey::new_rand();
+    let to = trezoa_pubkey::new_rand();
     let lamports = 50;
     let blockhash = Hash::new_from_array(to.to_bytes());
     let create_instruction = transfer(&keypair.pubkey(), &to, lamports);

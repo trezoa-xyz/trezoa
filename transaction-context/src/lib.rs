@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -21,15 +21,15 @@ use {
         },
         vm_slice::VmSlice,
     },
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_instruction::error::InstructionError,
-    solana_instructions_sysvar as instructions,
-    solana_pubkey::Pubkey,
-    solana_sbpf::memory_region::{AccessType, AccessViolationHandler, MemoryRegion},
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_instruction::error::InstructionError,
+    trezoa_instructions_sysvar as instructions,
+    trezoa_pubkey::Pubkey,
+    trezoa_sbpf::memory_region::{AccessType, AccessViolationHandler, MemoryRegion},
     std::{borrow::Cow, cell::Cell, rc::Rc},
 };
-#[cfg(not(target_os = "solana"))]
-use {solana_account::WritableAccount, solana_rent::Rent};
+#[cfg(not(target_os = "trezoa"))]
+use {trezoa_account::WritableAccount, trezoa_rent::Rent};
 
 pub mod instruction;
 pub mod instruction_accounts;
@@ -54,22 +54,22 @@ pub const MAX_INSTRUCTION_TRACE_LENGTH: usize = 64;
 #[cfg(test)]
 static_assertions::const_assert_eq!(
     MAX_ACCOUNTS_PER_INSTRUCTION,
-    solana_program_entrypoint::NON_DUP_MARKER as usize,
+    trezoa_program_entrypoint::NON_DUP_MARKER as usize,
 );
 #[cfg(test)]
 static_assertions::const_assert_eq!(
     MAX_ACCOUNT_DATA_LEN,
-    solana_system_interface::MAX_PERMITTED_DATA_LENGTH,
+    trezoa_system_interface::MAX_PERMITTED_DATA_LENGTH,
 );
 #[cfg(test)]
 static_assertions::const_assert_eq!(
     MAX_ACCOUNT_DATA_GROWTH_PER_TRANSACTION,
-    solana_system_interface::MAX_PERMITTED_ACCOUNTS_DATA_ALLOCATIONS_PER_TRANSACTION,
+    trezoa_system_interface::MAX_PERMITTED_ACCOUNTS_DATA_ALLOCATIONS_PER_TRANSACTION,
 );
 #[cfg(test)]
 static_assertions::const_assert_eq!(
     MAX_ACCOUNT_DATA_GROWTH_PER_INSTRUCTION,
-    solana_account_info::MAX_PERMITTED_DATA_INCREASE,
+    trezoa_account_info::MAX_PERMITTED_DATA_INCREASE,
 );
 
 /// Index of an account inside of the transaction or an instruction.
@@ -117,7 +117,7 @@ pub struct TransactionContext<'ix_data> {
     transaction_frame: TransactionFrame,
     return_data_bytes: Vec<u8>,
     top_level_instruction_index: usize,
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     rent: Rent,
     /// This is an account deduplication map that maps index_in_transaction to index_in_instruction
     /// Usage: dedup_map[index_in_transaction] = index_in_instruction
@@ -132,7 +132,7 @@ pub struct TransactionContext<'ix_data> {
 
 impl<'ix_data> TransactionContext<'ix_data> {
     /// Constructs a new TransactionContext
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn new(
         transaction_accounts: Vec<KeyedAccountSharedData>,
         rent: Rent,
@@ -177,7 +177,7 @@ impl<'ix_data> TransactionContext<'ix_data> {
     }
 
     /// Used in mock_process_instruction
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn deconstruct_without_keys(self) -> Result<Vec<AccountSharedData>, InstructionError> {
         if !self.instruction_stack.is_empty() {
             return Err(InstructionError::CallDepth);
@@ -190,7 +190,7 @@ impl<'ix_data> TransactionContext<'ix_data> {
         Ok(accounts)
     }
 
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn accounts(&self) -> &Rc<TransactionAccounts> {
         &self.accounts
     }
@@ -289,7 +289,7 @@ impl<'ix_data> TransactionContext<'ix_data> {
     }
 
     /// Gets instruction stack height, top-level instructions are height
-    /// `solana_instruction::TRANSACTION_LEVEL_STACK_HEIGHT`
+    /// `trezoa_instruction::TRANSACTION_LEVEL_STACK_HEIGHT`
     pub fn get_instruction_stack_height(&self) -> usize {
         self.instruction_stack.len()
     }
@@ -401,7 +401,7 @@ impl<'ix_data> TransactionContext<'ix_data> {
     }
 
     /// Pushes the next instruction
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn push(&mut self) -> Result<(), InstructionError> {
         let nesting_level = self.get_instruction_stack_height();
         if !self.instruction_stack.is_empty() && self.accounts.get_lamports_delta() != 0 {
@@ -426,7 +426,7 @@ impl<'ix_data> TransactionContext<'ix_data> {
         self.instruction_stack.push(index_in_trace);
         if let Some(index_in_transaction) = self.find_index_of_account(&instructions::id()) {
             let mut mut_account_ref = self.accounts.try_borrow_mut(index_in_transaction)?;
-            if mut_account_ref.owner() != &solana_sdk_ids::sysvar::id() {
+            if mut_account_ref.owner() != &trezoa_sdk_ids::sysvar::id() {
                 return Err(InstructionError::InvalidAccountOwner);
             }
             instructions::store_current_index_checked(
@@ -438,7 +438,7 @@ impl<'ix_data> TransactionContext<'ix_data> {
     }
 
     /// Pops the current instruction
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn pop(&mut self) -> Result<(), InstructionError> {
         if self.instruction_stack.is_empty() {
             return Err(InstructionError::CallDepth);
@@ -600,7 +600,7 @@ pub struct TransactionReturnData {
 }
 
 /// Everything that needs to be recorded from a TransactionContext after execution
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 pub struct ExecutionRecord {
     pub accounts: Vec<KeyedAccountSharedData>,
     pub return_data: TransactionReturnData,
@@ -609,7 +609,7 @@ pub struct ExecutionRecord {
 }
 
 /// Used by the bank in the runtime to write back the processed accounts and recorded instructions
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 impl From<TransactionContext<'_>> for ExecutionRecord {
     fn from(context: TransactionContext) -> Self {
         let (accounts, touched_flags, resize_delta) = Rc::try_unwrap(context.accounts)
@@ -667,7 +667,7 @@ mod tests {
 
         // Now with the wrong data length.
         let account =
-            AccountSharedData::new(rent_exempt_lamports, 0, &solana_sdk_ids::sysvar::id());
+            AccountSharedData::new(rent_exempt_lamports, 0, &trezoa_sdk_ids::sysvar::id());
         assert_eq!(
             build_transaction_context(account).push(),
             Err(InstructionError::AccountDataTooSmall),
@@ -677,7 +677,7 @@ mod tests {
         let account = AccountSharedData::new(
             rent_exempt_lamports,
             correct_space,
-            &solana_sdk_ids::sysvar::id(),
+            &trezoa_sdk_ids::sysvar::id(),
         );
         assert_eq!(build_transaction_context(account).push(), Ok(()),);
     }

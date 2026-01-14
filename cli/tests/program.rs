@@ -3,41 +3,41 @@
 #![allow(clippy::items_after_test_module)]
 
 use {
-    agave_feature_set::enable_alt_bn128_syscall,
+    trezoa_feature_set::enable_alt_bn128_syscall,
     assert_matches::assert_matches,
     serde_json::Value,
-    solana_account::{state_traits::StateMut, ReadableAccount},
-    solana_borsh::v1::try_from_slice_unchecked,
-    solana_cli::{
+    trezoa_account::{state_traits::StateMut, ReadableAccount},
+    trezoa_borsh::v1::try_from_slice_unchecked,
+    trezoa_cli::{
         cli::{process_command, CliCommand, CliConfig},
         program::{ProgramCliCommand, CLOSE_PROGRAM_WARNING},
         program_v4::{AdditionalCliConfig, ProgramV4CliCommand},
         test_utils::wait_n_slots,
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_client::rpc_config::RpcSendTransactionConfig,
-    solana_commitment_config::CommitmentConfig,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_fee_calculator::FeeRateGovernor,
-    solana_keypair::Keypair,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_rpc::rpc::JsonRpcConfig,
-    solana_rpc_client::{
+    trezoa_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    trezoa_client::rpc_config::RpcSendTransactionConfig,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_fee_calculator::FeeRateGovernor,
+    trezoa_keypair::Keypair,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_rpc::rpc::JsonRpcConfig,
+    trezoa_rpc_client::{
         nonblocking::rpc_client::RpcClient, rpc_client::GetConfirmedSignaturesForAddress2Config,
     },
-    solana_rpc_client_api::config::RpcTransactionConfig,
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_sdk_ids::{bpf_loader_upgradeable, compute_budget, loader_v4},
-    solana_signature::Signature,
-    solana_signer::{null_signer::NullSigner, Signer},
-    solana_system_interface::program as system_program,
-    solana_test_validator::TestValidatorGenesis,
-    solana_transaction::Transaction,
-    solana_transaction_status::UiTransactionEncoding,
+    trezoa_rpc_client_api::config::RpcTransactionConfig,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_sdk_ids::{bpf_loader_upgradeable, compute_budget, loader_v4},
+    trezoa_signature::Signature,
+    trezoa_signer::{null_signer::NullSigner, Signer},
+    trezoa_system_interface::program as system_program,
+    trezoa_test_validator::TestValidatorGenesis,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_status::UiTransactionEncoding,
     std::{
         env,
         fs::File,
@@ -106,7 +106,7 @@ async fn expect_account_absent(rpc_client: &RpcClient, pubkey: Pubkey, absent_be
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_deploy_non_upgradeable() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -276,7 +276,7 @@ async fn test_cli_program_deploy_non_upgradeable() {
     });
     expect_command_failure(
         &config,
-        "The CLI blocks deployments into accounts that hold more than the necessary amount of SOL",
+        "The CLI blocks deployments into accounts that hold more than the necessary amount of TRZ",
         &format!(
             "Account {} is not an upgradeable program or already in use",
             custom_address_keypair.pubkey()
@@ -316,7 +316,7 @@ async fn test_cli_program_deploy_non_upgradeable() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_deploy_no_authority() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -422,7 +422,7 @@ async fn test_cli_program_deploy_no_authority() {
 #[test_case(false, true; "Feature disabled, skip preflight")]
 #[test_case(false, false; "Feature disabled, don't skip preflight")]
 async fn test_cli_program_deploy_feature(enable_feature: bool, skip_preflight: bool) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut program_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     program_path.push("tests");
@@ -545,7 +545,7 @@ async fn test_cli_program_deploy_feature(enable_feature: bool, skip_preflight: b
 #[test_case(true; "Feature enabled")]
 #[test_case(false; "Feature disabled")]
 async fn test_cli_program_upgrade_with_feature(enable_feature: bool) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -713,7 +713,7 @@ async fn test_cli_program_upgrade_with_feature(enable_feature: bool) {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_deploy_with_authority() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1115,7 +1115,7 @@ async fn test_cli_program_deploy_with_authority() {
 #[test_case(true; "Skip preflight")]
 #[test_case(false; "Dont skip preflight")]
 async fn test_cli_program_upgrade_auto_extend(skip_preflight: bool) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1291,7 +1291,7 @@ async fn test_cli_program_upgrade_auto_extend(skip_preflight: bool) {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_close_program() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1407,7 +1407,7 @@ async fn test_cli_program_close_program() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_extend_program() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1591,7 +1591,7 @@ async fn test_cli_program_extend_program() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_migrate_program() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1671,7 +1671,7 @@ async fn test_cli_program_migrate_program() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_write_buffer() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -2071,7 +2071,7 @@ async fn test_cli_program_write_buffer() {
 #[test_case(true; "Feature enabled")]
 #[test_case(false; "Feature disabled")]
 async fn test_cli_program_write_buffer_feature(enable_feature: bool) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut program_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     program_path.push("tests");
@@ -2165,7 +2165,7 @@ async fn test_cli_program_write_buffer_feature(enable_feature: bool) {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_set_buffer_authority() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -2347,7 +2347,7 @@ async fn test_cli_program_set_buffer_authority() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_mismatch_buffer_authority() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -2472,7 +2472,7 @@ async fn test_cli_program_mismatch_buffer_authority() {
 #[test_case(true; "offline signer will be fee payer")]
 #[test_case(false; "online signer will be fee payer")]
 async fn test_cli_program_deploy_with_offline_signing(use_offline_signer_as_fee_payer: bool) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -2672,7 +2672,7 @@ async fn test_cli_program_deploy_with_offline_signing(use_offline_signer_as_fee_
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_show() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -2869,7 +2869,7 @@ async fn test_cli_program_show() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_cli_program_dump() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");

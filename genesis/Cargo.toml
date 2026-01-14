@@ -1,6 +1,6 @@
 [package]
-name = "solana-genesis"
-documentation = "https://docs.rs/solana-genesis"
+name = "trezoa-genesis"
+documentation = "https://docs.rs/trezoa-genesis"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -13,20 +13,20 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
-name = "solana_genesis"
+name = "trezoa_genesis"
 
 [[bin]]
-name = "solana-genesis"
+name = "trezoa-genesis"
 path = "src/main.rs"
 
 [features]
-default = ["agave-unstable-api"]
-agave-unstable-api = []
+default = ["trezoa-unstable-api"]
+trezoa-unstable-api = []
 
 [dependencies]
-agave-feature-set = { workspace = true }
-agave-logger = { workspace = true }
-agave-snapshots = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-snapshots = { workspace = true }
 base64 = { workspace = true }
 bincode = { workspace = true }
 clap = { workspace = true }
@@ -34,42 +34,42 @@ itertools = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 serde_yaml = { workspace = true }
-solana-account = "=3.3.0"
-solana-bls-signatures = { workspace = true }
-solana-clap-utils = { workspace = true }
-solana-cli-config = { workspace = true }
-solana-clock = "=3.0.0"
-solana-cluster-type = "=3.0.0"
-solana-commitment-config = "=3.1.0"
-solana-entry = { workspace = true }
-solana-epoch-schedule = "=3.0.0"
-solana-feature-gate-interface = "=3.0.0"
-solana-fee-calculator = "=3.0.0"
-solana-genesis-config = "=3.0.0"
-solana-genesis-utils = { workspace = true }
-solana-inflation = "=3.0.0"
-solana-keypair = "=3.1.0"
-solana-ledger = { workspace = true }
-solana-loader-v3-interface = "6.1.0"
-solana-native-token = "=3.0.0"
-solana-poh-config = "=3.0.0"
-solana-pubkey = { version = "=4.0.0", default-features = false }
-solana-rent = "=3.0.0"
-solana-rpc-client = { workspace = true }
-solana-rpc-client-api = { workspace = true }
-solana-runtime = { workspace = true }
-solana-sdk-ids = "=3.1.0"
-solana-signer = "=3.0.0"
-solana-stake-interface = { version = "=2.0.2", features = ["borsh"] }
-solana-time-utils = "3.0.0"
-solana-version = { workspace = true }
-solana-vote-program = { workspace = true }
+trezoa-account = "=3.3.0"
+trezoa-bls-signatures = { workspace = true }
+trezoa-clap-utils = { workspace = true }
+trezoa-cli-config = { workspace = true }
+trezoa-clock = "=3.0.0"
+trezoa-cluster-type = "=3.0.0"
+trezoa-commitment-config = "=3.1.0"
+trezoa-entry = { workspace = true }
+trezoa-epoch-schedule = "=3.0.0"
+trezoa-feature-gate-interface = "=3.0.0"
+trezoa-fee-calculator = "=3.0.0"
+trezoa-genesis-config = "=3.0.0"
+trezoa-genesis-utils = { workspace = true }
+trezoa-inflation = "=3.0.0"
+trezoa-keypair = "=3.1.0"
+trezoa-ledger = { workspace = true }
+trezoa-loader-v3-interface = "6.1.0"
+trezoa-native-token = "=3.0.0"
+trezoa-poh-config = "=3.0.0"
+trezoa-pubkey = { version = "=4.0.0", default-features = false }
+trezoa-rent = "=3.0.0"
+trezoa-rpc-client = { workspace = true }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-runtime = { workspace = true }
+trezoa-sdk-ids = "=3.1.0"
+trezoa-signer = "=3.0.0"
+trezoa-stake-interface = { version = "=2.0.2", features = ["borsh"] }
+trezoa-time-utils = "3.0.0"
+trezoa-version = { workspace = true }
+trezoa-vote-program = { workspace = true }
 tempfile = { workspace = true }
 
 [dev-dependencies]
-solana-borsh = { workspace = true }
-solana-genesis = { path = ".", features = ["agave-unstable-api"] }
-solana-pubkey = { workspace = true, features = ["rand"] }
-solana-runtime = { workspace = true, features = ["dev-context-only-utils"] }
-solana-vote = { workspace = true }
+trezoa-borsh = { workspace = true }
+trezoa-genesis = { path = ".", features = ["trezoa-unstable-api"] }
+trezoa-pubkey = { workspace = true, features = ["rand"] }
+trezoa-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-vote = { workspace = true }
 test-case = { workspace = true }

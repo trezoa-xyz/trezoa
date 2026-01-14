@@ -9,15 +9,15 @@ use {
         },
         replay_stage::DUPLICATE_THRESHOLD,
     },
-    solana_clock::{Epoch, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_hash::Hash,
-    solana_ledger::{
+    trezoa_clock::{Epoch, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_hash::Hash,
+    trezoa_ledger::{
         ancestor_iterator::AncestorIterator, blockstore::Blockstore, blockstore_meta::SlotMeta,
     },
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_runtime::epoch_stakes::VersionedEpochStakes,
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::epoch_stakes::VersionedEpochStakes,
     std::{
         collections::{HashMap, HashSet, VecDeque},
         iter,
@@ -986,13 +986,13 @@ mod test {
     use {
         super::*,
         itertools::Itertools,
-        solana_accounts_db::contains::Contains,
-        solana_hash::Hash,
-        solana_ledger::{
+        trezoa_accounts_db::contains::Contains,
+        trezoa_hash::Hash,
+        trezoa_ledger::{
             blockstore::{make_chaining_slot_entries, Blockstore},
             get_tmp_ledger_path,
         },
-        solana_runtime::{bank::Bank, bank_utils},
+        trezoa_runtime::{bank::Bank, bank_utils},
         trees::tr,
     };
 

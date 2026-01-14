@@ -1,14 +1,14 @@
 use {
-    agave_logger::redirect_stderr_to_file,
+    trezoa_logger::redirect_stderr_to_file,
     clap::{crate_name, Parser},
     crossbeam_channel::bounded,
     log::*,
-    solana_core::banking_trace::BankingTracer,
-    solana_keypair::read_keypair_file,
-    solana_net_utils::sockets::{bind_in_range_with_config, SocketConfiguration as SocketConfig},
-    solana_signer::Signer,
-    solana_streamer::streamer::StakedNodes,
-    solana_vortexor::{
+    trezoa_core::banking_trace::BankingTracer,
+    trezoa_keypair::read_keypair_file,
+    trezoa_net_utils::sockets::{bind_in_range_with_config, SocketConfiguration as SocketConfig},
+    trezoa_signer::Signer,
+    trezoa_streamer::streamer::StakedNodes,
+    trezoa_vortexor::{
         cli::Cli,
         rpc_load_balancer::RpcLoadBalancer,
         sender::{
@@ -36,10 +36,10 @@ pub fn main() {
         // Safety: env update is made before any spawned threads might access the environment
         unsafe { env::set_var("RUST_BACKTRACE", "1") }
     }
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let args = Cli::parse();
-    let solana_version = solana_version::version!();
+    let trezoa_version = trezoa_version::version!();
     let identity = args.identity;
 
     let identity_keypair = read_keypair_file(identity).unwrap_or_else(|error| {
@@ -53,7 +53,7 @@ pub fn main() {
     let logfile = {
         let logfile = args
             .logfile
-            .unwrap_or_else(|| format!("solana-vortexor-{}.log", identity_keypair.pubkey()));
+            .unwrap_or_else(|| format!("trezoa-vortexor-{}.log", identity_keypair.pubkey()));
 
         if logfile == "-" {
             None
@@ -64,7 +64,7 @@ pub fn main() {
     };
     let _logger_thread = redirect_stderr_to_file(logfile);
 
-    info!("{} {solana_version}", crate_name!());
+    info!("{} {trezoa_version}", crate_name!());
     info!(
         "Starting vortexor {} with: {:#?}",
         identity_keypair.pubkey(),

@@ -4,10 +4,10 @@
 use {
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
     log::{error, info, warn},
-    solana_client::{pubsub_client::PubsubClient, rpc_client::RpcClient},
-    solana_clock::Slot,
-    solana_commitment_config::{CommitmentConfig, CommitmentLevel},
-    solana_metrics::{datapoint_error, datapoint_info},
+    trezoa_client::{pubsub_client::PubsubClient, rpc_client::RpcClient},
+    trezoa_clock::Slot,
+    trezoa_commitment_config::{CommitmentConfig, CommitmentLevel},
+    trezoa_metrics::{datapoint_error, datapoint_info},
     std::{
         collections::HashMap,
         sync::{

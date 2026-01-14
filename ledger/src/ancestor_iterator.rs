@@ -1,4 +1,4 @@
-use {crate::blockstore::*, solana_clock::Slot, solana_hash::Hash};
+use {crate::blockstore::*, trezoa_clock::Slot, trezoa_hash::Hash};
 
 pub struct AncestorIterator<'a> {
     current: Option<Slot>,
@@ -72,7 +72,7 @@ impl Iterator for AncestorIteratorWithHash<'_> {
 mod tests {
     use {
         super::*,
-        solana_hash::Hash,
+        trezoa_hash::Hash,
         std::{collections::HashMap, path::Path},
         trees::tr,
     };

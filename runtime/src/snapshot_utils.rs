@@ -1,5 +1,5 @@
 #[cfg(feature = "dev-context-only-utils")]
-use solana_accounts_db::utils::create_accounts_run_and_snapshot_dirs;
+use trezoa_accounts_db::utils::create_accounts_run_and_snapshot_dirs;
 use {
     crate::{
         bank::BankFieldsToDeserialize,
@@ -13,8 +13,8 @@ use {
             get_slot_and_append_vec_id, SnapshotStorageRebuilder,
         },
     },
-    agave_fs::{buffered_writer::large_file_buf_writer, io_setup::IoSetupState, FileInfo},
-    agave_snapshots::{
+    trezoa_fs::{buffered_writer::large_file_buf_writer, io_setup::IoSetupState, FileInfo},
+    trezoa_snapshots::{
         archive_snapshot,
         error::{
             AddBankSnapshotError, GetSnapshotAccountsHardLinkDirError,
@@ -34,15 +34,15 @@ use {
     log::*,
     regex::Regex,
     semver::Version,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_storage::AccountStorageMap,
         account_storage_entry::AccountStorageEntry,
         accounts_db::{AccountsDbConfig, AtomicAccountsFileId},
         accounts_file::{AccountsFile, StorageAccess},
         utils::{move_and_async_delete_path, ACCOUNTS_RUN_DIR, ACCOUNTS_SNAPSHOT_DIR},
     },
-    solana_clock::Slot,
-    solana_measure::{measure::Measure, measure_time, measure_us},
+    trezoa_clock::Slot,
+    trezoa_measure::{measure::Measure, measure_time, measure_us},
     std::{
         cmp::Ordering,
         collections::{HashMap, HashSet},
@@ -1788,7 +1788,7 @@ pub fn create_tmp_accounts_dir_for_tests() -> (TempDir, PathBuf) {
 mod tests {
     use {
         super::*,
-        agave_snapshots::{
+        trezoa_snapshots::{
             paths::{
                 get_full_snapshot_archives, get_highest_full_snapshot_archive_slot,
                 get_highest_incremental_snapshot_archive_slot,
@@ -1800,8 +1800,8 @@ mod tests {
         },
         assert_matches::assert_matches,
         bincode::{deserialize_from, serialize_into},
-        solana_accounts_db::accounts_file::AccountsFileProvider,
-        solana_hash::Hash,
+        trezoa_accounts_db::accounts_file::AccountsFileProvider,
+        trezoa_hash::Hash,
         std::{convert::TryFrom, mem::size_of},
         tempfile::NamedTempFile,
         test_case::test_case,

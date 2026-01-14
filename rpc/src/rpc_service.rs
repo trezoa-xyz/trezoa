@@ -1,4 +1,4 @@
-//! The `rpc_service` module implements the Solana JSON RPC service.
+//! The `rpc_service` module implements the Trezoa JSON RPC service.
 
 use {
     crate::{
@@ -9,7 +9,7 @@ use {
         rpc_cache::LargestAccountsCache,
         rpc_health::*,
     },
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths as snapshot_paths, snapshot_archive_info::SnapshotArchiveInfoGetter,
         snapshot_config::SnapshotConfig, SnapshotInterval,
     },
@@ -20,32 +20,32 @@ use {
         RequestMiddlewareAction, ServerBuilder,
     },
     regex::Regex,
-    solana_cli_output::display::build_balance_message,
-    solana_client::connection_cache::Protocol,
-    solana_genesis_config::DEFAULT_GENESIS_DOWNLOAD_PATH,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_cli_output::display::build_balance_message,
+    trezoa_client::connection_cache::Protocol,
+    trezoa_genesis_config::DEFAULT_GENESIS_DOWNLOAD_PATH,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         bigtable_upload::ConfirmedBlockUploadConfig,
         bigtable_upload_service::BigTableUploadService, blockstore::Blockstore,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_metrics::inc_new_counter_info,
-    solana_perf::thread::renice_this_thread,
-    solana_poh::poh_recorder::PohRecorder,
-    solana_quic_definitions::NotifyKeyUpdate,
-    solana_runtime::{
+    trezoa_metrics::inc_new_counter_info,
+    trezoa_perf::thread::renice_this_thread,
+    trezoa_poh::poh_recorder::PohRecorder,
+    trezoa_quic_definitions::NotifyKeyUpdate,
+    trezoa_runtime::{
         bank::Bank, bank_forks::BankForks, commitment::BlockCommitmentCache,
         non_circulating_supply::calculate_non_circulating_supply,
         prioritization_fee_cache::PrioritizationFeeCache,
     },
-    solana_send_transaction_service::{
+    trezoa_send_transaction_service::{
         send_transaction_service::{self, SendTransactionService},
         transaction_client::{TpuClientNextClient, TransactionClient},
     },
-    solana_storage_bigtable::CredentialType,
-    solana_validator_exit::Exit,
+    trezoa_storage_bigtable::CredentialType,
+    trezoa_validator_exit::Exit,
     std::{
         net::{SocketAddr, UdpSocket},
         path::{Path, PathBuf},
@@ -290,7 +290,7 @@ impl RpcRequestMiddleware {
                     SnapshotInterval::Slots(slots) => Duration::from_millis(
                         slots
                             .get()
-                            .saturating_mul(solana_clock::DEFAULT_MS_PER_SLOT),
+                            .saturating_mul(trezoa_clock::DEFAULT_MS_PER_SLOT),
                     ),
                 };
                 let fallback = match st {
@@ -612,7 +612,7 @@ impl JsonRpcService {
                 max_message_size,
             }) = config.rpc_bigtable_config
             {
-                let bigtable_config = solana_storage_bigtable::LedgerStorageConfig {
+                let bigtable_config = trezoa_storage_bigtable::LedgerStorageConfig {
                     read_only: !enable_bigtable_ledger_upload,
                     timeout,
                     credential_type: CredentialType::Filepath(None),
@@ -621,7 +621,7 @@ impl JsonRpcService {
                     max_message_size,
                 };
                 runtime
-                    .block_on(solana_storage_bigtable::LedgerStorage::new_with_config(
+                    .block_on(trezoa_storage_bigtable::LedgerStorage::new_with_config(
                         bigtable_config,
                     ))
                     .map(|bigtable_ledger_storage| {
@@ -825,16 +825,16 @@ mod tests {
     use {
         super::*,
         crate::rpc::{create_validator_exit, tests::new_test_cluster_info},
-        solana_cluster_type::ClusterType,
-        solana_genesis_config::DEFAULT_GENESIS_ARCHIVE,
-        solana_ledger::{
+        trezoa_cluster_type::ClusterType,
+        trezoa_genesis_config::DEFAULT_GENESIS_ARCHIVE,
+        trezoa_ledger::{
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
         },
-        solana_rpc_client_api::config::RpcContextConfig,
-        solana_runtime::bank::Bank,
-        solana_send_transaction_service::test_utils::CreateClient,
-        solana_signer::Signer,
+        trezoa_rpc_client_api::config::RpcContextConfig,
+        trezoa_runtime::bank::Bank,
+        trezoa_send_transaction_service::test_utils::CreateClient,
+        trezoa_signer::Signer,
         std::{
             io::Write,
             net::{IpAddr, Ipv4Addr},
@@ -854,10 +854,10 @@ mod tests {
         let bank = Bank::new_for_tests(&genesis_config);
         let cluster_info = Arc::new(new_test_cluster_info());
         let ip_addr = IpAddr::V4(Ipv4Addr::UNSPECIFIED);
-        let port_range = solana_net_utils::sockets::localhost_port_range_for_tests();
+        let port_range = trezoa_net_utils::sockets::localhost_port_range_for_tests();
         let rpc_addr = SocketAddr::new(
             ip_addr,
-            solana_net_utils::find_available_port_in_range(ip_addr, port_range).unwrap(),
+            trezoa_net_utils::find_available_port_in_range(ip_addr, port_range).unwrap(),
         );
         let bank_forks = BankForks::new_rw_arc(bank);
         let ledger_path = get_tmp_ledger_path_auto_delete!();

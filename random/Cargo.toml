@@ -1,7 +1,7 @@
 [package]
-name = "agave-random"
-description = "Agave randomization utils"
-documentation = "https://docs.rs/agave-random"
+name = "trezoa-random"
+description = "Trezoa-team randomization utils"
+documentation = "https://docs.rs/trezoa-random"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,10 +14,10 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "agave_random"
+name = "trezoa_random"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 rand = { workspace = true }

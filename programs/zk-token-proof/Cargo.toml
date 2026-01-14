@@ -1,6 +1,6 @@
 [package]
-name = "solana-zk-token-proof-program"
-description = "Solana Zk Token Proof Program"
+name = "trezoa-zk-token-proof-program"
+description = "Trezoa Zk Token Proof Program"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -9,7 +9,7 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-solana-program-runtime = { workspace = true }
+trezoa-program-runtime = { workspace = true }

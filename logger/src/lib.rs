@@ -1,5 +1,5 @@
 //! The `logger` module configures `env_logger`
-#![cfg(feature = "agave-unstable-api")]
+#![cfg(feature = "trezoa-unstable-api")]
 use std::{
     path::{Path, PathBuf},
     sync::{Arc, LazyLock, RwLock},
@@ -9,7 +9,7 @@ use std::{
 static LOGGER: LazyLock<Arc<RwLock<env_logger::Logger>>> =
     LazyLock::new(|| Arc::new(RwLock::new(env_logger::Logger::from_default_env())));
 
-pub const DEFAULT_FILTER: &str = "solana=info,agave=info";
+pub const DEFAULT_FILTER: &str = "trezoa=info,trezoa=info";
 
 struct LoggerShim {}
 

@@ -8,11 +8,11 @@ use {
     },
     bincode::serialize,
     serde::{Deserialize, Serialize},
-    solana_keypair::signable::Signable,
-    solana_perf::packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
-    solana_signature::Signature,
+    trezoa_keypair::signable::Signable,
+    trezoa_perf::packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
+    trezoa_signature::Signature,
     std::{
         borrow::{Borrow, Cow},
         fmt::Debug,
@@ -38,7 +38,7 @@ pub(crate) const MAX_INCREMENTAL_SNAPSHOT_HASHES: usize = 25;
 /// serialized size of the PruneMessage stays below PACKET_DATA_SIZE.
 pub(crate) const MAX_PRUNE_DATA_NODES: usize = 32;
 /// Prune data prefix for PruneMessage
-const PRUNE_DATA_PREFIX: &[u8] = b"\xffSOLANA_PRUNE_DATA";
+const PRUNE_DATA_PREFIX: &[u8] = b"\xffTREZOA_PRUNE_DATA";
 /// Number of bytes in the randomly generated token sent with ping messages.
 const GOSSIP_PING_TOKEN_SIZE: usize = 32;
 /// Minimum serialized size of a Protocol::PullResponse packet.
@@ -265,15 +265,15 @@ pub(crate) mod tests {
             duplicate_shred::{self, tests::new_rand_shred, MAX_DUPLICATE_SHREDS},
         },
         rand::Rng,
-        solana_clock::Slot,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::shred::Shredder,
-        solana_perf::packet::Packet,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
-        solana_transaction::Transaction,
-        solana_vote_program::{vote_instruction, vote_state::Vote},
+        trezoa_clock::Slot,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::shred::Shredder,
+        trezoa_perf::packet::Packet,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
+        trezoa_transaction::Transaction,
+        trezoa_vote_program::{vote_instruction, vote_state::Vote},
         std::{
             iter::repeat_with,
             net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4},
@@ -508,7 +508,7 @@ pub(crate) mod tests {
             .collect();
         let splits: Vec<_> =
             split_gossip_messages(PUSH_MESSAGE_MAX_PAYLOAD_SIZE, values.clone()).collect();
-        let self_pubkey = solana_pubkey::new_rand();
+        let self_pubkey = trezoa_pubkey::new_rand();
         assert!(splits.len() * 2 < NUM_CRDS_VALUES);
         // Assert that all messages are included in the splits.
         assert_eq!(NUM_CRDS_VALUES, splits.iter().map(Vec::len).sum::<usize>());
@@ -545,7 +545,7 @@ pub(crate) mod tests {
             .collect();
         let splits: Vec<_> =
             split_gossip_messages(PULL_RESPONSE_MAX_PAYLOAD_SIZE, values.clone()).collect();
-        let self_pubkey = solana_pubkey::new_rand();
+        let self_pubkey = trezoa_pubkey::new_rand();
         assert!(splits.len() * 2 < NUM_CRDS_VALUES);
         // Assert that all messages are included in the splits.
         assert_eq!(NUM_CRDS_VALUES, splits.iter().map(Vec::len).sum::<usize>());

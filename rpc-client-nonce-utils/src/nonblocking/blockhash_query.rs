@@ -1,11 +1,11 @@
 use {
-    crate::nonblocking, solana_commitment_config::CommitmentConfig, solana_hash::Hash,
-    solana_pubkey::Pubkey, solana_rpc_client::nonblocking::rpc_client::RpcClient,
+    crate::nonblocking, trezoa_commitment_config::CommitmentConfig, trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey, trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
 };
 #[cfg(feature = "clap")]
 use {
     clap::ArgMatches,
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         input_parsers::{pubkey_of, value_of},
         nonce::*,
         offline::*,
@@ -121,15 +121,15 @@ mod tests {
         super::*,
         crate::nonblocking::blockhash_query,
         serde_json::{self, json},
-        solana_account::Account,
-        solana_account_decoder::{encode_ui_account, UiAccountEncoding},
-        solana_fee_calculator::FeeCalculator,
-        solana_nonce::{self as nonce, state::DurableNonce},
-        solana_rpc_client_api::{
+        trezoa_account::Account,
+        trezoa_account_decoder::{encode_ui_account, UiAccountEncoding},
+        trezoa_fee_calculator::FeeCalculator,
+        trezoa_nonce::{self as nonce, state::DurableNonce},
+        trezoa_rpc_client_api::{
             request::RpcRequest,
             response::{Response, RpcBlockhash, RpcResponseContext},
         },
-        solana_sha256_hasher::hash,
+        trezoa_sha256_hasher::hash,
         std::collections::HashMap,
     };
 
@@ -373,7 +373,7 @@ mod tests {
             42,
             &nonce::versions::Versions::new(nonce::state::State::Initialized(data)),
             nonce::state::State::size(),
-            &solana_sdk_ids::system_program::id(),
+            &trezoa_sdk_ids::system_program::id(),
         )
         .unwrap();
         let nonce_pubkey = Pubkey::from([4u8; 32]);

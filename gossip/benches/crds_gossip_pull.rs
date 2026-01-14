@@ -2,12 +2,12 @@ use {
     criterion::{criterion_group, criterion_main, Criterion},
     rand::{rng, Rng},
     rayon::ThreadPoolBuilder,
-    solana_gossip::{
+    trezoa_gossip::{
         crds::{Crds, GossipRoute},
         crds_gossip_pull::{CrdsFilter, CrdsGossipPull},
         crds_value::CrdsValue,
     },
-    solana_hash::Hash,
+    trezoa_hash::Hash,
     std::sync::RwLock,
 };
 

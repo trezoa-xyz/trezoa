@@ -1,7 +1,7 @@
 //! Helper types and functions for handling and dealing with snapshot hashes.
 use {
-    solana_clock::Slot, solana_hash::Hash,
-    solana_lattice_hash::lt_hash::Checksum as AccountsLtHashChecksum,
+    trezoa_clock::Slot, trezoa_hash::Hash,
+    trezoa_lattice_hash::lt_hash::Checksum as AccountsLtHashChecksum,
 };
 
 /// At startup, when loading from snapshots, the starting snapshot hashes need to be passed to

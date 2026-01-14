@@ -2,7 +2,7 @@
 //! By default, signatures are verified in parallel using all available CPU
 //! cores.
 
-pub use solana_perf::sigverify::{
+pub use trezoa_perf::sigverify::{
     count_packets_in_batches, ed25519_verify, ed25519_verify_disabled, TxOffset,
 };
 use {
@@ -10,9 +10,9 @@ use {
         banking_trace::BankingPacketSender,
         sigverify_stage::{SigVerifier, SigVerifyServiceError},
     },
-    agave_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
     crossbeam_channel::{Sender, TrySendError},
-    solana_perf::{packet::PacketBatch, sigverify},
+    trezoa_perf::{packet::PacketBatch, sigverify},
 };
 
 pub struct TransactionSigVerifier {

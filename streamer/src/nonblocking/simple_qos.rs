@@ -15,8 +15,8 @@ use {
         streamer::StakedNodes,
     },
     quinn::{Connection, VarInt},
-    solana_net_utils::token_bucket::TokenBucket,
-    solana_time_utils as timing,
+    trezoa_net_utils::token_bucket::TokenBucket,
+    trezoa_time_utils as timing,
     std::{
         future::Future,
         sync::{
@@ -138,7 +138,7 @@ impl SimpleQos {
 #[derive(Clone)]
 pub struct SimpleQosConnectionContext {
     peer_type: ConnectionPeerType,
-    remote_pubkey: Option<solana_pubkey::Pubkey>,
+    remote_pubkey: Option<trezoa_pubkey::Pubkey>,
     remote_address: std::net::SocketAddr,
     last_update: Arc<AtomicU64>,
     stream_counter: Option<Arc<TokenBucket>>,
@@ -149,7 +149,7 @@ impl ConnectionContext for SimpleQosConnectionContext {
         self.peer_type
     }
 
-    fn remote_pubkey(&self) -> Option<solana_pubkey::Pubkey> {
+    fn remote_pubkey(&self) -> Option<trezoa_pubkey::Pubkey> {
         self.remote_pubkey
     }
 }
@@ -315,8 +315,8 @@ mod tests {
             streamer::StakedNodes,
         },
         quinn::Endpoint,
-        solana_keypair::{Keypair, Signer},
-        solana_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_keypair::{Keypair, Signer},
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
         std::{
             collections::HashMap,
             sync::{
@@ -389,7 +389,7 @@ mod tests {
         stakes.insert(server_keypair.pubkey(), stake_amount);
         stakes.insert(client_keypair.pubkey(), stake_amount);
 
-        let overrides: HashMap<solana_pubkey::Pubkey, u64> = HashMap::new();
+        let overrides: HashMap<trezoa_pubkey::Pubkey, u64> = HashMap::new();
 
         Arc::new(RwLock::new(StakedNodes::new(Arc::new(stakes), overrides)))
     }
@@ -424,7 +424,7 @@ mod tests {
         let remote_addr = server_connection.remote_address();
         let conn_context = SimpleQosConnectionContext {
             peer_type: ConnectionPeerType::Staked(1000),
-            remote_pubkey: Some(solana_pubkey::Pubkey::new_unique()),
+            remote_pubkey: Some(trezoa_pubkey::Pubkey::new_unique()),
             remote_address: remote_addr,
             last_update: Arc::new(AtomicU64::new(0)),
             stream_counter: None,
@@ -548,7 +548,7 @@ mod tests {
 
         let conn_context = SimpleQosConnectionContext {
             peer_type: ConnectionPeerType::Staked(1000),
-            remote_pubkey: Some(solana_pubkey::Pubkey::new_unique()),
+            remote_pubkey: Some(trezoa_pubkey::Pubkey::new_unique()),
             remote_address: remote_addr,
             last_update: Arc::new(AtomicU64::new(0)),
             stream_counter: None,
@@ -762,7 +762,7 @@ mod tests {
         // client 2 has higher stake so that it can prune client 1
         stakes.insert(client_keypair2.pubkey(), stake_amount * 2);
 
-        let overrides: HashMap<solana_pubkey::Pubkey, u64> = HashMap::new();
+        let overrides: HashMap<trezoa_pubkey::Pubkey, u64> = HashMap::new();
         let staked_nodes = Arc::new(RwLock::new(StakedNodes::new(Arc::new(stakes), overrides)));
 
         let simple_qos = SimpleQos::new(
@@ -832,7 +832,7 @@ mod tests {
         stakes.insert(server_keypair2.pubkey(), low_stake);
         stakes.insert(client_keypair2.pubkey(), low_stake);
 
-        let overrides: HashMap<solana_pubkey::Pubkey, u64> = HashMap::new();
+        let overrides: HashMap<trezoa_pubkey::Pubkey, u64> = HashMap::new();
         let staked_nodes = Arc::new(RwLock::new(StakedNodes::new(Arc::new(stakes), overrides)));
 
         let simple_qos = SimpleQos::new(

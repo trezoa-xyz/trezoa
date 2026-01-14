@@ -1,8 +1,8 @@
 use {
     crate::{parse_account_data::ParseAccountError, UiFeeCalculator},
     serde::{Deserialize, Serialize},
-    solana_instruction::error::InstructionError,
-    solana_nonce::{state::State, versions::Versions},
+    trezoa_instruction::error::InstructionError,
+    trezoa_nonce::{state::State, versions::Versions},
 };
 
 pub fn parse_nonce(data: &[u8]) -> Result<UiNonceState, ParseAccountError> {
@@ -44,12 +44,12 @@ pub struct UiNonceData {
 mod test {
     use {
         super::*,
-        solana_hash::Hash,
-        solana_nonce::{
+        trezoa_hash::Hash,
+        trezoa_nonce::{
             state::{Data, State},
             versions::Versions,
         },
-        solana_pubkey::Pubkey,
+        trezoa_pubkey::Pubkey,
     };
 
     #[test]

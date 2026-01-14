@@ -3,10 +3,10 @@
 
 use {
     crate::banking_stage::consume_worker::ConsumeWorkerMetrics,
-    agave_scheduler_bindings::ProgressMessage,
-    solana_clock::Slot,
-    solana_cost_model::cost_tracker::SharedBlockCost,
-    solana_poh::poh_recorder::SharedLeaderState,
+    trezoa_scheduler_bindings::ProgressMessage,
+    trezoa_clock::Slot,
+    trezoa_cost_model::cost_tracker::SharedBlockCost,
+    trezoa_poh::poh_recorder::SharedLeaderState,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -118,7 +118,7 @@ impl ProgressTracker {
             }
 
             ProgressMessage {
-                leader_state: agave_scheduler_bindings::IS_LEADER,
+                leader_state: trezoa_scheduler_bindings::IS_LEADER,
                 current_slot: working_bank.slot(),
                 next_leader_slot: next_leader_range_start,
                 leader_range_end: next_leader_range_end,
@@ -132,7 +132,7 @@ impl ProgressTracker {
         } else {
             let current_slot = slot_from_tick_height(tick_height, self.ticks_per_slot);
             ProgressMessage {
-                leader_state: agave_scheduler_bindings::IS_NOT_LEADER,
+                leader_state: trezoa_scheduler_bindings::IS_NOT_LEADER,
                 current_slot,
                 next_leader_slot: next_leader_range_start,
                 leader_range_end: next_leader_range_end,
@@ -170,8 +170,8 @@ fn slot_from_tick_height(tick_height: u64, ticks_per_slot: u64) -> u64 {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, solana_clock::DEFAULT_TICKS_PER_SLOT, solana_poh::poh_recorder::LeaderState,
-        solana_runtime::bank::Bank,
+        super::*, trezoa_clock::DEFAULT_TICKS_PER_SLOT, trezoa_poh::poh_recorder::LeaderState,
+        trezoa_runtime::bank::Bank,
     };
 
     #[test]
@@ -190,7 +190,7 @@ mod tests {
         assert_eq!(tick_height, 0);
         assert_eq!(
             message.leader_state,
-            agave_scheduler_bindings::IS_NOT_LEADER
+            trezoa_scheduler_bindings::IS_NOT_LEADER
         );
         assert_eq!(message.current_slot, 0);
         assert_eq!(message.current_slot_progress, 0);
@@ -208,7 +208,7 @@ mod tests {
         assert_eq!(tick_height, expected_tick_height);
         assert_eq!(
             message.leader_state,
-            agave_scheduler_bindings::IS_NOT_LEADER
+            trezoa_scheduler_bindings::IS_NOT_LEADER
         );
         assert_eq!(message.current_slot, 2);
         assert_eq!(message.next_leader_slot, u64::MAX);
@@ -225,7 +225,7 @@ mod tests {
         assert_eq!(tick_height, expected_tick_height);
         assert_eq!(
             message.leader_state,
-            agave_scheduler_bindings::IS_NOT_LEADER
+            trezoa_scheduler_bindings::IS_NOT_LEADER
         );
         assert_eq!(message.current_slot, 2);
         assert_eq!(message.next_leader_slot, 4);
@@ -233,7 +233,7 @@ mod tests {
         assert_eq!(message.current_slot_progress, 0);
 
         let bank = Arc::new(Bank::new_for_tests(
-            &solana_genesis_config::create_genesis_config(1).0,
+            &trezoa_genesis_config::create_genesis_config(1).0,
         ));
         shared_leader_state.store(Arc::new(LeaderState::new(
             Some(bank.clone()),
@@ -245,7 +245,7 @@ mod tests {
         assert!(!bank.is_complete());
         let (message, tick_height) = progress_tracker.produce_progress_message();
         assert_eq!(tick_height, bank.tick_height());
-        assert_eq!(message.leader_state, agave_scheduler_bindings::IS_LEADER);
+        assert_eq!(message.leader_state, trezoa_scheduler_bindings::IS_LEADER);
         assert_eq!(message.current_slot, bank.slot());
         assert_eq!(message.next_leader_slot, 4);
         assert_eq!(message.leader_range_end, 7);
@@ -261,7 +261,7 @@ mod tests {
         )));
         let (message, tick_height) = progress_tracker.produce_progress_message();
         assert_eq!(tick_height, bank.tick_height());
-        assert_eq!(message.leader_state, agave_scheduler_bindings::IS_LEADER);
+        assert_eq!(message.leader_state, trezoa_scheduler_bindings::IS_LEADER);
         assert_eq!(message.current_slot, bank.slot());
         assert_eq!(message.next_leader_slot, 4);
         assert_eq!(message.leader_range_end, 7);

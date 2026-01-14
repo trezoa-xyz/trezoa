@@ -1,11 +1,11 @@
 use {
     criterion::{criterion_group, criterion_main, Criterion, Throughput},
     itertools::iproduct,
-    solana_accounts_db::{accounts::Accounts, accounts_db::AccountsDb},
-    solana_instruction::{AccountMeta, Instruction},
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::system_program,
-    solana_transaction::{
+    trezoa_accounts_db::{accounts::Accounts, accounts_db::AccountsDb},
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::system_program,
+    trezoa_transaction::{
         sanitized::{SanitizedTransaction, MAX_TX_ACCOUNT_LOCKS},
         Transaction,
     },

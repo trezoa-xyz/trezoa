@@ -1,9 +1,9 @@
-pub use solana_runtime::genesis_utils::{
+pub use trezoa_runtime::genesis_utils::{
     bootstrap_validator_stake_lamports, create_genesis_config_with_leader, GenesisConfigInfo,
 };
 use {
-    solana_keypair::Keypair, solana_pubkey::Pubkey,
-    solana_runtime::genesis_utils::create_genesis_config_with_leader_with_mint_keypair,
+    trezoa_keypair::Keypair, trezoa_pubkey::Pubkey,
+    trezoa_runtime::genesis_utils::create_genesis_config_with_leader_with_mint_keypair,
 };
 
 // same as genesis_config::create_genesis_config, but with bootstrap_validator staking logic

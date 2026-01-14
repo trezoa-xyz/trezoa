@@ -152,14 +152,14 @@ fn invoke_cargo(config: &Config, platform_tools_dir: &Path, validated_toolchain_
 
     if corrupted_toolchain(platform_tools_dir) {
         error!(
-            "The Solana toolchain is corrupted. Please, run cargo-build-sbf with the \
+            "The Trezoa toolchain is corrupted. Please, run cargo-build-sbf with the \
              --force-tools-install argument to fix it."
         );
         exit(1);
     }
 
     let llvm_bin = platform_tools_dir.join("llvm").join("bin");
-    // Override the behavior of cargo to use the Solana toolchain.
+    // Override the behavior of cargo to use the Trezoa toolchain.
     // Safety: cargo-build-sbf doesn't spawn any threads until final child process is spawned
     unsafe {
         env::set_var("CC", llvm_bin.join("clang"));
@@ -174,7 +174,7 @@ fn invoke_cargo(config: &Config, platform_tools_dir: &Path, validated_toolchain_
     let rustflags = env::var("RUSTFLAGS").ok().unwrap_or_default();
     if env::var("RUSTFLAGS").is_ok() {
         warn!("Removed RUSTFLAGS from cargo environment, because it overrides {cargo_target}.");
-        // User provided rust flags should apply to the solana target only, but not the host target.
+        // User provided rust flags should apply to the trezoa target only, but not the host target.
         // Safety: cargo-build-sbf doesn't spawn any threads until final child process is spawned
         unsafe { env::remove_var("RUSTFLAGS") }
     }
@@ -296,7 +296,7 @@ fn generate_program_name(package: &cargo_metadata::Package) -> Option<String> {
     }
 }
 
-fn build_solana(config: Config, manifest_path: Option<PathBuf>) {
+fn build_trezoa(config: Config, manifest_path: Option<PathBuf>) {
     let mut metadata_command = cargo_metadata::MetadataCommand::new();
     if let Some(manifest_path) = manifest_path {
         metadata_command.manifest_path(manifest_path);
@@ -364,7 +364,7 @@ fn build_solana(config: Config, manifest_path: Option<PathBuf>) {
 }
 
 fn main() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let mut args = env::args().collect::<Vec<_>>();
     // When run as a cargo subcommand, the first program argument is the subcommand name.
     // Remove it
@@ -400,7 +400,7 @@ fn main() {
                 .long("sbf-sdk")
                 .value_name("PATH")
                 .takes_value(true)
-                .help("UNUSED: Path to the Solana SBF SDK."),
+                .help("UNUSED: Path to the Trezoa SBF SDK."),
         )
         .arg(
             Arg::new("cargo_args")
@@ -469,7 +469,7 @@ fn main() {
                 .conflicts_with("force_tools_install")
                 .help(
                     "Do not use rustup to manage the toolchain. By default, cargo-build-sbf \
-                     invokes rustup to find the Solana rustc using a `+solana` toolchain \
+                     invokes rustup to find the Trezoa rustc using a `+trezoa` toolchain \
                      override. This flag disables that behavior.",
                 ),
         )
@@ -527,7 +527,7 @@ fn main() {
                 .long("workspace")
                 .takes_value(false)
                 .alias("all")
-                .help("Build all Solana packages in the workspace"),
+                .help("Build all Trezoa packages in the workspace"),
         )
         .arg(
             Arg::new("jobs")
@@ -658,7 +658,7 @@ fn main() {
         return;
     }
 
-    build_solana(config, manifest_path);
+    build_trezoa(config, manifest_path);
 }
 
 #[cfg(test)]

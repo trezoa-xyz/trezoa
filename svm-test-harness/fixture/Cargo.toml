@@ -1,7 +1,7 @@
 [package]
-name = "solana-svm-test-harness-fixture"
-description = "Solana SVM test harness fixture types."
-documentation = "https://docs.rs/solana-svm-test-harness-fixture"
+name = "trezoa-svm-test-harness-fixture"
+description = "Trezoa SVM test harness fixture types."
+documentation = "https://docs.rs/trezoa-svm-test-harness-fixture"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -11,25 +11,25 @@ edition = { workspace = true }
 publish = false
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dummy-for-ci-check = ["fuzz"]
 fuzz = [
     "dep:bincode",
     "dep:prost",
     "dep:prost-build",
     "dep:protosol",
-    "solana-pubkey/default",
+    "trezoa-pubkey/default",
 ]
 
 [dependencies]
-agave-feature-set = { workspace = true }
+trezoa-feature-set = { workspace = true }
 bincode = { workspace = true, optional = true }
 prost = { workspace = true, optional = true }
 protosol = { workspace = true, optional = true }
-solana-account = { workspace = true }
-solana-instruction = { workspace = true }
-solana-instruction-error = { workspace = true, features = ["serde"] }
-solana-pubkey = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-instruction-error = { workspace = true, features = ["serde"] }
+trezoa-pubkey = { workspace = true }
 thiserror = { workspace = true }
 
 [build-dependencies]

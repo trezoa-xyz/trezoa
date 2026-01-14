@@ -6,9 +6,9 @@ use {
         vm_slice::VmSlice,
         IndexOfAccount, MAX_ACCOUNT_DATA_GROWTH_PER_TRANSACTION, MAX_ACCOUNT_DATA_LEN,
     },
-    solana_account::{AccountSharedData, ReadableAccount, WritableAccount},
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
+    trezoa_account::{AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
     std::{
         cell::{Cell, UnsafeCell},
         ops::{Deref, DerefMut},
@@ -246,7 +246,7 @@ pub struct TransactionAccounts {
 }
 
 impl TransactionAccounts {
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub(crate) fn new(accounts: Vec<KeyedAccountSharedData>) -> TransactionAccounts {
         let touched_flags = vec![Cell::new(false); accounts.len()].into_boxed_slice();
         let borrow_counters = vec![BorrowCounter::default(); accounts.len()].into_boxed_slice();
@@ -302,7 +302,7 @@ impl TransactionAccounts {
         }
     }
 
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn touch(&self, index: IndexOfAccount) -> Result<(), InstructionError> {
         self.touched_flags
             .get(index as usize)
@@ -604,8 +604,8 @@ impl DerefMut for AccountRefMut<'_> {
 #[cfg(test)]
 mod tests {
     use {
-        crate::transaction_accounts::TransactionAccounts, solana_account::AccountSharedData,
-        solana_instruction::error::InstructionError, solana_pubkey::Pubkey,
+        crate::transaction_accounts::TransactionAccounts, trezoa_account::AccountSharedData,
+        trezoa_instruction::error::InstructionError, trezoa_pubkey::Pubkey,
     };
 
     #[test]

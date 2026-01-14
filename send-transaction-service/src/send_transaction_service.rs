@@ -8,14 +8,14 @@ use {
     crossbeam_channel::{Receiver, RecvTimeoutError},
     itertools::Itertools,
     log::*,
-    solana_hash::Hash,
-    solana_nonce_account as nonce_account,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_hash::Hash,
+    trezoa_nonce_account as nonce_account,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_forks::{BankForks, BankPair},
     },
-    solana_signature::Signature,
+    trezoa_signature::Signature,
     std::{
         collections::hash_map::{Entry, HashMap},
         net::SocketAddr,
@@ -536,13 +536,13 @@ mod test {
             transaction_client::TpuClientNextClient,
         },
         crossbeam_channel::{bounded, unbounded},
-        solana_account::AccountSharedData,
-        solana_genesis_config::create_genesis_config,
-        solana_nonce::{self as nonce, state::DurableNonce},
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
-        solana_system_interface::program as system_program,
-        solana_system_transaction as system_transaction,
+        trezoa_account::AccountSharedData,
+        trezoa_genesis_config::create_genesis_config,
+        trezoa_nonce::{self as nonce, state::DurableNonce},
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
+        trezoa_system_interface::program as system_program,
+        trezoa_system_transaction as system_transaction,
         std::ops::Sub,
         tokio::runtime::Handle,
     };
@@ -629,10 +629,10 @@ mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn process_transactions() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let (mut genesis_config, mint_keypair) = create_genesis_config(GENESIS_LAMPORTS);
-        genesis_config.fee_rate_governor = solana_fee_calculator::FeeRateGovernor::new(0, 0);
+        genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
         let (_, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
         let leader_forward_count = 1;
@@ -912,10 +912,10 @@ mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn retry_durable_nonce_transactions() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let (mut genesis_config, mint_keypair) = create_genesis_config(GENESIS_LAMPORTS);
-        genesis_config.fee_rate_governor = solana_fee_calculator::FeeRateGovernor::new(0, 0);
+        genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
         let (_, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         let leader_forward_count = 1;
         let config = Config::default();

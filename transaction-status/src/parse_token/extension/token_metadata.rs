@@ -1,6 +1,6 @@
 use {
     super::*,
-    spl_token_metadata_interface::{
+    tpl_token_metadata_interface::{
         instruction::{
             Emit, Initialize, RemoveKey, TokenMetadataInstruction, UpdateAuthority, UpdateField,
         },
@@ -104,7 +104,7 @@ pub(in crate::parse_token) fn parse_token_metadata_instruction(
 
 #[cfg(test)]
 mod test {
-    use {super::*, solana_message::Message, solana_pubkey::Pubkey};
+    use {super::*, trezoa_message::Message, trezoa_pubkey::Pubkey};
 
     #[test]
     fn test_parse_token_metadata_instruction() {
@@ -118,8 +118,8 @@ mod test {
         let uri = "https://mega.com".to_string();
 
         // Initialize
-        let ix = spl_token_metadata_interface::instruction::initialize(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::initialize(
+            &tpl_token_2022_interface::id(),
             &metadata,
             &update_authority,
             &mint,
@@ -152,11 +152,11 @@ mod test {
 
         // UpdateField
         // Update one of the fixed fields.
-        let ix = spl_token_metadata_interface::instruction::update_field(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::update_field(
+            &tpl_token_2022_interface::id(),
             &metadata,
             &update_authority,
-            spl_token_metadata_interface::state::Field::Uri,
+            tpl_token_metadata_interface::state::Field::Uri,
             "https://ultra-mega.com".to_string(),
         );
         let mut message = Message::new(&[ix], None);
@@ -178,11 +178,11 @@ mod test {
             }
         );
         // Add a new field
-        let ix = spl_token_metadata_interface::instruction::update_field(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::update_field(
+            &tpl_token_2022_interface::id(),
             &metadata,
             &update_authority,
-            spl_token_metadata_interface::state::Field::Key("new_field".to_string()),
+            tpl_token_metadata_interface::state::Field::Key("new_field".to_string()),
             "new_value".to_string(),
         );
         let mut message = Message::new(&[ix], None);
@@ -205,8 +205,8 @@ mod test {
         );
 
         // RemoveKey
-        let ix = spl_token_metadata_interface::instruction::remove_key(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::remove_key(
+            &tpl_token_2022_interface::id(),
             &metadata,
             &update_authority,
             "new_field".to_string(),
@@ -234,8 +234,8 @@ mod test {
         // UpdateAuthority
         // Update authority to a new authority.
         let new_authority = Pubkey::new_unique();
-        let ix = spl_token_metadata_interface::instruction::update_authority(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::update_authority(
+            &tpl_token_2022_interface::id(),
             &metadata,
             &update_authority,
             Some(new_authority).try_into().unwrap(),
@@ -258,8 +258,8 @@ mod test {
             }
         );
         // Update authority to None.
-        let ix = spl_token_metadata_interface::instruction::update_authority(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::update_authority(
+            &tpl_token_2022_interface::id(),
             &metadata,
             &update_authority,
             Option::<Pubkey>::None.try_into().unwrap(),
@@ -284,8 +284,8 @@ mod test {
 
         // Emit
         // Emit with start and end.
-        let ix = spl_token_metadata_interface::instruction::emit(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::emit(
+            &tpl_token_2022_interface::id(),
             &metadata,
             Some(1),
             Some(2),
@@ -308,8 +308,8 @@ mod test {
             }
         );
         // Emit with only start.
-        let ix = spl_token_metadata_interface::instruction::emit(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::emit(
+            &tpl_token_2022_interface::id(),
             &metadata,
             Some(1),
             None,
@@ -331,8 +331,8 @@ mod test {
             }
         );
         // Emit with only end.
-        let ix = spl_token_metadata_interface::instruction::emit(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::emit(
+            &tpl_token_2022_interface::id(),
             &metadata,
             None,
             Some(2),
@@ -354,8 +354,8 @@ mod test {
             }
         );
         // Emit with neither start nor end.
-        let ix = spl_token_metadata_interface::instruction::emit(
-            &spl_token_2022_interface::id(),
+        let ix = tpl_token_metadata_interface::instruction::emit(
+            &tpl_token_2022_interface::id(),
             &metadata,
             None,
             None,

@@ -1,23 +1,23 @@
 use {
     crate::commands::{FromClapArgMatches, Result},
     clap::{value_t, Arg, ArgMatches},
-    solana_accounts_db::accounts_index::AccountSecondaryIndexes,
-    solana_clap_utils::input_validators::is_parsable,
-    solana_rpc::rpc::{JsonRpcConfig, RpcBigtableConfig},
+    trezoa_accounts_db::accounts_index::AccountSecondaryIndexes,
+    trezoa_clap_utils::input_validators::is_parsable,
+    trezoa_rpc::rpc::{JsonRpcConfig, RpcBigtableConfig},
     std::sync::LazyLock,
 };
 
 static DEFAULT_HEALTH_CHECK_SLOT_DISTANCE: LazyLock<String> = LazyLock::new(|| {
-    solana_rpc_client_api::request::DELINQUENT_VALIDATOR_SLOT_DISTANCE.to_string()
+    trezoa_rpc_client_api::request::DELINQUENT_VALIDATOR_SLOT_DISTANCE.to_string()
 });
 static DEFAULT_MAX_MULTIPLE_ACCOUNTS: LazyLock<String> =
-    LazyLock::new(|| solana_rpc_client_api::request::MAX_MULTIPLE_ACCOUNTS.to_string());
+    LazyLock::new(|| trezoa_rpc_client_api::request::MAX_MULTIPLE_ACCOUNTS.to_string());
 static DEFAULT_RPC_THREADS: LazyLock<String> = LazyLock::new(|| num_cpus::get().to_string());
 static DEFAULT_RPC_BLOCKING_THREADS: LazyLock<String> =
     LazyLock::new(|| (1.max(num_cpus::get() / 4)).to_string());
 const DEFAULT_RPC_NICENESS_ADJ: &str = "0";
 static DEFAULT_RPC_MAX_REQUEST_BODY_SIZE: LazyLock<String> =
-    LazyLock::new(|| solana_rpc::rpc::MAX_REQUEST_BODY_SIZE.to_string());
+    LazyLock::new(|| trezoa_rpc::rpc::MAX_REQUEST_BODY_SIZE.to_string());
 
 impl FromClapArgMatches for JsonRpcConfig {
     fn from_clap_arg_match(matches: &ArgMatches) -> Result<Self> {
@@ -36,7 +36,7 @@ impl FromClapArgMatches for JsonRpcConfig {
             faucet_addr: matches
                 .value_of("rpc_faucet_addr")
                 .map(|address| {
-                    solana_net_utils::parse_host_port(address).map_err(|err| {
+                    trezoa_net_utils::parse_host_port(address).map_err(|err| {
                         crate::commands::Error::Dynamic(Box::<dyn std::error::Error>::from(
                             format!("failed to parse rpc_faucet_addr: {err}"),
                         ))
@@ -88,7 +88,7 @@ pub(crate) fn args<'a, 'b>() -> Vec<Arg<'a, 'b>> {
             .long("rpc-faucet-address")
             .value_name("HOST:PORT")
             .takes_value(true)
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help("Enable the JSON RPC 'requestAirdrop' API with this faucet address."),
         Arg::with_name("health_check_slot_distance")
             .long("health-check-slot-distance")
@@ -146,7 +146,7 @@ pub(crate) fn args<'a, 'b>() -> Vec<Arg<'a, 'b>> {
             .long("rpc-niceness-adjustment")
             .value_name("ADJUSTMENT")
             .takes_value(true)
-            .validator(solana_perf::thread::is_niceness_adjustment_valid)
+            .validator(trezoa_perf::thread::is_niceness_adjustment_valid)
             .default_value(DEFAULT_RPC_NICENESS_ADJ)
             .help(
                 "Add this value to niceness of RPC threads. Negative value increases priority, \
@@ -181,7 +181,7 @@ pub(super) mod tests {
             pub_sub_config::DEFAULT_RPC_PUBSUB_NUM_NOTIFICATION_THREADS,
             tests::verify_args_struct_by_command_run_with_identity_setup, RunArgs,
         },
-        solana_rpc::rpc_pubsub_service::PubSubConfig,
+        trezoa_rpc::rpc_pubsub_service::PubSubConfig,
         std::{
             net::{Ipv4Addr, SocketAddr},
             num::NonZeroUsize,

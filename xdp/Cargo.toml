@@ -1,6 +1,6 @@
 [package]
-name = "agave-xdp"
-description = "Agave XDP implementation"
+name = "trezoa-xdp"
+description = "Trezoa-team XDP implementation"
 version = { workspace = true }
 repository = { workspace = true }
 homepage = { workspace = true }
@@ -9,7 +9,7 @@ edition = { workspace = true }
 publish = true
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 arc-swap = { workspace = true }
@@ -19,6 +19,6 @@ log = { workspace = true }
 thiserror = { workspace = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-agave-xdp-ebpf = { workspace = true }
+trezoa-xdp-ebpf = { workspace = true }
 aya = { workspace = true }
 caps = { workspace = true }

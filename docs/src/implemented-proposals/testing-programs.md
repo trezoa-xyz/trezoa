@@ -2,7 +2,7 @@
 title: Testing Programs
 ---
 
-Applications send transactions to a Solana cluster and query validators to confirm the transactions were processed and to check each transaction's result. When the cluster doesn't behave as anticipated, it could be for a number of reasons:
+Applications send transactions to a Trezoa cluster and query validators to confirm the transactions were processed and to check each transaction's result. When the cluster doesn't behave as anticipated, it could be for a number of reasons:
 
 - The program is buggy
 - The BPF loader rejected an unsafe program instruction

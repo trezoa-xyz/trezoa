@@ -3,7 +3,7 @@
 use {
     bencher::{benchmark_group, benchmark_main, Bencher},
     rand::prelude::*,
-    solana_perf::{
+    trezoa_perf::{
         packet::{to_packet_batches, PacketBatch, PACKETS_PER_BATCH},
         sigverify,
     },

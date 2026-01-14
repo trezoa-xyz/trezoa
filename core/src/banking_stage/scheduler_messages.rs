@@ -1,6 +1,6 @@
 use {
     crate::banking_stage::consumer::RetryableIndex,
-    solana_clock::{Epoch, Slot},
+    trezoa_clock::{Epoch, Slot},
     std::fmt::Display,
 };
 

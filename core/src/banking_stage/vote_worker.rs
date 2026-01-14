@@ -14,28 +14,28 @@ use {
         consumer::{ExecuteAndCommitTransactionsOutput, ProcessTransactionBatchOutput},
         transaction_scheduler::transaction_state_container::{RuntimeTransactionView, SharedBytes},
     },
-    agave_transaction_view::{
+    trezoa_transaction_view::{
         transaction_version::TransactionVersion, transaction_view::SanitizedTransactionView,
     },
     arrayvec::ArrayVec,
     crossbeam_channel::RecvTimeoutError,
     itertools::Itertools,
-    solana_accounts_db::account_locks::validate_account_locks,
-    solana_clock::FORWARD_TRANSACTIONS_TO_LEADER_AT_SLOT_OFFSET,
-    solana_measure::{measure::Measure, measure_us},
-    solana_poh::poh_recorder::PohRecorderError,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_runtime_transaction::{
+    trezoa_accounts_db::account_locks::validate_account_locks,
+    trezoa_clock::FORWARD_TRANSACTIONS_TO_LEADER_AT_SLOT_OFFSET,
+    trezoa_measure::{measure::Measure, measure_us},
+    trezoa_poh::poh_recorder::PohRecorderError,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_runtime_transaction::{
         runtime_transaction::RuntimeTransaction, transaction_meta::StaticMeta,
         transaction_with_meta::TransactionWithMeta,
     },
-    solana_svm::{
+    trezoa_svm::{
         account_loader::TransactionCheckResult, transaction_error_metrics::TransactionErrorMetrics,
     },
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_time_utils::timestamp,
-    solana_transaction::sanitized::MessageHash,
-    solana_transaction_error::TransactionError,
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_time_utils::timestamp,
+    trezoa_transaction::sanitized::MessageHash,
+    trezoa_transaction_error::TransactionError,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -46,7 +46,7 @@ use {
 };
 
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 
 // This vote batch size was selected to balance the following two things:
@@ -564,13 +564,13 @@ mod tests {
             vote_storage::tests::packet_from_slots,
         },
         crossbeam_channel::unbounded,
-        solana_ledger::genesis_utils::GenesisConfigInfo,
-        solana_perf::packet::BytesPacket,
-        solana_poh::record_channels::record_channels,
-        solana_runtime::genesis_utils::ValidatorVoteKeypairs,
-        solana_runtime_transaction::transaction_meta::StaticMeta,
-        solana_svm::account_loader::CheckedTransactionDetails,
-        solana_system_transaction as system_transaction,
+        trezoa_ledger::genesis_utils::GenesisConfigInfo,
+        trezoa_perf::packet::BytesPacket,
+        trezoa_poh::record_channels::record_channels,
+        trezoa_runtime::genesis_utils::ValidatorVoteKeypairs,
+        trezoa_runtime_transaction::transaction_meta::StaticMeta,
+        trezoa_svm::account_loader::CheckedTransactionDetails,
+        trezoa_system_transaction as system_transaction,
         std::collections::HashSet,
     };
 
@@ -747,7 +747,7 @@ mod tests {
 
         // Set up Consumer infrastructure to process a transaction
         let (record_sender, mut record_receiver) = record_channels(false);
-        let recorder = solana_poh::transaction_recorder::TransactionRecorder::new(record_sender);
+        let recorder = trezoa_poh::transaction_recorder::TransactionRecorder::new(record_sender);
         record_receiver.restart(bank.bank_id());
 
         let (replay_vote_sender, _replay_vote_receiver) = unbounded();
@@ -755,7 +755,7 @@ mod tests {
         let consumer = Consumer::new(committer, recorder, QosService::new(1), None);
 
         // Create and process a simple transfer transaction
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let transactions = sanitize_transactions(vec![system_transaction::transfer(
             &mint_keypair,
             &pubkey,

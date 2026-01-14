@@ -22,24 +22,24 @@ use {
     crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender},
     lru::LruCache,
     rand::prelude::IndexedRandom as _,
-    solana_client::connection_cache::Protocol,
-    solana_clock::{Slot, DEFAULT_TICKS_PER_SECOND, MS_PER_TICK},
-    solana_epoch_schedule::EpochSchedule,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_hash::Hash,
-    solana_keypair::Signer,
-    solana_ledger::{
+    trezoa_client::connection_cache::Protocol,
+    trezoa_clock::{Slot, DEFAULT_TICKS_PER_SECOND, MS_PER_TICK},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_hash::Hash,
+    trezoa_keypair::Signer,
+    trezoa_ledger::{
         blockstore::{Blockstore, SlotMeta},
         shred,
     },
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_forks::{BankForks, SharableBanks},
     },
-    solana_streamer::sendmmsg::{batch_send, SendPktsError},
-    solana_time_utils::timestamp,
+    trezoa_streamer::sendmmsg::{batch_send, SendPktsError},
+    trezoa_time_utils::timestamp,
     std::{
         collections::{hash_map::Entry, HashMap, HashSet},
         iter::Iterator,
@@ -56,7 +56,7 @@ use {
 #[cfg(test)]
 use {
     crate::repair::duplicate_repair_status::DuplicateSlotRepairStatus,
-    solana_clock::DEFAULT_MS_PER_SLOT, solana_keypair::Keypair,
+    trezoa_clock::DEFAULT_MS_PER_SLOT, trezoa_keypair::Keypair,
 };
 
 // Time to defer repair requests to allow for turbine propagation
@@ -965,7 +965,7 @@ impl RepairService {
                     Some((
                         *pubkey,
                         peer_repair_addr,
-                        (stake / solana_native_token::LAMPORTS_PER_SOL) as u32,
+                        (stake / trezoa_native_token::LAMPORTS_PER_SOL) as u32,
                     ))
                 } else {
                     None
@@ -1280,9 +1280,9 @@ mod test {
     use {
         super::*,
         crate::repair::quic_endpoint::RemoteRequest,
-        solana_gossip::{contact_info::ContactInfo, node::Node},
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_gossip::{contact_info::ContactInfo, node::Node},
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::{
                 make_chaining_slot_entries, make_many_slot_entries, make_slot_entries, Blockstore,
             },
@@ -1290,10 +1290,10 @@ mod test {
             get_tmp_ledger_path_auto_delete,
             shred::max_ticks_per_n_shreds,
         },
-        solana_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
+        trezoa_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
         std::collections::HashSet,
     };
 
@@ -1327,8 +1327,8 @@ mod test {
         );
 
         // Receive and translate repair packet
-        let mut packets = vec![solana_packet::Packet::default(); 1];
-        let _recv_count = solana_streamer::recvmmsg::recv_mmsg(&reader, &mut packets[..]).unwrap();
+        let mut packets = vec![trezoa_packet::Packet::default(); 1];
+        let _recv_count = trezoa_streamer::recvmmsg::recv_mmsg(&reader, &mut packets[..]).unwrap();
         let packet = &packets[0];
         let Some(bytes) = packet.data(..).map(Vec::from) else {
             panic!("packet data not found");
@@ -1828,7 +1828,7 @@ mod test {
 
     #[test]
     fn test_generate_repairs_for_wen_restart() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
         let max_repairs = 3;

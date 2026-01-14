@@ -3,15 +3,15 @@
 pub mod blockhash_query;
 
 use {
-    solana_account::{state_traits::StateMut, Account, ReadableAccount},
-    solana_commitment_config::CommitmentConfig,
-    solana_hash::Hash,
-    solana_nonce::{
+    trezoa_account::{state_traits::StateMut, Account, ReadableAccount},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_hash::Hash,
+    trezoa_nonce::{
         state::{Data, State},
         versions::Versions,
     },
-    solana_pubkey::Pubkey,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
 };
 
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
@@ -74,7 +74,7 @@ pub async fn get_account_with_commitment(
 /// system program. Returns [`Error::UnexpectedDataSize`] if the account
 /// contains no data.
 pub fn account_identity_ok<T: ReadableAccount>(account: &T) -> Result<(), Error> {
-    if account.owner() != &solana_sdk_ids::system_program::ID {
+    if account.owner() != &trezoa_sdk_ids::system_program::ID {
         Err(Error::InvalidAccountOwner)
     } else if account.data().is_empty() {
         Err(Error::UnexpectedDataSize)
@@ -95,10 +95,10 @@ pub fn account_identity_ok<T: ReadableAccount>(account: &T) -> Result<(), Error>
 /// Determine if a nonce account is initialized:
 ///
 /// ```no_run
-/// use solana_rpc_client_nonce_utils::nonblocking;
-/// use solana_rpc_client::nonblocking::rpc_client::RpcClient;
-/// use solana_nonce::state::State;
-/// use solana_pubkey::Pubkey;
+/// use trezoa_rpc_client_nonce_utils::nonblocking;
+/// use trezoa_rpc_client::nonblocking::rpc_client::RpcClient;
+/// use trezoa_nonce::state::State;
+/// use trezoa_pubkey::Pubkey;
 /// use anyhow::Result;
 ///
 /// futures::executor::block_on(async {
@@ -143,14 +143,14 @@ pub fn state_from_account<T: ReadableAccount + StateMut<Versions>>(
 /// Create and sign a transaction with a durable nonce:
 ///
 /// ```no_run
-/// use solana_rpc_client_nonce_utils::nonblocking;
-/// use solana_rpc_client::nonblocking::rpc_client::RpcClient;
-/// use solana_keypair::Keypair;
-/// use solana_message::Message;
-/// use solana_system_interface::instruction as system_instruction;
-/// use solana_pubkey::Pubkey;
-/// use solana_signer::Signer;
-/// use solana_transaction::Transaction;
+/// use trezoa_rpc_client_nonce_utils::nonblocking;
+/// use trezoa_rpc_client::nonblocking::rpc_client::RpcClient;
+/// use trezoa_keypair::Keypair;
+/// use trezoa_message::Message;
+/// use trezoa_system_interface::instruction as system_instruction;
+/// use trezoa_pubkey::Pubkey;
+/// use trezoa_signer::Signer;
+/// use trezoa_transaction::Transaction;
 /// use std::path::Path;
 /// use anyhow::Result;
 /// # use anyhow::anyhow;

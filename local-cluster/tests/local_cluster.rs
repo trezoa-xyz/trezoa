@@ -1,6 +1,6 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths as snapshot_paths, snapshot_archive_info::SnapshotArchiveInfoGetter,
         snapshot_config::SnapshotConfig, SnapshotArchiveKind, SnapshotInterval,
     },
@@ -11,15 +11,15 @@ use {
     log::*,
     rand::seq::SliceRandom,
     serial_test::serial,
-    solana_account::AccountSharedData,
-    solana_accounts_db::utils::create_accounts_run_and_snapshot_dirs,
-    solana_client_traits::AsyncClient,
-    solana_clock::{
+    trezoa_account::AccountSharedData,
+    trezoa_accounts_db::utils::create_accounts_run_and_snapshot_dirs,
+    trezoa_client_traits::AsyncClient,
+    trezoa_clock::{
         self as clock, Slot, DEFAULT_SLOTS_PER_EPOCH, DEFAULT_TICKS_PER_SLOT, MAX_PROCESSING_AGE,
     },
-    solana_cluster_type::ClusterType,
-    solana_commitment_config::CommitmentConfig,
-    solana_core::{
+    trezoa_cluster_type::ClusterType,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_core::{
         consensus::{
             tower_storage::FileTowerStorage, Tower, SWITCH_FORK_THRESHOLD, VOTE_THRESHOLD_DEPTH,
         },
@@ -27,15 +27,15 @@ use {
         replay_stage::DUPLICATE_THRESHOLD,
         validator::{BlockProductionMethod, BlockVerificationMethod, ValidatorConfig},
     },
-    solana_download_utils::download_snapshot_archive,
-    solana_entry::entry::create_ticks,
-    solana_epoch_schedule::{MAX_LEADER_SCHEDULE_EPOCH_OFFSET, MINIMUM_SLOTS_PER_EPOCH},
-    solana_genesis_utils::open_genesis_config,
-    solana_gossip::{crds_data::MAX_VOTES, gossip_service::discover_validators},
-    solana_hard_forks::HardForks,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_download_utils::download_snapshot_archive,
+    trezoa_entry::entry::create_ticks,
+    trezoa_epoch_schedule::{MAX_LEADER_SCHEDULE_EPOCH_OFFSET, MINIMUM_SLOTS_PER_EPOCH},
+    trezoa_genesis_utils::open_genesis_config,
+    trezoa_gossip::{crds_data::MAX_VOTES, gossip_service::discover_validators},
+    trezoa_hard_forks::HardForks,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         ancestor_iterator::AncestorIterator,
         bank_forks_utils,
         blockstore::{entries_to_test_shreds, Blockstore},
@@ -44,7 +44,7 @@ use {
         shred::{ProcessShredsStats, ReedSolomonCache, Shred, Shredder},
         use_snapshot_archives_at_startup::UseSnapshotArchivesAtStartup,
     },
-    solana_local_cluster::{
+    trezoa_local_cluster::{
         cluster::{Cluster, ClusterValidatorInfo, QuicTpuClient},
         cluster_tests,
         integration_tests::{
@@ -60,30 +60,30 @@ use {
         local_cluster::{ClusterConfig, LocalCluster, DEFAULT_MINT_LAMPORTS},
         validator_configs::*,
     },
-    solana_net_utils::SocketAddrSpace,
-    solana_poh_config::PohConfig,
-    solana_pubkey::Pubkey,
-    solana_pubsub_client::pubsub_client::PubsubClient,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_poh_config::PohConfig,
+    trezoa_pubkey::Pubkey,
+    trezoa_pubsub_client::pubsub_client::PubsubClient,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         config::{
             RpcBlockSubscribeConfig, RpcBlockSubscribeFilter, RpcProgramAccountsConfig,
             RpcSignatureSubscribeConfig,
         },
         response::RpcSignatureResult,
     },
-    solana_runtime::{commitment::VOTE_THRESHOLD_SIZE, snapshot_bank_utils, snapshot_utils},
-    solana_signer::Signer,
-    solana_stake_interface::{self as stake, state::NEW_WARMUP_COOLDOWN_RATE},
-    solana_system_interface::program as system_program,
-    solana_system_transaction as system_transaction,
-    solana_turbine::broadcast_stage::{
+    trezoa_runtime::{commitment::VOTE_THRESHOLD_SIZE, snapshot_bank_utils, snapshot_utils},
+    trezoa_signer::Signer,
+    trezoa_stake_interface::{self as stake, state::NEW_WARMUP_COOLDOWN_RATE},
+    trezoa_system_interface::program as system_program,
+    trezoa_system_transaction as system_transaction,
+    trezoa_turbine::broadcast_stage::{
         broadcast_duplicates_run::{BroadcastDuplicatesConfig, ClusterPartition},
         BroadcastStageType,
     },
-    solana_vote::{vote_parser, vote_transaction},
-    solana_vote_interface::state::TowerSync,
-    solana_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
+    trezoa_vote::{vote_parser, vote_transaction},
+    trezoa_vote_interface::state::TowerSync,
+    trezoa_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
     std::{
         collections::{BTreeSet, HashMap, HashSet},
         fs,
@@ -104,7 +104,7 @@ use {
 #[test]
 #[serial]
 fn test_local_cluster_start_and_exit() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let num_nodes = 1;
     let cluster = LocalCluster::new_with_equal_stakes(
         num_nodes,
@@ -118,7 +118,7 @@ fn test_local_cluster_start_and_exit() {
 #[test]
 #[serial]
 fn test_local_cluster_start_and_exit_with_config() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     const NUM_NODES: usize = 1;
     let mut config = ClusterConfig {
         validator_configs: make_identical_validator_configs(
@@ -138,7 +138,7 @@ fn test_local_cluster_start_and_exit_with_config() {
 #[test]
 #[serial]
 fn test_spend_and_verify_all_nodes_1() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_spend_and_verify_all_nodes_1");
     let num_nodes = 1;
     let local = LocalCluster::new_with_equal_stakes(
@@ -160,7 +160,7 @@ fn test_spend_and_verify_all_nodes_1() {
 #[test]
 #[serial]
 fn test_spend_and_verify_all_nodes_2() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_spend_and_verify_all_nodes_2");
     let num_nodes = 2;
     let local = LocalCluster::new_with_equal_stakes(
@@ -182,7 +182,7 @@ fn test_spend_and_verify_all_nodes_2() {
 #[test]
 #[serial]
 fn test_spend_and_verify_all_nodes_3() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_spend_and_verify_all_nodes_3");
     let num_nodes = 3;
     let local = LocalCluster::new_with_equal_stakes(
@@ -204,7 +204,7 @@ fn test_spend_and_verify_all_nodes_3() {
 #[test]
 #[serial]
 fn test_local_cluster_signature_subscribe() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let num_nodes = 2;
     let cluster = LocalCluster::new_with_equal_stakes(
         num_nodes,
@@ -232,7 +232,7 @@ fn test_local_cluster_signature_subscribe() {
 
     let mut transaction = system_transaction::transfer(
         &cluster.funding_keypair,
-        &solana_pubkey::new_rand(),
+        &trezoa_pubkey::new_rand(),
         10,
         blockhash,
     );
@@ -287,7 +287,7 @@ fn test_local_cluster_signature_subscribe() {
 #[test]
 #[serial]
 fn test_two_unbalanced_stakes() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_two_unbalanced_stakes");
     let validator_config = ValidatorConfig::default_for_test();
     let num_ticks_per_second = 100;
@@ -323,7 +323,7 @@ fn test_two_unbalanced_stakes() {
 #[test]
 #[serial]
 fn test_forwarding() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // Set up a cluster where one node is never the leader, so all txs sent to this node
     // will be have to be forwarded in order to be confirmed
     let mut config = ClusterConfig {
@@ -366,7 +366,7 @@ fn test_forwarding() {
 #[test]
 #[serial]
 fn test_restart_node() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_restart_node");
     let slots_per_epoch = MINIMUM_SLOTS_PER_EPOCH * 2;
     let ticks_per_slot = 16;
@@ -409,7 +409,7 @@ fn test_restart_node() {
 #[test]
 #[serial]
 fn test_mainnet_beta_cluster_type() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     let mut config = ClusterConfig {
         cluster_type: ClusterType::MainnetBeta,
@@ -436,12 +436,12 @@ fn test_mainnet_beta_cluster_type() {
 
     // Programs that are available at epoch 0
     for program_id in [
-        &solana_sdk_ids::system_program::id(),
+        &trezoa_sdk_ids::system_program::id(),
         &stake::program::id(),
-        &solana_vote_program::id(),
-        &solana_sdk_ids::bpf_loader_deprecated::id(),
-        &solana_sdk_ids::bpf_loader::id(),
-        &solana_sdk_ids::bpf_loader_upgradeable::id(),
+        &trezoa_vote_program::id(),
+        &trezoa_sdk_ids::bpf_loader_deprecated::id(),
+        &trezoa_sdk_ids::bpf_loader::id(),
+        &trezoa_sdk_ids::bpf_loader_upgradeable::id(),
     ]
     .iter()
     {
@@ -477,7 +477,7 @@ fn test_mainnet_beta_cluster_type() {
 #[test]
 #[serial]
 fn test_snapshot_download() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 node
     let snapshot_interval_slots = NonZeroU64::new(50).unwrap();
     let num_account_paths = 3;
@@ -552,7 +552,7 @@ fn test_snapshot_download() {
 #[test]
 #[serial]
 fn test_incremental_snapshot_download() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 node
     let incremental_snapshot_interval = 9;
     let full_snapshot_interval = incremental_snapshot_interval * 3;
@@ -725,7 +725,7 @@ fn test_incremental_snapshot_download() {
 #[test]
 #[serial]
 fn test_incremental_snapshot_download_with_crossing_full_snapshot_interval_at_startup() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // If these intervals change, also make sure to change the loop timers accordingly.
     let incremental_snapshot_interval = 9;
     let full_snapshot_interval = incremental_snapshot_interval * 5;
@@ -1233,7 +1233,7 @@ fn test_incremental_snapshot_download_with_crossing_full_snapshot_interval_at_st
 #[test]
 #[serial]
 fn test_snapshot_restart_tower() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 2 nodes
     let snapshot_interval_slots = NonZeroU64::new(10).unwrap();
     let num_account_paths = 2;
@@ -1306,7 +1306,7 @@ fn test_snapshot_restart_tower() {
 #[test]
 #[serial]
 fn test_snapshots_blockstore_floor() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 snapshotting leader
     let snapshot_interval_slots = NonZeroU64::new(100).unwrap();
     let num_account_paths = 4;
@@ -1419,7 +1419,7 @@ fn test_snapshots_blockstore_floor() {
 #[test]
 #[serial]
 fn test_snapshots_restart_validity() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let snapshot_interval_slots = NonZeroU64::new(100).unwrap();
     let num_account_paths = 1;
     let mut snapshot_test_config =
@@ -1508,7 +1508,7 @@ fn test_snapshots_restart_validity() {
 #[allow(unused_attributes)]
 #[ignore]
 fn test_fail_entry_verification_leader() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let leader_stake = (DUPLICATE_THRESHOLD * 100.0) as u64 + 1;
     let validator_stake1 = (100 - leader_stake) / 2;
     let validator_stake2 = 100 - leader_stake - validator_stake1;
@@ -1530,7 +1530,7 @@ fn test_fail_entry_verification_leader() {
 #[ignore]
 #[allow(unused_attributes)]
 fn test_fake_shreds_broadcast_leader() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let node_stakes = vec![300, 100];
     let (cluster, _) = test_faulty_node(
         BroadcastStageType::BroadcastFakeShreds,
@@ -1548,7 +1548,7 @@ fn test_fake_shreds_broadcast_leader() {
 #[test]
 #[serial]
 fn test_wait_for_max_stake() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let validator_config = ValidatorConfig::default_for_test();
     let slots_per_epoch = MINIMUM_SLOTS_PER_EPOCH;
     // Set this large enough to allow for skipped slots but still be able to
@@ -1606,7 +1606,7 @@ fn test_wait_for_max_stake() {
 // Test that when a leader is leader for banks B_i..B_{i+n}, and B_i is not
 // votable, then B_{i+1} still chains to B_i
 fn test_no_voting() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let validator_config = ValidatorConfig {
         voting_disabled: true,
         ..ValidatorConfig::default_for_test()
@@ -1646,7 +1646,7 @@ fn test_no_voting() {
 #[test]
 #[serial]
 fn test_optimistic_confirmation_violation_detection() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
     let node_stakes = vec![50 * DEFAULT_NODE_STAKE, 51 * DEFAULT_NODE_STAKE];
@@ -1883,7 +1883,7 @@ fn test_optimistic_confirmation_violation_detection() {
 #[test]
 #[serial]
 fn test_validator_saves_tower() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     let validator_config = ValidatorConfig {
         require_tower: true,
@@ -2033,7 +2033,7 @@ enum ClusterMode {
 }
 
 fn do_test_future_tower(cluster_mode: ClusterMode) {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 4 nodes
     let slots_per_epoch = 2048;
@@ -2201,7 +2201,7 @@ fn restart_whole_cluster_after_hard_fork(
 #[test]
 #[serial]
 fn test_hard_fork_invalidates_tower() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
@@ -2262,10 +2262,10 @@ fn test_hard_fork_invalidates_tower() {
     // persistent tower's lockout behavior...
     let hard_fork_slot = min_root - 5;
     let hard_fork_slots = Some(vec![hard_fork_slot]);
-    let mut hard_forks = solana_hard_forks::HardForks::default();
+    let mut hard_forks = trezoa_hard_forks::HardForks::default();
     hard_forks.register(hard_fork_slot);
 
-    let expected_shred_version = solana_shred_version::compute_shred_version(
+    let expected_shred_version = trezoa_shred_version::compute_shred_version(
         &cluster.lock().unwrap().genesis_config.hash(),
         Some(&hard_forks),
     );
@@ -2374,7 +2374,7 @@ fn create_snapshot_to_hard_fork(
 #[ignore]
 #[serial]
 fn test_hard_fork_with_gap_in_roots() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
@@ -2446,19 +2446,19 @@ fn test_hard_fork_with_gap_in_roots() {
     let mut hard_forks = HardForks::default();
     hard_forks.register(hard_fork_slot);
 
-    let expected_shred_version = solana_shred_version::compute_shred_version(
+    let expected_shred_version = trezoa_shred_version::compute_shred_version(
         &cluster.lock().unwrap().genesis_config.hash(),
         Some(&hard_forks),
     );
 
     // create hard-forked snapshot only for validator a, emulating the manual cluster restart
-    // procedure with `agave-ledger-tool create-snapshot`
+    // procedure with `trezoa-ledger-tool create-snapshot`
     let genesis_slot = 0;
     {
         let blockstore_a = Blockstore::open(&val_a_ledger_path).unwrap();
         create_snapshot_to_hard_fork(&blockstore_a, hard_fork_slot, vec![hard_fork_slot]);
 
-        // Intentionally make agave-validator unbootable by replaying blocks from the genesis to
+        // Intentionally make trezoa-validator unbootable by replaying blocks from the genesis to
         // ensure the hard-forked snapshot is used always.  Otherwise, we couldn't create a gap
         // in the ledger roots column family reliably.
         // There was a bug which caused the hard-forked snapshot at an unrooted slot to forget
@@ -2541,7 +2541,7 @@ fn test_restart_tower_rollback() {
     // Test node crashing and failing to save its tower before restart
     // Cluster continues to make progress, this node is able to rejoin with
     // outdated tower post restart.
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
@@ -2729,7 +2729,7 @@ fn test_rpc_block_subscribe() {
             "ws://{}",
             // It is important that we subscribe to a non leader node as there
             // is a race condition which can cause leader nodes to not send
-            // BlockUpdate notifications properly. See https://github.com/solana-labs/solana/pull/34421
+            // BlockUpdate notifications properly. See https://github.com/trezoa-labs/trezoa/pull/34421
             &rpc_node_contact_info.rpc_pubsub().unwrap().to_string()
         ),
         RpcBlockSubscribeFilter::All,
@@ -2775,7 +2775,7 @@ fn test_rpc_block_subscribe() {
 #[serial]
 #[allow(unused_attributes)]
 fn test_oc_bad_signatures() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
 
     let total_stake = 100 * DEFAULT_NODE_STAKE;
     let leader_stake = (total_stake as f64 * VOTE_THRESHOLD_SIZE) as u64;
@@ -3147,7 +3147,7 @@ fn setup_transfer_scan_threads(
 }
 
 fn run_test_load_program_accounts(scan_commitment: CommitmentConfig) {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
     let node_stakes = vec![51 * DEFAULT_NODE_STAKE, 50 * DEFAULT_NODE_STAKE];
@@ -3262,7 +3262,7 @@ fn test_lockout_violation_without_tower() {
 //    `A` should not be able to generate a switching proof.
 //
 fn do_test_lockout_violation_with_or_without_tower(with_tower: bool) {
-    agave_logger::setup_with("info");
+    trezoa_logger::setup_with("info");
 
     // First set up the cluster with 4 nodes
     let slots_per_epoch = 2048;
@@ -3542,7 +3542,7 @@ fn do_test_lockout_violation_with_or_without_tower(with_tower: bool) {
 // stalling the network.
 
 fn test_fork_choice_refresh_old_votes() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let max_switch_threshold_failure_pct = 1.0 - 2.0 * SWITCH_FORK_THRESHOLD;
     let total_stake = 100 * DEFAULT_NODE_STAKE;
     let max_failures_stake = (max_switch_threshold_failure_pct * total_stake as f64) as u64;
@@ -3940,7 +3940,7 @@ fn test_duplicate_shreds_broadcast_leader_ancestor_hashes() {
 }
 
 fn run_duplicate_shreds_broadcast_leader(vote_on_duplicate: bool) {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     // Create 4 nodes:
     // 1) Bad leader sending different versions of shreds to both of the other nodes
     // 2) 1 node who's voting behavior in gossip
@@ -4118,7 +4118,7 @@ fn run_duplicate_shreds_broadcast_leader(vote_on_duplicate: bool) {
 #[serial]
 #[ignore]
 fn test_switch_threshold_uses_gossip_votes() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let total_stake = 100 * DEFAULT_NODE_STAKE;
 
     // Minimum stake needed to generate a switching proof
@@ -4449,7 +4449,7 @@ fn test_cluster_partition_1_1_1() {
 #[test]
 #[serial]
 fn test_leader_failure_4() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_leader_failure_4");
     // Cluster needs a supermajority to remain even after taking 1 node offline,
     // so the minimum number of nodes for this test is 4.
@@ -4524,8 +4524,8 @@ fn test_leader_failure_4() {
 #[test]
 #[serial]
 fn test_slot_hash_expiry() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
-    solana_slot_hashes::set_entries_for_tests_only(64);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_slot_hashes::set_entries_for_tests_only(64);
 
     let slots_per_epoch = 2048;
     let node_stakes = vec![60 * DEFAULT_NODE_STAKE, 40 * DEFAULT_NODE_STAKE];
@@ -4630,14 +4630,14 @@ fn test_slot_hash_expiry() {
 
     info!(
         "Run A on majority fork until it reaches slot hash expiry {}",
-        solana_slot_hashes::get_entries()
+        trezoa_slot_hashes::get_entries()
     );
     let mut last_vote_on_a;
     // Keep A running for a while longer so the majority fork has some decent size
     loop {
         last_vote_on_a =
             wait_for_last_vote_in_tower_to_land_in_ledger(&a_ledger_path, &a_pubkey).unwrap();
-        if last_vote_on_a >= common_ancestor_slot + 2 * (solana_slot_hashes::get_entries() as u64) {
+        if last_vote_on_a >= common_ancestor_slot + 2 * (trezoa_slot_hashes::get_entries() as u64) {
             let blockstore = open_blockstore(&a_ledger_path);
             info!(
                 "A majority fork: {:?}",
@@ -4740,8 +4740,8 @@ fn test_slot_hash_expiry() {
 #[serial]
 #[ignore]
 fn test_duplicate_with_pruned_ancestor() {
-    agave_logger::setup_with("info,solana_metrics=off");
-    solana_core::repair::duplicate_repair_status::set_ancestor_hash_repair_sample_size_for_tests_only(3);
+    trezoa_logger::setup_with("info,trezoa_metrics=off");
+    trezoa_core::repair::duplicate_repair_status::set_ancestor_hash_repair_sample_size_for_tests_only(3);
 
     let majority_leader_stake = 10_000_000 * DEFAULT_NODE_STAKE;
     let minority_leader_stake = 2_000_000 * DEFAULT_NODE_STAKE;
@@ -4984,7 +4984,7 @@ fn test_duplicate_with_pruned_ancestor() {
 #[test]
 #[serial]
 fn test_boot_from_local_state() {
-    agave_logger::setup_with_default("error,local_cluster=info");
+    trezoa_logger::setup_with_default("error,local_cluster=info");
     const FULL_SNAPSHOT_INTERVAL: SnapshotInterval =
         SnapshotInterval::Slots(NonZeroU64::new(100).unwrap());
     const INCREMENTAL_SNAPSHOT_INTERVAL: SnapshotInterval =
@@ -5279,7 +5279,7 @@ fn test_boot_from_local_state() {
 #[test]
 #[serial]
 fn test_boot_from_local_state_missing_archive() {
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     const FULL_SNAPSHOT_INTERVAL: SnapshotInterval =
         SnapshotInterval::Slots(NonZeroU64::new(20).unwrap());
     const INCREMENTAL_SNAPSHOT_INTERVAL: SnapshotInterval =
@@ -5454,7 +5454,7 @@ fn test_duplicate_shreds_switch_failure() {
         }
     }
 
-    agave_logger::setup_with_default(RUST_LOG_FILTER);
+    trezoa_logger::setup_with_default(RUST_LOG_FILTER);
     let validator_keypairs = [
         "28bN3xyvrP4E8LwEgtLjhnkb7cY4amQb6DrYAbAYjgRV4GAGgkVM2K7wnxnAS7WDneuavza7x21MiafLu1HkwQt4",
         "2saHBBoTkLMmttmPQP8KfBkcCw45S5cwtV3wTdGCscRC8uxdgvHxpHiWXKx4LvJjNJtnNcbSv5NdheokFFqnNDt8",
@@ -5523,7 +5523,7 @@ fn test_duplicate_shreds_switch_failure() {
         // The ideal sequence of events for the `duplicate_fork_validator1_pubkey` validator would go:
         // 1. Vote for duplicate block `D`
         // 2. See `D` is duplicate, remove from fork choice and reset to ancestor `A`, potentially generating a fork off that ancestor
-        // 3. See `D` is duplicate confirmed, but because of the bug fixed by https://github.com/solana-labs/solana/pull/28172
+        // 3. See `D` is duplicate confirmed, but because of the bug fixed by https://github.com/trezoa-labs/trezoa/pull/28172
         // where we disallow resetting to a slot which matches the last vote slot, we still don't build off `D`,
         // and continue building on `A`.
         //
@@ -5784,9 +5784,9 @@ fn test_duplicate_shreds_switch_failure() {
 #[serial]
 fn test_randomly_mixed_block_verification_methods_between_bootstrap_and_not() {
     // tailored logging just to see two block verification methods are working correctly
-    agave_logger::setup_with_default(
-        "solana_metrics::metrics=warn,solana_core=warn,\
-         solana_runtime::installed_scheduler_pool=trace,solana_ledger::blockstore_processor=debug,\
+    trezoa_logger::setup_with_default(
+        "trezoa_metrics::metrics=warn,trezoa_core=warn,\
+         trezoa_runtime::installed_scheduler_pool=trace,trezoa_ledger::blockstore_processor=debug,\
          info",
     );
 
@@ -5816,9 +5816,9 @@ fn test_randomly_mixed_block_verification_methods_between_bootstrap_and_not() {
 #[serial]
 fn test_randomly_mixed_block_production_methods_between_bootstrap_and_not() {
     // tailored logging just to see two block production methods are working correctly
-    agave_logger::setup_with_default(
-        "solana_metrics::metrics=warn,solana_core=warn,\
-         solana_runtime::installed_scheduler_pool=trace,solana_ledger::blockstore_processor=debug,\
+    trezoa_logger::setup_with_default(
+        "trezoa_metrics::metrics=warn,trezoa_core=warn,\
+         trezoa_runtime::installed_scheduler_pool=trace,trezoa_ledger::blockstore_processor=debug,\
          info",
     );
 
@@ -5849,7 +5849,7 @@ fn test_randomly_mixed_block_production_methods_between_bootstrap_and_not() {
 #[ignore]
 #[serial]
 fn test_invalid_forks_persisted_on_restart() {
-    agave_logger::setup_with("info,solana_metrics=off,solana_ledger=off");
+    trezoa_logger::setup_with("info,trezoa_metrics=off,trezoa_ledger=off");
 
     let dup_slot = 10;
     let validator_keypairs = [
@@ -5930,7 +5930,7 @@ fn test_invalid_forks_persisted_on_restart() {
             cluster.genesis_config.hash(),
         );
         let last_hash = entries.last().unwrap().hash;
-        let version = solana_shred_version::version_from_hash(&last_hash);
+        let version = trezoa_shred_version::version_from_hash(&last_hash);
         let dup_shreds = Shredder::new(dup_slot, parent, 0, version)
             .unwrap()
             .entries_to_merkle_shreds_for_tests(

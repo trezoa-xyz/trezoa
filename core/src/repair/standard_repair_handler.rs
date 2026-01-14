@@ -1,8 +1,8 @@
 use {
     super::{repair_handler::RepairHandler, repair_response},
-    solana_clock::Slot,
-    solana_ledger::{blockstore::Blockstore, shred::Nonce},
-    solana_perf::packet::{Packet, PacketBatch, PacketBatchRecycler, RecycledPacketBatch},
+    trezoa_clock::Slot,
+    trezoa_ledger::{blockstore::Blockstore, shred::Nonce},
+    trezoa_perf::packet::{Packet, PacketBatch, PacketBatchRecycler, RecycledPacketBatch},
     std::{net::SocketAddr, sync::Arc},
 };
 

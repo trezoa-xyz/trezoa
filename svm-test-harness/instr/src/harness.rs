@@ -2,25 +2,25 @@
 
 use {
     crate::fixture::{instr_context::InstrContext, instr_effects::InstrEffects},
-    agave_precompiles::{get_precompile, is_precompile},
-    agave_syscalls::create_program_runtime_environment_v1,
-    solana_account::{AccountSharedData, WritableAccount},
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_instruction::Instruction,
-    solana_instruction_error::InstructionError,
-    solana_message::{LegacyMessage, Message, SanitizedMessage},
-    solana_precompile_error::PrecompileError,
-    solana_program_runtime::{
+    trezoa_precompiles::{get_precompile, is_precompile},
+    trezoa_syscalls::create_program_runtime_environment_v1,
+    trezoa_account::{AccountSharedData, WritableAccount},
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_instruction::Instruction,
+    trezoa_instruction_error::InstructionError,
+    trezoa_message::{LegacyMessage, Message, SanitizedMessage},
+    trezoa_precompile_error::PrecompileError,
+    trezoa_program_runtime::{
         invoke_context::{EnvironmentConfig, InvokeContext},
         loaded_programs::{ProgramCacheForTxBatch, ProgramRuntimeEnvironments},
         sysvar_cache::SysvarCache,
     },
-    solana_pubkey::Pubkey,
-    solana_svm_callback::InvokeContextCallback,
-    solana_svm_log_collector::LogCollector,
-    solana_svm_timings::ExecuteTimings,
-    solana_svm_transaction::{instruction::SVMInstruction, svm_message::SVMStaticMessage},
-    solana_transaction_context::TransactionContext,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_callback::InvokeContextCallback,
+    trezoa_svm_log_collector::LogCollector,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_svm_transaction::{instruction::SVMInstruction, svm_message::SVMStaticMessage},
+    trezoa_transaction_context::TransactionContext,
     std::{collections::HashSet, rc::Rc, sync::Arc},
 };
 
@@ -53,7 +53,7 @@ impl InvokeContextCallback for InstrContextCallback<'_> {
 
 fn compile_message(
     instruction: &Instruction,
-    accounts: &[(Pubkey, solana_account::Account)],
+    accounts: &[(Pubkey, trezoa_account::Account)],
     program_id: &Pubkey,
     loader_key: &Pubkey,
 ) -> Option<(SanitizedMessage, Vec<(Pubkey, AccountSharedData)>)> {
@@ -84,7 +84,7 @@ fn compile_message(
     Some((sanitized_message, transaction_accounts))
 }
 
-/// Execute a single instruction against the Solana VM.
+/// Execute a single instruction against the Trezoa VM.
 pub fn execute_instr(
     input: InstrContext,
     compute_budget: &ComputeBudget,
@@ -223,8 +223,8 @@ pub fn execute_instr(
 #[cfg(test)]
 mod tests {
     use {
-        super::*, agave_feature_set::FeatureSet, solana_account::Account,
-        solana_instruction::AccountMeta, solana_pubkey::Pubkey, solana_sysvar_id::SysvarId,
+        super::*, trezoa_feature_set::FeatureSet, trezoa_account::Account,
+        trezoa_instruction::AccountMeta, trezoa_pubkey::Pubkey, trezoa_sysvar_id::SysvarId,
     };
 
     #[test]
@@ -261,9 +261,9 @@ mod tests {
 
     #[test]
     fn test_system_program_exec() {
-        let system_program_id = solana_sdk_ids::system_program::id();
-        let native_loader_id = solana_sdk_ids::native_loader::id();
-        let sysvar_id = solana_sysvar_id::id();
+        let system_program_id = trezoa_sdk_ids::system_program::id();
+        let native_loader_id = trezoa_sdk_ids::native_loader::id();
+        let sysvar_id = trezoa_sysvar_id::id();
 
         let from_pubkey = Pubkey::new_from_array([1u8; 32]);
         let to_pubkey = Pubkey::new_from_array([2u8; 32]);
@@ -273,14 +273,14 @@ mod tests {
         let feature_set = FeatureSet::default();
 
         // Create Clock sysvar
-        let clock = solana_clock::Clock {
+        let clock = trezoa_clock::Clock {
             slot,
             ..Default::default()
         };
         let clock_data = bincode::serialize(&clock).unwrap();
 
         // Create Rent sysvar
-        let rent = solana_rent::Rent::default();
+        let rent = trezoa_rent::Rent::default();
         let rent_data = bincode::serialize(&rent).unwrap();
 
         // Build the instruction context.
@@ -311,14 +311,14 @@ mod tests {
                     system_program_id,
                     Account {
                         lamports: 10000000,
-                        data: b"Solana Program".to_vec(),
+                        data: b"Trezoa Program".to_vec(),
                         owner: native_loader_id,
                         executable: true,
                         rent_epoch: u64::MAX,
                     },
                 ),
                 (
-                    solana_clock::Clock::id(),
+                    trezoa_clock::Clock::id(),
                     Account {
                         lamports: 1,
                         data: clock_data,
@@ -328,7 +328,7 @@ mod tests {
                     },
                 ),
                 (
-                    solana_rent::Rent::id(),
+                    trezoa_rent::Rent::id(),
                     Account {
                         lamports: 1,
                         data: rent_data,

@@ -13,11 +13,11 @@ use {
         pki_types::{CertificateDer, PrivateKeyDer},
         CertificateError, KeyLogFile,
     },
-    solana_gossip::contact_info::Protocol,
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::BankForks,
-    solana_tls_utils::{
+    trezoa_gossip::contact_info::Protocol,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::BankForks,
+    trezoa_tls_utils::{
         new_dummy_x509_certificate, socket_addr_to_quic_server_name, tls_client_config_builder,
         tls_server_config_builder,
     },
@@ -73,7 +73,7 @@ use {
 const CLIENT_CHANNEL_BUFFER: usize = 1 << 14;
 const ROUTER_CHANNEL_BUFFER: usize = 64;
 const CONNECTION_CACHE_CAPACITY: usize = 3072;
-const ALPN_REPAIR_PROTOCOL_ID: &[u8] = b"solana-repair";
+const ALPN_REPAIR_PROTOCOL_ID: &[u8] = b"trezoa-repair";
 
 // Transport config.
 const DATAGRAM_RECEIVE_BUFFER_SIZE: usize = 256 * 1024 * 1024;
@@ -692,7 +692,7 @@ where
 }
 
 fn get_remote_pubkey(connection: &Connection) -> Result<Pubkey, Error> {
-    match solana_streamer::nonblocking::quic::get_remote_pubkey(connection) {
+    match trezoa_streamer::nonblocking::quic::get_remote_pubkey(connection) {
         Some(remote_pubkey) => Ok(remote_pubkey),
         None => {
             connection.close(
@@ -1016,10 +1016,10 @@ mod tests {
     use {
         super::*,
         itertools::{izip, multiunzip},
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
+        trezoa_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_net_utils::sockets::{bind_to, localhost_port_range_for_tests},
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
         std::{
             iter::repeat_with,
             net::{IpAddr, Ipv4Addr},

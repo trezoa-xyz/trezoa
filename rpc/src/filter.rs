@@ -1,6 +1,6 @@
 use {
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_rpc_client_api::filter::RpcFilterType,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_rpc_client_api::filter::RpcFilterType,
     spl_generic_token::{token::GenericTokenAccount, token_2022::Account},
 };
 

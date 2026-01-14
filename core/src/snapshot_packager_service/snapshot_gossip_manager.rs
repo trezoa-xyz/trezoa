@@ -1,13 +1,13 @@
 use {
-    agave_snapshots::{
+    trezoa_snapshots::{
         snapshot_hash::{
             FullSnapshotHash, IncrementalSnapshotHash, SnapshotHash, StartingSnapshotHashes,
         },
         SnapshotArchiveKind, SnapshotKind,
     },
-    solana_clock::Slot,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_hash::Hash,
+    trezoa_clock::Slot,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_hash::Hash,
     std::sync::Arc,
 };
 

@@ -1,26 +1,26 @@
 use {
     rand::{CryptoRng, Rng, RngCore},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_message::{
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_message::{
         compiled_instruction::CompiledInstruction, v0::Message as MessageV0, AccountMeta,
         Instruction, Message, VersionedMessage,
     },
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{stake, system_program},
-    solana_signer::Signer,
-    solana_system_interface::instruction::SystemInstruction,
-    solana_transaction::{versioned::VersionedTransaction, Transaction},
-    solana_vote::vote_transaction,
-    solana_vote_program::vote_state::TowerSync,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{stake, system_program},
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction::SystemInstruction,
+    trezoa_transaction::{versioned::VersionedTransaction, Transaction},
+    trezoa_vote::vote_transaction,
+    trezoa_vote_program::vote_state::TowerSync,
 };
 
 pub fn test_tx() -> Transaction {
     let keypair1 = Keypair::new();
     let pubkey1 = keypair1.pubkey();
     let zero = Hash::default();
-    solana_system_transaction::transfer(&keypair1, &pubkey1, 42, zero)
+    trezoa_system_transaction::transfer(&keypair1, &pubkey1, 42, zero)
 }
 
 pub fn test_invalid_tx() -> Transaction {

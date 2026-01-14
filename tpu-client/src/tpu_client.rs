@@ -2,18 +2,18 @@ pub use crate::nonblocking::tpu_client::TpuSenderError;
 use {
     crate::nonblocking::tpu_client::TpuClient as NonblockingTpuClient,
     rayon::iter::{IntoParallelIterator, ParallelIterator},
-    solana_client_traits::AsyncClient,
-    solana_clock::Slot,
-    solana_connection_cache::{
+    trezoa_client_traits::AsyncClient,
+    trezoa_clock::Slot,
+    trezoa_connection_cache::{
         client_connection::ClientConnection,
         connection_cache::{
             ConnectionCache, ConnectionManager, ConnectionPool, NewConnectionConfig,
         },
     },
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_signature::Signature,
-    solana_transaction::{versioned::VersionedTransaction, Transaction},
-    solana_transaction_error::{TransportError, TransportResult},
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_signature::Signature,
+    trezoa_transaction::{versioned::VersionedTransaction, Transaction},
+    trezoa_transaction_error::{TransportError, TransportResult},
     std::{
         collections::VecDeque,
         sync::{Arc, RwLock},
@@ -21,8 +21,8 @@ use {
 };
 #[cfg(feature = "spinner")]
 use {
-    solana_message::Message, solana_signer::signers::Signers,
-    solana_transaction_error::TransactionError, tokio::time::Duration,
+    trezoa_message::Message, trezoa_signer::signers::Signers,
+    trezoa_transaction_error::TransactionError, tokio::time::Duration,
 };
 
 pub const DEFAULT_VOTE_USE_QUIC: bool = false;

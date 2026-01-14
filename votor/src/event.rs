@@ -1,8 +1,8 @@
 use {
-    agave_votor_messages::consensus_message::Block,
+    trezoa_votor_messages::consensus_message::Block,
     crossbeam_channel::{Receiver, Sender},
-    solana_clock::Slot,
-    solana_runtime::bank::Bank,
+    trezoa_clock::Slot,
+    trezoa_runtime::bank::Bank,
     std::{sync::Arc, time::Instant},
 };
 

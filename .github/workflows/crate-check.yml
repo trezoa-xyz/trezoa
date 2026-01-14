@@ -15,7 +15,7 @@ on:
 jobs:
   check:
     name: crate check
-    if: github.repository == 'anza-xyz/agave'
+    if: github.repository == 'trezoa-xyz/trezoa'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6

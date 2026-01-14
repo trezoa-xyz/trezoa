@@ -11,7 +11,7 @@ fn platform_tools_path() -> PathBuf {
     let tools_path = env::var("HOME").unwrap();
     PathBuf::from(tools_path)
         .join(".cache")
-        .join("solana")
+        .join("trezoa")
         .join("v1.52")
         .join("platform-tools")
 }
@@ -298,7 +298,7 @@ fn test_corrupted_toolchain() {
         let output = assert.get_output();
 
         assert!(
-            String::from_utf8_lossy(&output.stderr).contains("The Solana toolchain is corrupted.")
+            String::from_utf8_lossy(&output.stderr).contains("The Trezoa toolchain is corrupted.")
         );
     }
 

@@ -1,10 +1,10 @@
 use {
     crate::commands::{FromClapArgMatches, Result},
     clap::{values_t, ArgMatches},
-    solana_accounts_db::accounts_index::{
+    trezoa_accounts_db::accounts_index::{
         AccountIndex, AccountSecondaryIndexes, AccountSecondaryIndexesIncludeExclude,
     },
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
     std::collections::HashSet,
 };
 
@@ -15,8 +15,8 @@ impl FromClapArgMatches for AccountSecondaryIndexes {
             .unwrap_or_default()
             .map(|value| match value {
                 "program-id" => AccountIndex::ProgramId,
-                "spl-token-mint" => AccountIndex::SplTokenMint,
-                "spl-token-owner" => AccountIndex::SplTokenOwner,
+                "tpl-token-mint" => AccountIndex::SplTokenMint,
+                "tpl-token-owner" => AccountIndex::SplTokenOwner,
                 _ => unreachable!(),
             })
             .collect();
@@ -66,13 +66,13 @@ mod tests {
         crate::commands::run::args::{
             tests::verify_args_struct_by_command_run_with_identity_setup, RunArgs,
         },
-        solana_rpc::rpc::JsonRpcConfig,
+        trezoa_rpc::rpc::JsonRpcConfig,
         test_case::test_case,
     };
 
     #[test_case("program-id", AccountIndex::ProgramId)]
-    #[test_case("spl-token-mint", AccountIndex::SplTokenMint)]
-    #[test_case("spl-token-owner", AccountIndex::SplTokenOwner)]
+    #[test_case("tpl-token-mint", AccountIndex::SplTokenMint)]
+    #[test_case("tpl-token-owner", AccountIndex::SplTokenOwner)]
     fn verify_args_struct_by_command_run_with_account_indexes(
         arg_value: &str,
         expected_index: AccountIndex,
@@ -118,9 +118,9 @@ mod tests {
                 "--account-index",
                 "program-id",
                 "--account-index",
-                "spl-token-mint",
+                "tpl-token-mint",
                 "--account-index",
-                "spl-token-owner",
+                "tpl-token-owner",
             ],
             expected_args,
         );

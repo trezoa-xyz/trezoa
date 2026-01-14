@@ -8,23 +8,23 @@ use {
             proto::{InstrContext as ProtoInstrContext, InstrEffects as ProtoInstrEffects},
         },
     },
-    agave_feature_set::{increase_cpi_account_info_limit, raise_cpi_nesting_limit_to_8},
-    agave_syscalls::create_program_runtime_environment_v1,
+    trezoa_feature_set::{increase_cpi_account_info_limit, raise_cpi_nesting_limit_to_8},
+    trezoa_syscalls::create_program_runtime_environment_v1,
     prost::Message,
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_program_runtime::loaded_programs::ProgramRuntimeEnvironments,
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_program_runtime::loaded_programs::ProgramRuntimeEnvironments,
     std::{env, ffi::c_int, sync::Arc},
 };
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sol_compat_init(_log_level: i32) {
     unsafe {
-        env::set_var("SOLANA_RAYON_THREADS", "1");
+        env::set_var("TREZOA_RAYON_THREADS", "1");
         env::set_var("RAYON_NUM_THREADS", "1");
     }
-    if env::var("ENABLE_SOLANA_LOGGER").is_ok() {
+    if env::var("ENABLE_TREZOA_LOGGER").is_ok() {
         /* Pairs with RUST_LOG={trace,debug,info,etc} */
-        agave_logger::setup();
+        trezoa_logger::setup();
     }
 }
 
@@ -50,7 +50,7 @@ pub fn execute_instr_proto(input: ProtoInstrContext) -> Option<ProtoInstrEffects
 
     // When testing with protobuf, we fill the sysvar cache from input accounts.
     let sysvar_cache = {
-        let mut cache = solana_program_runtime::sysvar_cache::SysvarCache::default();
+        let mut cache = trezoa_program_runtime::sysvar_cache::SysvarCache::default();
         crate::sysvar_cache::fill_from_accounts(&mut cache, &instr_context.accounts);
         cache
     };

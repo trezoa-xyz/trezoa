@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -11,20 +11,20 @@
 
 use {
     crate::bigtable::RowKey,
-    agave_reserved_account_keys::ReservedAccountKeys,
+    trezoa_reserved_account_keys::ReservedAccountKeys,
     log::*,
     serde::{Deserialize, Serialize},
-    solana_clock::{Slot, UnixTimestamp},
-    solana_message::v0::LoadedAddresses,
-    solana_metrics::datapoint_info,
-    solana_pubkey::Pubkey,
-    solana_serde::default_on_eof,
-    solana_signature::Signature,
-    solana_storage_proto::convert::{entries, generated, tx_by_addr},
-    solana_time_utils::AtomicInterval,
-    solana_transaction::versioned::VersionedTransaction,
-    solana_transaction_error::TransactionError,
-    solana_transaction_status::{
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_message::v0::LoadedAddresses,
+    trezoa_metrics::datapoint_info,
+    trezoa_pubkey::Pubkey,
+    trezoa_serde::default_on_eof,
+    trezoa_signature::Signature,
+    trezoa_storage_proto::convert::{entries, generated, tx_by_addr},
+    trezoa_time_utils::AtomicInterval,
+    trezoa_transaction::versioned::VersionedTransaction,
+    trezoa_transaction_error::TransactionError,
+    trezoa_transaction_status::{
         extract_and_fmt_memos, ConfirmedBlock, ConfirmedTransactionStatusWithSignature,
         ConfirmedTransactionWithStatusMeta, EntrySummary, Reward, TransactionByAddrInfo,
         TransactionConfirmationStatus, TransactionStatus, TransactionStatusMeta,
@@ -46,7 +46,7 @@ use {
 };
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate trezoa_metrics;
 
 mod access_token;
 mod bigtable;
@@ -388,7 +388,7 @@ impl From<LegacyTransactionByAddrInfo> for TransactionByAddrInfo {
     }
 }
 
-pub const DEFAULT_INSTANCE_NAME: &str = "solana-ledger";
+pub const DEFAULT_INSTANCE_NAME: &str = "trezoa-ledger";
 pub const DEFAULT_APP_PROFILE_ID: &str = "default";
 pub const DEFAULT_MAX_MESSAGE_SIZE: usize = 64 * 1024 * 1024; // 64MB
 

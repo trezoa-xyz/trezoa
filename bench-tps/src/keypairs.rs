@@ -1,10 +1,10 @@
 use {
     crate::bench::{fund_keypairs, generate_and_fund_keypairs},
     log::*,
-    solana_genesis::Base64Account,
-    solana_keypair::Keypair,
-    solana_signer::Signer,
-    solana_tps_client::TpsClient,
+    trezoa_genesis::Base64Account,
+    trezoa_keypair::Keypair,
+    trezoa_signer::Signer,
+    trezoa_tps_client::TpsClient,
     std::{collections::HashMap, fs::File, path::Path, process::exit, sync::Arc},
 };
 

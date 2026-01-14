@@ -1,7 +1,7 @@
 [package]
-name = "solana-svm-test-harness-instr"
-description = "Solana SVM test harness for instruction execution."
-documentation = "https://docs.rs/solana-svm-test-harness-instr"
+name = "trezoa-svm-test-harness-instr"
+description = "Trezoa SVM test harness for instruction execution."
+documentation = "https://docs.rs/trezoa-svm-test-harness-instr"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -11,43 +11,43 @@ edition = { workspace = true }
 publish = false
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dummy-for-ci-check = ["fuzz"]
 fuzz = [
     "dep:prost",
-    "solana-pubkey/default",
-    "solana-svm-test-harness-fixture/fuzz",
+    "trezoa-pubkey/default",
+    "trezoa-svm-test-harness-fixture/fuzz",
 ]
 
 [dependencies]
-agave-feature-set = { workspace = true }
-agave-logger = { workspace = true }
-agave-precompiles = { workspace = true }
-agave-syscalls = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-logger = { workspace = true }
+trezoa-precompiles = { workspace = true }
+trezoa-syscalls = { workspace = true }
 bincode = { workspace = true }
 prost = { workspace = true, optional = true }
-solana-account = { workspace = true }
-solana-builtins = { workspace = true }
-solana-clock = { workspace = true, features = ["sysvar"] }
-solana-compute-budget = { workspace = true }
-solana-epoch-schedule = { workspace = true, features = ["sysvar"] }
-solana-instruction = { workspace = true }
-solana-instruction-error = { workspace = true, features = ["serde"] }
-solana-last-restart-slot = { workspace = true, features = ["sysvar"] }
-solana-message = { workspace = true }
-solana-precompile-error = { workspace = true }
-solana-program-runtime = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-rent = { workspace = true, features = ["sysvar"] }
-solana-sdk-ids = { workspace = true }
-solana-svm = { workspace = true }
-solana-svm-callback = { workspace = true }
-solana-svm-log-collector = { workspace = true }
-solana-svm-test-harness-fixture = { workspace = true }
-solana-svm-timings = { workspace = true }
-solana-svm-transaction = { workspace = true }
-solana-sysvar-id = { workspace = true }
-solana-transaction-context = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-builtins = { workspace = true }
+trezoa-clock = { workspace = true, features = ["sysvar"] }
+trezoa-compute-budget = { workspace = true }
+trezoa-epoch-schedule = { workspace = true, features = ["sysvar"] }
+trezoa-instruction = { workspace = true }
+trezoa-instruction-error = { workspace = true, features = ["serde"] }
+trezoa-last-restart-slot = { workspace = true, features = ["sysvar"] }
+trezoa-message = { workspace = true }
+trezoa-precompile-error = { workspace = true }
+trezoa-program-runtime = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-rent = { workspace = true, features = ["sysvar"] }
+trezoa-sdk-ids = { workspace = true }
+trezoa-svm = { workspace = true }
+trezoa-svm-callback = { workspace = true }
+trezoa-svm-log-collector = { workspace = true }
+trezoa-svm-test-harness-fixture = { workspace = true }
+trezoa-svm-timings = { workspace = true }
+trezoa-svm-transaction = { workspace = true }
+trezoa-sysvar-id = { workspace = true }
+trezoa-transaction-context = { workspace = true }
 
 [lints]
 workspace = true

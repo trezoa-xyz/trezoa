@@ -1,10 +1,10 @@
 use {
-    solana_clock::Slot,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_ledger::{
         blockstore::Blockstore,
         shred::{Nonce, SIZE_OF_NONCE},
     },
-    solana_packet::Packet,
+    trezoa_packet::Packet,
     std::{io, net::SocketAddr},
 };
 
@@ -46,13 +46,13 @@ pub fn repair_response_packet_from_bytes(
 mod test {
     use {
         super::*,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             shred::Shredder,
             sigverify_shreds::{verify_shred_cpu, LruCache, SlotPubkeys},
         },
-        solana_packet::PacketFlags,
-        solana_signer::Signer,
+        trezoa_packet::PacketFlags,
+        trezoa_signer::Signer,
         std::{
             collections::HashMap,
             net::{IpAddr, Ipv4Addr},
@@ -61,7 +61,7 @@ mod test {
     };
 
     fn run_test_sigverify_shred_cpu_repair(slot: Slot) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let cache = RwLock::new(LruCache::new(/*capacity:*/ 128));
         let keypair = Keypair::new();
         let shred = Shredder::single_shred_for_tests(slot, &keypair);

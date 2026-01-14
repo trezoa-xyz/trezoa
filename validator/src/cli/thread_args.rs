@@ -2,10 +2,10 @@
 
 use {
     clap::{value_t_or_exit, Arg, ArgMatches},
-    solana_accounts_db::{accounts_db, accounts_index},
-    solana_clap_utils::{hidden_unless_forced, input_validators::is_within_range},
-    solana_core::banking_stage::BankingStage,
-    solana_rayon_threadlimit::get_thread_count,
+    trezoa_accounts_db::{accounts_db, accounts_index},
+    trezoa_clap_utils::{hidden_unless_forced, input_validators::is_within_range},
+    trezoa_core::banking_stage::BankingStage,
+    trezoa_rayon_threadlimit::get_thread_count,
     std::{num::NonZeroUsize, ops::RangeInclusive},
 };
 
@@ -261,10 +261,10 @@ impl ThreadArg for IpEchoServerThreadsArg {
     const HELP: &'static str = "Number of threads to use for the IP echo server";
 
     fn default() -> usize {
-        solana_net_utils::DEFAULT_IP_ECHO_SERVER_THREADS.get()
+        trezoa_net_utils::DEFAULT_IP_ECHO_SERVER_THREADS.get()
     }
     fn min() -> usize {
-        solana_net_utils::MINIMUM_IP_ECHO_SERVER_THREADS.get()
+        trezoa_net_utils::MINIMUM_IP_ECHO_SERVER_THREADS.get()
     }
 }
 
@@ -315,7 +315,7 @@ impl ThreadArg for TpuTransactionForwardReceiveThreadArgs {
         "Number of threads to use for receiving transactions on the TPU forwards port";
 
     fn default() -> usize {
-        solana_streamer::quic::default_num_tpu_transaction_forward_receive_threads()
+        trezoa_streamer::quic::default_num_tpu_transaction_forward_receive_threads()
     }
 }
 
@@ -327,7 +327,7 @@ impl ThreadArg for TpuTransactionReceiveThreads {
         "Number of threads to use for receiving transactions on the TPU port";
 
     fn default() -> usize {
-        solana_streamer::quic::default_num_tpu_transaction_receive_threads()
+        trezoa_streamer::quic::default_num_tpu_transaction_receive_threads()
     }
 }
 
@@ -339,7 +339,7 @@ impl ThreadArg for TpuVoteTransactionReceiveThreads {
         "Number of threads to use for receiving transactions on the TPU vote port";
 
     fn default() -> usize {
-        solana_streamer::quic::default_num_tpu_vote_transaction_receive_threads()
+        trezoa_streamer::quic::default_num_tpu_vote_transaction_receive_threads()
     }
 }
 
@@ -351,10 +351,10 @@ impl ThreadArg for TvuReceiveThreadsArg {
         "Number of threads (and sockets) to use for receiving shreds on the TVU port";
 
     fn default() -> usize {
-        solana_gossip::cluster_info::DEFAULT_NUM_TVU_RECEIVE_SOCKETS.get()
+        trezoa_gossip::cluster_info::DEFAULT_NUM_TVU_RECEIVE_SOCKETS.get()
     }
     fn min() -> usize {
-        solana_gossip::cluster_info::MINIMUM_NUM_TVU_RECEIVE_SOCKETS.get()
+        trezoa_gossip::cluster_info::MINIMUM_NUM_TVU_RECEIVE_SOCKETS.get()
     }
 }
 
@@ -365,11 +365,11 @@ impl ThreadArg for TvuRetransmitThreadsArg {
     const HELP: &'static str = "Number of threads (and sockets) to use for retransmitting shreds";
 
     fn default() -> usize {
-        solana_gossip::cluster_info::DEFAULT_NUM_TVU_RETRANSMIT_SOCKETS.get()
+        trezoa_gossip::cluster_info::DEFAULT_NUM_TVU_RETRANSMIT_SOCKETS.get()
     }
 
     fn min() -> usize {
-        solana_gossip::cluster_info::MINIMUM_NUM_TVU_RETRANSMIT_SOCKETS.get()
+        trezoa_gossip::cluster_info::MINIMUM_NUM_TVU_RETRANSMIT_SOCKETS.get()
     }
 }
 

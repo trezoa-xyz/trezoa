@@ -1,15 +1,15 @@
 use {
-    solana_account_info::{next_account_info, AccountInfo},
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_program::program::invoke,
-    solana_program_error::ProgramResult,
-    solana_program_test::{processor, ProgramTest},
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_sysvar::rent,
-    solana_transaction::Transaction,
+    trezoa_account_info::{next_account_info, AccountInfo},
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_program::program::invoke,
+    trezoa_program_error::ProgramResult,
+    trezoa_program_test::{processor, ProgramTest},
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_sysvar::rent,
+    trezoa_transaction::Transaction,
 };
 
 fn process_instruction(

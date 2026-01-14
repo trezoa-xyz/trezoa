@@ -8,21 +8,21 @@ use {
         vote_history_storage::{SavedVoteHistory, SavedVoteHistoryVersions},
         voting_service::BLSOp,
     },
-    agave_votor_messages::{
+    trezoa_votor_messages::{
         consensus_message::{ConsensusMessage, VoteMessage, BLS_KEYPAIR_DERIVE_SEED},
         vote::Vote,
     },
     crossbeam_channel::{SendError, Sender},
-    solana_bls_signatures::{
+    trezoa_bls_signatures::{
         keypair::Keypair as BLSKeypair, pubkey::PubkeyCompressed as BLSPubkeyCompressed, BlsError,
         Pubkey as BLSPubkey,
     },
-    solana_clock::Slot,
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_runtime::{bank::Bank, bank_forks::SharableBanks},
-    solana_signer::Signer,
-    solana_transaction::Transaction,
+    trezoa_clock::Slot,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{bank::Bank, bank_forks::SharableBanks},
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
     std::{collections::HashMap, sync::Arc},
     thiserror::Error,
 };
@@ -318,8 +318,8 @@ mod tests {
     use {
         super::*,
         crossbeam_channel::unbounded,
-        solana_hash::Hash,
-        solana_runtime::{
+        trezoa_hash::Hash,
+        trezoa_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             epoch_stakes::VersionedEpochStakes,
@@ -562,7 +562,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "The bank 0 doesn't have its own epoch_stakes for")]
     fn test_panic_on_future_slot() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (own_vote_sender, _own_vote_receiver) = crossbeam_channel::unbounded();
         // Create 10 node validatorvotekeypairs vec
         let validator_keypairs = (0..10)
@@ -579,7 +579,7 @@ mod tests {
 
     #[test]
     fn test_zero_staked_validator_fails_voting() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (own_vote_sender, _own_vote_receiver) = crossbeam_channel::unbounded();
         // Create 10 node validatorvotekeypairs vec
         let validator_keypairs = (0..10)

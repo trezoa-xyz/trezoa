@@ -1,22 +1,22 @@
 use {
     assert_matches::assert_matches,
     common::{add_upgradeable_loader_account, assert_ix_error, setup_test_context},
-    solana_account::{AccountSharedData, ReadableAccount, WritableAccount},
-    solana_instruction::error::InstructionError,
-    solana_keypair::Keypair,
-    solana_loader_v3_interface::{
+    trezoa_account::{AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_instruction::error::InstructionError,
+    trezoa_keypair::Keypair,
+    trezoa_loader_v3_interface::{
         instruction::extend_program_checked, state::UpgradeableLoaderState,
     },
-    solana_program_test::*,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::bpf_loader_upgradeable::id,
-    solana_signer::Signer,
-    solana_system_interface::{
+    trezoa_program_test::*,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::bpf_loader_upgradeable::id,
+    trezoa_signer::Signer,
+    trezoa_system_interface::{
         error::SystemError, instruction as system_instruction, program as system_program,
         MAX_PERMITTED_DATA_LENGTH,
     },
-    solana_transaction::Transaction,
-    solana_transaction_error::TransactionError,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionError,
 };
 
 mod common;

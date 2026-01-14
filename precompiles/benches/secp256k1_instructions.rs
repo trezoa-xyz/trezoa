@@ -2,11 +2,11 @@
 
 extern crate test;
 use {
-    agave_feature_set::FeatureSet,
-    agave_precompiles::secp256k1::verify,
+    trezoa_feature_set::FeatureSet,
+    trezoa_precompiles::secp256k1::verify,
     rand0_7::{thread_rng, Rng},
-    solana_instruction::Instruction,
-    solana_secp256k1_program::{
+    trezoa_instruction::Instruction,
+    trezoa_secp256k1_program::{
         eth_address_from_pubkey, new_secp256k1_instruction_with_signature, sign_message,
     },
     test::Bencher,

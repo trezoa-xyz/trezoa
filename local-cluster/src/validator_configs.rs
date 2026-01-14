@@ -1,6 +1,6 @@
 use {
-    solana_core::validator::ValidatorConfig,
-    solana_validator_exit::Exit,
+    trezoa_core::validator::ValidatorConfig,
+    trezoa_validator_exit::Exit,
     std::sync::{atomic::AtomicBool, Arc, RwLock},
 };
 

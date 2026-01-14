@@ -1,12 +1,12 @@
 #![allow(dead_code)]
 
 use {
-    agave_votor_messages::vote::Vote,
+    trezoa_votor_messages::vote::Vote,
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
     histogram::Histogram,
-    solana_clock::{Epoch, Slot},
-    solana_metrics::datapoint_info,
-    solana_pubkey::Pubkey,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_metrics::datapoint_info,
+    trezoa_pubkey::Pubkey,
     std::{
         collections::BTreeMap,
         sync::{

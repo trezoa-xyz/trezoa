@@ -1,10 +1,10 @@
-use {log::*, solana_clock::Slot, solana_measure::measure::Measure, std::result::Result};
+use {log::*, trezoa_clock::Slot, trezoa_measure::measure::Measure, std::result::Result};
 
 // Attempt to delete this many blocks in parallel
 const NUM_BLOCKS_TO_DELETE_IN_PARALLEL: usize = 32;
 
 pub async fn delete_confirmed_blocks(
-    bigtable: solana_storage_bigtable::LedgerStorage,
+    bigtable: trezoa_storage_bigtable::LedgerStorage,
     blocks_to_delete: Vec<Slot>,
     dry_run: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {

@@ -58,7 +58,7 @@ impl Iterator for PcapReader {
     }
 }
 
-/// Helper function to validate packet parsing capabilities across agave.
+/// Helper function to validate packet parsing capabilities across trezoa.
 /// It will read all packets from file identified by `filename`, then parse them
 /// using parse_packet, re-serialize using `serialize_packet`, and finally compare
 /// whether the original packet matches the reserialized version.

@@ -1,8 +1,8 @@
 use {
     crate::cli::{CliCommand, CliCommandInfo, CliConfig, CliError, ProcessResult},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
-    solana_account::from_account,
-    solana_address_lookup_table_interface::{
+    trezoa_account::from_account,
+    trezoa_address_lookup_table_interface::{
         self as address_lookup_table,
         instruction::{
             close_lookup_table, create_lookup_table, deactivate_lookup_table, extend_lookup_table,
@@ -10,18 +10,18 @@ use {
         },
         state::AddressLookupTable,
     },
-    solana_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
-    solana_cli_output::{CliAddressLookupTable, CliAddressLookupTableCreated, CliSignature},
-    solana_clock::Clock,
-    solana_commitment_config::CommitmentConfig,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::config::RpcSendTransactionConfig,
-    solana_sdk_ids::sysvar,
-    solana_signer::Signer,
-    solana_transaction::Transaction,
+    trezoa_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
+    trezoa_cli_output::{CliAddressLookupTable, CliAddressLookupTableCreated, CliSignature},
+    trezoa_clock::Clock,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::config::RpcSendTransactionConfig,
+    trezoa_sdk_ids::sysvar,
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
     std::{rc::Rc, sync::Arc},
 };
 

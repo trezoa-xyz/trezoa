@@ -2,7 +2,7 @@
 
 use {
     crossbeam_channel::Receiver,
-    solana_runtime::bank::Bank,
+    trezoa_runtime::bank::Bank,
     std::{
         sync::Arc,
         thread::{self, Builder, JoinHandle},

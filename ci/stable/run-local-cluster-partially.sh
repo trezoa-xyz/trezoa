@@ -22,7 +22,7 @@ source "$here"/common.sh
 
 _ cargo nextest run \
   --profile ci \
-  --package solana-local-cluster \
+  --package trezoa-local-cluster \
   --test local_cluster \
   --partition hash:"$CURRENT/$TOTAL" \
   --test-threads=1 \

@@ -8,8 +8,8 @@ use {
         },
         replay_stage::HeaviestForkFailures,
     },
-    solana_clock::Slot,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_clock::Slot,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
     std::{
         collections::{HashMap, HashSet},
         sync::{Arc, RwLock},

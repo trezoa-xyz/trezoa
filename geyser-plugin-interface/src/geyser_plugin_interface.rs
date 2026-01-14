@@ -3,11 +3,11 @@
 //! In addition, the dynamic library must export a "C" function _create_plugin which
 //! creates the implementation of the plugin.
 use {
-    solana_clock::{Slot, UnixTimestamp},
-    solana_hash::Hash,
-    solana_signature::Signature,
-    solana_transaction::{sanitized::SanitizedTransaction, versioned::VersionedTransaction},
-    solana_transaction_status::{Reward, RewardsAndNumPartitions, TransactionStatusMeta},
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_hash::Hash,
+    trezoa_signature::Signature,
+    trezoa_transaction::{sanitized::SanitizedTransaction, versioned::VersionedTransaction},
+    trezoa_transaction_status::{Reward, RewardsAndNumPartitions, TransactionStatusMeta},
     std::{any::Any, error, io},
     thiserror::Error,
 };
@@ -201,7 +201,7 @@ pub struct ReplicaEntryInfo<'a> {
     /// The number of hashes since the previous Entry
     pub num_hashes: u64,
     /// The Entry's SHA-256 hash, generated from the previous Entry's hash with
-    /// `solana_entry::entry::next_hash()`
+    /// `trezoa_entry::entry::next_hash()`
     pub hash: &'a [u8],
     /// The number of executed transactions in the Entry
     pub executed_transaction_count: u64,
@@ -217,7 +217,7 @@ pub struct ReplicaEntryInfoV2<'a> {
     /// The number of hashes since the previous Entry
     pub num_hashes: u64,
     /// The Entry's SHA-256 hash, generated from the previous Entry's hash with
-    /// `solana_entry::entry::next_hash()`
+    /// `trezoa_entry::entry::next_hash()`
     pub hash: &'a [u8],
     /// The number of executed transactions in the Entry
     pub executed_transaction_count: u64,
@@ -381,7 +381,7 @@ pub trait GeyserPlugin: Any + Send + Sync + std::fmt::Debug {
     /// # Examples
     ///
     /// ```
-    /// use agave_geyser_plugin_interface::geyser_plugin_interface::{GeyserPlugin,
+    /// use trezoa_geyser_plugin_interface::geyser_plugin_interface::{GeyserPlugin,
     /// GeyserPluginError, Result};
     ///
     /// #[derive(Debug)]

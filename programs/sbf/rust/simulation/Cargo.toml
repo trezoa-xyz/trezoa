@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-simulation"
+name = "trezoa-sbf-rust-simulation"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -12,13 +12,13 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-solana-account-info = { workspace = true }
-solana-clock = { workspace = true }
-solana-msg = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-solana-program-error = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sysvar = { workspace = true }
+trezoa-account-info = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-msg = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
+trezoa-program-error = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sysvar = { workspace = true }
 
 [lints]
 workspace = true

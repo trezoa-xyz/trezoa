@@ -1,8 +1,8 @@
 //! Example Rust-based SBF program that issues a cross-program-invocation
 
 use {
-    solana_instruction::{AccountMeta, Instruction},
-    solana_pubkey::Pubkey,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_pubkey::Pubkey,
 };
 
 pub const VERIFY_TRANSLATIONS: u8 = 0;

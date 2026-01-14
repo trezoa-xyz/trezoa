@@ -2,7 +2,7 @@ use {
     criterion::{criterion_group, criterion_main, Criterion},
     rand::prelude::*,
     rand_chacha::ChaChaRng,
-    solana_lattice_hash::lt_hash::LtHash,
+    trezoa_lattice_hash::lt_hash::LtHash,
 };
 
 fn new_random_lt_hash(rng: &mut impl Rng) -> LtHash {

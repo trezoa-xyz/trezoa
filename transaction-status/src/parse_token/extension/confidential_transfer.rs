@@ -1,9 +1,9 @@
 use {
     super::*,
-    spl_token_2022_interface::{
+    tpl_token_2022_interface::{
         extension::confidential_transfer::instruction::*,
         instruction::{decode_instruction_data, decode_instruction_type},
-        solana_zk_sdk::encryption::pod::elgamal::PodElGamalPubkey,
+        trezoa_zk_sdk::encryption::pod::elgamal::PodElGamalPubkey,
     },
 };
 
@@ -597,14 +597,14 @@ mod test {
     use {
         super::*,
         bytemuck::Zeroable,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        spl_token_2022_interface::{
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        tpl_token_2022_interface::{
             extension::confidential_transfer::instruction::{
                 initialize_mint, inner_configure_account, inner_empty_account, update_mint,
             },
-            solana_zk_sdk::{
+            trezoa_zk_sdk::{
                 encryption::pod::{
                     auth_encryption::PodAeCiphertext, elgamal::PodElGamalCiphertext,
                 },
@@ -614,7 +614,7 @@ mod test {
                 },
             },
         },
-        spl_token_confidential_transfer_proof_extraction::instruction::ProofLocation,
+        tpl_token_confidential_transfer_proof_extraction::instruction::ProofLocation,
         std::num::NonZero,
     };
 
@@ -634,7 +634,7 @@ mod test {
     #[test]
     fn test_initialize() {
         let instruction = initialize_mint(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &Pubkey::new_unique(),
             Some(Pubkey::new_unique()),
             true,
@@ -647,7 +647,7 @@ mod test {
     #[test]
     fn test_approve() {
         let instruction = approve_account(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),
@@ -660,7 +660,7 @@ mod test {
     #[test]
     fn test_update() {
         let instruction = update_mint(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),
             &[],
@@ -681,7 +681,7 @@ mod test {
             ProofLocation::ContextStateAccount(&Pubkey::new_unique()),
         ] {
             let instruction = inner_configure_account(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &PodAeCiphertext::default(),
@@ -705,7 +705,7 @@ mod test {
             ProofLocation::ContextStateAccount(&Pubkey::new_unique()),
         ] {
             let instruction = inner_empty_account(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &[],
@@ -735,7 +735,7 @@ mod test {
             ),
         ] {
             let instruction = inner_withdraw(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 1,
@@ -775,7 +775,7 @@ mod test {
             ),
         ] {
             let instruction = inner_transfer(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
@@ -833,7 +833,7 @@ mod test {
             ),
         ] {
             let instruction = inner_transfer_with_fee(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),

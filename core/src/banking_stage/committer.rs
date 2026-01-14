@@ -1,26 +1,26 @@
 use {
     super::leader_slot_timing_metrics::LeaderExecuteAndCommitTimings,
     itertools::Itertools,
-    solana_cost_model::cost_model::CostModel,
-    solana_ledger::{
+    trezoa_cost_model::cost_model::CostModel,
+    trezoa_ledger::{
         blockstore_processor::TransactionStatusSender,
         transaction_balances::compile_collected_balances,
     },
-    solana_measure::measure_us,
-    solana_runtime::{
+    trezoa_measure::measure_us,
+    trezoa_runtime::{
         bank::{Bank, ProcessedTransactionCounts},
         bank_utils,
         prioritization_fee_cache::PrioritizationFeeCache,
         transaction_batch::TransactionBatch,
         vote_sender_types::ReplayVoteSender,
     },
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
-    solana_svm::{
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_svm::{
         transaction_balances::BalanceCollector,
         transaction_commit_result::{TransactionCommitResult, TransactionCommitResultExtensions},
         transaction_processing_result::TransactionProcessingResult,
     },
-    solana_transaction_error::TransactionError,
+    trezoa_transaction_error::TransactionError,
     std::{num::Saturating, sync::Arc},
 };
 

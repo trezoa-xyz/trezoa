@@ -5,24 +5,24 @@ use {
         transaction_meta::{StaticMeta, TransactionMeta},
         transaction_with_meta::TransactionWithMeta,
     },
-    agave_transaction_view::{
+    trezoa_transaction_view::{
         resolved_transaction_view::ResolvedTransactionView, transaction_data::TransactionData,
         transaction_version::TransactionVersion, transaction_view::SanitizedTransactionView,
     },
-    solana_message::{
+    trezoa_message::{
         LegacyMessage, MessageHeader, SanitizedMessage, TransactionSignatureDetails,
         VersionedMessage,
         compiled_instruction::CompiledInstruction,
         v0::{LoadedAddresses, LoadedMessage, MessageAddressTableLookup},
     },
-    solana_pubkey::Pubkey,
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_transaction::{
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_transaction::{
         sanitized::{MessageHash, SanitizedTransaction},
         simple_vote_transaction_checker::is_simple_vote_transaction_impl,
         versioned::VersionedTransaction,
     },
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
     std::{borrow::Cow, collections::HashSet},
 };
 
@@ -182,14 +182,14 @@ impl<D: TransactionData> TransactionWithMeta for RuntimeTransaction<ResolvedTran
 
         let message = match self.version() {
             TransactionVersion::Legacy => {
-                VersionedMessage::Legacy(solana_message::legacy::Message {
+                VersionedMessage::Legacy(trezoa_message::legacy::Message {
                     header,
                     account_keys: static_account_keys,
                     recent_blockhash,
                     instructions,
                 })
             }
-            TransactionVersion::V0 => VersionedMessage::V0(solana_message::v0::Message {
+            TransactionVersion::V0 => VersionedMessage::V0(trezoa_message::v0::Message {
                 header,
                 account_keys: static_account_keys,
                 recent_blockhash,
@@ -216,13 +216,13 @@ impl<D: TransactionData> TransactionWithMeta for RuntimeTransaction<ResolvedTran
 mod tests {
     use {
         super::*,
-        agave_reserved_account_keys::ReservedAccountKeys,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::{AddressLookupTableAccount, SimpleAddressLoader, v0},
-        solana_signature::Signature,
-        solana_system_interface::instruction as system_instruction,
-        solana_system_transaction as system_transaction,
+        trezoa_reserved_account_keys::ReservedAccountKeys,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::{AddressLookupTableAccount, SimpleAddressLoader, v0},
+        trezoa_signature::Signature,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_system_transaction as system_transaction,
     };
 
     #[test]

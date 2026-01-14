@@ -2,11 +2,11 @@
 extern crate test;
 use {
     itertools::Itertools,
-    solana_cost_model::{
+    trezoa_cost_model::{
         cost_tracker::CostTracker,
         transaction_cost::{TransactionCost, UsageCostDetails, WritableKeysTransaction},
     },
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
     test::Bencher,
 };
 

@@ -1,11 +1,11 @@
-pub use solana_program_runtime::execution_budget::{
+pub use trezoa_program_runtime::execution_budget::{
     DEFAULT_HEAP_COST, DEFAULT_INSTRUCTION_COMPUTE_UNIT_LIMIT,
     MAX_BUILTIN_ALLOCATION_COMPUTE_UNIT_LIMIT, MAX_COMPUTE_UNIT_LIMIT, MAX_HEAP_FRAME_BYTES,
     MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES, MIN_HEAP_FRAME_BYTES,
 };
 use {
-    solana_fee_structure::{FeeBudgetLimits, FeeDetails},
-    solana_program_runtime::execution_budget::{
+    trezoa_fee_structure::{FeeBudgetLimits, FeeDetails},
+    trezoa_program_runtime::execution_budget::{
         SVMTransactionExecutionAndFeeBudgetLimits, SVMTransactionExecutionBudget,
     },
     std::num::NonZeroU32,

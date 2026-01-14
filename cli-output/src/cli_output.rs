@@ -16,32 +16,32 @@ use {
     inflector::cases::titlecase::to_title_case,
     serde::{Deserialize, Serialize},
     serde_json::{Map, Value},
-    solana_account::ReadableAccount,
-    solana_account_decoder::{
+    trezoa_account::ReadableAccount,
+    trezoa_account_decoder::{
         encode_ui_account, parse_account_data::AccountAdditionalDataV3,
         parse_token::UiTokenAccount, UiAccountEncoding, UiDataSliceConfig,
     },
-    solana_clap_utils::keypair::SignOnly,
-    solana_clock::{Epoch, Slot, UnixTimestamp},
-    solana_epoch_info::EpochInfo,
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_api::response::{
+    trezoa_clap_utils::keypair::SignOnly,
+    trezoa_clock::{Epoch, Slot, UnixTimestamp},
+    trezoa_epoch_info::EpochInfo,
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_api::response::{
         RpcAccountBalance, RpcContactInfo, RpcInflationGovernor, RpcInflationRate, RpcKeyedAccount,
         RpcSupply, RpcVoteAccountInfo,
     },
-    solana_signature::Signature,
-    solana_stake_interface::{
+    trezoa_signature::Signature,
+    trezoa_stake_interface::{
         stake_history::StakeHistoryEntry,
         state::{Authorized, Lockup},
     },
-    solana_transaction::{versioned::VersionedTransaction, Transaction},
-    solana_transaction_status::{
+    trezoa_transaction::{versioned::VersionedTransaction, Transaction},
+    trezoa_transaction_status::{
         EncodedConfirmedBlock, EncodedTransaction, TransactionConfirmationStatus,
         UiTransactionStatusMeta,
     },
-    solana_transaction_status_client_types::UiTransactionError,
-    solana_vote_program::{
+    trezoa_transaction_status_client_types::UiTransactionError,
+    trezoa_vote_program::{
         authorized_voters::AuthorizedVoters,
         vote_state::{BlockTimestamp, LandedVote, MAX_EPOCH_CREDITS_HISTORY, MAX_LOCKOUT_HISTORY},
     },
@@ -2057,7 +2057,7 @@ impl fmt::Display for CliAccountBalances {
                 "{:<44}  {}",
                 account.address,
                 &format!(
-                    "{} SOL",
+                    "{} TRZ",
                     build_balance_message(account.lamports, false, false)
                 ),
             )?;
@@ -2097,13 +2097,13 @@ impl fmt::Display for CliSupply {
         writeln_name_value(
             f,
             "Total:",
-            &format!("{} SOL", build_balance_message(self.total, false, false)),
+            &format!("{} TRZ", build_balance_message(self.total, false, false)),
         )?;
         writeln_name_value(
             f,
             "Circulating:",
             &format!(
-                "{} SOL",
+                "{} TRZ",
                 build_balance_message(self.circulating, false, false)
             ),
         )?;
@@ -2111,7 +2111,7 @@ impl fmt::Display for CliSupply {
             f,
             "Non-Circulating:",
             &format!(
-                "{} SOL",
+                "{} TRZ",
                 build_balance_message(self.non_circulating, false, false)
             ),
         )?;
@@ -3342,13 +3342,13 @@ mod tests {
     use {
         super::*,
         clap::{App, Arg},
-        solana_keypair::keypair_from_seed,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_signature::Signature,
-        solana_signer::{null_signer::NullSigner, Signer, SignerError},
-        solana_system_interface::instruction::transfer,
-        solana_transaction::Transaction,
+        trezoa_keypair::keypair_from_seed,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_signature::Signature,
+        trezoa_signer::{null_signer::NullSigner, Signer, SignerError},
+        trezoa_system_interface::instruction::transfer,
+        trezoa_transaction::Transaction,
     };
 
     #[test]
@@ -3573,7 +3573,7 @@ mod tests {
         };
         #[rustfmt::skip]
         let expected_output_common =
-            "Account Balance: 0.00001 SOL\n\
+            "Account Balance: 0.00001 TRZ\n\
              Validator Identity: 11111111111111111111111111111111\n\
              Vote Authority: None\n\
              Withdraw Authority: \n\
@@ -3583,7 +3583,7 @@ mod tests {
              Inflation Rewards Collector: \n\
              Block Revenue Collector: \n\
              Block Revenue Commission: 0 basis points\n\
-             Pending Delegator Rewards: 0 SOL\n\
+             Pending Delegator Rewards: 0 TRZ\n\
              Root Slot: ~\n\
              Recent Timestamp: 1970-01-01T00:00:00Z from slot 0\n";
 

@@ -1,19 +1,19 @@
 use {
-    solana_cli::{
+    trezoa_cli::{
         address_lookup_table::{
             AddressLookupTableCliCommand, DEACTIVATE_LOOKUP_TABLE_WARNING,
             FREEZE_LOOKUP_TABLE_WARNING,
         },
         cli::{process_command, CliCommand, CliConfig},
     },
-    solana_cli_output::{CliAddressLookupTable, CliAddressLookupTableCreated, OutputFormat},
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_keypair::Keypair,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_test_validator::TestValidator,
+    trezoa_cli_output::{CliAddressLookupTable, CliAddressLookupTableCreated, OutputFormat},
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_keypair::Keypair,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_test_validator::TestValidator,
     std::str::FromStr,
 };
 
@@ -34,7 +34,7 @@ async fn test_cli_create_extend_and_freeze_address_lookup_table() {
     config.signers = vec![&keypair];
     config.output_format = OutputFormat::JsonCompact;
 
-    // Airdrop SOL for transaction fees
+    // Airdrop TRZ for transaction fees
     config.command = CliCommand::Airdrop {
         pubkey: None,
         lamports: 10 * LAMPORTS_PER_SOL,
@@ -151,7 +151,7 @@ async fn test_cli_create_and_deactivate_address_lookup_table() {
     config.signers = vec![&keypair];
     config.output_format = OutputFormat::JsonCompact;
 
-    // Airdrop SOL for transaction fees
+    // Airdrop TRZ for transaction fees
     config.command = CliCommand::Airdrop {
         pubkey: None,
         lamports: 10 * LAMPORTS_PER_SOL,

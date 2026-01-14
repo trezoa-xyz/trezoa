@@ -1,6 +1,6 @@
 use {
     crate::local_cluster::LocalCluster,
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths as snapshot_paths,
         snapshot_archive_info::{
             FullSnapshotArchiveInfo, IncrementalSnapshotArchiveInfo, SnapshotArchiveInfoGetter,

@@ -1,7 +1,7 @@
 [package]
-name = "solana-svm-transaction"
-description = "Solana SVM Transaction"
-documentation = "https://docs.rs/solana-svm-transaction"
+name = "trezoa-svm-transaction"
+description = "Trezoa SVM Transaction"
+documentation = "https://docs.rs/trezoa-svm-transaction"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,19 +10,19 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-solana-hash = { workspace = true }
-solana-message = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-signature = { workspace = true }
-solana-transaction = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-transaction = { workspace = true }
 
 [dev-dependencies]
-solana-message = { workspace = true, features = ["bincode"] }
-solana-nonce = { workspace = true }
-solana-system-interface = { workspace = true, features = ["bincode"] }
+trezoa-message = { workspace = true, features = ["bincode"] }
+trezoa-nonce = { workspace = true }
+trezoa-system-interface = { workspace = true, features = ["bincode"] }
 static_assertions = { workspace = true }
 test-case = { workspace = true }

@@ -172,10 +172,10 @@ mod tests {
             r#"
 [workspace.package]
 version = "3.1.0"
-authors = ["Anza Maintainers <maintainers@anza.xyz>"]
+authors = ["Trezoa-team Maintainers <maintainers@trezoa.xyz>"]
 description = "Blockchain, Rebuilt for Scale"
-repository = "https://github.com/anza-xyz/agave"
-homepage = "https://anza.xyz/"
+repository = "https://github.com/trezoa-xyz/trezoa"
+homepage = "https://trezoa.xyz/"
 license = "Apache-2.0"
 edition = "2021"
 

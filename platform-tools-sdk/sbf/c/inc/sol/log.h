@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana logging utilities
+ * @brief Trezoa logging utilities
  */
 
 #include <sol/types.h>

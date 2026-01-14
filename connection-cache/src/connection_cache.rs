@@ -8,9 +8,9 @@ use {
     indexmap::map::IndexMap,
     log::*,
     rand::{rng, Rng},
-    solana_keypair::Keypair,
-    solana_measure::measure::Measure,
-    solana_time_utils::AtomicInterval,
+    trezoa_keypair::Keypair,
+    trezoa_measure::measure::Measure,
+    trezoa_time_utils::AtomicInterval,
     std::{
         net::SocketAddr,
         sync::{atomic::Ordering, Arc, RwLock},
@@ -514,8 +514,8 @@ mod tests {
         async_trait::async_trait,
         rand::{Rng, SeedableRng},
         rand_chacha::ChaChaRng,
-        solana_net_utils::sockets::bind_to_localhost_unique,
-        solana_transaction_error::TransportResult,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_transaction_error::TransportResult,
         std::{
             net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket},
             sync::Arc,
@@ -687,7 +687,7 @@ mod tests {
 
     #[test]
     fn test_connection_cache() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         // Allow the test to run deterministically
         // with the same pseudorandom sequence between runs
         // and on different platforms - the cryptographic security

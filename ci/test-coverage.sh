@@ -22,6 +22,6 @@ else
 
   if [[ -n "$BUILDKITE" ]]; then
     buildkite-agent annotate --style success --context codecov.io \
-      "CodeCov report: https://codecov.io/github/anza-xyz/agave/commit/$CI_COMMIT"
+      "CodeCov report: https://codecov.io/github/trezoa-xyz/trezoa/commit/$CI_COMMIT"
   fi
 fi

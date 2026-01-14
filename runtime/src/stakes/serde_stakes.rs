@@ -3,10 +3,10 @@ use {
     crate::stake_history::StakeHistory,
     im::HashMap as ImHashMap,
     serde::{ser::SerializeMap, Deserialize, Serialize, Serializer},
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::state::Stake,
-    solana_vote::vote_account::VoteAccounts,
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::state::Stake,
+    trezoa_vote::vote_account::VoteAccounts,
     std::{collections::HashMap, sync::Arc},
 };
 
@@ -195,9 +195,9 @@ mod tests {
         crate::{stake_utils, stakes::StakesCache},
         rand::Rng,
         serde::Deserialize,
-        solana_rent::Rent,
-        solana_stake_interface::state::Delegation,
-        solana_vote_program::vote_state,
+        trezoa_rent::Rent,
+        trezoa_stake_interface::state::Delegation,
+        trezoa_vote_program::vote_state,
     };
 
     #[test]
@@ -265,8 +265,8 @@ mod tests {
             ..Stakes::default()
         });
         for _ in 0..rng.random_range(5usize..10) {
-            let vote_pubkey = solana_pubkey::new_rand();
-            let node_pubkey = solana_pubkey::new_rand();
+            let vote_pubkey = trezoa_pubkey::new_rand();
+            let node_pubkey = trezoa_pubkey::new_rand();
             let commission = rng.random_range(0..101);
             let commission_bps = commission * 100;
             let vote_account = vote_state::create_v4_account_with_authorized(
@@ -279,7 +279,7 @@ mod tests {
             );
             stakes_cache.check_and_store(&vote_pubkey, &vote_account, None);
             for _ in 0..rng.random_range(10usize..20) {
-                let stake_pubkey = solana_pubkey::new_rand();
+                let stake_pubkey = trezoa_pubkey::new_rand();
                 let rent = Rent::with_slots_per_epoch(rng.random());
                 let stake_account = stake_utils::create_stake_account(
                     &stake_pubkey, // authorized

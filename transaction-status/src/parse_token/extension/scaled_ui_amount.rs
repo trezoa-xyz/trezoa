@@ -1,6 +1,6 @@
 use {
     super::*,
-    spl_token_2022_interface::{
+    tpl_token_2022_interface::{
         extension::scaled_ui_amount::instruction::{
             InitializeInstructionData, ScaledUiAmountMintInstruction,
             UpdateMultiplierInstructionData,

@@ -3,9 +3,9 @@ use {
         instruction_data_len::InstructionDataLenBuilder,
         signature_details::{PrecompileSignatureDetails, PrecompileSignatureDetailsBuilder},
     },
-    solana_pubkey::Pubkey,
-    solana_svm_transaction::instruction::SVMInstruction,
-    solana_transaction_error::TransactionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_transaction::instruction::SVMInstruction,
+    trezoa_transaction_error::TransactionError,
 };
 
 pub struct InstructionMeta {

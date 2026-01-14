@@ -11,7 +11,7 @@ use {
     },
     clap::{value_t_or_exit, App, Arg, ArgMatches, SubCommand},
     hex::FromHex,
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit, COMPUTE_UNIT_PRICE_ARG},
         fee_payer::*,
         hidden_unless_forced,
@@ -22,25 +22,25 @@ use {
         nonce::*,
         offline::*,
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         display::{build_balance_message, BuildBalanceMessageConfig},
         return_signers_with_config, CliAccount, CliBalance, CliFindProgramDerivedAddress,
         CliSignatureVerificationStatus, CliTransaction, CliTransactionConfirmation, OutputFormat,
         ReturnSignersConfig,
     },
-    solana_commitment_config::CommitmentConfig,
-    solana_message::Message,
-    solana_offchain_message::OffchainMessage,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::config::RpcTransactionConfig,
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_sdk_ids::{stake, system_program},
-    solana_signature::Signature,
-    solana_system_interface::{error::SystemError, instruction as system_instruction},
-    solana_transaction::{versioned::VersionedTransaction, Transaction},
-    solana_transaction_status::{
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_message::Message,
+    trezoa_offchain_message::OffchainMessage,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::config::RpcTransactionConfig,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_sdk_ids::{stake, system_program},
+    trezoa_signature::Signature,
+    trezoa_system_interface::{error::SystemError, instruction as system_instruction},
+    trezoa_transaction::{versioned::VersionedTransaction, Transaction},
+    trezoa_transaction_status::{
         EncodableWithMeta, EncodedConfirmedTransactionWithStatusMeta, EncodedTransaction,
         TransactionBinaryEncoding, UiTransactionEncoding,
     },
@@ -100,7 +100,7 @@ impl WalletSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 ),
         )
         .subcommand(
@@ -115,7 +115,7 @@ impl WalletSubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("airdrop")
-                .about("Request SOL from a faucet")
+                .about("Request TRZ from a faucet")
                 .arg(
                     Arg::with_name("amount")
                         .index(1)
@@ -123,7 +123,7 @@ impl WalletSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount)
                         .required(true)
-                        .help("The airdrop amount to request, in SOL"),
+                        .help("The airdrop amount to request, in TRZ"),
                 )
                 .arg(pubkey!(
                     Arg::with_name("to")
@@ -145,7 +145,7 @@ impl WalletSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 ),
         )
         .subcommand(
@@ -274,7 +274,7 @@ impl WalletSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount_or_all)
                         .required(true)
-                        .help("The amount to send, in SOL; accepts keyword ALL"),
+                        .help("The amount to send, in TRZ; accepts keyword ALL"),
                 )
                 .arg(pubkey!(
                     Arg::with_name("from")
@@ -394,7 +394,7 @@ fn resolve_derived_address_program_id(matches: &ArgMatches<'_>, arg_name: &str) 
         match upper.as_str() {
             "NONCE" | "SYSTEM" => Some(system_program::id()),
             "STAKE" => Some(stake::id()),
-            "VOTE" => Some(solana_vote_program::id()),
+            "VOTE" => Some(trezoa_vote_program::id()),
             _ => pubkey_of(matches, arg_name),
         }
     })
@@ -713,7 +713,7 @@ pub async fn process_airdrop(
 
         if current_balance < pre_balance.saturating_add(lamports) {
             println!("Balance unchanged");
-            println!("Run `solana confirm -v {signature:?}` for more info");
+            println!("Run `trezoa confirm -v {signature:?}` for more info");
             Ok("".to_string())
         } else {
             Ok(build_balance_message(current_balance, false, true))
@@ -987,7 +987,7 @@ pub async fn process_transfer(
     } else {
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,

@@ -1,16 +1,16 @@
 use {
-    solana_account_info::AccountInfo,
-    solana_clock::Slot,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_msg::msg,
-    solana_program_error::ProgramResult,
-    solana_program_test::{processor, ProgramTest, ProgramTestContext},
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_sysvar::{
+    trezoa_account_info::AccountInfo,
+    trezoa_clock::Slot,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_msg::msg,
+    trezoa_program_error::ProgramResult,
+    trezoa_program_test::{processor, ProgramTest, ProgramTestContext},
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_sysvar::{
         last_restart_slot, last_restart_slot::LastRestartSlot, Sysvar, SysvarSerialize,
     },
-    solana_transaction::Transaction,
+    trezoa_transaction::Transaction,
 };
 
 // program to check both syscall and sysvar

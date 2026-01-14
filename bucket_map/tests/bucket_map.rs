@@ -1,8 +1,8 @@
 use {
     rayon::prelude::*,
-    solana_bucket_map::bucket_map::{BucketMap, BucketMapConfig},
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
+    trezoa_bucket_map::bucket_map::{BucketMap, BucketMapConfig},
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
     std::path::PathBuf,
 };
 #[test]

@@ -28,7 +28,7 @@ source ci/rust-version.sh nightly
 # as normal (not dev) dependencies, only if you're sure that there's good
 # reason to bend dev-context-only-utils's original intention and that listed
 # package isn't part of released binaries.
-source scripts/agave-build-lists.sh
+source scripts/trezoa-build-lists.sh
 
 # convert to comma separeted (ref: https://stackoverflow.com/a/53839433)
 printf -v allowed '"%s",' "${DCOU_TAINTED_PACKAGES[@]}"
@@ -152,7 +152,7 @@ fi
 export RUSTFLAGS="-D warnings -Z threads=8 $RUSTFLAGS"
 
 # As this environment value is used by the rather deep crate of our dep graph
-# (solana-varsion), this could invalidate significant portion of caches when
+# (trezoa-varsion), this could invalidate significant portion of caches when
 # this changes just with a new tiny commit. Technically, it's possible for
 # CI_COMMIT to affect the outcome of compilation via build.rs, but it's
 # extremely unrealistic for such diverting compilation behaviors to be desired

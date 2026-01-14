@@ -9,13 +9,13 @@ use {
     },
     rand::Rng,
     serde::{de::Deserializer, Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_pubkey::{self, Pubkey},
-    solana_sanitize::{Sanitize, SanitizeError},
-    solana_time_utils::timestamp,
-    solana_transaction::Transaction,
-    solana_vote::vote_parser,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_pubkey::{self, Pubkey},
+    trezoa_sanitize::{Sanitize, SanitizeError},
+    trezoa_time_utils::timestamp,
+    trezoa_transaction::Transaction,
+    trezoa_vote::vote_parser,
     std::collections::BTreeSet,
 };
 
@@ -248,7 +248,7 @@ impl AccountsHashes {
         .take(num_hashes)
         .collect();
         Self {
-            from: pubkey.unwrap_or_else(solana_pubkey::new_rand),
+            from: pubkey.unwrap_or_else(trezoa_pubkey::new_rand),
             hashes,
             wallclock: new_rand_timestamp(rng),
         }
@@ -310,7 +310,7 @@ impl LowestSlot {
     /// New random LowestSlot for tests and benchmarks.
     fn new_rand<R: Rng>(rng: &mut R, pubkey: Option<Pubkey>) -> Self {
         Self {
-            from: pubkey.unwrap_or_else(solana_pubkey::new_rand),
+            from: pubkey.unwrap_or_else(trezoa_pubkey::new_rand),
             root: rng.random(),
             lowest: rng.random(),
             slots: BTreeSet::default(),
@@ -386,7 +386,7 @@ impl Vote {
     /// New random Vote for tests and benchmarks.
     fn new_rand<R: Rng>(rng: &mut R, pubkey: Option<Pubkey>) -> Self {
         Self {
-            from: pubkey.unwrap_or_else(solana_pubkey::new_rand),
+            from: pubkey.unwrap_or_else(trezoa_pubkey::new_rand),
             transaction: Transaction::default(),
             wallclock: new_rand_timestamp(rng),
             slot: None,
@@ -427,7 +427,7 @@ impl<'de> Deserialize<'de> for Vote {
 pub(crate) struct LegacyVersion {
     from: Pubkey,
     wallclock: u64,
-    version: solana_version::LegacyVersion1,
+    version: trezoa_version::LegacyVersion1,
 }
 reject_deserialize!(LegacyVersion, "LegacyVersion is deprecated");
 
@@ -444,7 +444,7 @@ impl Sanitize for LegacyVersion {
 pub(crate) struct Version {
     from: Pubkey,
     wallclock: u64,
-    version: solana_version::LegacyVersion2,
+    version: trezoa_version::LegacyVersion2,
 }
 reject_deserialize!(Version, "Version is deprecated");
 
@@ -502,11 +502,11 @@ mod test {
         super::*,
         crate::crds_value::CrdsValue,
         bincode::Options,
-        solana_keypair::Keypair,
-        solana_perf::test_tx::new_test_vote_tx,
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
-        solana_vote_program::{vote_instruction, vote_state},
+        trezoa_keypair::Keypair,
+        trezoa_perf::test_tx::new_test_vote_tx,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
+        trezoa_vote_program::{vote_instruction, vote_state},
     };
 
     #[test]
@@ -612,7 +612,7 @@ mod test {
             commit: Option<u32>,
         }
 
-        let legacy_v1: solana_version::LegacyVersion1 = {
+        let legacy_v1: trezoa_version::LegacyVersion1 = {
             let bytes = bincode::serialize(&LegacyVersion1Mirror {
                 major: 0,
                 minor: 0,
@@ -636,7 +636,7 @@ mod test {
         let version = CrdsData::Version(Version {
             from: keypair.pubkey(),
             wallclock: timestamp(),
-            version: solana_version::LegacyVersion2::default(),
+            version: trezoa_version::LegacyVersion2::default(),
         });
         let bytes = bincode::serialize(&version).unwrap();
         assert!(bincode::deserialize::<CrdsData>(&bytes[..]).is_err());

@@ -11,13 +11,13 @@
 use {
     crate::rpc_subscriptions::RpcSubscriptions,
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
-    solana_clock::Slot,
-    solana_rpc_client_api::response::{SlotTransactionStats, SlotUpdate},
-    solana_runtime::{
+    trezoa_clock::Slot,
+    trezoa_rpc_client_api::response::{SlotTransactionStats, SlotUpdate},
+    trezoa_runtime::{
         bank::Bank, bank_forks::BankForks, dependency_tracker::DependencyTracker,
         prioritization_fee_cache::PrioritizationFeeCache,
     },
-    solana_time_utils::timestamp,
+    trezoa_time_utils::timestamp,
     std::{
         collections::HashSet,
         sync::{
@@ -416,9 +416,9 @@ mod tests {
     use {
         super::*,
         crossbeam_channel::unbounded,
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_pubkey::Pubkey,
-        solana_runtime::{commitment::BlockCommitmentCache, dependency_tracker},
+        trezoa_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{commitment::BlockCommitmentCache, dependency_tracker},
         std::sync::atomic::AtomicU64,
     };
 

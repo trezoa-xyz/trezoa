@@ -1,7 +1,7 @@
 use {
     super::batch_id_generator::BatchIdGenerator,
     crate::banking_stage::scheduler_messages::TransactionBatchId,
-    agave_scheduling_utils::thread_aware_account_locks::ThreadId, std::collections::HashMap,
+    trezoa_scheduling_utils::thread_aware_account_locks::ThreadId, std::collections::HashMap,
 };
 
 /// Tracks the number of transactions that are in flight for each thread.

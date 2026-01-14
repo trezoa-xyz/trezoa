@@ -1,20 +1,20 @@
 use {
     crate::{TpsClient, TpsClientError, TpsClientResult},
-    solana_account::Account,
-    solana_commitment_config::CommitmentConfig,
-    solana_connection_cache::connection_cache::{
+    trezoa_account::Account,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_connection_cache::connection_cache::{
         ConnectionManager, ConnectionPool, NewConnectionConfig,
     },
-    solana_epoch_info::EpochInfo,
-    solana_hash::Hash,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_rpc_client_api::config::RpcBlockConfig,
-    solana_signature::Signature,
-    solana_tpu_client::tpu_client::TpuClient,
-    solana_transaction::Transaction,
-    solana_transaction_error::TransactionResult as Result,
-    solana_transaction_status::UiConfirmedBlock,
+    trezoa_epoch_info::EpochInfo,
+    trezoa_hash::Hash,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client_api::config::RpcBlockConfig,
+    trezoa_signature::Signature,
+    trezoa_tpu_client::tpu_client::TpuClient,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionResult as Result,
+    trezoa_transaction_status::UiConfirmedBlock,
 };
 
 impl<P, M, C> TpsClient for TpuClient<P, M, C>

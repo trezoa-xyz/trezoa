@@ -6,7 +6,7 @@ on:
 
 jobs:
   benchmark:
-    if: github.repository == 'anza-xyz/agave'
+    if: github.repository == 'trezoa-xyz/trezoa'
     name: benchmark
     runs-on: benchmark
     strategy:
@@ -30,20 +30,20 @@ jobs:
         #
         test:
           - {
-              name: "solana-runtime",
-              commands: ["cargo +$rust_nightly bench -p solana-runtime"],
+              name: "trezoa-runtime",
+              commands: ["cargo +$rust_nightly bench -p trezoa-runtime"],
             }
           - {
-              name: "solana-gossip",
-              commands: ["cargo bench -p solana-gossip -- --output-format bencher --noplot"],
+              name: "trezoa-gossip",
+              commands: ["cargo bench -p trezoa-gossip -- --output-format bencher --noplot"],
             }
           - {
-              name: "solana-poh",
-              commands: ["cargo +$rust_nightly bench -p solana-poh"],
+              name: "trezoa-poh",
+              commands: ["cargo +$rust_nightly bench -p trezoa-poh"],
             }
           - {
-              name: "solana-core",
-              commands: ["cargo +$rust_nightly bench -p solana-core"],
+              name: "trezoa-core",
+              commands: ["cargo +$rust_nightly bench -p trezoa-core"],
             }
           - {
               name: "sbf",
@@ -53,17 +53,17 @@ jobs:
                   "cargo +$rust_nightly bench --manifest-path programs/sbf/Cargo.toml --features=sbf_c",
                 ],
             }
-          # spliting solana-accounts-db because it includes criterion bench
+          # spliting trezoa-accounts-db because it includes criterion bench
           - {
-              name: "solana-accounts-db",
+              name: "trezoa-accounts-db",
               commands:
                 [
-                  "cargo +$rust_nightly bench -p solana-accounts-db --bench accounts_index",
-                  "cargo +$rust_nightly bench -p solana-accounts-db --bench accounts",
-                  "cargo +$rust_nightly bench -p solana-accounts-db --bench append_vec",
-                  "cargo +$rust_nightly bench -p solana-accounts-db --bench bench_accounts_file -- --output-format bencher",
-                  "cargo +$rust_nightly bench -p solana-accounts-db --bench bench_hashing -- --output-format bencher",
-                  "cargo +$rust_nightly bench -p solana-accounts-db --bench bench_serde -- --output-format bencher",
+                  "cargo +$rust_nightly bench -p trezoa-accounts-db --bench accounts_index",
+                  "cargo +$rust_nightly bench -p trezoa-accounts-db --bench accounts",
+                  "cargo +$rust_nightly bench -p trezoa-accounts-db --bench append_vec",
+                  "cargo +$rust_nightly bench -p trezoa-accounts-db --bench bench_accounts_file -- --output-format bencher",
+                  "cargo +$rust_nightly bench -p trezoa-accounts-db --bench bench_hashing -- --output-format bencher",
+                  "cargo +$rust_nightly bench -p trezoa-accounts-db --bench bench_serde -- --output-format bencher",
                 ],
             }
 

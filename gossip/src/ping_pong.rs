@@ -5,12 +5,12 @@ use {
     serde::{Deserialize, Serialize},
     serde_big_array::BigArray,
     siphasher::sip::SipHasher24,
-    solana_hash::Hash,
-    solana_keypair::{signable::Signable, Keypair},
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
-    solana_signature::Signature,
-    solana_signer::Signer,
+    trezoa_hash::Hash,
+    trezoa_keypair::{signable::Signable, Keypair},
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
     std::{
         borrow::Cow,
         hash::{Hash as _, Hasher},
@@ -20,7 +20,7 @@ use {
 };
 
 const KEY_REFRESH_CADENCE: Duration = Duration::from_secs(60);
-const PING_PONG_HASH_PREFIX: &[u8] = "SOLANA_PING_PONG".as_bytes();
+const PING_PONG_HASH_PREFIX: &[u8] = "TREZOA_PING_PONG".as_bytes();
 const PONG_SIGNATURE_SAMPLE_LEADING_ZEROS: u32 = 5;
 
 // For backward compatibility we are using a const generic parameter here.
@@ -288,7 +288,7 @@ fn make_ping_token<const N: usize>(
 }
 
 fn hash_ping_token<const N: usize>(token: &[u8; N]) -> Hash {
-    solana_sha256_hasher::hashv(&[PING_PONG_HASH_PREFIX, token])
+    trezoa_sha256_hasher::hashv(&[PING_PONG_HASH_PREFIX, token])
 }
 
 #[cfg(test)]
@@ -314,7 +314,7 @@ mod tests {
         assert!(pong.verify());
         assert!(pong.sanitize().is_ok());
         assert_eq!(
-            solana_sha256_hasher::hashv(&[PING_PONG_HASH_PREFIX, &ping.token]),
+            trezoa_sha256_hasher::hashv(&[PING_PONG_HASH_PREFIX, &ping.token]),
             pong.hash
         );
     }

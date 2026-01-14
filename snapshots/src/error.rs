@@ -1,10 +1,10 @@
 use {
     crate::{hardened_unpack::UnpackError, snapshot_hash::SnapshotHash},
-    agave_fs::FileInfo,
+    trezoa_fs::FileInfo,
     crossbeam_channel::SendError,
     semver::Version,
-    solana_accounts_db::{accounts_db::AccountsFileId, accounts_file::AccountsFileError},
-    solana_clock::{Epoch, Slot},
+    trezoa_accounts_db::{accounts_db::AccountsFileId, accounts_file::AccountsFileError},
+    trezoa_clock::{Epoch, Slot},
     std::{io, ops::RangeInclusive, path::PathBuf, process::ExitStatus},
     thiserror::Error,
 };

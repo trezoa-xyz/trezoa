@@ -9,15 +9,15 @@ use {
         ser::{SerializeSeq, Serializer},
         Deserialize, Serialize,
     },
-    solana_account::{Account, AccountSharedData, ReadableAccount},
-    solana_clock::Slot,
-    solana_fee_structure::FeeDetails,
-    solana_message::inner_instruction::InnerInstructionsList,
-    solana_pubkey::Pubkey,
-    solana_svm::transaction_commit_result::CommittedTransaction,
-    solana_transaction_context::TransactionReturnData,
-    solana_transaction_error::TransactionResult,
-    solana_transaction_status_client_types::UiInstruction,
+    trezoa_account::{Account, AccountSharedData, ReadableAccount},
+    trezoa_clock::Slot,
+    trezoa_fee_structure::FeeDetails,
+    trezoa_message::inner_instruction::InnerInstructionsList,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm::transaction_commit_result::CommittedTransaction,
+    trezoa_transaction_context::TransactionReturnData,
+    trezoa_transaction_error::TransactionResult,
+    trezoa_transaction_status_client_types::UiInstruction,
     std::str::FromStr,
 };
 
@@ -34,7 +34,7 @@ pub struct BankHashDetails {
 impl BankHashDetails {
     pub fn new(bank_hash_details: Vec<SlotDetails>) -> Self {
         Self {
-            version: solana_version::version!().to_string(),
+            version: trezoa_version::version!().to_string(),
             account_data_encoding: "base64".to_string(),
             bank_hash_details,
         }

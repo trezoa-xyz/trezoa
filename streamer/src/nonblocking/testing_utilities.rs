@@ -14,14 +14,14 @@ use {
         crypto::rustls::QuicClientConfig, ClientConfig, Connection, EndpointConfig, IdleTimeout,
         TokioRuntime, TransportConfig,
     },
-    solana_keypair::Keypair,
-    solana_net_utils::sockets::{
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::sockets::{
         bind_to_localhost_unique, localhost_port_range_for_tests, multi_bind_in_range_with_config,
         SocketConfiguration as SocketConfig,
     },
-    solana_perf::packet::PacketBatch,
-    solana_quic_definitions::{QUIC_KEEP_ALIVE, QUIC_MAX_TIMEOUT, QUIC_SEND_FAIRNESS},
-    solana_tls_utils::{new_dummy_x509_certificate, tls_client_config_builder},
+    trezoa_perf::packet::PacketBatch,
+    trezoa_quic_definitions::{QUIC_KEEP_ALIVE, QUIC_MAX_TIMEOUT, QUIC_SEND_FAIRNESS},
+    trezoa_tls_utils::{new_dummy_x509_certificate, tls_client_config_builder},
     std::{
         net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket},
         sync::{Arc, RwLock},

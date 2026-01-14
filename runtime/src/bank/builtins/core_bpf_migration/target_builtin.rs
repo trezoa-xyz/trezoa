@@ -1,11 +1,11 @@
 use {
     super::error::CoreBpfMigrationError,
     crate::bank::Bank,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_builtins::core_bpf_migration::CoreBpfMigrationTargetType,
-    solana_loader_v3_interface::get_program_data_address,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::native_loader::ID as NATIVE_LOADER_ID,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_builtins::core_bpf_migration::CoreBpfMigrationTargetType,
+    trezoa_loader_v3_interface::get_program_data_address,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::native_loader::ID as NATIVE_LOADER_ID,
 };
 
 /// The account details of a built-in program to be migrated to Core BPF.
@@ -71,11 +71,11 @@ impl TargetBuiltin {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, crate::bank::tests::create_simple_test_bank, agave_feature_set as feature_set,
-        assert_matches::assert_matches, solana_account::Account,
-        solana_feature_gate_interface as feature,
-        solana_loader_v3_interface::state::UpgradeableLoaderState,
-        solana_sdk_ids::bpf_loader_upgradeable::ID as BPF_LOADER_UPGRADEABLE_ID,
+        super::*, crate::bank::tests::create_simple_test_bank, trezoa_feature_set as feature_set,
+        assert_matches::assert_matches, trezoa_account::Account,
+        trezoa_feature_gate_interface as feature,
+        trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+        trezoa_sdk_ids::bpf_loader_upgradeable::ID as BPF_LOADER_UPGRADEABLE_ID,
         test_case::test_case,
     };
 
@@ -99,22 +99,22 @@ mod tests {
         bank.store_account_and_update_capitalization(address, &account);
     }
 
-    #[test_case(solana_sdk_ids::bpf_loader::id(), None)]
-    #[test_case(solana_sdk_ids::bpf_loader_deprecated::id(), None)]
-    #[test_case(solana_sdk_ids::bpf_loader_upgradeable::id(), None)]
-    #[test_case(solana_compute_budget_interface::id(), None)]
-    #[test_case(solana_system_interface::program::id(), None)]
-    #[test_case(solana_vote_interface::program::id(), None)]
+    #[test_case(trezoa_sdk_ids::bpf_loader::id(), None)]
+    #[test_case(trezoa_sdk_ids::bpf_loader_deprecated::id(), None)]
+    #[test_case(trezoa_sdk_ids::bpf_loader_upgradeable::id(), None)]
+    #[test_case(trezoa_compute_budget_interface::id(), None)]
+    #[test_case(trezoa_system_interface::program::id(), None)]
+    #[test_case(trezoa_vote_interface::program::id(), None)]
     #[test_case(
-        solana_sdk_ids::loader_v4::id(),
+        trezoa_sdk_ids::loader_v4::id(),
         Some(feature_set::enable_loader_v4::id())
     )]
     #[test_case(
-        solana_sdk_ids::zk_token_proof_program::id(),
+        trezoa_sdk_ids::zk_token_proof_program::id(),
         Some(feature_set::zk_token_sdk_enabled::id())
     )]
     #[test_case(
-        solana_sdk_ids::zk_elgamal_proof_program::id(),
+        trezoa_sdk_ids::zk_elgamal_proof_program::id(),
         Some(feature_set::zk_elgamal_proof_program_enabled::id())
     )]
     fn test_target_program_builtin(program_address: Pubkey, activation_feature: Option<Pubkey>) {
@@ -190,8 +190,8 @@ mod tests {
         );
     }
 
-    #[test_case(solana_feature_gate_interface::id())]
-    #[test_case(solana_sdk_ids::native_loader::id())]
+    #[test_case(trezoa_feature_gate_interface::id())]
+    #[test_case(trezoa_sdk_ids::native_loader::id())]
     fn test_target_program_stateless_builtin(program_address: Pubkey) {
         let migration_target = CoreBpfMigrationTargetType::Stateless;
         let bank = create_simple_test_bank(0);

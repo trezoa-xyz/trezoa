@@ -1,10 +1,10 @@
 use {
-    solana_account_info::{next_account_info, AccountInfo},
-    solana_msg::msg,
-    solana_program_entrypoint::entrypoint,
-    solana_program_error::{ProgramError, ProgramResult},
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::incinerator,
+    trezoa_account_info::{next_account_info, AccountInfo},
+    trezoa_msg::msg,
+    trezoa_program_entrypoint::entrypoint,
+    trezoa_program_error::{ProgramError, ProgramResult},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::incinerator,
 };
 
 entrypoint!(process_instruction);

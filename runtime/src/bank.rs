@@ -62,17 +62,17 @@ use {
         transaction_batch::{OwnedOrBorrowed, TransactionBatch},
     },
     accounts_lt_hash::{CacheValue as AccountsLtHashCacheValue, Stats as AccountsLtHashStats},
-    agave_feature_set::{
+    trezoa_feature_set::{
         self as feature_set, increase_cpi_account_info_limit, raise_cpi_nesting_limit_to_8,
         FeatureSet,
     },
-    agave_precompiles::{get_precompile, get_precompiles, is_precompile},
-    agave_reserved_account_keys::ReservedAccountKeys,
-    agave_snapshots::snapshot_hash::SnapshotHash,
-    agave_syscalls::{
+    trezoa_precompiles::{get_precompile, get_precompiles, is_precompile},
+    trezoa_reserved_account_keys::ReservedAccountKeys,
+    trezoa_snapshots::snapshot_hash::SnapshotHash,
+    trezoa_syscalls::{
         create_program_runtime_environment_v1, create_program_runtime_environment_v2,
     },
-    agave_votor_messages::{
+    trezoa_votor_messages::{
         consensus_message::Certificate, migration::GENESIS_CERTIFICATE_ACCOUNT,
     },
     ahash::AHashSet,
@@ -81,11 +81,11 @@ use {
     partitioned_epoch_rewards::PartitionedRewardsCalculation,
     rayon::{ThreadPool, ThreadPoolBuilder},
     serde::{Deserialize, Serialize},
-    solana_account::{
+    trezoa_account::{
         create_account_shared_data_with_fields as create_account, from_account, Account,
         AccountSharedData, InheritableAccountFields, ReadableAccount, WritableAccount,
     },
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_locks::validate_account_locks,
         account_storage_entry::AccountStorageEntry,
         accounts::{AccountAddressFilter, Accounts, PubkeyAccountSlot},
@@ -98,48 +98,48 @@ use {
         storable_accounts::StorableAccounts,
         utils::create_account_shared_data,
     },
-    solana_builtins::{BUILTINS, STATELESS_BUILTINS},
-    solana_clock::{
+    trezoa_builtins::{BUILTINS, STATELESS_BUILTINS},
+    trezoa_clock::{
         BankId, Epoch, Slot, SlotIndex, UnixTimestamp, INITIAL_RENT_EPOCH, MAX_PROCESSING_AGE,
         MAX_TRANSACTION_FORWARDING_DELAY,
     },
-    solana_cluster_type::ClusterType,
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_compute_budget_instruction::instructions_processor::process_compute_budget_instructions,
-    solana_cost_model::{block_cost_limits::simd_0286_block_limits, cost_tracker::CostTracker},
-    solana_epoch_info::EpochInfo,
-    solana_epoch_schedule::EpochSchedule,
-    solana_feature_gate_interface as feature,
-    solana_fee::FeeFeatures,
-    solana_fee_calculator::FeeRateGovernor,
-    solana_fee_structure::{FeeBudgetLimits, FeeDetails, FeeStructure},
-    solana_genesis_config::GenesisConfig,
-    solana_hard_forks::HardForks,
-    solana_hash::Hash,
-    solana_inflation::Inflation,
-    solana_keypair::Keypair,
-    solana_lattice_hash::lt_hash::LtHash,
-    solana_measure::{measure::Measure, measure_time, measure_us},
-    solana_message::{inner_instruction::InnerInstructions, AccountKeys, SanitizedMessage},
-    solana_packet::PACKET_DATA_SIZE,
-    solana_precompile_error::PrecompileError,
-    solana_program_runtime::{
+    trezoa_cluster_type::ClusterType,
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_compute_budget_instruction::instructions_processor::process_compute_budget_instructions,
+    trezoa_cost_model::{block_cost_limits::simd_0286_block_limits, cost_tracker::CostTracker},
+    trezoa_epoch_info::EpochInfo,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_feature_gate_interface as feature,
+    trezoa_fee::FeeFeatures,
+    trezoa_fee_calculator::FeeRateGovernor,
+    trezoa_fee_structure::{FeeBudgetLimits, FeeDetails, FeeStructure},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_hard_forks::HardForks,
+    trezoa_hash::Hash,
+    trezoa_inflation::Inflation,
+    trezoa_keypair::Keypair,
+    trezoa_lattice_hash::lt_hash::LtHash,
+    trezoa_measure::{measure::Measure, measure_time, measure_us},
+    trezoa_message::{inner_instruction::InnerInstructions, AccountKeys, SanitizedMessage},
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_precompile_error::PrecompileError,
+    trezoa_program_runtime::{
         invoke_context::BuiltinFunctionWithContext,
         loaded_programs::{ProgramCacheEntry, ProgramRuntimeEnvironments},
     },
-    solana_pubkey::{Pubkey, PubkeyHasherBuilder},
-    solana_runtime_transaction::{
+    trezoa_pubkey::{Pubkey, PubkeyHasherBuilder},
+    trezoa_runtime_transaction::{
         runtime_transaction::RuntimeTransaction, transaction_with_meta::TransactionWithMeta,
     },
-    solana_sdk_ids::{bpf_loader_upgradeable, incinerator, native_loader},
-    solana_sha256_hasher::hashv,
-    solana_signature::Signature,
-    solana_slot_hashes::SlotHashes,
-    solana_slot_history::{Check, SlotHistory},
-    solana_stake_interface::{
+    trezoa_sdk_ids::{bpf_loader_upgradeable, incinerator, native_loader},
+    trezoa_sha256_hasher::hashv,
+    trezoa_signature::Signature,
+    trezoa_slot_hashes::SlotHashes,
+    trezoa_slot_history::{Check, SlotHistory},
+    trezoa_stake_interface::{
         stake_history::StakeHistory, state::Delegation, sysvar::stake_history,
     },
-    solana_svm::{
+    trezoa_svm::{
         account_loader::LoadedTransaction,
         account_overrides::AccountOverrides,
         program_loader::load_program_with_pubkey,
@@ -158,23 +158,23 @@ use {
             TransactionProcessingConfig, TransactionProcessingEnvironment,
         },
     },
-    solana_svm_callback::{AccountState, InvokeContextCallback, TransactionProcessingCallback},
-    solana_svm_timings::{ExecuteTimingType, ExecuteTimings},
-    solana_svm_transaction::svm_message::SVMMessage,
-    solana_system_transaction as system_transaction,
-    solana_sysvar::{self as sysvar, last_restart_slot::LastRestartSlot, SysvarSerialize},
-    solana_sysvar_id::SysvarId,
-    solana_time_utils::years_as_slots,
-    solana_transaction::{
+    trezoa_svm_callback::{AccountState, InvokeContextCallback, TransactionProcessingCallback},
+    trezoa_svm_timings::{ExecuteTimingType, ExecuteTimings},
+    trezoa_svm_transaction::svm_message::SVMMessage,
+    trezoa_system_transaction as system_transaction,
+    trezoa_sysvar::{self as sysvar, last_restart_slot::LastRestartSlot, SysvarSerialize},
+    trezoa_sysvar_id::SysvarId,
+    trezoa_time_utils::years_as_slots,
+    trezoa_transaction::{
         sanitized::{MessageHash, SanitizedTransaction, MAX_TX_ACCOUNT_LOCKS},
         versioned::VersionedTransaction,
         Transaction, TransactionVerificationMode,
     },
-    solana_transaction_context::{
+    trezoa_transaction_context::{
         transaction_accounts::KeyedAccountSharedData, TransactionReturnData,
     },
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
-    solana_vote::vote_account::{VoteAccount, VoteAccounts, VoteAccountsHashMap},
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_vote::vote_account::{VoteAccount, VoteAccounts, VoteAccountsHashMap},
     std::{
         collections::{HashMap, HashSet},
         fmt,
@@ -195,14 +195,14 @@ use {
 use {
     dashmap::DashSet,
     rayon::iter::{IntoParallelRefIterator, ParallelIterator},
-    solana_accounts_db::accounts_db::{
+    trezoa_accounts_db::accounts_db::{
         ACCOUNTS_DB_CONFIG_FOR_BENCHMARKS, ACCOUNTS_DB_CONFIG_FOR_TESTING,
     },
-    solana_nonce as nonce,
-    solana_nonce_account::{get_system_account_kind, SystemAccountKind},
-    solana_program_runtime::sysvar_cache::SysvarCache,
+    trezoa_nonce as nonce,
+    trezoa_nonce_account::{get_system_account_kind, SystemAccountKind},
+    trezoa_program_runtime::sysvar_cache::SysvarCache,
 };
-pub use {partitioned_epoch_rewards::KeyedRewardsAndNumPartitions, solana_reward_info::RewardType};
+pub use {partitioned_epoch_rewards::KeyedRewardsAndNumPartitions, trezoa_reward_info::RewardType};
 
 /// params to `verify_accounts_hash`
 struct VerifyAccountsHashConfig {
@@ -1505,7 +1505,7 @@ impl Bank {
 
         // Recompile loaded programs one at a time before the next epoch hits
         let slots_in_recompilation_phase =
-            (solana_program_runtime::loaded_programs::MAX_LOADED_ENTRY_COUNT as u64)
+            (trezoa_program_runtime::loaded_programs::MAX_LOADED_ENTRY_COUNT as u64)
                 .min(slots_in_epoch)
                 .checked_div(2)
                 .unwrap();
@@ -2804,7 +2804,7 @@ impl Bank {
             )
             .unwrap_or_default(),
         );
-        solana_fee::calculate_fee(
+        trezoa_fee::calculate_fee(
             message,
             lamports_per_signature == 0,
             self.fee_structure().lamports_per_signature,
@@ -2927,7 +2927,7 @@ impl Bank {
     }
 
     // gating this under #[cfg(feature = "dev-context-only-utils")] isn't easy due to
-    // solana-program-test's usage...
+    // trezoa-program-test's usage...
     pub fn register_unique_recent_blockhash_for_test(&self) {
         self.register_recent_blockhash(
             &Hash::new_unique(),
@@ -3017,7 +3017,7 @@ impl Bank {
     ) -> Result<TransactionBatch<'_, '_, RuntimeTransaction<SanitizedTransaction>>> {
         let enable_static_instruction_limit = self
             .feature_set
-            .is_active(&agave_feature_set::static_instruction_limit::id());
+            .is_active(&trezoa_feature_set::static_instruction_limit::id());
         let sanitized_txs = txs
             .into_iter()
             .map(|tx| {
@@ -3376,7 +3376,7 @@ impl Bank {
             self.last_blockhash_and_lamports_per_signature();
         let effective_epoch_of_deployments =
             self.epoch_schedule().get_epoch(self.slot.saturating_add(
-                solana_program_runtime::loaded_programs::DELAY_VISIBILITY_SLOT_OFFSET,
+                trezoa_program_runtime::loaded_programs::DELAY_VISIBILITY_SLOT_OFFSET,
             ));
         let processing_environment = TransactionProcessingEnvironment {
             blockhash,
@@ -3711,7 +3711,7 @@ impl Bank {
 
             let to_store = (self.slot(), accounts_to_store.as_slice());
             self.update_bank_hash_stats(&to_store);
-            // See https://github.com/solana-labs/solana/pull/31455 for discussion
+            // See https://github.com/trezoa-labs/trezoa/pull/31455 for discussion
             // on *not* updating the index within a threadpool.
             self.rc
                 .accounts
@@ -4802,7 +4802,7 @@ impl Bank {
     ) -> Result<RuntimeTransaction<SanitizedTransaction>> {
         let enable_static_instruction_limit = self
             .feature_set
-            .is_active(&agave_feature_set::static_instruction_limit::id());
+            .is_active(&trezoa_feature_set::static_instruction_limit::id());
         let sanitized_tx = {
             let size =
                 bincode::serialized_size(&tx).map_err(|_| TransactionError::SanitizeFailure)?;
@@ -4814,9 +4814,9 @@ impl Bank {
                 // SIMD-0160, check instruction limit before signature verificaton
                 if enable_static_instruction_limit
                     && tx.message.instructions().len()
-                        > solana_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH
+                        > trezoa_transaction_context::MAX_INSTRUCTION_TRACE_LENGTH
                 {
-                    return Err(solana_transaction_error::TransactionError::SanitizeFailure);
+                    return Err(trezoa_transaction_error::TransactionError::SanitizeFailure);
                 }
                 tx.verify_and_hash_message()?
             } else {
@@ -4867,7 +4867,7 @@ impl Bank {
     /// account-by-account, summing each account's balance.
     ///
     /// Only intended to be called at startup by ledger-tool or tests.
-    /// (cannot be made DCOU due to solana-program-test)
+    /// (cannot be made DCOU due to trezoa-program-test)
     pub fn calculate_capitalization_for_tests(&self) -> u64 {
         self.rc
             .accounts
@@ -4878,7 +4878,7 @@ impl Bank {
     /// Sets the capitalization.
     ///
     /// Only intended to be called by ledger-tool or tests.
-    /// (cannot be made DCOU due to solana-program-test)
+    /// (cannot be made DCOU due to trezoa-program-test)
     pub fn set_capitalization_for_tests(&self, capitalization: u64) {
         self.capitalization.store(capitalization, Relaxed);
     }
@@ -5399,14 +5399,14 @@ impl Bank {
 
         if new_feature_activations.contains(&feature_set::pico_inflation::id()) {
             *self.inflation.write().unwrap() = Inflation::pico();
-            self.fee_rate_governor.burn_percent = solana_fee_calculator::DEFAULT_BURN_PERCENT; // 50% fee burn
+            self.fee_rate_governor.burn_percent = trezoa_fee_calculator::DEFAULT_BURN_PERCENT; // 50% fee burn
             self.rent_collector.rent.burn_percent = 50; // 50% rent burn
         }
 
         if !new_feature_activations.is_disjoint(&self.feature_set.full_inflation_features_enabled())
         {
             *self.inflation.write().unwrap() = Inflation::full();
-            self.fee_rate_governor.burn_percent = solana_fee_calculator::DEFAULT_BURN_PERCENT; // 50% fee burn
+            self.fee_rate_governor.burn_percent = trezoa_fee_calculator::DEFAULT_BURN_PERCENT; // 50% fee burn
             self.rent_collector.rent.burn_percent = 50; // 50% rent burn
         }
 
@@ -5434,7 +5434,7 @@ impl Bank {
 
         if new_feature_activations.contains(&feature_set::vote_state_v4::id()) {
             if let Err(e) = self.upgrade_core_bpf_program(
-                &solana_sdk_ids::stake::id(),
+                &trezoa_sdk_ids::stake::id(),
                 &feature_set::vote_state_v4::stake_program_buffer::id(),
                 "upgrade_stake_program_for_vote_state_v4",
             ) {
@@ -5445,15 +5445,15 @@ impl Bank {
             self.apply_simd_0339_invoke_cost_changes();
         }
 
-        if new_feature_activations.contains(&feature_set::replace_spl_token_with_p_token::id()) {
+        if new_feature_activations.contains(&feature_set::replace_tpl_token_with_p_token::id()) {
             if let Err(e) = self.upgrade_loader_v2_program_with_loader_v3_program(
-                &feature_set::replace_spl_token_with_p_token::SPL_TOKEN_PROGRAM_ID,
-                &feature_set::replace_spl_token_with_p_token::PTOKEN_PROGRAM_BUFFER,
-                "replace_spl_token_with_p_token",
+                &feature_set::replace_tpl_token_with_p_token::SPL_TOKEN_PROGRAM_ID,
+                &feature_set::replace_tpl_token_with_p_token::PTOKEN_PROGRAM_BUFFER,
+                "replace_tpl_token_with_p_token",
             ) {
                 warn!(
-                    "Failed to replace SPL Token with p-token buffer '{}': {e}",
-                    feature_set::replace_spl_token_with_p_token::PTOKEN_PROGRAM_BUFFER,
+                    "Failed to replace TRZ Token with p-token buffer '{}': {e}",
+                    feature_set::replace_tpl_token_with_p_token::PTOKEN_PROGRAM_BUFFER,
                 );
             }
         }
@@ -5784,7 +5784,7 @@ impl Bank {
         let account: AccountSharedData = AccountSharedData::from(Account {
             lamports,
             data: name.as_bytes().to_vec(),
-            owner: solana_sdk_ids::native_loader::id(),
+            owner: trezoa_sdk_ids::native_loader::id(),
             executable: true,
             rent_epoch,
         });
@@ -6158,12 +6158,12 @@ pub mod test_utils {
     use {
         super::Bank,
         crate::installed_scheduler_pool::BankWithScheduler,
-        solana_account::{state_traits::StateMut, ReadableAccount, WritableAccount},
-        solana_instruction::error::LamportsError,
-        solana_pubkey::Pubkey,
-        solana_sha256_hasher::hashv,
-        solana_vote_interface::state::VoteStateV4,
-        solana_vote_program::vote_state::{BlockTimestamp, VoteStateVersions},
+        trezoa_account::{state_traits::StateMut, ReadableAccount, WritableAccount},
+        trezoa_instruction::error::LamportsError,
+        trezoa_pubkey::Pubkey,
+        trezoa_sha256_hasher::hashv,
+        trezoa_vote_interface::state::VoteStateV4,
+        trezoa_vote_program::vote_state::{BlockTimestamp, VoteStateVersions},
         std::sync::Arc,
     };
     pub fn goto_end_of_slot(bank: Arc<Bank>) {

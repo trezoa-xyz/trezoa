@@ -1,6 +1,6 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    solana_net_utils::token_bucket::*,
+    trezoa_net_utils::token_bucket::*,
     std::{
         net::{IpAddr, Ipv4Addr},
         sync::atomic::{AtomicUsize, Ordering},

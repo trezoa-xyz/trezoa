@@ -3,15 +3,15 @@ use {
         builtin_programs_filter::{BuiltinProgramsFilter, ProgramKind},
         compute_budget_program_id_filter::ComputeBudgetProgramIdFilter,
     },
-    agave_feature_set::FeatureSet,
-    solana_borsh::v1::try_from_slice_unchecked,
-    solana_builtins_default_costs::{MIGRATING_BUILTINS_COSTS, get_migration_feature_id},
-    solana_compute_budget::compute_budget_limits::*,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
-    solana_svm_transaction::instruction::SVMInstruction,
-    solana_transaction_error::{TransactionError, TransactionResult as Result},
+    trezoa_feature_set::FeatureSet,
+    trezoa_borsh::v1::try_from_slice_unchecked,
+    trezoa_builtins_default_costs::{MIGRATING_BUILTINS_COSTS, get_migration_feature_id},
+    trezoa_compute_budget::compute_budget_limits::*,
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_transaction::instruction::SVMInstruction,
+    trezoa_transaction_error::{TransactionError, TransactionResult as Result},
     std::num::{NonZeroU32, Saturating},
 };
 
@@ -223,16 +223,16 @@ impl ComputeBudgetInstructionDetails {
 mod test {
     use {
         super::*,
-        solana_builtins_default_costs::{
+        trezoa_builtins_default_costs::{
             BuiltinCost, MigratingBuiltinCost, get_migration_feature_position,
         },
-        solana_instruction::Instruction,
-        solana_keypair::Keypair,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
-        solana_svm_transaction::svm_message::SVMStaticMessage,
-        solana_transaction::{Transaction, sanitized::SanitizedTransaction},
+        trezoa_instruction::Instruction,
+        trezoa_keypair::Keypair,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
+        trezoa_svm_transaction::svm_message::SVMStaticMessage,
+        trezoa_transaction::{Transaction, sanitized::SanitizedTransaction},
     };
 
     fn build_sanitized_transaction(instructions: &[Instruction]) -> SanitizedTransaction {

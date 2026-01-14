@@ -23,11 +23,11 @@ use {
         received_cache::ReceivedCache,
     },
     itertools::Itertools,
-    solana_keypair::Keypair,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_time_utils::timestamp,
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_time_utils::timestamp,
     std::{
         collections::{HashMap, HashSet},
         iter::repeat,
@@ -336,7 +336,7 @@ mod tests {
         let crds = RwLock::<Crds>::default();
         let push = CrdsGossipPush::default();
         let value = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         let label = value.label();
@@ -356,7 +356,7 @@ mod tests {
     fn test_process_push_old_version() {
         let crds = RwLock::<Crds>::default();
         let push = CrdsGossipPush::default();
-        let mut ci = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut ci = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         ci.set_wallclock(1);
         let value = CrdsValue::new_unsigned(CrdsData::from(&ci));
 
@@ -378,7 +378,7 @@ mod tests {
         let crds = RwLock::<Crds>::default();
         let push = CrdsGossipPush::default();
         let timeout = push.msg_timeout;
-        let mut ci = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut ci = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
 
         // push a version to far in the future
         ci.set_wallclock(timeout + 1);
@@ -398,7 +398,7 @@ mod tests {
     fn test_process_push_update() {
         let crds = RwLock::<Crds>::default();
         let push = CrdsGossipPush::default();
-        let mut ci = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut ci = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         let origin = *ci.pubkey();
         ci.set_wallclock(0);
         let value_old = CrdsValue::new_unsigned(CrdsData::from(&ci));
@@ -424,7 +424,7 @@ mod tests {
         let mut crds = Crds::default();
         let push = CrdsGossipPush::default();
         let mut ping_cache = new_ping_cache();
-        let peer = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let peer = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         ping_cache.mock_pong(*peer.pubkey(), peer.gossip().unwrap(), Instant::now());
         let peer = CrdsValue::new_unsigned(CrdsData::from(peer));
         assert_eq!(
@@ -445,7 +445,7 @@ mod tests {
         );
 
         let new_msg = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         let mut expected = HashMap::new();
@@ -531,10 +531,10 @@ mod tests {
     #[test]
     fn test_process_prune() {
         let mut crds = Crds::default();
-        let self_id = solana_pubkey::new_rand();
+        let self_id = trezoa_pubkey::new_rand();
         let push = CrdsGossipPush::default();
         let peer = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         assert_eq!(
@@ -555,7 +555,7 @@ mod tests {
         );
 
         let new_msg = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         let expected = HashMap::new();
@@ -585,7 +585,7 @@ mod tests {
         let mut crds = Crds::default();
         let push = CrdsGossipPush::default();
         let peer = CrdsValue::new_unsigned(CrdsData::from(ContactInfo::new_localhost(
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             0,
         )));
         assert_eq!(crds.insert(peer, 0, GossipRoute::LocalMessage), Ok(()));
@@ -602,7 +602,7 @@ mod tests {
             &SocketAddrSpace::Unspecified,
         );
 
-        let mut ci = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut ci = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         ci.set_wallclock(1);
         let new_msg = CrdsValue::new_unsigned(CrdsData::from(ci));
         let expected = HashMap::new();
@@ -626,7 +626,7 @@ mod tests {
     fn test_purge_old_received_cache() {
         let crds = RwLock::<Crds>::default();
         let push = CrdsGossipPush::default();
-        let mut ci = ContactInfo::new_localhost(&solana_pubkey::new_rand(), 0);
+        let mut ci = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), 0);
         ci.set_wallclock(0);
         let value = CrdsValue::new_unsigned(CrdsData::from(ci));
         let label = value.label();

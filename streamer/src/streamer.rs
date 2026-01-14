@@ -11,15 +11,15 @@ use {
     },
     crossbeam_channel::{Receiver, RecvTimeoutError, SendError, Sender, TrySendError},
     histogram::Histogram,
-    solana_net_utils::{
+    trezoa_net_utils::{
         multihomed_sockets::{
             BindIpAddrs, CurrentSocket, FixedSocketProvider, MultihomedSocketProvider,
             SocketProvider,
         },
         SocketAddrSpace,
     },
-    solana_pubkey::Pubkey,
-    solana_time_utils::timestamp,
+    trezoa_pubkey::Pubkey,
+    trezoa_time_utils::timestamp,
     std::{
         cmp::Reverse,
         collections::HashMap,
@@ -609,8 +609,8 @@ mod test {
             streamer::{receiver, responder},
         },
         crossbeam_channel::unbounded,
-        solana_net_utils::sockets::bind_to_localhost_unique,
-        solana_perf::recycler::Recycler,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_perf::recycler::Recycler,
         std::{
             io::{self, Write},
             sync::{

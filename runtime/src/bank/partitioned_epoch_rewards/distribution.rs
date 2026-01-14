@@ -12,12 +12,12 @@ use {
     },
     log::error,
     serde::{Deserialize, Serialize},
-    solana_account::{state_traits::StateMut, AccountSharedData, ReadableAccount, WritableAccount},
-    solana_accounts_db::stake_rewards::{StakeReward, StakeRewardInfo},
-    solana_measure::measure_us,
-    solana_pubkey::Pubkey,
-    solana_reward_info::RewardType,
-    solana_stake_interface::state::{Delegation, StakeStateV2},
+    trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_accounts_db::stake_rewards::{StakeReward, StakeRewardInfo},
+    trezoa_measure::measure_us,
+    trezoa_pubkey::Pubkey,
+    trezoa_reward_info::RewardType,
+    trezoa_stake_interface::state::{Delegation, StakeStateV2},
     std::sync::{atomic::Ordering::Relaxed, Arc},
     thiserror::Error,
 };
@@ -321,19 +321,19 @@ mod tests {
             stake_utils,
         },
         rand::Rng,
-        solana_account::from_account,
-        solana_accounts_db::stake_rewards::StakeReward,
-        solana_epoch_schedule::EpochSchedule,
-        solana_hash::Hash,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_rent::Rent,
-        solana_reward_info::RewardType,
-        solana_stake_interface::{
+        trezoa_account::from_account,
+        trezoa_accounts_db::stake_rewards::StakeReward,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_hash::Hash,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_rent::Rent,
+        trezoa_reward_info::RewardType,
+        trezoa_stake_interface::{
             stake_flags::StakeFlags,
             state::{Meta, Stake},
         },
-        solana_sysvar as sysvar,
-        solana_vote_program::vote_state,
+        trezoa_sysvar as sysvar,
+        trezoa_vote_program::vote_state,
         std::sync::Arc,
     };
 
@@ -646,7 +646,7 @@ mod tests {
         let mut stake_account = AccountSharedData::new(
             u64::MAX - stake_reward + 1,
             StakeStateV2::size_of(),
-            &solana_stake_interface::program::id(),
+            &trezoa_stake_interface::program::id(),
         );
         stake_account
             .set_state(&StakeStateV2::Stake(
@@ -677,7 +677,7 @@ mod tests {
         let mut stake_account = AccountSharedData::new(
             starting_lamports,
             StakeStateV2::size_of(),
-            &solana_stake_interface::program::id(),
+            &trezoa_stake_interface::program::id(),
         );
         let other_stake = Stake {
             delegation: Delegation {
@@ -707,7 +707,7 @@ mod tests {
         let mut expected_stake_account = AccountSharedData::new(
             expected_lamports,
             StakeStateV2::size_of(),
-            &solana_stake_interface::program::id(),
+            &trezoa_stake_interface::program::id(),
         );
         expected_stake_account
             .set_state(&StakeStateV2::Stake(

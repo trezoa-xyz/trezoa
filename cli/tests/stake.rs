@@ -1,36 +1,36 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
     assert_matches::assert_matches,
-    solana_account::state_traits::StateMut,
-    solana_cli::{
+    trezoa_account::state_traits::StateMut,
+    trezoa_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
         spend_utils::SpendAmount,
         stake::StakeAuthorizationIndexed,
         test_utils::{check_ready, wait_for_next_epoch_plus_n_slots},
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_client::nonblocking::blockhash_query::{BlockhashQuery, Source},
-    solana_commitment_config::CommitmentConfig,
-    solana_epoch_schedule::EpochSchedule,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_fee_calculator::FeeRateGovernor,
-    solana_fee_structure::FeeStructure,
-    solana_keypair::{keypair_from_seed, Keypair},
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_nonce::state::State as NonceState,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::request::DELINQUENT_VALIDATOR_SLOT_DISTANCE,
-    solana_signer::Signer,
-    solana_stake_interface::{
+    trezoa_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    trezoa_client::nonblocking::blockhash_query::{BlockhashQuery, Source},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_fee_calculator::FeeRateGovernor,
+    trezoa_fee_structure::FeeStructure,
+    trezoa_keypair::{keypair_from_seed, Keypair},
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_nonce::state::State as NonceState,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::request::DELINQUENT_VALIDATOR_SLOT_DISTANCE,
+    trezoa_signer::Signer,
+    trezoa_stake_interface::{
         self as stake,
         instruction::LockupArgs,
         state::{Lockup, StakeAuthorize, StakeStateV2},
     },
-    solana_test_validator::{TestValidator, TestValidatorGenesis},
+    trezoa_test_validator::{TestValidator, TestValidatorGenesis},
     test_case::test_case,
 };
 
@@ -202,7 +202,7 @@ async fn test_stake_delegation_force() {
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_seed_stake_delegation_and_deactivation(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -301,7 +301,7 @@ async fn test_seed_stake_delegation_and_deactivation(compute_unit_price: Option<
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_stake_delegation_and_withdraw_available() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -400,7 +400,7 @@ async fn test_stake_delegation_and_withdraw_available() {
     // is activating
     check_balance!(0, &rpc_client, &recipient_pubkey);
 
-    // Add extra SOL to the stake account
+    // Add extra TRZ to the stake account
     request_and_confirm_airdrop(
         &rpc_client,
         &config_validator,
@@ -430,7 +430,7 @@ async fn test_stake_delegation_and_withdraw_available() {
         compute_unit_price: None,
     };
     process_command(&config_validator).await.unwrap();
-    // Extra (inactive) SOL is withdrawn
+    // Extra (inactive) TRZ is withdrawn
     check_balance!(5 * LAMPORTS_PER_SOL, &rpc_client, &recipient_pubkey);
 
     // Deactivate stake
@@ -475,7 +475,7 @@ async fn test_stake_delegation_and_withdraw_available() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_stake_delegation_and_withdraw_all() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -571,7 +571,7 @@ async fn test_stake_delegation_and_withdraw_all() {
     };
     process_command(&config_validator).await.unwrap_err();
 
-    // Add extra SOL to the stake account
+    // Add extra TRZ to the stake account
     request_and_confirm_airdrop(
         &rpc_client,
         &config_validator,
@@ -646,7 +646,7 @@ async fn test_stake_delegation_and_withdraw_all() {
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_stake_delegation_and_deactivation(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -743,7 +743,7 @@ async fn test_stake_delegation_and_deactivation(compute_unit_price: Option<u64>)
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_offline_stake_delegation_and_deactivation(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -909,7 +909,7 @@ async fn test_offline_stake_delegation_and_deactivation(compute_unit_price: Opti
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_nonced_stake_delegation_and_deactivation(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -979,13 +979,13 @@ async fn test_nonced_stake_delegation_and_deactivation(compute_unit_price: Optio
     process_command(&config).await.unwrap();
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -1011,13 +1011,13 @@ async fn test_nonced_stake_delegation_and_deactivation(compute_unit_price: Optio
     process_command(&config).await.unwrap();
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -1046,7 +1046,7 @@ async fn test_nonced_stake_delegation_and_deactivation(compute_unit_price: Optio
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_stake_authorize(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -1297,13 +1297,13 @@ async fn test_stake_authorize(compute_unit_price: Option<u64>) {
     process_command(&config).await.unwrap();
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -1368,13 +1368,13 @@ async fn test_stake_authorize(compute_unit_price: Option<u64>) {
     };
     assert_eq!(current_authority, online_authority_pubkey);
 
-    let new_nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let new_nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
     assert_ne!(nonce_hash, new_nonce_hash);
@@ -1382,7 +1382,7 @@ async fn test_stake_authorize(compute_unit_price: Option<u64>) {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_stake_authorize_with_fee_payer() {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let fee_one_sig = FeeStructure::default().get_max_fee(1, 0);
     let fee_two_sig = FeeStructure::default().get_max_fee(2, 0);
 
@@ -1569,7 +1569,7 @@ async fn test_stake_authorize_with_fee_payer() {
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_stake_split(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -1668,13 +1668,13 @@ async fn test_stake_split(compute_unit_price: Option<u64>) {
     check_balance!(minimum_nonce_balance, &rpc_client, &nonce_account.pubkey());
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -1736,7 +1736,7 @@ async fn test_stake_split(compute_unit_price: Option<u64>) {
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_stake_set_lockup(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -1958,13 +1958,13 @@ async fn test_stake_set_lockup(compute_unit_price: Option<u64>) {
     check_balance!(minimum_nonce_balance, &rpc_client, &nonce_account_pubkey);
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -2030,7 +2030,7 @@ async fn test_stake_set_lockup(compute_unit_price: Option<u64>) {
 #[test_case(None; "base")]
 #[test_case(Some(1_000_000); "with_compute_unit_price")]
 async fn test_offline_nonced_create_stake_account_and_withdraw(compute_unit_price: Option<u64>) {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
@@ -2096,13 +2096,13 @@ async fn test_offline_nonced_create_stake_account_and_withdraw(compute_unit_pric
     process_command(&config).await.unwrap();
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -2160,13 +2160,13 @@ async fn test_offline_nonced_create_stake_account_and_withdraw(compute_unit_pric
     check_balance!(50_000_000_000, &rpc_client, &stake_pubkey);
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -2217,13 +2217,13 @@ async fn test_offline_nonced_create_stake_account_and_withdraw(compute_unit_pric
     check_balance!(50_000_000_000, &rpc_client, &recipient_pubkey);
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_account.pubkey(),
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 
@@ -2282,7 +2282,7 @@ async fn test_offline_nonced_create_stake_account_and_withdraw(compute_unit_pric
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_stake_checked_instructions() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());

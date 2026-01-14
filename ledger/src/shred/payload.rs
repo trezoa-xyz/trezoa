@@ -1,7 +1,7 @@
 #[cfg(any(test, feature = "dev-context-only-utils"))]
 use {
     crate::shred::Nonce,
-    solana_perf::packet::{bytes::BufMut, BytesPacket, Meta, Packet},
+    trezoa_perf::packet::{bytes::BufMut, BytesPacket, Meta, Packet},
 };
 use {
     bytes::{Bytes, BytesMut},
@@ -280,10 +280,10 @@ mod test {
     fn test_to_bytes_packet_nonce_endianness() {
         use {
             crate::shredder::{ReedSolomonCache, Shredder},
-            solana_entry::entry::Entry,
-            solana_hash::Hash,
-            solana_keypair::Keypair,
-            solana_perf::packet::PacketFlags,
+            trezoa_entry::entry::Entry,
+            trezoa_hash::Hash,
+            trezoa_keypair::Keypair,
+            trezoa_perf::packet::PacketFlags,
         };
 
         // Build a valid shred payload using the shredder helper.

@@ -12,15 +12,15 @@ use {
     core::fmt::Debug,
     field_frames::{CommissionFrame, CommissionView},
     frame_v4::VoteStateFrameV4,
-    solana_clock::{Epoch, Slot},
-    solana_pubkey::Pubkey,
-    solana_vote_interface::state::{BlockTimestamp, Lockout, BLS_PUBLIC_KEY_COMPRESSED_SIZE},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_pubkey::Pubkey,
+    trezoa_vote_interface::state::{BlockTimestamp, Lockout, BLS_PUBLIC_KEY_COMPRESSED_SIZE},
     std::sync::Arc,
 };
 #[cfg(feature = "dev-context-only-utils")]
 use {
     bincode,
-    solana_vote_interface::state::{VoteStateV3, VoteStateV4, VoteStateVersions},
+    trezoa_vote_interface::state::{VoteStateV3, VoteStateV4, VoteStateVersions},
 };
 
 mod field_frames;
@@ -177,8 +177,8 @@ impl VoteStateView {
         let buffer = &self.data[offset..];
         let mut cursor = std::io::Cursor::new(buffer);
         BlockTimestamp {
-            slot: solana_serialize_utils::cursor::read_u64(&mut cursor).unwrap(),
-            timestamp: solana_serialize_utils::cursor::read_i64(&mut cursor).unwrap(),
+            slot: trezoa_serialize_utils::cursor::read_u64(&mut cursor).unwrap(),
+            timestamp: trezoa_serialize_utils::cursor::read_i64(&mut cursor).unwrap(),
         }
     }
 
@@ -270,7 +270,7 @@ impl VoteStateFrame {
     fn try_new(bytes: &[u8]) -> Result<Self> {
         let version = {
             let mut cursor = std::io::Cursor::new(bytes);
-            solana_serialize_utils::cursor::read_u32(&mut cursor)
+            trezoa_serialize_utils::cursor::read_u32(&mut cursor)
                 .map_err(|_err| VoteStateViewError::AccountDataTooSmall)?
         };
 
@@ -353,8 +353,8 @@ mod tests {
         super::*,
         arbitrary::{Arbitrary, Unstructured},
         serde::{Deserialize, Serialize},
-        solana_clock::Clock,
-        solana_vote_interface::{
+        trezoa_clock::Clock,
+        trezoa_vote_interface::{
             authorized_voters::AuthorizedVoters,
             state::{
                 LandedVote, VoteInit, VoteState1_14_11, VoteStateV3, VoteStateV4,

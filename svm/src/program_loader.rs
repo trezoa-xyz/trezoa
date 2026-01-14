@@ -1,19 +1,19 @@
 use {
-    solana_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
-    solana_clock::Slot,
-    solana_instruction::error::InstructionError,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_loader_v4_interface::state::{LoaderV4State, LoaderV4Status},
-    solana_program_runtime::loaded_programs::{
+    trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
+    trezoa_clock::Slot,
+    trezoa_instruction::error::InstructionError,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_loader_v4_interface::state::{LoaderV4State, LoaderV4Status},
+    trezoa_program_runtime::loaded_programs::{
         LoadProgramMetrics, ProgramCacheEntry, ProgramCacheEntryOwner, ProgramCacheEntryType,
         ProgramRuntimeEnvironment, ProgramRuntimeEnvironments, DELAY_VISIBILITY_SLOT_OFFSET,
     },
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, loader_v4},
-    solana_svm_callback::TransactionProcessingCallback,
-    solana_svm_timings::ExecuteTimings,
-    solana_svm_type_overrides::sync::Arc,
-    solana_transaction_error::{TransactionError, TransactionResult},
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable, loader_v4},
+    trezoa_svm_callback::TransactionProcessingCallback,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_svm_type_overrides::sync::Arc,
+    trezoa_transaction_error::{TransactionError, TransactionResult},
 };
 
 #[derive(Debug)]
@@ -67,7 +67,7 @@ pub(crate) fn load_program_accounts<CB: TransactionProcessingCallback>(
     let (program_account, last_modification_slot) = callbacks.get_account_shared_data(pubkey)?;
 
     let load_result = if loader_v4::check_id(program_account.owner()) {
-        solana_loader_v4_program::get_state(program_account.data())
+        trezoa_loader_v4_program::get_state(program_account.data())
             .ok()
             .and_then(|state| {
                 (!matches!(state.status, LoaderV4Status::Retracted)).then_some(state.slot)
@@ -246,7 +246,7 @@ pub(crate) fn get_program_deployment_slot<CB: TransactionProcessingCallback>(
         }
         Err(TransactionError::ProgramAccountNotFound)
     } else if loader_v4::check_id(program.owner()) {
-        let state = solana_loader_v4_program::get_state(program.data())
+        let state = trezoa_loader_v4_program::get_state(program.data())
             .map_err(|_| TransactionError::ProgramAccountNotFound)?;
         Ok(state.slot)
     } else {
@@ -259,13 +259,13 @@ mod tests {
     use {
         super::*,
         crate::transaction_processor::TransactionBatchProcessor,
-        solana_account::WritableAccount,
-        solana_program_runtime::{
+        trezoa_account::WritableAccount,
+        trezoa_program_runtime::{
             loaded_programs::{BlockRelation, ForkGraph, ProgramRuntimeEnvironments},
-            solana_sbpf::program::BuiltinProgram,
+            trezoa_sbpf::program::BuiltinProgram,
         },
-        solana_sdk_ids::{bpf_loader, bpf_loader_upgradeable},
-        solana_svm_callback::InvokeContextCallback,
+        trezoa_sdk_ids::{bpf_loader, bpf_loader_upgradeable},
+        trezoa_svm_callback::InvokeContextCallback,
         std::{
             cell::RefCell,
             collections::HashMap,
@@ -467,8 +467,8 @@ mod tests {
         let mut dir = env::current_dir().unwrap();
         dir.push("tests");
         dir.push("example-programs");
-        dir.push("hello-solana");
-        dir.push("hello_solana_program.so");
+        dir.push("hello-trezoa");
+        dir.push("hello_trezoa_program.so");
         let mut file = File::open(dir.clone()).expect("file not found");
         let metadata = fs::metadata(dir).expect("Unable to read metadata");
         let mut buffer = vec![0; metadata.len() as usize];

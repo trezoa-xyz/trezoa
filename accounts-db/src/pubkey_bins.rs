@@ -1,5 +1,5 @@
 use {
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
     std::num::{NonZeroU32, NonZeroUsize},
 };
 

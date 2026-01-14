@@ -1,14 +1,14 @@
 #[cfg(test)]
-use solana_perf::packet::PacketRef;
+use trezoa_perf::packet::PacketRef;
 use {
     crate::banking_stage::transaction_scheduler::transaction_state_container::SharedBytes,
-    agave_transaction_view::transaction_view::SanitizedTransactionView,
-    solana_bincode::limited_deserialize,
-    solana_clock::{Slot, UnixTimestamp},
-    solana_hash::Hash,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_vote_program::vote_instruction::VoteInstruction,
+    trezoa_transaction_view::transaction_view::SanitizedTransactionView,
+    trezoa_bincode::limited_deserialize,
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_hash::Hash,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_vote_program::vote_instruction::VoteInstruction,
     thiserror::Error,
 };
 
@@ -159,13 +159,13 @@ mod tests {
     use {
         super::*,
         itertools::Itertools,
-        solana_packet::PacketFlags,
-        solana_perf::packet::{BytesPacket, PacketBatch},
-        solana_runtime::genesis_utils::ValidatorVoteKeypairs,
-        solana_signer::Signer,
-        solana_system_transaction::transfer,
-        solana_vote::vote_transaction::new_tower_sync_transaction,
-        solana_vote_program::vote_state::TowerSync,
+        trezoa_packet::PacketFlags,
+        trezoa_perf::packet::{BytesPacket, PacketBatch},
+        trezoa_runtime::genesis_utils::ValidatorVoteKeypairs,
+        trezoa_signer::Signer,
+        trezoa_system_transaction::transfer,
+        trezoa_vote::vote_transaction::new_tower_sync_transaction,
+        trezoa_vote_program::vote_state::TowerSync,
     };
 
     fn deserialize_packets(

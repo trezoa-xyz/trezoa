@@ -1,5 +1,5 @@
 //! This module provides [`LeaderTpuCacheService`] structure along with [`LeaderUpdateReceiver`],
-//! [`Config`]. [`LeaderTpuCacheService`] tracks the current and upcoming Solana leader nodes and
+//! [`Config`]. [`LeaderTpuCacheService`] tracks the current and upcoming Trezoa leader nodes and
 //! their TPU socket addresses.
 #![allow(clippy::arithmetic_side_effects)]
 use {
@@ -9,11 +9,11 @@ use {
         node_address_service::SlotReceiver,
     },
     async_trait::async_trait,
-    solana_clock::{Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
-    solana_commitment_config::CommitmentConfig,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::{client_error::Error as ClientError, response::RpcContactInfo},
+    trezoa_clock::{Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{client_error::Error as ClientError, response::RpcContactInfo},
     std::{
         collections::HashMap, future::Future, net::SocketAddr, str::FromStr, sync::Arc,
         time::Instant,
@@ -51,7 +51,7 @@ impl Default for Config {
     }
 }
 
-/// [`LeaderTpuCacheService`] is a background task that tracks the current and upcoming Solana
+/// [`LeaderTpuCacheService`] is a background task that tracks the current and upcoming Trezoa
 /// leader nodes and updates their TPU socket addresses encapsulated in [`LeaderUpdateReceiver`] for
 /// downstream consumers.
 pub struct LeaderTpuCacheService {

@@ -13,13 +13,13 @@ use {
         stake_account::StakeAccount,
         stakes::{serialize_stake_accounts_to_delegation_format, DeserializableStakes, Stakes},
     },
-    agave_fs::FileInfo,
-    agave_snapshots::error::SnapshotError,
+    trezoa_fs::FileInfo,
+    trezoa_snapshots::error::SnapshotError,
     bincode::{self, config::Options, Error},
     log::*,
     serde::{de::DeserializeOwned, Deserialize, Serialize},
     smallvec::SmallVec,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_storage_entry::AccountStorageEntry,
         accounts::Accounts,
         accounts_db::{
@@ -32,18 +32,18 @@ use {
         blockhash_queue::BlockhashQueue,
         ObsoleteAccounts,
     },
-    solana_clock::{Epoch, Slot, UnixTimestamp},
-    solana_epoch_schedule::EpochSchedule,
-    solana_fee_calculator::{FeeCalculator, FeeRateGovernor},
-    solana_genesis_config::GenesisConfig,
-    solana_hard_forks::HardForks,
-    solana_hash::Hash,
-    solana_inflation::Inflation,
-    solana_lattice_hash::lt_hash::LtHash,
-    solana_measure::measure::Measure,
-    solana_pubkey::Pubkey,
-    solana_serde::default_on_eof,
-    solana_stake_interface::state::Delegation,
+    trezoa_clock::{Epoch, Slot, UnixTimestamp},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_fee_calculator::{FeeCalculator, FeeRateGovernor},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_hard_forks::HardForks,
+    trezoa_hash::Hash,
+    trezoa_inflation::Inflation,
+    trezoa_lattice_hash::lt_hash::LtHash,
+    trezoa_measure::measure::Measure,
+    trezoa_pubkey::Pubkey,
+    trezoa_serde::default_on_eof,
+    trezoa_stake_interface::state::Delegation,
     std::{
         collections::{HashMap, HashSet},
         io::{self, BufReader, Read, Write},
@@ -308,7 +308,7 @@ impl From<BankFieldsToSerialize> for SerializableVersionedBank {
 }
 
 #[cfg(feature = "frozen-abi")]
-impl solana_frozen_abi::abi_example::TransparentAsHelper for SerializableVersionedBank {}
+impl trezoa_frozen_abi::abi_example::TransparentAsHelper for SerializableVersionedBank {}
 
 /// Helper type to wrap BufReader streams when deserializing and reconstructing from either just a
 /// full snapshot, or both a full and incremental snapshot
@@ -770,7 +770,7 @@ impl Serialize for SerializableAccountsDb<'_> {
 }
 
 #[cfg(feature = "frozen-abi")]
-impl solana_frozen_abi::abi_example::TransparentAsHelper for SerializableAccountsDb<'_> {}
+impl trezoa_frozen_abi::abi_example::TransparentAsHelper for SerializableAccountsDb<'_> {}
 
 /// This struct contains side-info while reconstructing the bank from fields
 #[derive(Debug)]

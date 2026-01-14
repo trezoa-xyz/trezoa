@@ -1,7 +1,7 @@
 use {
     crate::transaction_execution_result::TransactionLoadedAccountsStats,
-    solana_fee_structure::FeeDetails, solana_message::inner_instruction::InnerInstructionsList,
-    solana_transaction_context::TransactionReturnData, solana_transaction_error::TransactionResult,
+    trezoa_fee_structure::FeeDetails, trezoa_message::inner_instruction::InnerInstructionsList,
+    trezoa_transaction_context::TransactionReturnData, trezoa_transaction_error::TransactionResult,
 };
 
 pub type TransactionCommitResult = TransactionResult<CommittedTransaction>;

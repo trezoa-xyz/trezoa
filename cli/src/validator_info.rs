@@ -8,29 +8,29 @@ use {
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     reqwest::blocking::Client,
     serde_json::{Map, Value},
-    solana_account::Account,
-    solana_account_decoder::validator_info::{
+    trezoa_account::Account,
+    trezoa_account_decoder::validator_info::{
         self, ValidatorInfo, MAX_LONG_FIELD_LENGTH, MAX_SHORT_FIELD_LENGTH, MAX_VALIDATOR_INFO,
     },
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit, COMPUTE_UNIT_PRICE_ARG},
         hidden_unless_forced,
         input_parsers::{pubkey_of, value_of},
         input_validators::{is_pubkey, is_url},
         keypair::DefaultSigner,
     },
-    solana_cli_output::{CliValidatorInfo, CliValidatorInfoVec},
-    solana_config_interface::{
+    trezoa_cli_output::{CliValidatorInfo, CliValidatorInfoVec},
+    trezoa_config_interface::{
         instruction::{self as config_instruction},
         state::{get_config_data, ConfigKeys},
     },
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_signer::Signer,
-    solana_transaction::Transaction,
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
     std::{error, rc::Rc},
 };
 
@@ -87,7 +87,7 @@ fn verify_keybase(
 ) -> Result<(), Box<dyn error::Error>> {
     if let Some(keybase_username) = keybase_username.as_str() {
         let url =
-            format!("https://keybase.pub/{keybase_username}/solana/validator-{validator_pubkey:?}");
+            format!("https://keybase.pub/{keybase_username}/trezoa/validator-{validator_pubkey:?}");
         let client = Client::new();
         if client.head(&url).send()?.status().is_success() {
             Ok(())
@@ -132,7 +132,7 @@ fn parse_validator_info(
     pubkey: &Pubkey,
     account: &Account,
 ) -> Result<(Pubkey, Map<String, serde_json::value::Value>), Box<dyn error::Error>> {
-    if account.owner != solana_config_interface::id() {
+    if account.owner != trezoa_config_interface::id() {
         return Err(format!("{pubkey} is not a validator info account").into());
     }
     let key_list: ConfigKeys = deserialize(&account.data)?;
@@ -154,11 +154,11 @@ impl ValidatorInfoSubCommands for App<'_, '_> {
     fn validator_info_subcommands(self) -> Self {
         self.subcommand(
             SubCommand::with_name("validator-info")
-                .about("Publish/get Validator info on Solana")
+                .about("Publish/get Validator info on Trezoa")
                 .setting(AppSettings::SubcommandRequiredElseHelp)
                 .subcommand(
                     SubCommand::with_name("publish")
-                        .about("Publish Validator info on Solana")
+                        .about("Publish Validator info on Trezoa")
                         .arg(
                             Arg::with_name("info_pubkey")
                                 .short("p")
@@ -225,7 +225,7 @@ impl ValidatorInfoSubCommands for App<'_, '_> {
                 )
                 .subcommand(
                     SubCommand::with_name("get")
-                        .about("Get and parse Solana Validator info")
+                        .about("Get and parse Trezoa Validator info")
                         .arg(
                             Arg::with_name("info_pubkey")
                                 .index(1)
@@ -306,7 +306,7 @@ pub async fn process_set_validator_info(
 
     // Check for existing validator-info account
     let all_config = rpc_client
-        .get_program_accounts(&solana_config_interface::id())
+        .get_program_accounts(&trezoa_config_interface::id())
         .await?;
     let existing_account = all_config
         .iter()
@@ -442,7 +442,7 @@ pub async fn process_get_validator_info(
         )]
     } else {
         let all_config = rpc_client
-            .get_program_accounts(&solana_config_interface::id())
+            .get_program_accounts(&trezoa_config_interface::id())
             .await?;
         all_config
             .into_iter()
@@ -518,7 +518,7 @@ mod tests {
 
     #[test]
     fn test_verify_keybase_username_not_string() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let value = Value::Bool(true);
 
         assert_eq!(
@@ -583,7 +583,7 @@ mod tests {
 
     #[test]
     fn test_parse_validator_info() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         let keys = vec![(validator_info::id(), false), (pubkey, true)];
         let config = ConfigKeys { keys };
 
@@ -597,7 +597,7 @@ mod tests {
             parse_validator_info(
                 &Pubkey::default(),
                 &Account {
-                    owner: solana_config_interface::id(),
+                    owner: trezoa_config_interface::id(),
                     data,
                     ..Account::default()
                 }
@@ -612,7 +612,7 @@ mod tests {
         assert!(parse_validator_info(
             &Pubkey::default(),
             &Account {
-                owner: solana_pubkey::new_rand(),
+                owner: trezoa_pubkey::new_rand(),
                 ..Account::default()
             }
         )
@@ -632,7 +632,7 @@ mod tests {
         assert!(parse_validator_info(
             &Pubkey::default(),
             &Account {
-                owner: solana_config_interface::id(),
+                owner: trezoa_config_interface::id(),
                 data,
                 ..Account::default()
             },

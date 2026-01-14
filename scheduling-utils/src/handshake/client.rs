@@ -3,7 +3,7 @@ use {
         shared::{GLOBAL_ALLOCATORS, LOGON_FAILURE, MAX_WORKERS, VERSION},
         ClientLogon,
     },
-    agave_scheduler_bindings::{
+    trezoa_scheduler_bindings::{
         PackToWorkerMessage, ProgressMessage, TpuToPackMessage, WorkerToPackMessage,
     },
     libc::CMSG_LEN,

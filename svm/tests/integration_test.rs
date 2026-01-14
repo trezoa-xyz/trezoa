@@ -7,28 +7,28 @@ use {
         program_data_size, register_builtins, MockBankCallback, MockForkGraph, EXECUTION_EPOCH,
         EXECUTION_SLOT, WALLCLOCK_TIME,
     },
-    solana_account::{AccountSharedData, ReadableAccount, WritableAccount, PROGRAM_OWNERS},
-    solana_clock::Slot,
-    solana_compute_budget::compute_budget_limits::ComputeBudgetLimits,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_fee_structure::FeeDetails,
-    solana_hash::Hash,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_loader_v3_interface::{
+    trezoa_account::{AccountSharedData, ReadableAccount, WritableAccount, PROGRAM_OWNERS},
+    trezoa_clock::Slot,
+    trezoa_compute_budget::compute_budget_limits::ComputeBudgetLimits,
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_fee_structure::FeeDetails,
+    trezoa_hash::Hash,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_loader_v3_interface::{
         get_program_data_address, instruction as loaderv3_instruction,
         state::UpgradeableLoaderState,
     },
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_nonce::{self as nonce, state::DurableNonce},
-    solana_program_entrypoint::MAX_PERMITTED_DATA_INCREASE,
-    solana_program_runtime::execution_budget::{
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_nonce::{self as nonce, state::DurableNonce},
+    trezoa_program_entrypoint::MAX_PERMITTED_DATA_INCREASE,
+    trezoa_program_runtime::execution_budget::{
         SVMTransactionExecutionAndFeeBudgetLimits, MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES,
     },
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{bpf_loader_upgradeable, compute_budget, native_loader},
-    solana_signer::Signer,
-    solana_svm::{
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{bpf_loader_upgradeable, compute_budget, native_loader},
+    trezoa_signer::Signer,
+    trezoa_svm::{
         account_loader::{CheckedTransactionDetails, TransactionCheckResult},
         nonce_info::NonceInfo,
         transaction_execution_result::TransactionExecutionDetails,
@@ -42,18 +42,18 @@ use {
             TransactionProcessingEnvironment,
         },
     },
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_transaction::{
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_transaction::{
         instruction::SVMInstruction,
         svm_message::{SVMMessage, SVMStaticMessage},
     },
-    solana_svm_type_overrides::sync::{Arc, RwLock},
-    solana_system_interface::{instruction as system_instruction, program as system_program},
-    solana_system_transaction as system_transaction,
-    solana_sysvar::rent::Rent,
-    solana_transaction::{sanitized::SanitizedTransaction, Transaction},
-    solana_transaction_context::TransactionReturnData,
-    solana_transaction_error::TransactionError,
+    trezoa_svm_type_overrides::sync::{Arc, RwLock},
+    trezoa_system_interface::{instruction as system_instruction, program as system_program},
+    trezoa_system_transaction as system_transaction,
+    trezoa_sysvar::rent::Rent,
+    trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
+    trezoa_transaction_context::TransactionReturnData,
+    trezoa_transaction_error::TransactionError,
     std::{collections::HashMap, num::NonZeroU32, slice, sync::atomic::Ordering},
     test_case::test_case,
 };
@@ -739,7 +739,7 @@ fn program_medley(drop_on_failure: bool) -> Vec<SvmTestEntry> {
 
     // 0: A transaction that works without any account
     {
-        let program_name = "hello-solana";
+        let program_name = "hello-trezoa";
         let program_id = program_address(program_name);
         test_entry.add_initial_program(program_name);
 
@@ -761,7 +761,7 @@ fn program_medley(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         test_entry.transaction_batch[0]
             .asserts
             .logs
-            .push("Program log: Hello, Solana!".to_string());
+            .push("Program log: Hello, Trezoa!".to_string());
 
         test_entry.decrease_expected_lamports(&fee_payer, LAMPORTS_PER_SIGNATURE);
     }
@@ -1068,7 +1068,7 @@ fn simple_transfer(drop_on_failure: bool) -> Vec<SvmTestEntry> {
 fn simple_nonce(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
     let mut test_entry = SvmTestEntry::default();
 
-    let program_name = "hello-solana";
+    let program_name = "hello-trezoa";
     let real_program_id = program_address(program_name);
     test_entry.add_initial_program(program_name);
 
@@ -1508,7 +1508,7 @@ fn simd83_intrabatch_account_reuse() -> Vec<SvmTestEntry> {
 fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
     let mut test_entries = vec![];
 
-    let program_name = "hello-solana";
+    let program_name = "hello-trezoa";
     let program_id = program_address(program_name);
 
     let fee_payer_keypair = Keypair::new();
@@ -2016,7 +2016,7 @@ impl WriteProgramInstruction {
                 vec![2],
                 vec![
                     AccountMeta::new(target, false),
-                    AccountMeta::new(solana_sdk_ids::incinerator::id(), false),
+                    AccountMeta::new(trezoa_sdk_ids::incinerator::id(), false),
                 ],
             ),
             Self::Realloc(new_size) => {
@@ -2125,13 +2125,13 @@ fn simd83_account_deallocate() -> Vec<SvmTestEntry> {
 fn simd83_fee_payer_deallocate() -> Vec<SvmTestEntry> {
     let mut test_entry = SvmTestEntry::default();
 
-    let program_name = "hello-solana";
+    let program_name = "hello-trezoa";
     let real_program_id = program_address(program_name);
     test_entry.add_initial_program(program_name);
 
     // rent minimum needs to be adjusted so fee payer can be deallocated
     let rent = Rent {
-        lamports_per_byte_year: LAMPORTS_PER_SIGNATURE / solana_rent::ACCOUNT_STORAGE_OVERHEAD,
+        lamports_per_byte_year: LAMPORTS_PER_SIGNATURE / trezoa_rent::ACCOUNT_STORAGE_OVERHEAD,
         exemption_threshold: 1.0,
         burn_percent: 0,
     };
@@ -2651,7 +2651,7 @@ fn program_cache_create_account() {
 fn program_cache_loaderv3_update_tombstone(upgrade_program: bool, invoke_changed_program: bool) {
     let mut test_entry = SvmTestEntry::default();
 
-    let program_name = "hello-solana";
+    let program_name = "hello-trezoa";
     let program_id = program_address(program_name);
 
     let fee_payer_keypair = Keypair::new();
@@ -2757,7 +2757,7 @@ fn program_cache_loaderv3_update_tombstone(upgrade_program: bool, invoke_changed
 fn program_cache_loaderv3_buffer_swap(invoke_changed_program: bool) {
     let mut test_entry = SvmTestEntry::default();
 
-    let program_name = "hello-solana";
+    let program_name = "hello-trezoa";
 
     let fee_payer_keypair = Keypair::new();
     let fee_payer = fee_payer_keypair.pubkey();
@@ -2888,7 +2888,7 @@ fn program_cache_loaderv3_buffer_swap(invoke_changed_program: bool) {
 fn program_cache_stats() {
     let mut test_entry = SvmTestEntry::default();
 
-    let program_name = "hello-solana";
+    let program_name = "hello-trezoa";
     let noop_program = program_address(program_name);
 
     let fee_payer_keypair = Keypair::new();
@@ -3467,9 +3467,9 @@ mod balance_collector {
     use {
         super::*,
         rand0_7::prelude::*,
-        solana_program_pack::Pack,
+        trezoa_program_pack::Pack,
         spl_generic_token::token_2022,
-        spl_token_interface::state::{
+        tpl_token_interface::state::{
             Account as TokenAccount, AccountState as TokenAccountState, Mint,
         },
         test_case::test_case,
@@ -3511,8 +3511,8 @@ mod balance_collector {
             // we use a common account owner, the fee-payer, to conveniently reuse account state
             // so why do we sign? to force the sender and receiver to be in a consistent order in account keys
             // which means we can grab them by index in our final test instead of searching by key
-            let mut instruction = spl_token_interface::instruction::transfer(
-                &spl_token_interface::id(),
+            let mut instruction = tpl_token_interface::instruction::transfer(
+                &tpl_token_interface::id(),
                 &self.from,
                 &self.to,
                 fee_payer,
@@ -3571,7 +3571,7 @@ mod balance_collector {
         let mint_state = AccountSharedData::create_from_existing_shared_data(
             LAMPORTS_PER_SOL,
             Arc::new(mint_buf),
-            spl_token_interface::id(),
+            tpl_token_interface::id(),
             false,
             u64::MAX,
         );
@@ -3590,13 +3590,13 @@ mod balance_collector {
         let token_state = AccountSharedData::create_from_existing_shared_data(
             LAMPORTS_PER_SOL,
             Arc::new(token_buf),
-            spl_token_interface::id(),
+            tpl_token_interface::id(),
             false,
             u64::MAX,
         );
 
-        let (_, spl_token) =
-            solana_program_binaries::by_id(&spl_token_interface::id(), &Rent::default())
+        let (_, tpl_token) =
+            trezoa_program_binaries::by_id(&tpl_token_interface::id(), &Rent::default())
                 .unwrap()
                 .swap_remove(0);
 
@@ -3605,7 +3605,7 @@ mod balance_collector {
             test_entry.add_initial_account(fee_payer, &native_state.clone());
 
             if use_tokens {
-                test_entry.add_initial_account(spl_token_interface::id(), &spl_token);
+                test_entry.add_initial_account(tpl_token_interface::id(), &tpl_token);
                 test_entry.add_initial_account(mint, &mint_state);
                 test_entry.add_initial_account(alice, &token_state);
                 test_entry.add_initial_account(bob, &token_state);
@@ -3722,7 +3722,7 @@ mod balance_collector {
                 let final_token_state = AccountSharedData::create_from_existing_shared_data(
                     LAMPORTS_PER_SOL,
                     Arc::new(token_buf.clone()),
-                    spl_token_interface::id(),
+                    tpl_token_interface::id(),
                     false,
                     u64::MAX,
                 );
@@ -3733,7 +3733,7 @@ mod balance_collector {
                 let final_token_state = AccountSharedData::create_from_existing_shared_data(
                     LAMPORTS_PER_SOL,
                     Arc::new(token_buf.clone()),
-                    spl_token_interface::id(),
+                    tpl_token_interface::id(),
                     false,
                     u64::MAX,
                 );
@@ -3744,7 +3744,7 @@ mod balance_collector {
                 let final_token_state = AccountSharedData::create_from_existing_shared_data(
                     LAMPORTS_PER_SOL,
                     Arc::new(token_buf.clone()),
-                    spl_token_interface::id(),
+                    tpl_token_interface::id(),
                     false,
                     u64::MAX,
                 );

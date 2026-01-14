@@ -3,15 +3,15 @@
 use {
     crate::result::{Error, Result},
     crossbeam_channel::{unbounded, RecvTimeoutError},
-    solana_clock::{DEFAULT_TICKS_PER_SLOT, HOLD_TRANSACTIONS_SLOT_OFFSET},
-    solana_metrics::{inc_new_counter_debug, inc_new_counter_info},
-    solana_packet::PacketFlags,
-    solana_perf::{
+    trezoa_clock::{DEFAULT_TICKS_PER_SLOT, HOLD_TRANSACTIONS_SLOT_OFFSET},
+    trezoa_metrics::{inc_new_counter_debug, inc_new_counter_info},
+    trezoa_packet::PacketFlags,
+    trezoa_perf::{
         packet::{PacketBatchRecycler, PacketRefMut},
         recycler::Recycler,
     },
-    solana_poh::poh_recorder::PohRecorder,
-    solana_streamer::streamer::{
+    trezoa_poh::poh_recorder::PohRecorder,
+    trezoa_streamer::streamer::{
         self, PacketBatchReceiver, PacketBatchSender, StreamerReceiveStats,
     },
     std::{

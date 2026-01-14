@@ -3,8 +3,8 @@
 
 use {
     async_trait::async_trait, core::iter::repeat,
-    solana_connection_cache::nonblocking::client_connection::ClientConnection,
-    solana_streamer::nonblocking::sendmmsg::batch_send, solana_transaction_error::TransportResult,
+    trezoa_connection_cache::nonblocking::client_connection::ClientConnection,
+    trezoa_streamer::nonblocking::sendmmsg::batch_send, trezoa_transaction_error::TransportResult,
     std::net::SocketAddr, tokio::net::UdpSocket,
 };
 
@@ -46,12 +46,12 @@ impl ClientConnection for UdpClientConnection {
 mod tests {
     use {
         super::*,
-        solana_net_utils::sockets::{
+        trezoa_net_utils::sockets::{
             bind_to_async, bind_to_with_config, unique_port_range_for_tests,
             SocketConfiguration as SocketConfig,
         },
-        solana_packet::{Packet, PACKET_DATA_SIZE},
-        solana_streamer::nonblocking::recvmmsg::recv_mmsg,
+        trezoa_packet::{Packet, PACKET_DATA_SIZE},
+        trezoa_streamer::nonblocking::recvmmsg::recv_mmsg,
         std::net::{IpAddr, Ipv4Addr},
         tokio::net::UdpSocket,
     };

@@ -1,17 +1,17 @@
 /// Module responsible for notifying plugins of account updates
 use {
     crate::geyser_plugin_manager::GeyserPluginManager,
-    agave_geyser_plugin_interface::geyser_plugin_interface::{
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaAccountInfoV3, ReplicaAccountInfoVersions,
     },
     log::*,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_accounts_db::accounts_update_notifier_interface::{
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_accounts_db::accounts_update_notifier_interface::{
         AccountForGeyser, AccountsUpdateNotifierInterface,
     },
-    solana_clock::Slot,
-    solana_pubkey::Pubkey,
-    solana_transaction::sanitized::SanitizedTransaction,
+    trezoa_clock::Slot,
+    trezoa_pubkey::Pubkey,
+    trezoa_transaction::sanitized::SanitizedTransaction,
     std::sync::{Arc, RwLock},
 };
 #[derive(Debug)]

@@ -14,8 +14,8 @@ use {
         stake::check_current_authority,
     },
     clap::{value_t_or_exit, App, Arg, ArgMatches, SubCommand},
-    solana_account::Account,
-    solana_clap_utils::{
+    trezoa_account::Account,
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit, COMPUTE_UNIT_PRICE_ARG},
         fee_payer::{fee_payer_arg, FEE_PAYER_ARG},
         input_parsers::*,
@@ -25,21 +25,21 @@ use {
         nonce::*,
         offline::*,
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         display::build_balance_message, return_signers_with_config, CliEpochVotingHistory,
         CliLandedVote, CliVoteAccount, ReturnSignersConfig,
     },
-    solana_commitment_config::CommitmentConfig,
-    solana_feature_gate_interface::from_account,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::config::RpcGetVoteAccountsConfig,
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_system_interface::error::SystemError,
-    solana_transaction::Transaction,
-    solana_vote_program::{
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_feature_gate_interface::from_account,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::config::RpcGetVoteAccountsConfig,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_system_interface::error::SystemError,
+    trezoa_transaction::Transaction,
+    trezoa_vote_program::{
         vote_error::VoteError,
         vote_instruction::{self, withdraw, CreateVoteAccountConfig},
         vote_state::{VoteAuthorize, VoteInit, VoteStateV4, VOTE_CREDITS_MAXIMUM_PER_SLOT},
@@ -338,7 +338,7 @@ impl VoteSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(
                     Arg::with_name("with_rewards")
@@ -389,7 +389,7 @@ impl VoteSubCommands for App<'_, '_> {
                         .index(2)
                         .value_name("RECIPIENT_ADDRESS")
                         .required(true),
-                    "The recipient of withdrawn SOL."
+                    "The recipient of withdrawn TRZ."
                 ))
                 .arg(
                     Arg::with_name("amount")
@@ -399,7 +399,7 @@ impl VoteSubCommands for App<'_, '_> {
                         .required(true)
                         .validator(is_amount_or_all)
                         .help(
-                            "The amount to withdraw, in SOL; accepts keyword ALL, which for this \
+                            "The amount to withdraw, in TRZ; accepts keyword ALL, which for this \
                              command means account balance minus rent-exempt minimum",
                         ),
                 )
@@ -432,7 +432,7 @@ impl VoteSubCommands for App<'_, '_> {
                         .index(2)
                         .value_name("RECIPIENT_ADDRESS")
                         .required(true),
-                    "The recipient of all withdrawn SOL."
+                    "The recipient of all withdrawn TRZ."
                 ))
                 .arg(
                     Arg::with_name("authorized_withdrawer")
@@ -810,7 +810,7 @@ pub async fn process_create_vote_account(
     let vote_account = config.signers[vote_account];
     let vote_account_pubkey = vote_account.pubkey();
     let vote_account_address = if let Some(seed) = seed {
-        Pubkey::create_with_seed(&vote_account_pubkey, seed, &solana_vote_program::id())?
+        Pubkey::create_with_seed(&vote_account_pubkey, seed, &trezoa_vote_program::id())?
     } else {
         vote_account_pubkey
     };
@@ -906,7 +906,7 @@ pub async fn process_create_vote_account(
             .await
         {
             if let Some(vote_account) = response.value {
-                let err_msg = if vote_account.owner == solana_vote_program::id() {
+                let err_msg = if vote_account.owner == trezoa_vote_program::id() {
                     format!("Vote account {vote_account_address} already exists")
                 } else {
                     format!(
@@ -919,7 +919,7 @@ pub async fn process_create_vote_account(
 
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1086,7 +1086,7 @@ pub async fn process_vote_authorize(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1181,7 +1181,7 @@ pub async fn process_vote_update_validator(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1269,7 +1269,7 @@ pub async fn process_vote_update_commission(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1308,7 +1308,7 @@ pub(crate) async fn get_vote_account(
             CliError::RpcRequestError(format!("{vote_account_pubkey:?} account does not exist"))
         })?;
 
-    if vote_account.owner != solana_vote_program::id() {
+    if vote_account.owner != trezoa_vote_program::id() {
         return Err(CliError::RpcRequestError(format!(
             "{vote_account_pubkey:?} is not a vote account"
         ))
@@ -1339,7 +1339,7 @@ pub async fn process_show_vote_account(
     let epoch_schedule = rpc_client.get_epoch_schedule().await?;
     let tvc_activation_slot = rpc_client
         .get_account_with_commitment(
-            &agave_feature_set::timely_vote_credits::id(),
+            &trezoa_feature_set::timely_vote_credits::id(),
             config.commitment,
         )
         .await
@@ -1497,7 +1497,7 @@ pub async fn process_withdraw_from_vote_account(
             let balance_remaining = current_balance.saturating_sub(withdraw_amount);
             if balance_remaining < minimum_balance && balance_remaining != 0 {
                 return Err(CliError::BadParameter(format!(
-                    "Withdraw amount too large. The vote account balance must be at least {} SOL \
+                    "Withdraw amount too large. The vote account balance must be at least {} TRZ \
                      to remain rent exempt",
                     build_balance_message(minimum_balance, false, false)
                 ))
@@ -1521,7 +1521,7 @@ pub async fn process_withdraw_from_vote_account(
         tx.try_sign(&config.signers, recent_blockhash)?;
         if let Some(nonce_account) = &nonce_account {
             let nonce_account =
-                solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+                trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
                     rpc_client,
                     nonce_account,
                     config.commitment,
@@ -1623,11 +1623,11 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_hash::Hash,
-        solana_keypair::{read_keypair_file, write_keypair, Keypair},
-        solana_presigner::Presigner,
-        solana_rpc_client_nonce_utils::nonblocking::blockhash_query::Source,
-        solana_signer::Signer,
+        trezoa_hash::Hash,
+        trezoa_keypair::{read_keypair_file, write_keypair, Keypair},
+        trezoa_presigner::Presigner,
+        trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::Source,
+        trezoa_signer::Signer,
         tempfile::NamedTempFile,
     };
 
@@ -2064,7 +2064,7 @@ mod tests {
         );
 
         // test init with an authed voter
-        let authed = solana_pubkey::new_rand();
+        let authed = trezoa_pubkey::new_rand();
         let (keypair_file, mut tmp_file) = make_tmp_file();
         let keypair = Keypair::new();
         write_keypair(&keypair, tmp_file.as_file_mut()).unwrap();

@@ -1,24 +1,24 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
     log::*,
-    solana_bench_tps::{
+    trezoa_bench_tps::{
         bench::{do_bench_tps, max_lamports_for_prioritization},
         cli::{self, ExternalClientType},
         keypairs::get_keypairs,
         send_batch::{generate_durable_nonce_accounts, generate_keypairs},
     },
-    solana_client::connection_cache::ConnectionCache,
-    solana_commitment_config::CommitmentConfig,
-    solana_fee_calculator::FeeRateGovernor,
-    solana_genesis::Base64Account,
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_signer::Signer,
-    solana_streamer::streamer::StakedNodes,
-    solana_system_interface::program as system_program,
-    solana_tps_client::TpsClient,
-    solana_tpu_client::tpu_client::{TpuClient, TpuClientConfig},
+    trezoa_client::connection_cache::ConnectionCache,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_fee_calculator::FeeRateGovernor,
+    trezoa_genesis::Base64Account,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_signer::Signer,
+    trezoa_streamer::streamer::StakedNodes,
+    trezoa_system_interface::program as system_program,
+    trezoa_tps_client::TpsClient,
+    trezoa_tpu_client::tpu_client::{TpuClient, TpuClientConfig},
     std::{
         collections::HashMap,
         fs::File,
@@ -162,10 +162,10 @@ fn create_client(
 }
 
 fn main() {
-    agave_logger::setup_with_default_filter();
-    solana_metrics::set_panic_hook("bench-tps", /*version:*/ None);
+    trezoa_logger::setup_with_default_filter();
+    trezoa_metrics::set_panic_hook("bench-tps", /*version:*/ None);
 
-    let matches = cli::build_args(solana_version::version!()).get_matches();
+    let matches = cli::build_args(trezoa_version::version!()).get_matches();
     let cli_config = match cli::parse_args(&matches) {
         Ok(config) => config,
         Err(error) => {
@@ -252,7 +252,7 @@ fn main() {
             .get_account(&instruction_padding_config.program_id)
             .expect(
                 "Instruction padding program must be deployed to this cluster. Deploy the program \
-                 using `solana program deploy \
+                 using `trezoa program deploy \
                  ./bench-tps/tests/fixtures/spl_instruction_padding.so` and pass the resulting \
                  program id with `--instruction-padding-program-id`",
             );

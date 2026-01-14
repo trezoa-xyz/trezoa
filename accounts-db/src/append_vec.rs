@@ -2,7 +2,7 @@
 //!
 //! For more information, see:
 //!
-//! <https://docs.anza.xyz/implemented-proposals/persistent-account-storage>
+//! <https://docs.trezoa.xyz/implemented-proposals/persistent-account-storage>
 
 mod meta;
 pub mod test_utils;
@@ -21,7 +21,7 @@ use {
         u64_align,
         utils::create_account_shared_data,
     },
-    agave_fs::{
+    trezoa_fs::{
         buffered_reader::{
             BufReaderWithOverflow, BufferedReader, FileBufRead as _, RequiredLenBufFileRead,
             RequiredLenBufRead as _,
@@ -32,9 +32,9 @@ use {
     log::*,
     memmap2::MmapMut,
     meta::{AccountMeta, StoredAccountNoData, StoredMeta},
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_pubkey::Pubkey,
-    solana_system_interface::MAX_PERMITTED_DATA_LENGTH,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_pubkey::Pubkey,
+    trezoa_system_interface::MAX_PERMITTED_DATA_LENGTH,
     std::{
         self,
         convert::TryFrom,
@@ -435,7 +435,7 @@ impl AppendVec {
             // However, if opening a minimized snapshot, the file sizes can be
             // larger than current length [^1].  So when the `if` condition fails,
             // fallback to the old/slow impl that does the full sanitization.
-            // [^1]: https://github.com/anza-xyz/agave/issues/6797
+            // [^1]: https://github.com/trezoa-xyz/trezoa/issues/6797
             info!(
                 "Could not optimistically create new AppendVec, falling back to pessimistic impl: \
                  file size ({}) and current length ({}) do not match for '{}'",
@@ -873,7 +873,7 @@ impl AppendVec {
     pub fn get_account_test(
         &self,
         offset: usize,
-    ) -> Option<(Pubkey, solana_account::AccountSharedData)> {
+    ) -> Option<(Pubkey, trezoa_account::AccountSharedData)> {
         let data_len = self.get_account_data_lens(&[offset]);
         let sizes: usize = data_len
             .iter()
@@ -881,7 +881,7 @@ impl AppendVec {
             .sum();
         let result = self.get_stored_account_meta_callback(offset, |r_callback| {
             let r2 = self.get_account_shared_data(offset);
-            assert!(solana_account::accounts_equal(
+            assert!(trezoa_account::accounts_equal(
                 &r_callback,
                 r2.as_ref().unwrap()
             ));
@@ -1049,7 +1049,7 @@ impl AppendVec {
 
     /// Scans accounts with StoredAccountMeta
     ///
-    /// Only intended to be called by agave-store-tool.
+    /// Only intended to be called by trezoa-store-tool.
     /// Refer to `scan_accounts_stored_meta` for further documentation.
     #[cfg(feature = "dev-context-only-utils")]
     pub fn scan_accounts_stored_meta_for_store_tool(
@@ -1349,8 +1349,8 @@ mod tests {
         memoffset::offset_of,
         rand::{prelude::*, rng},
         rand_chacha::ChaChaRng,
-        solana_account::{accounts_equal, AccountSharedData, WritableAccount},
-        solana_clock::Slot,
+        trezoa_account::{accounts_equal, AccountSharedData, WritableAccount},
+        trezoa_clock::Slot,
         std::{mem::ManuallyDrop, time::Instant},
         test_case::{test_case, test_matrix},
     };
@@ -1796,14 +1796,14 @@ mod tests {
         // So, the sanitizing on load behavior can be tested by capturing [u8] that would be created if such a write was possible (as it used to be).
         // The contents of [u8] written by an append vec cannot easily or reasonably change frequently since it has released a long time.
         /*
-            agave_logger::setup();
+            trezoa_logger::setup();
             // uncomment this code to generate the invalid append vec that will fail on load
             let file = get_append_vec_path("test_append");
             let path = &file.path;
             let mut av = AppendVec::new(path, true, 256);
             av.set_no_remove_on_drop();
 
-            let pubkey = solana_pubkey::new_rand();
+            let pubkey = trezoa_pubkey::new_rand();
             let owner = Pubkey::default();
             let data_len = 3_u64;
             let mut account = AccountSharedData::new(0, data_len as usize, &owner);
@@ -2147,7 +2147,7 @@ mod tests {
         check_fn: impl Fn(&AppendVec, &[Pubkey], &[usize], &[AccountSharedData]),
     ) {
         const NUM_ACCOUNTS: usize = 37;
-        let pubkeys: Vec<_> = std::iter::repeat_with(solana_pubkey::new_rand)
+        let pubkeys: Vec<_> = std::iter::repeat_with(trezoa_pubkey::new_rand)
             .take(NUM_ACCOUNTS)
             .collect();
 
@@ -2249,12 +2249,12 @@ mod tests {
             let fake_stored_meta = StoredMeta {
                 write_version_obsolete: 0,
                 data_len: 100,
-                pubkey: solana_pubkey::new_rand(),
+                pubkey: trezoa_pubkey::new_rand(),
             };
             let fake_account_meta = AccountMeta {
                 lamports: 100,
                 rent_epoch: 10,
-                owner: solana_pubkey::new_rand(),
+                owner: trezoa_pubkey::new_rand(),
                 executable: false,
             };
 
@@ -2348,12 +2348,12 @@ mod tests {
             let fake_stored_meta = StoredMeta {
                 write_version_obsolete: 0,
                 data_len: 100,
-                pubkey: solana_pubkey::new_rand(),
+                pubkey: trezoa_pubkey::new_rand(),
             };
             let fake_account_meta = AccountMeta {
                 lamports: 100,
                 rent_epoch: 10,
-                owner: solana_pubkey::new_rand(),
+                owner: trezoa_pubkey::new_rand(),
                 executable: false,
             };
 
@@ -2446,12 +2446,12 @@ mod tests {
             let fake_stored_meta = StoredMeta {
                 write_version_obsolete: 0,
                 data_len: 100,
-                pubkey: solana_pubkey::new_rand(),
+                pubkey: trezoa_pubkey::new_rand(),
             };
             let fake_account_meta = AccountMeta {
                 lamports: 100,
                 rent_epoch: 10,
-                owner: solana_pubkey::new_rand(),
+                owner: trezoa_pubkey::new_rand(),
                 executable: false,
             };
 

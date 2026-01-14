@@ -1,5 +1,5 @@
 [package]
-name = "solana-sbf-rust-big-mod-exp"
+name = "trezoa-sbf-rust-big-mod-exp"
 version = { workspace = true }
 description = { workspace = true }
 authors = { workspace = true }
@@ -15,9 +15,9 @@ crate-type = ["cdylib"]
 array-bytes = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-solana-big-mod-exp = { workspace = true }
-solana-msg = { workspace = true }
-solana-program-entrypoint = { workspace = true }
+trezoa-big-mod-exp = { workspace = true }
+trezoa-msg = { workspace = true }
+trezoa-program-entrypoint = { workspace = true }
 
 [lints]
 workspace = true

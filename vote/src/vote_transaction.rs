@@ -1,11 +1,11 @@
 use {
     serde::{Deserialize, Serialize},
-    solana_clock::{Slot, UnixTimestamp},
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_signer::Signer,
-    solana_transaction::Transaction,
-    solana_vote_interface::{self as vote, state::*},
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
+    trezoa_vote_interface::{self as vote, state::*},
 };
 
 #[cfg_attr(

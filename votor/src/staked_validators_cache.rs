@@ -3,11 +3,11 @@
 use {
     crate::voting_service::AlpenglowPortOverride,
     lru::LruCache,
-    solana_clock::{Epoch, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank_forks::BankForks,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank_forks::BankForks,
     std::{
         collections::HashMap,
         net::SocketAddr,
@@ -236,22 +236,22 @@ mod tests {
         super::StakedValidatorsCache,
         crate::voting_service::AlpenglowPortOverride,
         rand::Rng,
-        solana_gossip::{
+        trezoa_gossip::{
             cluster_info::ClusterInfo, contact_info::ContactInfo, crds::GossipRoute,
             crds_data::CrdsData, crds_value::CrdsValue, node::Node,
         },
-        solana_keypair::Keypair,
-        solana_net_utils::SocketAddrSpace,
-        solana_pubkey::Pubkey,
-        solana_runtime::{
+        trezoa_keypair::Keypair,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             genesis_utils::{
                 create_genesis_config_with_alpenglow_vote_accounts, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
         std::{
             collections::HashMap,
             net::{Ipv4Addr, SocketAddr},
@@ -566,7 +566,7 @@ mod tests {
 
     #[test]
     fn test_alpenglow_port_override() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (bank_forks, cluster_info, node_pubkeys) = create_bank_forks_and_cluster_info(3, 0, 1);
         let pubkey_b = node_pubkeys[1];
 

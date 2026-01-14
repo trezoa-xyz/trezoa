@@ -1,11 +1,11 @@
 use {
-    solana_clock::{
+    trezoa_clock::{
         DEFAULT_TICKS_PER_SLOT, FORWARD_TRANSACTIONS_TO_LEADER_AT_SLOT_OFFSET,
         HOLD_TRANSACTIONS_SLOT_OFFSET,
     },
-    solana_poh::poh_recorder::{PohRecorder, SharedLeaderState},
-    solana_runtime::bank::Bank,
-    solana_unified_scheduler_pool::{BankingStageMonitor, BankingStageStatus},
+    trezoa_poh::poh_recorder::{PohRecorder, SharedLeaderState},
+    trezoa_runtime::bank::Bank,
+    trezoa_unified_scheduler_pool::{BankingStageMonitor, BankingStageStatus},
     std::sync::{
         atomic::{AtomicBool, Ordering::Relaxed},
         Arc,
@@ -122,8 +122,8 @@ impl BankingStageMonitor for DecisionMakerWrapper {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, solana_ledger::genesis_utils::create_genesis_config,
-        solana_poh::poh_recorder::LeaderState, solana_runtime::bank::Bank,
+        super::*, trezoa_ledger::genesis_utils::create_genesis_config,
+        trezoa_poh::poh_recorder::LeaderState, trezoa_runtime::bank::Bank,
     };
 
     #[test]

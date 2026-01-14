@@ -1,12 +1,12 @@
 use {
-    solana_account_info::AccountInfo,
-    solana_instruction::{error::InstructionError, Instruction},
-    solana_program_error::ProgramResult,
-    solana_program_test::{processor, ProgramTest},
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_transaction::Transaction,
-    solana_transaction_error::TransactionError,
+    trezoa_account_info::AccountInfo,
+    trezoa_instruction::{error::InstructionError, Instruction},
+    trezoa_program_error::ProgramResult,
+    trezoa_program_test::{processor, ProgramTest},
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionError,
 };
 
 fn panic(_program_id: &Pubkey, _accounts: &[AccountInfo], _input: &[u8]) -> ProgramResult {

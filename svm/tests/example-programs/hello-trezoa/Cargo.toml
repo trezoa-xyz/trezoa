@@ -1,5 +1,5 @@
 [package]
-name = "hello-solana-program"
+name = "hello-trezoa-program"
 version = "4.0.0-alpha.0"
 edition = "2021"
 

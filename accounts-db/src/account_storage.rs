@@ -5,8 +5,8 @@ use {
     dashmap::DashMap,
     rand::seq::SliceRandom,
     rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
-    solana_clock::Slot,
-    solana_nohash_hasher::IntMap,
+    trezoa_clock::Slot,
+    trezoa_nohash_hasher::IntMap,
     std::{
         ops::{Index, Range},
         sync::{

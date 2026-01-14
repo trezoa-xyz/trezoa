@@ -9,8 +9,8 @@ use {
     },
     log::*,
     regex::Regex,
-    solana_clock::Slot,
-    solana_hash::Hash,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
     std::{
         fs,
         path::{Path, PathBuf},

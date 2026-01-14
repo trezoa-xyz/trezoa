@@ -2,7 +2,7 @@
 
 use {
     crate::core_bpf_migration::CoreBpfMigrationConfig,
-    solana_program_runtime::invoke_context::BuiltinFunctionWithContext, solana_pubkey::Pubkey,
+    trezoa_program_runtime::invoke_context::BuiltinFunctionWithContext, trezoa_pubkey::Pubkey,
 };
 
 /// Transitions of built-in programs at epoch boundaries when features are activated.

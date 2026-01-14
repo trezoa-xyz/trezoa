@@ -1,16 +1,16 @@
 use {
     crate::commands::{FromClapArgMatches, Result},
     clap::{value_t, Arg, ArgMatches},
-    solana_clap_utils::{hidden_unless_forced, input_validators::is_parsable},
-    solana_rpc::rpc::RpcBigtableConfig,
+    trezoa_clap_utils::{hidden_unless_forced, input_validators::is_parsable},
+    trezoa_rpc::rpc::RpcBigtableConfig,
     std::{sync::LazyLock, time::Duration},
 };
 
-const DEFAULT_BIGTABLE_INSTANCE_NAME: &str = solana_storage_bigtable::DEFAULT_INSTANCE_NAME;
-const DEFAULT_BIGTABLE_APP_PROFILE_ID: &str = solana_storage_bigtable::DEFAULT_APP_PROFILE_ID;
+const DEFAULT_BIGTABLE_INSTANCE_NAME: &str = trezoa_storage_bigtable::DEFAULT_INSTANCE_NAME;
+const DEFAULT_BIGTABLE_APP_PROFILE_ID: &str = trezoa_storage_bigtable::DEFAULT_APP_PROFILE_ID;
 const DEFAULT_BIGTABLE_TIMEOUT: &str = "30";
 static DEFAULT_BIGTABLE_MAX_MESSAGE_SIZE: LazyLock<String> =
-    LazyLock::new(|| solana_storage_bigtable::DEFAULT_MAX_MESSAGE_SIZE.to_string());
+    LazyLock::new(|| trezoa_storage_bigtable::DEFAULT_MAX_MESSAGE_SIZE.to_string());
 
 impl FromClapArgMatches for RpcBigtableConfig {
     fn from_clap_arg_match(matches: &ArgMatches) -> Result<Self> {
@@ -69,7 +69,7 @@ mod tests {
         crate::commands::run::args::{
             tests::verify_args_struct_by_command_run_with_identity_setup, RunArgs,
         },
-        solana_rpc::rpc::JsonRpcConfig,
+        trezoa_rpc::rpc::JsonRpcConfig,
     };
 
     fn default_rpc_bigtable_config() -> RpcBigtableConfig {
@@ -236,7 +236,7 @@ mod tests {
 
     #[test]
     fn test_default_bigtable_instance_name_unchanged() {
-        assert_eq!(DEFAULT_BIGTABLE_INSTANCE_NAME, "solana-ledger");
+        assert_eq!(DEFAULT_BIGTABLE_INSTANCE_NAME, "trezoa-ledger");
     }
 
     #[test]

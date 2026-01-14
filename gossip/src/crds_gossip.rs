@@ -22,14 +22,14 @@ use {
     itertools::Itertools,
     rand::{CryptoRng, Rng},
     rayon::ThreadPool,
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::shred::Shred,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_time_utils::timestamp,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::Shred,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_time_utils::timestamp,
     std::{
         collections::{HashMap, HashSet},
         net::SocketAddr,
@@ -411,7 +411,7 @@ pub(crate) fn maybe_ping_gossip_addresses<R: Rng + CryptoRng>(
 
 #[cfg(test)]
 mod test {
-    use {super::*, solana_sha256_hasher::hash, solana_time_utils::timestamp};
+    use {super::*, trezoa_sha256_hasher::hash, trezoa_time_utils::timestamp};
 
     #[test]
     fn test_prune_errors() {

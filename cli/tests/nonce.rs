@@ -1,24 +1,24 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
-    solana_cli::{
+    trezoa_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
         spend_utils::SpendAmount,
         test_utils::check_ready,
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_commitment_config::CommitmentConfig,
-    solana_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
-    solana_hash::Hash,
-    solana_keypair::{keypair_from_seed, Keypair},
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::{BlockhashQuery, Source},
-    solana_signer::Signer,
-    solana_system_interface::program as system_program,
-    solana_test_validator::TestValidator,
+    trezoa_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
+    trezoa_hash::Hash,
+    trezoa_keypair::{keypair_from_seed, Keypair},
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::{BlockhashQuery, Source},
+    trezoa_signer::Signer,
+    trezoa_system_interface::program as system_program,
+    trezoa_test_validator::TestValidator,
     test_case::test_case,
 };
 
@@ -146,7 +146,7 @@ async fn test_nonce(
     assert_ne!(first_nonce, third_nonce);
 
     // Withdraw from nonce account
-    let payee_pubkey = solana_pubkey::new_rand();
+    let payee_pubkey = trezoa_pubkey::new_rand();
     config_payer.signers = authorized_signers;
     config_payer.command = CliCommand::WithdrawFromNonceAccount {
         nonce_account,
@@ -224,7 +224,7 @@ async fn test_nonce(
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn test_create_account_with_seed() {
     const ONE_SIG_FEE: u64 = 5000;
-    agave_logger::setup();
+    trezoa_logger::setup();
     let mint_keypair = Keypair::new();
     let faucet_addr = run_local_faucet_with_unique_port_for_tests(mint_keypair.insecure_clone());
     let test_validator = TestValidator::async_with_custom_fees(
@@ -306,13 +306,13 @@ async fn test_create_account_with_seed() {
     check_balance!(0, &rpc_client, &to_address);
 
     // Fetch nonce hash
-    let nonce_hash = solana_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
+    let nonce_hash = trezoa_rpc_client_nonce_utils::nonblocking::get_account_with_commitment(
         &rpc_client,
         &nonce_address,
         CommitmentConfig::processed(),
     )
     .await
-    .and_then(|ref a| solana_rpc_client_nonce_utils::data_from_account(a))
+    .and_then(|ref a| trezoa_rpc_client_nonce_utils::data_from_account(a))
     .unwrap()
     .blockhash();
 

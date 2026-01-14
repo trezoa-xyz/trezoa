@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 #[cfg(target_os = "linux")]
-use {crate::io_uring::dir_remover::RingDirRemover, agave_io_uring::io_uring_supported};
+use {crate::io_uring::dir_remover::RingDirRemover, trezoa_io_uring::io_uring_supported};
 
 /// Removes a directory and all its contents.
 pub fn remove_dir_all(path: impl Into<PathBuf> + AsRef<Path>) -> io::Result<()> {

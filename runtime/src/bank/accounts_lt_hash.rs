@@ -1,13 +1,13 @@
 use {
     super::Bank,
     rayon::prelude::*,
-    solana_account::{accounts_equal, AccountSharedData},
-    solana_accounts_db::accounts_db::AccountsDb,
-    solana_hash::Hash,
-    solana_lattice_hash::lt_hash::LtHash,
-    solana_measure::{meas_dur, measure::Measure},
-    solana_pubkey::Pubkey,
-    solana_svm_callback::AccountState,
+    trezoa_account::{accounts_equal, AccountSharedData},
+    trezoa_accounts_db::accounts_db::AccountsDb,
+    trezoa_hash::Hash,
+    trezoa_lattice_hash::lt_hash::LtHash,
+    trezoa_measure::{meas_dur, measure::Measure},
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_callback::AccountState,
     std::{
         ops::AddAssign,
         sync::atomic::{AtomicU64, Ordering},
@@ -390,18 +390,18 @@ mod tests {
     use {
         super::*,
         crate::{runtime_config::RuntimeConfig, snapshot_bank_utils, snapshot_utils},
-        agave_snapshots::snapshot_config::SnapshotConfig,
-        solana_account::{ReadableAccount as _, WritableAccount as _},
-        solana_accounts_db::{
+        trezoa_snapshots::snapshot_config::SnapshotConfig,
+        trezoa_account::{ReadableAccount as _, WritableAccount as _},
+        trezoa_accounts_db::{
             accounts_db::{AccountsDbConfig, MarkObsoleteAccounts, ACCOUNTS_DB_CONFIG_FOR_TESTING},
             accounts_index::{AccountsIndexConfig, IndexLimit, ACCOUNTS_INDEX_CONFIG_FOR_TESTING},
         },
-        solana_fee_calculator::FeeRateGovernor,
-        solana_genesis_config::{self, GenesisConfig},
-        solana_keypair::Keypair,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_pubkey::{self as pubkey, Pubkey},
-        solana_signer::Signer as _,
+        trezoa_fee_calculator::FeeRateGovernor,
+        trezoa_genesis_config::{self, GenesisConfig},
+        trezoa_keypair::Keypair,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_pubkey::{self as pubkey, Pubkey},
+        trezoa_signer::Signer as _,
         std::{cmp, iter, str::FromStr as _, sync::Arc},
         tempfile::TempDir,
         test_case::{test_case, test_matrix},
@@ -420,7 +420,7 @@ mod tests {
     fn genesis_config_with(features: Features) -> (GenesisConfig, Keypair) {
         let mint_lamports = 123_456_789 * LAMPORTS_PER_SOL;
         match features {
-            Features::None => solana_genesis_config::create_genesis_config(mint_lamports),
+            Features::None => trezoa_genesis_config::create_genesis_config(mint_lamports),
             Features::All => {
                 let info = crate::genesis_utils::create_genesis_config(mint_lamports);
                 (info.genesis_config, info.mint_keypair)
@@ -447,7 +447,7 @@ mod tests {
         let keypair5 = Keypair::new();
 
         let (mut genesis_config, mint_keypair) =
-            solana_genesis_config::create_genesis_config(123_456_789 * LAMPORTS_PER_SOL);
+            trezoa_genesis_config::create_genesis_config(123_456_789 * LAMPORTS_PER_SOL);
         genesis_config.fee_rate_governor = FeeRateGovernor::new(0, 0);
         let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 

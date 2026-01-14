@@ -1,8 +1,8 @@
 #[cfg(test)]
 use {
     crate::repair::standard_repair_handler::StandardRepairHandler,
-    solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path_auto_delete},
-    solana_runtime::bank_forks::BankForks,
+    trezoa_ledger::{blockstore::Blockstore, get_tmp_ledger_path_auto_delete},
+    trezoa_runtime::bank_forks::BankForks,
 };
 use {
     crate::{
@@ -28,32 +28,32 @@ use {
         Rng,
     },
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_cluster_type::ClusterType,
-    solana_gossip::{
+    trezoa_clock::Slot,
+    trezoa_cluster_type::ClusterType,
+    trezoa_gossip::{
         cluster_info::{ClusterInfo, ClusterInfoError},
         contact_info::{ContactInfo, Protocol},
         ping_pong::{self, Pong},
         weighted_shuffle::WeightedShuffle,
     },
-    solana_hash::{Hash, HASH_BYTES},
-    solana_keypair::{signable::Signable, Keypair},
-    solana_ledger::shred::{self, Nonce, ShredFetchStats, SIZE_OF_NONCE},
-    solana_net_utils::SocketAddrSpace,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_perf::{
+    trezoa_hash::{Hash, HASH_BYTES},
+    trezoa_keypair::{signable::Signable, Keypair},
+    trezoa_ledger::shred::{self, Nonce, ShredFetchStats, SIZE_OF_NONCE},
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_perf::{
         data_budget::DataBudget,
         packet::{Packet, PacketBatch, PacketBatchRecycler, RecycledPacketBatch},
     },
-    solana_pubkey::{Pubkey, PUBKEY_BYTES},
-    solana_runtime::bank_forks::SharableBanks,
-    solana_signature::{Signature, SIGNATURE_BYTES},
-    solana_signer::Signer,
-    solana_streamer::{
+    trezoa_pubkey::{Pubkey, PUBKEY_BYTES},
+    trezoa_runtime::bank_forks::SharableBanks,
+    trezoa_signature::{Signature, SIGNATURE_BYTES},
+    trezoa_signer::Signer,
+    trezoa_streamer::{
         sendmmsg::{batch_send, SendPktsError},
         streamer::PacketBatchSender,
     },
-    solana_time_utils::timestamp,
+    trezoa_time_utils::timestamp,
     std::{
         cmp::Reverse,
         collections::{HashMap, HashSet},
@@ -1350,11 +1350,11 @@ mod tests {
     use {
         super::*,
         crate::repair::repair_response,
-        agave_feature_set::FeatureSet,
-        solana_gossip::{contact_info::ContactInfo, socketaddr, socketaddr_any},
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_feature_set::FeatureSet,
+        trezoa_gossip::{contact_info::ContactInfo, socketaddr, socketaddr_any},
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::{make_many_slot_entries, Blockstore},
             blockstore_processor::fill_blockstore_slot_with_ticks,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
@@ -1363,11 +1363,11 @@ mod tests {
                 max_ticks_per_n_shreds, ProcessShredsStats, ReedSolomonCache, Shred, Shredder,
             },
         },
-        solana_net_utils::SocketAddrSpace,
-        solana_perf::packet::{deserialize_from_with_limit, Packet, PacketFlags, PacketRef},
-        solana_pubkey::Pubkey,
-        solana_runtime::bank::Bank,
-        solana_time_utils::timestamp,
+        trezoa_net_utils::SocketAddrSpace,
+        trezoa_perf::packet::{deserialize_from_with_limit, Packet, PacketFlags, PacketRef},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::bank::Bank,
+        trezoa_time_utils::timestamp,
         std::{io::Cursor, net::Ipv4Addr},
     };
 
@@ -1495,7 +1495,7 @@ mod tests {
             Arc::new(RwLock::new(HashSet::default())),
         );
         let keypair = cluster_info.keypair();
-        let repair_peer_id = solana_pubkey::new_rand();
+        let repair_peer_id = trezoa_pubkey::new_rand();
         let repair_request = ShredRepairType::Orphan(123);
 
         let rsp = serve_repair
@@ -1531,7 +1531,7 @@ mod tests {
         let slot: Slot = 50;
         let nonce = 70;
         let cluster_info = Arc::new(new_test_cluster_info());
-        let repair_peer_id = solana_pubkey::new_rand();
+        let repair_peer_id = trezoa_pubkey::new_rand();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let keypair = cluster_info.keypair();
 
@@ -1581,7 +1581,7 @@ mod tests {
             Arc::new(RwLock::new(HashSet::default())),
         );
         let keypair = cluster_info.keypair();
-        let repair_peer_id = solana_pubkey::new_rand();
+        let repair_peer_id = trezoa_pubkey::new_rand();
 
         let slot = 50;
         let shred_index = 60;
@@ -1778,7 +1778,7 @@ mod tests {
     /// test run_window_request responds with the right shred, and do not overrun
     pub fn run_highest_window_request(slot: Slot, num_slots: u64, nonce: Nonce) {
         let recycler = PacketBatchRecycler::default();
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Arc::new(Blockstore::open(ledger_path.path()).unwrap());
         let handler = StandardRepairHandler::new(blockstore.clone());
@@ -1831,7 +1831,7 @@ mod tests {
         let slot = 2;
         let nonce = 9;
         let recycler = PacketBatchRecycler::default();
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Arc::new(Blockstore::open(ledger_path.path()).unwrap());
         let handler = StandardRepairHandler::new(blockstore.clone());
@@ -1913,7 +1913,7 @@ mod tests {
 
         let serve_repair_addr = socketaddr!(Ipv4Addr::LOCALHOST, 1243);
         let mut nxt = ContactInfo::new(
-            solana_pubkey::new_rand(),
+            trezoa_pubkey::new_rand(),
             timestamp(), // wallclock
             0u16,        // shred_version
         );
@@ -1944,7 +1944,7 @@ mod tests {
 
         let serve_repair_addr2 = socketaddr!([127, 0, 0, 2], 1243);
         let mut nxt = ContactInfo::new(
-            solana_pubkey::new_rand(),
+            trezoa_pubkey::new_rand(),
             timestamp(), // wallclock
             0u16,        // shred_version
         );
@@ -1991,7 +1991,7 @@ mod tests {
     }
 
     pub fn run_orphan(slot: Slot, num_slots: u64, nonce: Nonce) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let recycler = PacketBatchRecycler::default();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Arc::new(Blockstore::open(ledger_path.path()).unwrap());
@@ -2045,7 +2045,7 @@ mod tests {
 
     #[test]
     fn run_orphan_corrupted_shred_size() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let recycler = PacketBatchRecycler::default();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Arc::new(Blockstore::open(ledger_path.path()).unwrap());
@@ -2101,7 +2101,7 @@ mod tests {
                 .unwrap()
         }
 
-        agave_logger::setup();
+        trezoa_logger::setup();
         let recycler = PacketBatchRecycler::default();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
 
@@ -2187,8 +2187,8 @@ mod tests {
         let me = cluster_info.my_contact_info();
         let (repair_request_quic_sender, _) = tokio::sync::mpsc::channel(/*buffer:*/ 128);
         // Insert two peers on the network
-        let contact_info2 = ContactInfo::new_localhost(&solana_pubkey::new_rand(), timestamp());
-        let contact_info3 = ContactInfo::new_localhost(&solana_pubkey::new_rand(), timestamp());
+        let contact_info2 = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), timestamp());
+        let contact_info3 = ContactInfo::new_localhost(&trezoa_pubkey::new_rand(), timestamp());
         cluster_info.insert_info(contact_info2.clone());
         cluster_info.insert_info(contact_info3.clone());
         let identity_keypair = cluster_info.keypair();
@@ -2202,7 +2202,7 @@ mod tests {
         // 1) repair validator set doesn't exist in gossip
         // 2) repair validator set only includes our own id
         // then no repairs should be generated
-        for pubkey in &[solana_pubkey::new_rand(), *me.pubkey()] {
+        for pubkey in &[trezoa_pubkey::new_rand(), *me.pubkey()] {
             let known_validators = Some(vec![*pubkey].into_iter().collect());
             assert!(serve_repair
                 .repair_peers(&known_validators, 1, &identity_keypair.pubkey())

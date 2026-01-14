@@ -4,10 +4,10 @@ use {
         cli::{hash_validator, port_range_validator, port_validator, DefaultArgs},
         commands::{FromClapArgMatches, Result},
     },
-    agave_snapshots::{SnapshotVersion, SUPPORTED_ARCHIVE_COMPRESSION},
+    trezoa_snapshots::{SnapshotVersion, SUPPORTED_ARCHIVE_COMPRESSION},
     clap::{values_t, App, Arg, ArgMatches},
-    solana_accounts_db::utils::create_and_canonicalize_directory,
-    solana_clap_utils::{
+    trezoa_accounts_db::utils::create_and_canonicalize_directory,
+    trezoa_clap_utils::{
         hidden_unless_forced,
         input_parsers::keypair_of,
         input_validators::{
@@ -18,18 +18,18 @@ use {
         },
         keypair::SKIP_SEED_PHRASE_VALIDATION_ARG,
     },
-    solana_core::{
+    trezoa_core::{
         banking_trace::DirByteLimit,
         validator::{BlockProductionMethod, BlockVerificationMethod},
     },
-    solana_keypair::Keypair,
-    solana_ledger::{blockstore_options::BlockstoreOptions, use_snapshot_archives_at_startup},
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
-    solana_send_transaction_service::send_transaction_service::Config as SendTransactionServiceConfig,
-    solana_signer::Signer,
-    solana_unified_scheduler_pool::DefaultSchedulerPool,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{blockstore_options::BlockstoreOptions, use_snapshot_archives_at_startup},
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
+    trezoa_send_transaction_service::send_transaction_service::Config as SendTransactionServiceConfig,
+    trezoa_signer::Signer,
+    trezoa_unified_scheduler_pool::DefaultSchedulerPool,
     std::{collections::HashSet, net::SocketAddr, path::PathBuf, str::FromStr},
 };
 
@@ -104,7 +104,7 @@ impl FromClapArgMatches for RunArgs {
         let logfile = matches
             .value_of("logfile")
             .map(String::from)
-            .unwrap_or_else(|| format!("agave-validator-{}.log", identity_keypair.pubkey()));
+            .unwrap_or_else(|| format!("trezoa-validator-{}.log", identity_keypair.pubkey()));
         let logfile = if logfile == "-" {
             None
         } else {
@@ -118,7 +118,7 @@ impl FromClapArgMatches for RunArgs {
         let entrypoints = entrypoints
             .into_iter()
             .map(|entrypoint| {
-                solana_net_utils::parse_host_port(&entrypoint).map_err(|err| {
+                trezoa_net_utils::parse_host_port(&entrypoint).map_err(|err| {
                     crate::commands::Error::Dynamic(Box::<dyn std::error::Error>::from(format!(
                         "failed to parse entrypoint address: {err}"
                     )))
@@ -221,7 +221,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .value_name("HOST:PORT")
             .takes_value(true)
             .multiple(true)
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help("Rendezvous with the cluster at this gossip entrypoint"),
     )
     .arg(
@@ -338,7 +338,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .alias("tpu-host-addr")
             .value_name("HOST:PORT")
             .takes_value(true)
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help(
                 "Specify TPU QUIC address to advertise in gossip [default: ask --entrypoint or \
                  localhost when --entrypoint is not provided]",
@@ -349,7 +349,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .long("public-tpu-forwards-address")
             .value_name("HOST:PORT")
             .takes_value(true)
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help(
                 "Specify TPU Forwards QUIC address to advertise in gossip [default: ask \
                  --entrypoint or localhostwhen --entrypoint is not provided]",
@@ -361,7 +361,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .alias("tvu-host-addr")
             .value_name("HOST:PORT")
             .takes_value(true)
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help(
                 "Specify TVU address to advertise in gossip [default: ask --entrypoint or \
                  localhost when --entrypoint is not provided]",
@@ -373,7 +373,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .value_name("HOST:PORT")
             .takes_value(true)
             .hidden(hidden_unless_forced())
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help(
                 "TPU Vortexor Receiver address to which verified transaction packet will be \
                  forwarded.",
@@ -385,7 +385,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .value_name("HOST:PORT")
             .takes_value(true)
             .conflicts_with("private_rpc")
-            .validator(solana_net_utils::is_host_port)
+            .validator(trezoa_net_utils::is_host_port)
             .help(
                 "RPC address for the validator to advertise publicly in gossip. Useful for \
                  validators running behind a load balancer or proxy [default: use \
@@ -482,7 +482,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .long("snapshot-packager-niceness-adjustment")
             .value_name("ADJUSTMENT")
             .takes_value(true)
-            .validator(solana_perf::thread::is_niceness_adjustment_valid)
+            .validator(trezoa_perf::thread::is_niceness_adjustment_valid)
             .default_value(&default_args.snapshot_packager_niceness_adjustment)
             .help(
                 "Add this value to niceness of snapshot packager thread. Negative value increases \
@@ -834,7 +834,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .long("bind-address")
             .value_name("HOST")
             .takes_value(true)
-            .validator(solana_net_utils::is_host)
+            .validator(trezoa_net_utils::is_host)
             .default_value(&default_args.bind_address)
             .multiple(true)
             .help(
@@ -847,7 +847,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .long("rpc-bind-address")
             .value_name("HOST")
             .takes_value(true)
-            .validator(solana_net_utils::is_host)
+            .validator(trezoa_net_utils::is_host)
             .help(
                 "IP address to bind the RPC port [default: 127.0.0.1 if --private-rpc is present, \
                  otherwise use --bind-address]",
@@ -872,7 +872,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
     .arg(
         Arg::with_name("snapshot_archive_format")
             .long("snapshot-archive-format")
-            .alias("snapshot-compression") // Legacy name used by Solana v1.5.x and older
+            .alias("snapshot-compression") // Legacy name used by Trezoa v1.5.x and older
             .possible_values(SUPPORTED_ARCHIVE_COMPRESSION)
             .default_value(&default_args.snapshot_archive_format)
             .value_name("ARCHIVE_TYPE")
@@ -929,7 +929,7 @@ pub fn add_args<'a>(app: App<'a, 'a>, default_args: &'a DefaultArgs) -> App<'a, 
             .long("account-index")
             .takes_value(true)
             .multiple(true)
-            .possible_values(&["program-id", "spl-token-owner", "spl-token-mint"])
+            .possible_values(&["program-id", "tpl-token-owner", "tpl-token-mint"])
             .value_name("INDEX")
             .help("Enable an accounts index, indexed by the selected account field"),
     )
@@ -1342,7 +1342,7 @@ mod tests {
             let identity_keypair = Keypair::new();
             let ledger_path = absolute(PathBuf::from("ledger")).unwrap();
             let logfile =
-                PathBuf::from(format!("agave-validator-{}.log", identity_keypair.pubkey()));
+                PathBuf::from(format!("trezoa-validator-{}.log", identity_keypair.pubkey()));
             let entrypoints = vec![];
             let known_validators = None;
 
@@ -1363,7 +1363,7 @@ mod tests {
                     worker_threads: 4,
                     notification_threads: None,
                     queue_capacity_items:
-                        solana_rpc::rpc_pubsub_service::DEFAULT_QUEUE_CAPACITY_ITEMS,
+                        trezoa_rpc::rpc_pubsub_service::DEFAULT_QUEUE_CAPACITY_ITEMS,
                     ..PubSubConfig::default_for_tests()
                 },
                 send_transaction_service_config: SendTransactionServiceConfig::default(),
@@ -1413,7 +1413,7 @@ mod tests {
         let tmp_dir = tempfile::tempdir().unwrap();
         let file = tmp_dir.path().join("id.json");
         let keypair = default_run_args.identity_keypair.insecure_clone();
-        solana_keypair::write_keypair_file(&keypair, &file).unwrap();
+        trezoa_keypair::write_keypair_file(&keypair, &file).unwrap();
 
         let expected_args = RunArgs {
             identity_keypair: keypair.insecure_clone(),
@@ -1450,7 +1450,7 @@ mod tests {
         let tmp_dir = tempfile::tempdir().unwrap();
         let file = tmp_dir.path().join("id.json");
         let keypair = default_run_args.identity_keypair.insecure_clone();
-        solana_keypair::write_keypair_file(&keypair, &file).unwrap();
+        trezoa_keypair::write_keypair_file(&keypair, &file).unwrap();
 
         let args = [&["--identity", file.to_str().unwrap()], &args[..]].concat();
         verify_args_struct_by_command(&default_args, args, expected_args);
@@ -1466,7 +1466,7 @@ mod tests {
         let tmp_dir = tempfile::tempdir().unwrap();
         let file = tmp_dir.path().join("id.json");
         let keypair = default_run_args.identity_keypair.insecure_clone();
-        solana_keypair::write_keypair_file(&keypair, &file).unwrap();
+        trezoa_keypair::write_keypair_file(&keypair, &file).unwrap();
 
         let app = add_args(App::new("run_command"), &default_args)
             .args(&thread_args(&default_args.thread_args));
@@ -1576,7 +1576,7 @@ mod tests {
         {
             let expected_args = RunArgs {
                 logfile: Some(PathBuf::from(format!(
-                    "agave-validator-{}.log",
+                    "trezoa-validator-{}.log",
                     default_run_args.identity_keypair.pubkey()
                 ))),
                 ..default_run_args.clone()
@@ -1802,7 +1802,7 @@ mod tests {
             // generate a keypair
             let tmp_dir = tempfile::tempdir().unwrap();
             let file = tmp_dir.path().join("id.json");
-            solana_keypair::write_keypair_file(&default_run_args.identity_keypair, &file).unwrap();
+            trezoa_keypair::write_keypair_file(&default_run_args.identity_keypair, &file).unwrap();
 
             let matches = add_args(App::new("run_command"), &default_args).get_matches_from(vec![
                 "run_command",

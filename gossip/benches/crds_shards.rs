@@ -1,12 +1,12 @@
 use {
     criterion::{criterion_group, criterion_main, Criterion},
     rand::{rng, Rng},
-    solana_gossip::{
+    trezoa_gossip::{
         crds::{Crds, GossipRoute, VersionedCrdsValue},
         crds_shards::CrdsShards,
         crds_value::CrdsValue,
     },
-    solana_time_utils::timestamp,
+    trezoa_time_utils::timestamp,
     std::iter::repeat_with,
 };
 

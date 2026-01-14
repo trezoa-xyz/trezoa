@@ -4,9 +4,9 @@ use {
         message_address_table_lookup::SVMMessageAddressTableLookup,
         svm_message::{SVMMessage, SVMStaticMessage},
     },
-    solana_hash::Hash,
-    solana_message::{AccountKeys, SanitizedMessage},
-    solana_pubkey::Pubkey,
+    trezoa_hash::Hash,
+    trezoa_message::{AccountKeys, SanitizedMessage},
+    trezoa_pubkey::Pubkey,
 };
 
 impl SVMStaticMessage for SanitizedMessage {

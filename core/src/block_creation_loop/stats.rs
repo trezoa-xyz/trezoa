@@ -1,8 +1,8 @@
 //! Stats about the block creation loop
 use {
     histogram::Histogram,
-    solana_clock::Slot,
-    solana_metrics::datapoint_info,
+    trezoa_clock::Slot,
+    trezoa_metrics::datapoint_info,
     std::time::{Duration, Instant},
 };
 

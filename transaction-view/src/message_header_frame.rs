@@ -4,7 +4,7 @@ use {
         result::{Result, TransactionViewError},
         transaction_version::TransactionVersion,
     },
-    solana_message::MESSAGE_VERSION_PREFIX,
+    trezoa_message::MESSAGE_VERSION_PREFIX,
 };
 
 /// Metadata for accessing message header fields in a transaction view.

@@ -4,8 +4,8 @@
 
 use {
     crate::{error::FixtureError, proto::AcctState as ProtoAccount},
-    solana_account::Account,
-    solana_pubkey::Pubkey,
+    trezoa_account::Account,
+    trezoa_pubkey::Pubkey,
 };
 
 // Default `rent_epoch` field value for all accounts.

@@ -1,68 +1,68 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
-//! The solana-program-test provides a BanksClient-based test framework SBF programs
+//! The trezoa-program-test provides a BanksClient-based test framework SBF programs
 #![allow(clippy::arithmetic_side_effects)]
 
 // Export tokio for test clients
 pub use tokio;
 use {
-    agave_feature_set::{
+    trezoa_feature_set::{
         increase_cpi_account_info_limit, raise_cpi_nesting_limit_to_8, FeatureSet, FEATURE_NAMES,
     },
     async_trait::async_trait,
     base64::{prelude::BASE64_STANDARD, Engine},
     chrono_humanize::{Accuracy, HumanTime, Tense},
     log::*,
-    solana_account::{
+    trezoa_account::{
         create_account_shared_data_for_test, state_traits::StateMut, Account, AccountSharedData,
         ReadableAccount,
     },
-    solana_account_info::AccountInfo,
-    solana_accounts_db::accounts_db::ACCOUNTS_DB_CONFIG_FOR_TESTING,
-    solana_banks_client::start_client,
-    solana_banks_server::banks_server::start_local_server,
-    solana_clock::{Epoch, Slot},
-    solana_cluster_type::ClusterType,
-    solana_compute_budget::compute_budget::ComputeBudget,
-    solana_fee_calculator::{FeeRateGovernor, DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE},
-    solana_genesis_config::GenesisConfig,
-    solana_hash::Hash,
-    solana_instruction::{
+    trezoa_account_info::AccountInfo,
+    trezoa_accounts_db::accounts_db::ACCOUNTS_DB_CONFIG_FOR_TESTING,
+    trezoa_banks_client::start_client,
+    trezoa_banks_server::banks_server::start_local_server,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_cluster_type::ClusterType,
+    trezoa_compute_budget::compute_budget::ComputeBudget,
+    trezoa_fee_calculator::{FeeRateGovernor, DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_hash::Hash,
+    trezoa_instruction::{
         error::{InstructionError, UNSUPPORTED_SYSVAR},
         Instruction,
     },
-    solana_keypair::Keypair,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_poh_config::PohConfig,
-    solana_program_binaries as programs,
-    solana_program_entrypoint::{deserialize, SUCCESS},
-    solana_program_error::{ProgramError, ProgramResult},
-    solana_program_runtime::{
+    trezoa_keypair::Keypair,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_poh_config::PohConfig,
+    trezoa_program_binaries as programs,
+    trezoa_program_entrypoint::{deserialize, SUCCESS},
+    trezoa_program_error::{ProgramError, ProgramResult},
+    trezoa_program_runtime::{
         invoke_context::BuiltinFunctionWithContext, loaded_programs::ProgramCacheEntry,
         serialization::serialize_parameters, stable_log,
     },
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_runtime::{
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_runtime::{
         bank::Bank,
         bank_forks::BankForks,
         commitment::BlockCommitmentCache,
         genesis_utils::{create_genesis_config_with_leader_ex, GenesisConfigInfo},
         runtime_config::RuntimeConfig,
     },
-    solana_signer::Signer,
-    solana_svm_log_collector::ic_msg,
-    solana_svm_timings::ExecuteTimings,
-    solana_sysvar::SysvarSerialize,
-    solana_sysvar_id::SysvarId,
-    solana_vote_program::vote_state::{VoteStateV4, VoteStateVersions},
+    trezoa_signer::Signer,
+    trezoa_svm_log_collector::ic_msg,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_sysvar::SysvarSerialize,
+    trezoa_sysvar_id::SysvarId,
+    trezoa_vote_program::vote_state::{VoteStateV4, VoteStateVersions},
     std::{
         cell::RefCell,
         collections::{HashMap, HashSet},
@@ -81,16 +81,16 @@ use {
     thiserror::Error,
     tokio::task::JoinHandle,
 };
-// Export types so test clients can limit their solana crate dependencies
+// Export types so test clients can limit their trezoa crate dependencies
 pub use {
-    solana_banks_client::{BanksClient, BanksClientError},
-    solana_banks_interface::BanksTransactionResultWithMetadata,
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_sbpf::{
+    trezoa_banks_client::{BanksClient, BanksClientError},
+    trezoa_banks_interface::BanksTransactionResultWithMetadata,
+    trezoa_program_runtime::invoke_context::InvokeContext,
+    trezoa_sbpf::{
         error::EbpfError,
         vm::{get_runtime_environment_key, EbpfVm},
     },
-    solana_transaction_context::IndexOfAccount,
+    trezoa_transaction_context::IndexOfAccount,
 };
 
 /// Errors from the program test environment
@@ -118,7 +118,7 @@ fn get_invoke_context<'a, 'b>() -> &'a mut InvokeContext<'b, 'b> {
 }
 
 pub fn invoke_builtin_function(
-    builtin_function: solana_program_entrypoint::ProcessInstruction,
+    builtin_function: trezoa_program_entrypoint::ProcessInstruction,
     invoke_context: &mut InvokeContext,
 ) -> Result<u64, Box<dyn std::error::Error>> {
     set_invoke_context(invoke_context);
@@ -212,7 +212,7 @@ pub fn invoke_builtin_function(
     Ok(0)
 }
 
-/// Converts a `solana-program`-style entrypoint into the runtime's entrypoint style, for
+/// Converts a `trezoa-program`-style entrypoint into the runtime's entrypoint style, for
 /// use with `ProgramTest::add_program`
 #[macro_export]
 macro_rules! processor {
@@ -252,7 +252,7 @@ fn get_sysvar<T: Default + SysvarSerialize + Sized + serde::de::DeserializeOwned
 }
 
 struct SyscallStubs {}
-impl solana_sysvar::program_stubs::SyscallStubs for SyscallStubs {
+impl trezoa_sysvar::program_stubs::SyscallStubs for SyscallStubs {
     fn sol_log(&self, message: &str) {
         let invoke_context = get_invoke_context();
         ic_msg!(invoke_context, "Program log: {}", message);
@@ -506,9 +506,9 @@ impl Default for ProgramTest {
     /// * the current working directory
     ///
     fn default() -> Self {
-        agave_logger::setup_with_default(
-            "solana_sbpf::vm=debug,solana_runtime::message_processor=debug,\
-             solana_runtime::system_instruction_processor=trace,solana_program_test=info",
+        trezoa_logger::setup_with_default(
+            "trezoa_sbpf::vm=debug,trezoa_runtime::message_processor=debug,\
+             trezoa_runtime::system_instruction_processor=trace,trezoa_program_test=info",
         );
         let prefer_bpf =
             std::env::var("BPF_OUT_DIR").is_ok() || std::env::var("SBF_OUT_DIR").is_ok();
@@ -635,7 +635,7 @@ impl ProgramTest {
     /// the builtin version of the program, allowing the provided BPF program
     /// to be used at the designated program ID instead.
     ///
-    /// See https://github.com/anza-xyz/agave/blob/c038908600b8a1b0080229dea015d7fc9939c418/runtime/src/bank.rs#L5109-L5126.
+    /// See https://github.com/trezoa-xyz/trezoa/blob/c038908600b8a1b0080229dea015d7fc9939c418/runtime/src/bank.rs#L5109-L5126.
     pub fn add_upgradeable_program_to_genesis(
         &mut self,
         program_name: &'static str,
@@ -694,7 +694,7 @@ impl ProgramTest {
                 Account {
                     lamports: Rent::default().minimum_balance(data.len()).max(1),
                     data,
-                    owner: solana_sdk_ids::bpf_loader::id(),
+                    owner: trezoa_sdk_ids::bpf_loader::id(),
                     executable: true,
                     rent_epoch: 0,
                 },
@@ -797,7 +797,7 @@ impl ProgramTest {
             static ONCE: Once = Once::new();
 
             ONCE.call_once(|| {
-                solana_sysvar::program_stubs::set_syscall_stubs(Box::new(SyscallStubs {}));
+                trezoa_sysvar::program_stubs::set_syscall_stubs(Box::new(SyscallStubs {}));
             });
         }
 
@@ -965,7 +965,7 @@ impl ProgramTest {
     /// Start the test client
     ///
     /// Returns a `BanksClient` interface into the test environment as well as a payer `Keypair`
-    /// with SOL for sending transactions
+    /// with TRZ for sending transactions
     pub async fn start_with_context(mut self) -> ProgramTestContext {
         let (bank_forks, block_commitment_cache, last_blockhash, gci) = self.setup_bank();
         let target_tick_duration = gci.genesis_config.poh_config.target_tick_duration;

@@ -1,8 +1,8 @@
 use {
     bencher::{benchmark_group, benchmark_main, Bencher},
-    solana_message::{compiled_instruction::CompiledInstruction, Message},
-    solana_pubkey::Pubkey,
-    solana_transaction_status::extract_memos::ExtractMemos,
+    trezoa_message::{compiled_instruction::CompiledInstruction, Message},
+    trezoa_pubkey::Pubkey,
+    trezoa_transaction_status::extract_memos::ExtractMemos,
 };
 
 #[allow(clippy::arithmetic_side_effects)]

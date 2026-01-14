@@ -2,18 +2,18 @@
 use {
     crate::{bank::Bank, bank_client::BankClient, bank_forks::BankForks},
     serde::Serialize,
-    solana_account::{AccountSharedData, WritableAccount},
-    solana_client_traits::{Client, SyncClient},
-    solana_clock::Clock,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::Keypair,
-    solana_loader_v3_interface::state::UpgradeableLoaderState,
-    solana_loader_v4_interface::instruction,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::loader_v4,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
+    trezoa_account::{AccountSharedData, WritableAccount},
+    trezoa_client_traits::{Client, SyncClient},
+    trezoa_clock::Clock,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::Keypair,
+    trezoa_loader_v3_interface::state::UpgradeableLoaderState,
+    trezoa_loader_v4_interface::instruction,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::loader_v4,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
     std::{
         env,
         fs::File,
@@ -80,7 +80,7 @@ pub fn load_upgradeable_buffer<T: Client>(
         .send_and_confirm_message(
             &[from_keypair, buffer_keypair],
             Message::new(
-                &solana_loader_v3_interface::instruction::create_buffer(
+                &trezoa_loader_v3_interface::instruction::create_buffer(
                     &from_keypair.pubkey(),
                     &buffer_pubkey,
                     &buffer_authority_pubkey,
@@ -101,7 +101,7 @@ pub fn load_upgradeable_buffer<T: Client>(
     let mut offset = 0;
     for chunk in program.chunks(chunk_size) {
         let message = Message::new(
-            &[solana_loader_v3_interface::instruction::write(
+            &[trezoa_loader_v3_interface::instruction::write(
                 &buffer_pubkey,
                 &buffer_authority_pubkey,
                 offset,
@@ -137,7 +137,7 @@ pub fn load_upgradeable_program(
 
     #[allow(deprecated)]
     let message = Message::new(
-        &solana_loader_v3_interface::instruction::deploy_with_max_program_len(
+        &trezoa_loader_v3_interface::instruction::deploy_with_max_program_len(
             &from_keypair.pubkey(),
             &executable_keypair.pubkey(),
             &buffer_keypair.pubkey(),
@@ -228,7 +228,7 @@ pub fn upgrade_program<T: Client>(
         name,
     );
     let message = Message::new(
-        &[solana_loader_v3_interface::instruction::upgrade(
+        &[trezoa_loader_v3_interface::instruction::upgrade(
             executable_pubkey,
             &buffer_keypair.pubkey(),
             &authority_keypair.pubkey(),
@@ -250,7 +250,7 @@ pub fn set_upgrade_authority<T: Client>(
 ) {
     let message = Message::new(
         &[
-            solana_loader_v3_interface::instruction::set_upgrade_authority(
+            trezoa_loader_v3_interface::instruction::set_upgrade_authority(
                 program_pubkey,
                 &current_authority_keypair.pubkey(),
                 new_authority_pubkey,
@@ -281,7 +281,7 @@ pub fn instructions_to_load_program_of_loader_v4<T: Client>(
             &program_keypair.pubkey(),
             bank_client
                 .get_minimum_balance_for_rent_exemption(
-                    solana_loader_v4_interface::state::LoaderV4State::program_data_offset()
+                    trezoa_loader_v4_interface::state::LoaderV4State::program_data_offset()
                         .saturating_add(program.len()),
                 )
                 .unwrap(),

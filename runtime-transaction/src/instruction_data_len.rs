@@ -1,4 +1,4 @@
-use {solana_pubkey::Pubkey, solana_svm_transaction::instruction::SVMInstruction};
+use {trezoa_pubkey::Pubkey, trezoa_svm_transaction::instruction::SVMInstruction};
 
 #[derive(Default)]
 pub struct InstructionDataLenBuilder {

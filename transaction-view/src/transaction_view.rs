@@ -6,10 +6,10 @@ use {
         transaction_version::TransactionVersion,
     },
     core::fmt::{Debug, Formatter},
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_svm_transaction::{
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_svm_transaction::{
         instruction::SVMInstruction, message_address_table_lookup::SVMMessageAddressTableLookup,
         svm_message::SVMStaticMessage,
     },
@@ -351,11 +351,11 @@ impl<D: TransactionData> SVMStaticMessage for &TransactionView<true, D> {
 mod tests {
     use {
         super::*,
-        solana_message::{Message, VersionedMessage},
-        solana_pubkey::Pubkey,
-        solana_signature::Signature,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::versioned::VersionedTransaction,
+        trezoa_message::{Message, VersionedMessage},
+        trezoa_pubkey::Pubkey,
+        trezoa_signature::Signature,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::versioned::VersionedTransaction,
     };
 
     fn verify_transaction_view_frame(tx: &VersionedTransaction) {

@@ -1,5 +1,5 @@
 use {
-    agave_votor_messages::{
+    trezoa_votor_messages::{
         consensus_message::CertificateType, migration::GENESIS_VOTE_THRESHOLD, vote::Vote,
     },
     std::time::Duration,

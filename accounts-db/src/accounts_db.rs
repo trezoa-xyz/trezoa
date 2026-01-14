@@ -60,22 +60,22 @@ use {
         u64_align,
         utils::{self, create_account_shared_data},
     },
-    agave_fs::buffered_reader::RequiredLenBufFileRead,
+    trezoa_fs::buffered_reader::RequiredLenBufFileRead,
     dashmap::{DashMap, DashSet},
     log::*,
     rand::{rng, Rng},
     rayon::{prelude::*, ThreadPool},
     seqlock::SeqLock,
     smallvec::SmallVec,
-    solana_account::{Account, AccountSharedData, ReadableAccount},
-    solana_clock::{BankId, Epoch, Slot},
-    solana_epoch_schedule::EpochSchedule,
-    solana_lattice_hash::lt_hash::LtHash,
-    solana_measure::{measure::Measure, measure_us},
-    solana_nohash_hasher::{BuildNoHashHasher, IntMap, IntSet},
-    solana_pubkey::Pubkey,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_transaction::sanitized::SanitizedTransaction,
+    trezoa_account::{Account, AccountSharedData, ReadableAccount},
+    trezoa_clock::{BankId, Epoch, Slot},
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_lattice_hash::lt_hash::LtHash,
+    trezoa_measure::{measure::Measure, measure_us},
+    trezoa_nohash_hasher::{BuildNoHashHasher, IntMap, IntSet},
+    trezoa_pubkey::Pubkey,
+    trezoa_rayon_threadlimit::get_thread_count,
+    trezoa_transaction::sanitized::SanitizedTransaction,
     std::{
         borrow::Cow,
         boxed::Box,
@@ -991,7 +991,7 @@ pub fn default_num_foreground_threads() -> usize {
 }
 
 #[cfg(feature = "frozen-abi")]
-impl solana_frozen_abi::abi_example::AbiExample for AccountsDb {
+impl trezoa_frozen_abi::abi_example::AbiExample for AccountsDb {
     fn example() -> Self {
         let accounts_db = AccountsDb::new_single_for_tests();
         let key = Pubkey::default();
@@ -7090,7 +7090,7 @@ impl AccountsDb {
     ) {
         let ancestors = vec![(slot, 0)].into_iter().collect();
         for t in 0..num {
-            let pubkey = solana_pubkey::new_rand();
+            let pubkey = trezoa_pubkey::new_rand();
             let account =
                 AccountSharedData::new((t + 1) as u64, space, AccountSharedData::default().owner());
             pubkeys.push(pubkey);
@@ -7098,9 +7098,9 @@ impl AccountsDb {
             self.store_for_tests((slot, [(&pubkey, &account)].as_slice()));
         }
         for t in 0..num_vote {
-            let pubkey = solana_pubkey::new_rand();
+            let pubkey = trezoa_pubkey::new_rand();
             let account =
-                AccountSharedData::new((num + t + 1) as u64, space, &solana_vote_program::id());
+                AccountSharedData::new((num + t + 1) as u64, space, &trezoa_vote_program::id());
             pubkeys.push(pubkey);
             let ancestors = vec![(slot, 0)].into_iter().collect();
             assert!(self.load_without_fixed_root(&ancestors, &pubkey).is_none());

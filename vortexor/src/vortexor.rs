@@ -1,16 +1,16 @@
 use {
     crossbeam_channel::{Receiver, Sender},
-    solana_core::{
+    trezoa_core::{
         banking_trace::TracedSender, sigverify::TransactionSigVerifier,
         sigverify_stage::SigVerifyStage,
     },
-    solana_keypair::Keypair,
-    solana_net_utils::sockets::{
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::sockets::{
         multi_bind_in_range_with_config, SocketConfiguration as SocketConfig,
     },
-    solana_perf::packet::PacketBatch,
-    solana_quic_definitions::NotifyKeyUpdate,
-    solana_streamer::{
+    trezoa_perf::packet::PacketBatch,
+    trezoa_quic_definitions::NotifyKeyUpdate,
+    trezoa_streamer::{
         nonblocking::{quic::DEFAULT_WAIT_FOR_CHUNK_TIMEOUT, swqos::SwQosConfig},
         quic::{
             spawn_stake_wighted_qos_server, EndpointKeyUpdater, QuicStreamerConfig,

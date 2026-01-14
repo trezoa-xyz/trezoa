@@ -1,8 +1,8 @@
 use {
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_clock::{Epoch, Slot},
-    solana_pubkey::Pubkey,
-    solana_transaction::sanitized::SanitizedTransaction,
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_pubkey::Pubkey,
+    trezoa_transaction::sanitized::SanitizedTransaction,
     std::sync::Arc,
 };
 

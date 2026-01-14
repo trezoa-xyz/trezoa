@@ -1,9 +1,9 @@
 use {
     crate::{rpc_subscriptions::RpcSubscriptions, slot_status_notifier::SlotStatusNotifier},
     crossbeam_channel::RecvTimeoutError,
-    solana_ledger::blockstore::CompletedSlotsReceiver,
-    solana_rpc_client_api::response::SlotUpdate,
-    solana_time_utils::timestamp,
+    trezoa_ledger::blockstore::CompletedSlotsReceiver,
+    trezoa_rpc_client_api::response::SlotUpdate,
+    trezoa_time_utils::timestamp,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},

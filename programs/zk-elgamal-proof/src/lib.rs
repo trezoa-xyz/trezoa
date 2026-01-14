@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -11,11 +11,11 @@
 
 use {
     bytemuck::Pod,
-    solana_instruction::error::InstructionError,
-    solana_program_runtime::{declare_process_instruction, invoke_context::InvokeContext},
-    solana_sdk_ids::system_program,
-    solana_svm_log_collector::ic_msg,
-    solana_zk_sdk::zk_elgamal_proof_program::{
+    trezoa_instruction::error::InstructionError,
+    trezoa_program_runtime::{declare_process_instruction, invoke_context::InvokeContext},
+    trezoa_sdk_ids::system_program,
+    trezoa_svm_log_collector::ic_msg,
+    trezoa_zk_sdk::zk_elgamal_proof_program::{
         id,
         instruction::ProofInstruction,
         proof_data::*,

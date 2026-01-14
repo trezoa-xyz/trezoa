@@ -4,10 +4,10 @@
 
 use {
     crate::banking_trace::TracedSender,
-    agave_banking_stage_ingress_types::BankingPacketBatch,
-    agave_verified_packet_receiver::receiver::VerifiedPacketReceiver,
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_verified_packet_receiver::receiver::VerifiedPacketReceiver,
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, Sender},
-    solana_perf::packet::PacketBatch,
+    trezoa_perf::packet::PacketBatch,
     std::{
         net::UdpSocket,
         sync::{atomic::AtomicBool, Arc},

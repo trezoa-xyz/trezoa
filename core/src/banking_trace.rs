@@ -1,14 +1,14 @@
 #[cfg(feature = "dev-context-only-utils")]
 use qualifier_attr::qualifiers;
 use {
-    agave_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
+    trezoa_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
     bincode::serialize_into,
     chrono::{DateTime, Local},
     crossbeam_channel::{unbounded, Receiver, SendError, Sender, TryRecvError},
     rolling_file::{RollingCondition, RollingConditionBasic, RollingFileAppender},
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_hash::Hash,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
     std::{
         fs::{create_dir_all, remove_dir_all},
         io::{self, Write},
@@ -511,7 +511,7 @@ impl TracedSender {
 pub mod for_test {
     use {
         super::*,
-        solana_perf::{packet::to_packet_batches, test_tx::test_tx},
+        trezoa_perf::{packet::to_packet_batches, test_tx::test_tx},
         tempfile::TempDir,
     };
 

@@ -1,7 +1,7 @@
 //! Stakes serve as a cache of stake and vote accounts to derive
 //! node stakes
 #[cfg(feature = "dev-context-only-utils")]
-use solana_stake_interface::state::Stake;
+use trezoa_stake_interface::state::Stake;
 use {
     crate::{stake_account, stake_history::StakeHistory},
     im::HashMap as ImHashMap,
@@ -9,16 +9,16 @@ use {
     num_derive::ToPrimitive,
     rayon::{prelude::*, ThreadPool},
     serde::Serialize,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_accounts_db::utils::create_account_shared_data,
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::{
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_accounts_db::utils::create_account_shared_data,
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::{
         program as stake_program,
         state::{Delegation, StakeActivationStatus},
     },
-    solana_vote::vote_account::{VoteAccount, VoteAccounts},
-    solana_vote_interface::state::VoteStateVersions,
+    trezoa_vote::vote_account::{VoteAccount, VoteAccounts},
+    trezoa_vote_interface::state::VoteStateVersions,
     std::{
         collections::HashMap,
         ops::Add,
@@ -79,12 +79,12 @@ impl StakesCache {
         // TODO: If the account is already cached as a vote or stake account
         // but the owner changes, then this needs to evict the account from
         // the cache. see:
-        // https://github.com/solana-labs/solana/pull/24200#discussion_r849935444
+        // https://github.com/trezoa-labs/trezoa/pull/24200#discussion_r849935444
         let owner = account.owner();
         // Zero lamport accounts are not stored in accounts-db
         // and so should be removed from cache as well.
         if account.lamports() == 0 {
-            if solana_vote_program::check_id(owner) {
+            if trezoa_vote_program::check_id(owner) {
                 let _old_vote_account = {
                     let mut stakes = self.0.write().unwrap();
                     stakes.remove_vote_account(pubkey)
@@ -96,7 +96,7 @@ impl StakesCache {
             return;
         }
         debug_assert_ne!(account.lamports(), 0u64);
-        if solana_vote_program::check_id(owner) {
+        if trezoa_vote_program::check_id(owner) {
             if VoteStateVersions::is_correct_size_and_initialized(account.data()) {
                 match VoteAccount::try_from(create_account_shared_data(account)) {
                     Ok(vote_account) => {
@@ -578,20 +578,20 @@ pub(crate) mod tests {
         super::*,
         crate::stake_utils,
         rayon::ThreadPoolBuilder,
-        solana_account::WritableAccount,
-        solana_pubkey::Pubkey,
-        solana_rent::Rent,
-        solana_stake_interface::{self as stake, state::StakeStateV2},
-        solana_vote_interface::state::VoteStateV4,
-        solana_vote_program::vote_state,
+        trezoa_account::WritableAccount,
+        trezoa_pubkey::Pubkey,
+        trezoa_rent::Rent,
+        trezoa_stake_interface::{self as stake, state::StakeStateV2},
+        trezoa_vote_interface::state::VoteStateV4,
+        trezoa_vote_program::vote_state,
     };
 
     //  set up some dummies for a staked node     ((     vote      )  (     stake     ))
     pub(crate) fn create_staked_node_accounts(
         stake: u64,
     ) -> ((Pubkey, AccountSharedData), (Pubkey, AccountSharedData)) {
-        let vote_pubkey = solana_pubkey::new_rand();
-        let node_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let vote_account = vote_state::create_v4_account_with_authorized(
             &node_pubkey,
             &vote_pubkey,
@@ -600,7 +600,7 @@ pub(crate) mod tests {
             0,
             1,
         );
-        let stake_pubkey = solana_pubkey::new_rand();
+        let stake_pubkey = trezoa_pubkey::new_rand();
         (
             (vote_pubkey, vote_account),
             (
@@ -616,7 +616,7 @@ pub(crate) mod tests {
         vote_pubkey: &Pubkey,
         stake_pubkey: &Pubkey,
     ) -> AccountSharedData {
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         stake_utils::create_stake_account(
             stake_pubkey,
             vote_pubkey,
@@ -675,7 +675,7 @@ pub(crate) mod tests {
 
             // activate more
             let mut stake_account =
-                create_stake_account(42, &vote_pubkey, &solana_pubkey::new_rand());
+                create_stake_account(42, &vote_pubkey, &trezoa_pubkey::new_rand());
             stakes_cache.check_and_store(&stake_pubkey, &stake_account, None);
             let stake = stake_account
                 .deserialize_data::<StakeStateV2>()
@@ -867,7 +867,7 @@ pub(crate) mod tests {
         let ((vote_pubkey, vote_account), (stake_pubkey, stake_account)) =
             create_staked_node_accounts(10);
 
-        let stake_pubkey2 = solana_pubkey::new_rand();
+        let stake_pubkey2 = trezoa_pubkey::new_rand();
         let stake_account2 = create_stake_account(10, &vote_pubkey, &stake_pubkey2);
 
         stakes_cache.check_and_store(&vote_pubkey, &vote_account, None);

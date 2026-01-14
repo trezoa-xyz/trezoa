@@ -8,10 +8,10 @@ use {
         block_cost_limits::*, cost_tracker_post_analysis::CostTrackerPostAnalysis,
         transaction_cost::TransactionCost,
     },
-    solana_metrics::datapoint_info,
-    solana_pubkey::Pubkey,
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
-    solana_transaction_error::TransactionError,
+    trezoa_metrics::datapoint_info,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_transaction_error::TransactionError,
     std::{
         collections::HashMap,
         num::Saturating,
@@ -229,7 +229,7 @@ impl CostTracker {
 
     pub fn report_stats(
         &self,
-        bank_slot: solana_clock::Slot,
+        bank_slot: trezoa_clock::Slot,
         is_leader: bool,
         total_transaction_fee: u64,
         total_priority_fee: u64,
@@ -471,8 +471,8 @@ mod tests {
     use {
         super::*,
         crate::transaction_cost::{WritableKeysTransaction, *},
-        solana_keypair::Keypair,
-        solana_signer::Signer,
+        trezoa_keypair::Keypair,
+        trezoa_signer::Signer,
         std::cmp,
     };
 
@@ -490,7 +490,7 @@ mod tests {
     }
 
     fn test_setup() -> Keypair {
-        agave_logger::setup();
+        trezoa_logger::setup();
         Keypair::new()
     }
 

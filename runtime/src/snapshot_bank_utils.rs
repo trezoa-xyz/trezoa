@@ -25,8 +25,8 @@ use {
         },
         status_cache,
     },
-    agave_fs::dirs,
-    agave_snapshots::{
+    trezoa_fs::dirs,
+    trezoa_snapshots::{
         error::{
             SnapshotError, VerifyEpochStakesError, VerifySlotDeltasError, VerifySlotHistoryError,
         },
@@ -42,15 +42,15 @@ use {
         ArchiveFormat, SnapshotArchiveKind, SnapshotKind, SnapshotVersion,
     },
     log::*,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::{AccountsDbConfig, AtomicAccountsFileId},
         accounts_update_notifier_interface::AccountsUpdateNotifier,
     },
-    solana_clock::{Epoch, Slot},
-    solana_genesis_config::GenesisConfig,
-    solana_measure::{measure::Measure, measure_time},
-    solana_pubkey::Pubkey,
-    solana_slot_history::{Check, SlotHistory},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_measure::{measure::Measure, measure_time},
+    trezoa_pubkey::Pubkey,
+    trezoa_slot_history::{Check, SlotHistory},
     std::{
         collections::{HashMap, HashSet},
         ops::RangeInclusive,
@@ -66,7 +66,7 @@ pub fn bank_fields_from_snapshot_archives(
     full_snapshot_archives_dir: impl AsRef<Path>,
     incremental_snapshot_archives_dir: impl AsRef<Path>,
     accounts_db_config: &AccountsDbConfig,
-) -> agave_snapshots::Result<BankFieldsToDeserialize> {
+) -> trezoa_snapshots::Result<BankFieldsToDeserialize> {
     let full_snapshot_archive_info =
         get_highest_full_snapshot_archive_info(&full_snapshot_archives_dir).ok_or_else(|| {
             SnapshotError::NoSnapshotArchives(full_snapshot_archives_dir.as_ref().to_path_buf())
@@ -109,7 +109,7 @@ fn bank_fields_from_snapshots(
     incremental_snapshot_unpacked_snapshots_dir_and_version: Option<
         &UnpackedSnapshotsDirAndVersion,
     >,
-) -> agave_snapshots::Result<BankFieldsToDeserialize> {
+) -> trezoa_snapshots::Result<BankFieldsToDeserialize> {
     let (snapshot_version, snapshot_root_paths) = snapshot_version_and_root_paths(
         full_snapshot_unpacked_snapshots_dir_and_version,
         incremental_snapshot_unpacked_snapshots_dir_and_version,
@@ -147,7 +147,7 @@ pub fn bank_from_snapshot_archives(
     accounts_db_config: AccountsDbConfig,
     accounts_update_notifier: Option<AccountsUpdateNotifier>,
     exit: Arc<AtomicBool>,
-) -> agave_snapshots::Result<Bank> {
+) -> trezoa_snapshots::Result<Bank> {
     info!(
         "Loading bank from full snapshot archive: {}, and incremental snapshot archive: {:?}",
         full_snapshot_archive_info.path().display(),
@@ -290,7 +290,7 @@ pub fn bank_from_latest_snapshot_archives(
     accounts_db_config: AccountsDbConfig,
     accounts_update_notifier: Option<AccountsUpdateNotifier>,
     exit: Arc<AtomicBool>,
-) -> agave_snapshots::Result<(
+) -> trezoa_snapshots::Result<(
     Bank,
     FullSnapshotArchiveInfo,
     Option<IncrementalSnapshotArchiveInfo>,
@@ -342,7 +342,7 @@ pub fn bank_from_snapshot_dir(
     accounts_db_config: AccountsDbConfig,
     accounts_update_notifier: Option<AccountsUpdateNotifier>,
     exit: Arc<AtomicBool>,
-) -> agave_snapshots::Result<Bank> {
+) -> trezoa_snapshots::Result<Bank> {
     info!(
         "Loading bank from snapshot dir: {}",
         bank_snapshot.snapshot_dir.display()
@@ -432,7 +432,7 @@ fn verify_bank_against_expected_slot_hash(
     bank: &Bank,
     snapshot_slot: Slot,
     snapshot_hash: SnapshotHash,
-) -> agave_snapshots::Result<()> {
+) -> trezoa_snapshots::Result<()> {
     let bank_slot = bank.slot();
     if bank_slot != snapshot_slot {
         return Err(SnapshotError::MismatchedSlot(bank_slot, snapshot_slot));
@@ -453,7 +453,7 @@ fn snapshot_version_and_root_paths(
     incremental_snapshot_unpacked_snapshots_dir_and_version: Option<
         &UnpackedSnapshotsDirAndVersion,
     >,
-) -> agave_snapshots::Result<(SnapshotVersion, SnapshotRootPaths)> {
+) -> trezoa_snapshots::Result<(SnapshotVersion, SnapshotRootPaths)> {
     let (full_snapshot_version, full_snapshot_root_paths) =
         verify_unpacked_snapshots_dir_and_version(
             full_snapshot_unpacked_snapshots_dir_and_version,
@@ -587,7 +587,7 @@ fn verify_slot_history(
         return Err(VerifySlotHistoryError::InvalidNewestSlot);
     }
 
-    if slot_history.bits.len() != solana_slot_history::MAX_ENTRIES {
+    if slot_history.bits.len() != trezoa_slot_history::MAX_ENTRIES {
         return Err(VerifySlotHistoryError::InvalidNumEntries);
     }
 
@@ -652,7 +652,7 @@ pub fn bank_to_full_snapshot_archive(
     full_snapshot_archives_dir: impl AsRef<Path>,
     incremental_snapshot_archives_dir: impl AsRef<Path>,
     archive_format: ArchiveFormat,
-) -> agave_snapshots::Result<FullSnapshotArchiveInfo> {
+) -> trezoa_snapshots::Result<FullSnapshotArchiveInfo> {
     let snapshot_version = snapshot_version.unwrap_or_default();
     let bank_snapshots_dir = tempfile::tempdir_in(&bank_snapshots_dir)?;
 
@@ -723,7 +723,7 @@ pub fn bank_to_incremental_snapshot_archive(
     full_snapshot_archives_dir: impl AsRef<Path>,
     incremental_snapshot_archives_dir: impl AsRef<Path>,
     archive_format: ArchiveFormat,
-) -> agave_snapshots::Result<IncrementalSnapshotArchiveInfo> {
+) -> trezoa_snapshots::Result<IncrementalSnapshotArchiveInfo> {
     let snapshot_version = snapshot_version.unwrap_or_default();
 
     assert!(bank.is_complete());
@@ -803,18 +803,18 @@ mod tests {
             },
             status_cache::Status,
         },
-        agave_snapshots::{error::VerifySlotDeltasError, paths::get_bank_snapshot_dir},
+        trezoa_snapshots::{error::VerifySlotDeltasError, paths::get_bank_snapshot_dir},
         semver::Version,
-        solana_accounts_db::{
+        trezoa_accounts_db::{
             accounts_db::{MarkObsoleteAccounts, ACCOUNTS_DB_CONFIG_FOR_TESTING},
             accounts_file::StorageAccess,
         },
-        solana_genesis_config::create_genesis_config,
-        solana_keypair::Keypair,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_signer::Signer,
-        solana_system_transaction as system_transaction,
-        solana_transaction::sanitized::SanitizedTransaction,
+        trezoa_genesis_config::create_genesis_config,
+        trezoa_keypair::Keypair,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_signer::Signer,
+        trezoa_system_transaction as system_transaction,
+        trezoa_transaction::sanitized::SanitizedTransaction,
         std::{
             fs, slice,
             sync::{atomic::Ordering, Arc},
@@ -857,7 +857,7 @@ mod tests {
         bank: &Bank,
         snapshot_version: SnapshotVersion,
         should_flush_and_hard_link_storages: bool,
-    ) -> agave_snapshots::Result<()> {
+    ) -> trezoa_snapshots::Result<()> {
         assert!(bank.is_complete());
 
         bank.squash(); // Bank may not be a root
@@ -1371,7 +1371,7 @@ mod tests {
         let (mut genesis_config, mint_keypair) =
             create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
         // test expects 0 transaction fee
-        genesis_config.fee_rate_governor = solana_fee_calculator::FeeRateGovernor::new(0, 0);
+        genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
 
         let lamports_to_transfer = 123_456 * LAMPORTS_PER_SOL;
         let (bank0, bank_forks) = Bank::new_with_paths_for_tests(
@@ -1975,7 +1975,7 @@ mod tests {
         let (mut genesis_config, mint) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
 
         // Disable fees so fees don't need to be calculated
-        genesis_config.fee_rate_governor = solana_fee_calculator::FeeRateGovernor::new(0, 0);
+        genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
 
         let lamports = 123_456 * LAMPORTS_PER_SOL;
         let bank_test_config = BankTestConfig {

@@ -1,5 +1,5 @@
 use {
-    solana_time_utils::AtomicInterval,
+    trezoa_time_utils::AtomicInterval,
     std::sync::atomic::{AtomicU64, Ordering},
 };
 

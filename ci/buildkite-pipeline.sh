@@ -22,8 +22,8 @@ if [[ -n $CI_PULL_REQUEST ]]; then
     repo="${BASH_REMATCH[2]}"
   else
     echo "couldn't parse owner and repo. use defaults"
-    owner="anza-xyz"
-    repo="agave"
+    owner="trezoa-xyz"
+    repo="trezoa"
   fi
 
   # ref: https://github.com/cli/cli/issues/5368#issuecomment-1087515074
@@ -154,15 +154,15 @@ command_step() {
     timeout_in_minutes: $3
     artifact_paths: "log-*.txt"
     agents:
-      queue: "${4:-solana}"
+      queue: "${4:-trezoa}"
 EOF
 }
 
 
 trigger_secondary_step() {
   cat  >> "$output_file" <<"EOF"
-  - name: "Trigger Build on agave-secondary"
-    trigger: "agave-secondary"
+  - name: "Trigger Build on trezoa-secondary"
+    trigger: "trezoa-secondary"
     branches: "!pull/*"
     async: true
     soft_fail: true
@@ -227,7 +227,7 @@ all_test_steps() {
     name: "stable-sbf"
     timeout_in_minutes: 35
     agents:
-      queue: "solana"
+      queue: "trezoa"
 EOF
   else
     annotate --style info \
@@ -263,17 +263,17 @@ EOF
         name: "coverage-1"
         timeout_in_minutes: 60
         agents:
-          queue: "solana"
+          queue: "trezoa"
       - command: "ci/docker-run-default-image.sh ci/coverage/part-2.sh"
         name: "coverage-2"
         timeout_in_minutes: 60
         agents:
-          queue: "solana"
+          queue: "trezoa"
       - command: "ci/docker-run-default-image.sh ci/coverage/part-3.sh"
         name: "coverage-3"
         timeout_in_minutes: 60
         agents:
-          queue: "solana"
+          queue: "trezoa"
 EOF
   else
     annotate --style info --context test-coverage \
@@ -307,7 +307,7 @@ pull_or_push_steps() {
     # | cat is a no-op. If this pull request is a version bump then grep will output no lines and have an exit code of 1.
     # Piping the output to cat prevents that non-zero exit code from exiting this script
     diff_other_than_version_bump=$(git diff origin/"$BUILDKITE_PULL_REQUEST_BASE_BRANCH"..HEAD | \
-      grep -vE "^ |^@@ |^--- |^\+\+\+ |^index |^diff |^-( \")?solana.*$optional_old_version_number|^\+( \")?solana.*$new_version_number|^-version|^\+version"|cat)
+      grep -vE "^ |^@@ |^--- |^\+\+\+ |^index |^diff |^-( \")?trezoa.*$optional_old_version_number|^\+( \")?trezoa.*$new_version_number|^-version|^\+version"|cat)
     echo "diff_other_than_version_bump: ->$diff_other_than_version_bump<-"
 
     if [ -z "$diff_other_than_version_bump" ]; then
@@ -331,7 +331,7 @@ if [[ -n $BUILDKITE_TAG ]]; then
   start_pipeline "Tag pipeline for $BUILDKITE_TAG"
 
   annotate --style info --context release-tag \
-    "https://github.com/anza-xyz/agave/releases/$BUILDKITE_TAG"
+    "https://github.com/trezoa-xyz/trezoa/releases/$BUILDKITE_TAG"
 
   # Jump directly to the secondary build to publish release artifacts quickly
   trigger_secondary_step
@@ -349,7 +349,7 @@ if [[ $BUILDKITE_BRANCH =~ ^pull ]]; then
 
   # Add helpful link back to the corresponding Github Pull Request
   annotate --style info --context pr-backlink \
-    "Github Pull Request: https://github.com/anza-xyz/agave/$BUILDKITE_BRANCH"
+    "Github Pull Request: https://github.com/trezoa-xyz/trezoa/$BUILDKITE_BRANCH"
 
   pull_or_push_steps
   exit 0

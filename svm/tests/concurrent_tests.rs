@@ -8,15 +8,15 @@ use {
         sync::{Arc, RwLock},
         thread, Runner,
     },
-    solana_account::{AccountSharedData, ReadableAccount, WritableAccount},
-    solana_clock::Slot,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_program_runtime::{
+    trezoa_account::{AccountSharedData, ReadableAccount, WritableAccount},
+    trezoa_clock::Slot,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_program_runtime::{
         execution_budget::SVMTransactionExecutionAndFeeBudgetLimits,
         loaded_programs::{ProgramCacheEntryType, ProgramCacheForTxBatch},
     },
-    solana_pubkey::Pubkey,
-    solana_svm::{
+    trezoa_pubkey::Pubkey,
+    trezoa_svm::{
         account_loader::{AccountLoader, CheckedTransactionDetails, TransactionCheckResult},
         transaction_processing_result::{
             ProcessedTransaction, TransactionProcessingResultExtensions,
@@ -26,9 +26,9 @@ use {
             TransactionProcessingEnvironment,
         },
     },
-    solana_svm_feature_set::SVMFeatureSet,
-    solana_svm_timings::ExecuteTimings,
-    solana_transaction::{sanitized::SanitizedTransaction, Transaction},
+    trezoa_svm_feature_set::SVMFeatureSet,
+    trezoa_svm_timings::ExecuteTimings,
+    trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
     std::collections::{HashMap, HashSet},
 };
 
@@ -43,7 +43,7 @@ fn program_cache_execution(threads: usize) {
         TransactionBatchProcessor::new(5, 5, Arc::downgrade(&fork_graph), None, None);
 
     let programs = vec![
-        deploy_program("hello-solana".to_string(), 0, &mut mock_bank),
+        deploy_program("hello-trezoa".to_string(), 0, &mut mock_bank),
         deploy_program("simple-transfer".to_string(), 0, &mut mock_bank),
         deploy_program("clock-sysvar".to_string(), 0, &mut mock_bank),
     ];

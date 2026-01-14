@@ -1,21 +1,21 @@
 use {
-    solana_client::{
+    trezoa_client::{
         nonblocking::tpu_client::TpuClient,
         rpc_config::RpcSendTransactionConfig,
         send_and_confirm_transactions_in_parallel::{
             send_and_confirm_transactions_in_parallel_blocking_v2, SendAndConfirmConfigV2,
         },
     },
-    solana_commitment_config::CommitmentConfig,
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_native_token::LAMPORTS_PER_SOL,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_test_validator::TestValidator,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_test_validator::TestValidator,
     std::sync::Arc,
 };
 
@@ -36,20 +36,20 @@ fn create_messages(from: Pubkey, to: Pubkey) -> (Vec<Message>, u64) {
 
 #[test]
 fn test_send_and_confirm_transactions_in_parallel_without_tpu_client() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
 
-    let bob_pubkey = solana_pubkey::new_rand();
+    let bob_pubkey = trezoa_pubkey::new_rand();
     let alice_pubkey = alice.pubkey();
 
     let rpc_client = Arc::new(RpcClient::new(test_validator.rpc_url()));
 
     assert_eq!(
-        rpc_client.get_version().unwrap().solana_core,
-        solana_version::semver!()
+        rpc_client.get_version().unwrap().trezoa_core,
+        trezoa_version::semver!()
     );
 
     let original_alice_balance = rpc_client.get_balance(&alice.pubkey()).unwrap();
@@ -93,20 +93,20 @@ fn test_send_and_confirm_transactions_in_parallel_without_tpu_client() {
 
 #[test]
 fn test_send_and_confirm_transactions_in_parallel_with_tpu_client() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
 
-    let bob_pubkey = solana_pubkey::new_rand();
+    let bob_pubkey = trezoa_pubkey::new_rand();
     let alice_pubkey = alice.pubkey();
 
     let rpc_client = Arc::new(RpcClient::new(test_validator.rpc_url()));
 
     assert_eq!(
-        rpc_client.get_version().unwrap().solana_core,
-        solana_version::semver!()
+        rpc_client.get_version().unwrap().trezoa_core,
+        trezoa_version::semver!()
     );
 
     let original_alice_balance = rpc_client.get_balance(&alice.pubkey()).unwrap();
@@ -116,7 +116,7 @@ fn test_send_and_confirm_transactions_in_parallel_with_tpu_client() {
         "temp",
         rpc_client.get_inner_client().clone(),
         ws_url.as_str(),
-        solana_client::tpu_client::TpuClientConfig::default(),
+        trezoa_client::tpu_client::TpuClientConfig::default(),
     );
     let tpu_client = rpc_client.runtime().block_on(tpu_client_fut).unwrap();
 

@@ -1,7 +1,7 @@
 //! The `weighted_shuffle` module provides an iterator over shuffled weights.
 
 use {
-    agave_random::range::UniformU64Sampler,
+    trezoa_random::range::UniformU64Sampler,
     num_traits::CheckedAdd,
     rand::Rng,
     std::{
@@ -240,11 +240,11 @@ impl Clone for WeightedShuffle {
 mod tests {
     use {
         super::*,
-        agave_random::range::random_u64_range,
+        trezoa_random::range::random_u64_range,
         itertools::Itertools,
         rand::SeedableRng,
         rand_chacha::{ChaCha8Rng, ChaChaRng},
-        solana_hash::Hash,
+        trezoa_hash::Hash,
         std::{
             convert::TryInto,
             iter::{repeat_with, successors},
@@ -553,7 +553,7 @@ mod tests {
             .map(usize::to_le_bytes)
             .collect::<Vec<_>>();
         let bytes = bytes.iter().map(AsRef::as_ref).collect::<Vec<_>>();
-        assert_eq!(solana_sha256_hasher::hashv(&bytes[..]), expected_hash);
+        assert_eq!(trezoa_sha256_hasher::hashv(&bytes[..]), expected_hash);
     }
 
     #[test]

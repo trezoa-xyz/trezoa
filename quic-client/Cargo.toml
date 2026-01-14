@@ -1,7 +1,7 @@
 [package]
-name = "solana-quic-client"
-description = "Solana Quic Client"
-documentation = "https://docs.rs/solana-quic-client"
+name = "trezoa-quic-client"
+description = "Trezoa Quic Client"
+documentation = "https://docs.rs/trezoa-quic-client"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,7 +10,7 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 async-lock = { workspace = true }
@@ -21,27 +21,27 @@ log = { workspace = true }
 quinn = { workspace = true }
 quinn-proto = { workspace = true }
 rustls = { workspace = true }
-solana-connection-cache = { workspace = true }
-solana-keypair = { workspace = true }
-solana-measure = { workspace = true }
-solana-metrics = { workspace = true }
-solana-net-utils = { workspace = true }
-solana-pubkey = { workspace = true, default-features = false }
-solana-quic-definitions = { workspace = true }
-solana-rpc-client-api = { workspace = true }
-solana-signer = { workspace = true }
-solana-streamer = { workspace = true }
-solana-tls-utils = { workspace = true }
-solana-transaction-error = { workspace = true }
+trezoa-connection-cache = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-measure = { workspace = true }
+trezoa-metrics = { workspace = true }
+trezoa-net-utils = { workspace = true }
+trezoa-pubkey = { workspace = true, default-features = false }
+trezoa-quic-definitions = { workspace = true }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-streamer = { workspace = true }
+trezoa-tls-utils = { workspace = true }
+trezoa-transaction-error = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
-agave-logger = { workspace = true }
+trezoa-logger = { workspace = true }
 crossbeam-channel = { workspace = true }
-solana-net-utils = { workspace = true, features = ["dev-context-only-utils"] }
-solana-packet = { workspace = true }
-solana-perf = { workspace = true }
-solana-quic-client = { path = ".", features = ["agave-unstable-api"] }
-solana-streamer = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-net-utils = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-packet = { workspace = true }
+trezoa-perf = { workspace = true }
+trezoa-quic-client = { path = ".", features = ["trezoa-unstable-api"] }
+trezoa-streamer = { workspace = true, features = ["dev-context-only-utils"] }
 tokio-util = { workspace = true }

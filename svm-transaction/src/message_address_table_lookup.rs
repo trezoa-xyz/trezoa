@@ -1,4 +1,4 @@
-use {solana_message::v0, solana_pubkey::Pubkey};
+use {trezoa_message::v0, trezoa_pubkey::Pubkey};
 
 /// A non-owning version of [`v0::MessageAddressTableLookup`].
 /// This simply references the data in the original message.

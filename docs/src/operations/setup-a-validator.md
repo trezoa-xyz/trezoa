@@ -1,11 +1,11 @@
 ---
-title: Setup an Agave Validator
-sidebar_label: Setup an Agave Validator
+title: Setup an Trezoa-team Validator
+sidebar_label: Setup an Trezoa-team Validator
 sidebar_position: 5
 ---
 
-This is a guide for getting your validator setup on the Solana testnet cluster
-for the first time. Testnet is a Solana cluster used for performance
+This is a guide for getting your validator setup on the Trezoa testnet cluster
+for the first time. Testnet is a Trezoa cluster used for performance
 testing of the software before the software is used on mainnet. Since testnet is
 stress tested daily, it is a good cluster to practice validator operations.
 
@@ -29,54 +29,54 @@ locate the terminal program on your _trusted computer_.
 - on Ubuntu, you can type `CTRL + Alt + T`.
 - on Windows, you will have to open the command prompt as an Administrator.
 
-## Install The Solana CLI Locally
+## Install The Trezoa CLI Locally
 
-Validator operators are required to install the tools included in the Solana CLI using the [installation instructions](../cli/install.md).
+Validator operators are required to install the tools included in the Trezoa CLI using the [installation instructions](../cli/install.md).
 
-Once the Solana CLI is installed, you can return to this document once you are
+Once the Trezoa CLI is installed, you can return to this document once you are
 able to run two commands and get an answer on your terminal.
 
-First, run the following command to verify that the Solana CLI is installed:
+First, run the following command to verify that the Trezoa CLI is installed:
 
 ```
-solana --version
+trezoa --version
 ```
 
 You should see an output that looks similar to this (note your version number
 may be higher):
 
 ```
-solana-cli 1.14.17 (src:b29a37cf; feat:3488713414)
+trezoa-cli 1.14.17 (src:b29a37cf; feat:3488713414)
 ```
 
-Now, run the following command to verify that the agave-validator binary is
+Now, run the following command to verify that the trezoa-validator binary is
 installed:
 
 ```
-agave-validator --version
+trezoa-validator --version
 ```
 
 You should see an output that looks similar to this (note your version number
 may be higher):
 
 ```
-agave-validator 2.3.1 (src:e3eca4c1; feat:3640012085, client:Agave)
+trezoa-validator 2.3.1 (src:e3eca4c1; feat:3640012085, client:Trezoa-team)
 ```
 
 Once you have successfully installed the cli and validator binary, the next step is to change your
 config so that it is making requests to the `testnet` cluster:
 
 ```
-solana config set --url https://api.testnet.solana.com
+trezoa config set --url https://api.testnet.trezoa.com
 ```
 
 To verify that your config has changed, run:
 
 ```
-solana config get
+trezoa config get
 ```
 
-You should see a line that says: `RPC URL: https://api.testnet.solana.com`
+You should see a line that says: `RPC URL: https://api.testnet.trezoa.com`
 
 ## Create Keys
 
@@ -88,15 +88,15 @@ validator ([docs for reference](./guides/validator-start.md#generate-identity)):
 > ([docs for reference](./guides/validator-start.md#vanity-keypair)).
 
 ```
-solana-keygen new -o validator-keypair.json
+trezoa-keygen new -o validator-keypair.json
 ```
 
 ```
-solana-keygen new -o vote-account-keypair.json
+trezoa-keygen new -o vote-account-keypair.json
 ```
 
 ```
-solana-keygen new -o authorized-withdrawer-keypair.json
+trezoa-keygen new -o authorized-withdrawer-keypair.json
 ```
 
 > **IMPORTANT** the `authorized-withdrawer-keypair.json` should be considered
@@ -110,34 +110,34 @@ solana-keygen new -o authorized-withdrawer-keypair.json
 
 ## Create a Vote Account
 
-Before you can create your vote account, you need to configure the Solana
+Before you can create your vote account, you need to configure the Trezoa
 command line tool a bit more.
 
-The below command sets the default keypair that the Solana CLI uses to the
+The below command sets the default keypair that the Trezoa CLI uses to the
 `validator-keypair.json` file that you just created in the terminal:
 
 ```
-solana config set --keypair ./validator-keypair.json
+trezoa config set --keypair ./validator-keypair.json
 ```
 
 Now verify your account balance of `0`:
 
 ```
-solana balance
+trezoa balance
 ```
 
 Next, you need to deposit some SOL into that keypair account in order create a
 transaction (in this case, making your vote account):
 
 ```
-solana airdrop 1
+trezoa airdrop 1
 ```
 
 > **NOTE** The `airdrop` sub command does not work on mainnet, so you will have
 > to acquire SOL and transfer it into this keypair's account if you are setting
 > up a mainnet validator.
 
-Now, use the Solana cluster to create a vote account.
+Now, use the Trezoa cluster to create a vote account.
 
 As a reminder, all commands mentioned so far **should be done on your trusted
 computer** and **NOT** on a server where you intend to run your validator. It is
@@ -145,7 +145,7 @@ especially important that the following command is done on a **trusted
 computer**:
 
 ```
-solana create-vote-account -ut \
+trezoa create-vote-account -ut \
     --fee-payer ./validator-keypair.json \
     ./vote-account-keypair.json \
     ./validator-keypair.json \
@@ -154,7 +154,7 @@ solana create-vote-account -ut \
 
 > Note `-ut` tells the cli command that we would like to use the testnet
 > cluster. `--fee-payer` specifies the keypair that will be used to pay the
-> transaction fees. Both flags are not necessary if you configured the solana
+> transaction fees. Both flags are not necessary if you configured the trezoa
 > cli properly above but they are useful to ensure you're using the intended
 > cluster and keypair.
 
@@ -314,7 +314,7 @@ not start without the settings below.
 #### **Optimize sysctl knobs**
 
 ```bash
-sudo bash -c "cat >/etc/sysctl.d/21-agave-validator.conf <<EOF
+sudo bash -c "cat >/etc/sysctl.d/21-trezoa-validator.conf <<EOF
 # Increase max UDP buffer sizes
 net.core.rmem_max = 134217728
 net.core.wmem_max = 134217728
@@ -328,7 +328,7 @@ EOF"
 ```
 
 ```bash
-sudo sysctl -p /etc/sysctl.d/21-agave-validator.conf
+sudo sysctl -p /etc/sysctl.d/21-trezoa-validator.conf
 ```
 
 #### **Increase systemd and session file limits**
@@ -355,7 +355,7 @@ sudo systemctl daemon-reload
 ```
 
 ```bash
-sudo bash -c "cat >/etc/security/limits.d/90-solana-nofiles.conf <<EOF
+sudo bash -c "cat >/etc/security/limits.d/90-trezoa-nofiles.conf <<EOF
 # Increase process file descriptor count limit
 * - nofile 1000000
 # Increase memory locked limit (kB)
@@ -390,9 +390,9 @@ On the validator server, switch to the `sol` user:
 su - sol
 ```
 
-## Install agave-validator on Remote Machine
+## Install trezoa-validator on Remote Machine
 
-Your remote machine will need `agave-validator` installed to run the Agave validator
+Your remote machine will need `trezoa-validator` installed to run the Trezoa-team validator
 software. For simplicity, install the application with user `sol`. Refer again to
 [build from source](../cli/install.md#build-from-source).
 
@@ -417,7 +417,7 @@ Copy and paste the following contents into `validator.sh` then save the file:
 
 ```
 #!/bin/bash
-exec agave-validator \
+exec trezoa-validator \
     --identity /home/sol/validator-keypair.json \
     --vote-account /home/sol/vote-account-keypair.json \
     --known-validator 5D1fNXzvv5NjV1ysLjirC4WY92RNsVH18vjmcszZd8on \
@@ -425,20 +425,20 @@ exec agave-validator \
     --known-validator Ft5fbkqNa76vnsjYNwjDZUXoTWpP7VYm3mtsaQckQADN \
     --known-validator 9QxCLckBiJc783jnMvXZubK4wH86Eqqvashtrwvcsgkv \
     --only-known-rpc \
-    --log /home/sol/agave-validator.log \
+    --log /home/sol/trezoa-validator.log \
     --ledger /mnt/ledger \
     --accounts /mnt/accounts \
     --rpc-port 8899 \
     --dynamic-port-range 8000-8020 \
-    --entrypoint entrypoint.testnet.solana.com:8001 \
-    --entrypoint entrypoint2.testnet.solana.com:8001 \
-    --entrypoint entrypoint3.testnet.solana.com:8001 \
+    --entrypoint entrypoint.testnet.trezoa.com:8001 \
+    --entrypoint entrypoint2.testnet.trezoa.com:8001 \
+    --entrypoint entrypoint3.testnet.trezoa.com:8001 \
     --expected-genesis-hash 4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY \
     --wal-recovery-mode skip_any_corrupted_record \
     --limit-ledger-size
 ```
 
-Refer to `agave-validator --help` for more information on what each flag is
+Refer to `trezoa-validator --help` for more information on what each flag is
 doing in this script. Also refer to the section on
 [best practices for operating a validator](./best-practices/general.md).
 
@@ -453,14 +453,14 @@ Test that your `validator.sh` file is running properly by executing the
 /home/sol/bin/validator.sh
 ```
 
-The script should execute the `agave-validator` process. In a new terminal
+The script should execute the `trezoa-validator` process. In a new terminal
 window, ssh into your server, then verify that the process is running:
 
 ```
-ps aux | grep agave-validator
+ps aux | grep trezoa-validator
 ```
 
-You should see a line in the output that includes `agave-validator` with all
+You should see a line in the output that includes `trezoa-validator` with all
 the flags that were added to your `validator.sh` script.
 
 Next, we need to look at the logs to make sure everything is operating properly.
@@ -475,7 +475,7 @@ In a new terminal window, ssh into your validator machine, switch users to the
 
 ```
 su - sol
-tail -f agave-validator.log
+tail -f trezoa-validator.log
 ```
 
 The `tail` command will continue to display the output of a file as the file
@@ -486,7 +486,7 @@ Assuming you do not see any error messages, exit out of the command.
 
 ### Gossip Protocol
 
-Gossip is a protocol used in the Solana clusters to communicate between
+Gossip is a protocol used in the Trezoa clusters to communicate between
 validator nodes. For more information on gossip, see
 [Gossip Service](../validator/gossip.md). To verify that your validator is
 running properly, make sure that the validator has registered itself with the
@@ -496,15 +496,15 @@ In a new terminal window, connect to your server via ssh. Identify your
 validator's pubkey:
 
 ```
-solana-keygen pubkey ~/validator-keypair.json
+trezoa-keygen pubkey ~/validator-keypair.json
 ```
 
-The command `solana gossip` lists all validators that have registered with the
+The command `trezoa gossip` lists all validators that have registered with the
 protocol. To check that the newly setup validator is in gossip, we will `grep`
 for our pubkey in the output:
 
 ```
-solana gossip | grep <pubkey>
+trezoa gossip | grep <pubkey>
 ```
 
 After running the command, you should see a single line that looks like this:
@@ -517,17 +517,17 @@ If you do not see any output after grep-ing the output of gossip, your validator
 may be having startup problems. If that is the case, start debugging by looking
 through the validator log output.
 
-### Solana Validators
+### Trezoa Validators
 
 After you have verified that your validator is in gossip, you should stake some
 SOL to your validator. Once the stake has activated (which happens at the start
 of the next epoch), you can verify that your validator is ready to be a voting
-participant of the network with the `solana validators` command. The command
+participant of the network with the `trezoa validators` command. The command
 lists all validators in the network, but like before, we can `grep` the output
 for the validator we care about:
 
 ```
-solana validators | grep <pubkey>
+trezoa validators | grep <pubkey>
 ```
 
 You should see a line of output that looks like this:
@@ -536,10 +536,10 @@ You should see a line of output that looks like this:
 5D1fNXzvv5NjV1ysLjirC4WY92RNsVH18vjmcszZd8on  FX6NNbS5GHc2kuzgTZetup6GZX6ReaWyki8Z8jC7rbNG  100%  197434166 (  0)  197434133 (  0)   2.11%   323614  1.14.17   2450110.588302720 SOL (1.74%)
 ```
 
-### Solana Catchup
+### Trezoa Catchup
 
-The `solana catchup` command is a useful tool for seeing how quickly your
-validator is processing blocks. The Solana network has the capability to produce
+The `trezoa catchup` command is a useful tool for seeing how quickly your
+validator is processing blocks. The Trezoa network has the capability to produce
 many transactions per second. Since your validator is new to the network, it has
 to ask another validator (listed as a `--known-validator` in your startup
 script) for a recent snapshot of the ledger. By the time you receive the
@@ -548,16 +548,16 @@ processed and finalized in that time. In order for your validator to participate
 in consensus, it must _catchup_ to the rest of the network by asking for the
 more recent transactions that it does not have.
 
-The `solana catchup` command is a tool that tells you how far behind the network
+The `trezoa catchup` command is a tool that tells you how far behind the network
 your validator is and how quickly you are catching up:
 
 ```
-solana catchup <pubkey>
+trezoa catchup <pubkey>
 ```
 
 If you see a message about trying to connect, your validator may not be part of
-the network yet. Make sure to check the logs and double check `solana gossip`
-and `solana validators` to make sure your validator is running properly.
+the network yet. Make sure to check the logs and double check `trezoa gossip`
+and `trezoa validators` to make sure your validator is running properly.
 
 Once you are happy that the validator can start up without errors, the next step
 is to create a system service to run the `validator.sh` file automatically. Stop
@@ -577,18 +577,18 @@ sudo systemctl enable --now sol
 ```
 
 Now verify that the validator is running properly by tailing the logs and using
-the commands mentioned earlier to check gossip and Solana validators:
+the commands mentioned earlier to check gossip and Trezoa validators:
 
 ```
-tail -f /home/sol/agave-validator*.log
+tail -f /home/sol/trezoa-validator*.log
 ```
 
 ## Monitoring
 
-`agave-watchtower` is a command you can run on a separate machine to monitor
+`trezoa-watchtower` is a command you can run on a separate machine to monitor
 your server. You can read more about handling
-[automatic restarts and monitoring](./best-practices/monitoring.md#agave-watchtower)
-using Agave Watchtower here in the docs.
+[automatic restarts and monitoring](./best-practices/monitoring.md#trezoa-watchtower)
+using Trezoa-team Watchtower here in the docs.
 
 ## Common issues
 
@@ -603,7 +603,7 @@ snapshot from another validator node.
 
 ### PoH hashes/second rate is slower than the cluster target
 
-If you are using `agave-validator` built from source, ensure that you are using a `release` build and not a `debug` build
+If you are using `trezoa-validator` built from source, ensure that you are using a `release` build and not a `debug` build
 
 Ensure that your machine's CPU base clock speed is 2.8GHz or faster. Use `lscpu` to check your clock speed. `CPU(s) scaling MHz` can cause your clock speed to be underclocked. Some additional tuning:
 

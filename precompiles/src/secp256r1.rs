@@ -1,5 +1,5 @@
 use {
-    agave_feature_set::FeatureSet,
+    trezoa_feature_set::FeatureSet,
     openssl::{
         bn::{BigNum, BigNumContext},
         ec::{EcGroup, EcKey, EcPoint},
@@ -7,8 +7,8 @@ use {
         pkey::PKey,
         sign::Verifier,
     },
-    solana_precompile_error::PrecompileError,
-    solana_secp256r1_program::{
+    trezoa_precompile_error::PrecompileError,
+    trezoa_secp256r1_program::{
         Secp256r1SignatureOffsets, COMPRESSED_PUBKEY_SERIALIZED_SIZE, FIELD_SIZE,
         SECP256R1_HALF_ORDER, SECP256R1_ORDER_MINUS_ONE, SIGNATURE_OFFSETS_SERIALIZED_SIZE,
         SIGNATURE_OFFSETS_START, SIGNATURE_SERIALIZED_SIZE,
@@ -171,7 +171,7 @@ mod tests {
         super::*,
         crate::test_verify_with_alignment,
         bytemuck::bytes_of,
-        solana_secp256r1_program::{
+        trezoa_secp256r1_program::{
             new_secp256r1_instruction_with_signature, sign_message, DATA_START, SECP256R1_ORDER,
         },
     };
@@ -198,7 +198,7 @@ mod tests {
 
     #[test]
     fn test_invalid_offsets() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         let mut instruction_data = vec![0u8; DATA_START];
         let offsets = Secp256r1SignatureOffsets::default();
@@ -246,7 +246,7 @@ mod tests {
 
     #[test]
     fn test_invalid_signature_data_size() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // Test data.len() < SIGNATURE_OFFSETS_START
         let small_data = vec![0u8; SIGNATURE_OFFSETS_START - 1];
@@ -358,7 +358,7 @@ mod tests {
 
     #[test]
     fn test_secp256r1() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let message_arr = b"hello";
         let group = EcGroup::from_curve_name(Nid::X9_62_PRIME256V1).unwrap();
         let signing_key = EcKey::generate(&group).unwrap();
@@ -405,7 +405,7 @@ mod tests {
 
     #[test]
     fn test_secp256r1_high_s() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let message_arr = b"hello";
         let group = EcGroup::from_curve_name(Nid::X9_62_PRIME256V1).unwrap();
         let signing_key = EcKey::generate(&group).unwrap();
@@ -461,7 +461,7 @@ mod tests {
     }
     #[test]
     fn test_new_secp256r1_instruction_31byte_components() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let message_arr = b"hello";
         let group = EcGroup::from_curve_name(Nid::X9_62_PRIME256V1).unwrap();
         let signing_key = EcKey::generate(&group).unwrap();

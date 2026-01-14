@@ -23,11 +23,11 @@ use {
     },
     percentage::Percentage,
     quinn::{Connection, VarInt},
-    solana_quic_definitions::{
+    trezoa_quic_definitions::{
         QUIC_MAX_STAKED_CONCURRENT_STREAMS, QUIC_MAX_UNSTAKED_CONCURRENT_STREAMS,
         QUIC_MIN_STAKED_CONCURRENT_STREAMS, QUIC_TOTAL_STAKED_CONCURRENT_STREAMS,
     },
-    solana_time_utils as timing,
+    trezoa_time_utils as timing,
     std::{
         future::Future,
         sync::{
@@ -84,7 +84,7 @@ pub struct SwQos {
 #[derive(Clone)]
 pub struct SwQosConnectionContext {
     peer_type: ConnectionPeerType,
-    remote_pubkey: Option<solana_pubkey::Pubkey>,
+    remote_pubkey: Option<trezoa_pubkey::Pubkey>,
     total_stake: u64,
     in_staked_table: bool,
     last_update: Arc<AtomicU64>,
@@ -97,7 +97,7 @@ impl ConnectionContext for SwQosConnectionContext {
         self.peer_type
     }
 
-    fn remote_pubkey(&self) -> Option<solana_pubkey::Pubkey> {
+    fn remote_pubkey(&self) -> Option<trezoa_pubkey::Pubkey> {
         self.remote_pubkey
     }
 }

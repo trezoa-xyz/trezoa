@@ -1,6 +1,6 @@
 use {
     crate::{accounts_index::AccountsIndexRootsStats, append_vec::APPEND_VEC_STATS},
-    solana_time_utils::AtomicInterval,
+    trezoa_time_utils::AtomicInterval,
     std::{
         iter::Sum,
         num::Saturating,

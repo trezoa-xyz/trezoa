@@ -1,5 +1,5 @@
 use {
-    agave_validator::{
+    trezoa_validator::{
         admin_rpc_service, cli, commands::FromClapArgMatches, dashboard::Dashboard,
         ledger_lockfile, lock_ledger, println_name_value,
     },
@@ -7,30 +7,30 @@ use {
     crossbeam_channel::unbounded,
     itertools::Itertools,
     log::*,
-    solana_account::AccountSharedData,
-    solana_accounts_db::accounts_index::{AccountIndex, AccountSecondaryIndexes},
-    solana_clap_utils::{
+    trezoa_account::AccountSharedData,
+    trezoa_accounts_db::accounts_index::{AccountIndex, AccountSecondaryIndexes},
+    trezoa_clap_utils::{
         input_parsers::{pubkey_of, pubkeys_of, value_of},
         input_validators::normalize_to_url_if_moniker,
     },
-    solana_clock::Slot,
-    solana_core::consensus::tower_storage::FileTowerStorage,
-    solana_epoch_schedule::EpochSchedule,
-    solana_faucet::faucet::{run_faucet, Faucet},
-    solana_inflation::Inflation,
-    solana_keypair::{read_keypair_file, write_keypair_file, Keypair},
-    solana_native_token::sol_str_to_lamports,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_rent::Rent,
-    solana_rpc::{
+    trezoa_clock::Slot,
+    trezoa_core::consensus::tower_storage::FileTowerStorage,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_faucet::faucet::{run_faucet, Faucet},
+    trezoa_inflation::Inflation,
+    trezoa_keypair::{read_keypair_file, write_keypair_file, Keypair},
+    trezoa_native_token::sol_str_to_lamports,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_rent::Rent,
+    trezoa_rpc::{
         rpc::{JsonRpcConfig, RpcBigtableConfig},
         rpc_pubsub_service::PubSubConfig,
     },
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_signer::Signer,
-    solana_system_interface::program as system_program,
-    solana_test_validator::*,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_signer::Signer,
+    trezoa_system_interface::program as system_program,
+    trezoa_test_validator::*,
     std::{
         collections::{HashMap, HashSet},
         env, fs, io,
@@ -58,7 +58,7 @@ fn main() {
     }
 
     let default_args = cli::DefaultTestArgs::new();
-    let version = solana_version::version!();
+    let version = trezoa_version::version!();
     let matches = cli::test_app(version, &default_args).get_matches();
 
     let output = if matches.is_present("quiet") {
@@ -77,8 +77,8 @@ fn main() {
         .unwrap_or_default()
         .map(|value| match value {
             "program-id" => AccountIndex::ProgramId,
-            "spl-token-mint" => AccountIndex::SplTokenMint,
-            "spl-token-owner" => AccountIndex::SplTokenOwner,
+            "tpl-token-mint" => AccountIndex::SplTokenMint,
+            "tpl-token-owner" => AccountIndex::SplTokenOwner,
             _ => unreachable!(),
         })
         .collect();
@@ -107,7 +107,7 @@ fn main() {
             exit(1);
         })
     }
-    solana_runtime::snapshot_utils::remove_tmp_snapshot_archives(&ledger_path);
+    trezoa_runtime::snapshot_utils::remove_tmp_snapshot_archives(&ledger_path);
 
     let validator_log_symlink = ledger_path.join("validator.log");
 
@@ -127,18 +127,18 @@ fn main() {
     } else {
         None
     };
-    agave_logger::initialize_logging(logfile);
+    trezoa_logger::initialize_logging(logfile);
 
-    info!("{} {}", crate_name!(), solana_version::version!());
+    info!("{} {}", crate_name!(), trezoa_version::version!());
     info!("Starting validator with: {:#?}", std::env::args_os());
-    solana_core::validator::report_target_features();
+    trezoa_core::validator::report_target_features();
 
     // TODO: Ideally test-validator should *only* allow private addresses.
     let socket_addr_space = SocketAddrSpace::new(/*allow_private_addr=*/ true);
     let cli_config = if let Some(config_file) = matches.value_of("config_file") {
-        solana_cli_config::Config::load(config_file).unwrap_or_default()
+        trezoa_cli_config::Config::load(config_file).unwrap_or_default()
     } else {
-        solana_cli_config::Config::default()
+        trezoa_cli_config::Config::default()
     };
 
     let cluster_rpc_client = value_t!(matches, "json_rpc_url", String)
@@ -162,12 +162,12 @@ fn main() {
     let inflation_fixed = value_t!(matches, "inflation_fixed", f64).ok();
     let gossip_port = value_t!(matches, "gossip_port", u16).ok();
     let dynamic_port_range = matches.value_of("dynamic_port_range").map(|port_range| {
-        solana_net_utils::parse_port_range(port_range).unwrap_or_else(|| {
+        trezoa_net_utils::parse_port_range(port_range).unwrap_or_else(|| {
             eprintln!("Failed to parse --dynamic-port-range");
             exit(1);
         })
     });
-    let bind_address = solana_net_utils::parse_host(
+    let bind_address = trezoa_net_utils::parse_host(
         matches
             .value_of("bind_address")
             .expect("Bind address has default value"),
@@ -217,7 +217,7 @@ fn main() {
 
             upgradeable_programs_to_load.push(UpgradeableProgramInfo {
                 program_id: address,
-                loader: solana_sdk_ids::bpf_loader_upgradeable::id(),
+                loader: trezoa_sdk_ids::bpf_loader_upgradeable::id(),
                 upgrade_authority: Pubkey::default(),
                 program_path,
             });
@@ -246,7 +246,7 @@ fn main() {
 
             upgradeable_programs_to_load.push(UpgradeableProgramInfo {
                 program_id: address,
-                loader: solana_sdk_ids::bpf_loader_upgradeable::id(),
+                loader: trezoa_sdk_ids::bpf_loader_upgradeable::id(),
                 upgrade_authority: upgrade_authority_address,
                 program_path,
             });
@@ -392,7 +392,7 @@ fn main() {
     } else if random_mint {
         println_name_value(
             "\nNotice!",
-            "No wallet available. `solana airdrop` localnet SOL after creating one\n",
+            "No wallet available. `trezoa airdrop` localnet TRZ after creating one\n",
         );
     }
 

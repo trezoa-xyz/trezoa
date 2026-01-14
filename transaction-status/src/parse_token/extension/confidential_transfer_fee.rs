@@ -1,9 +1,9 @@
 use {
     super::*,
-    spl_token_2022_interface::{
+    tpl_token_2022_interface::{
         extension::confidential_transfer_fee::instruction::*,
         instruction::{decode_instruction_data, decode_instruction_type},
-        solana_zk_sdk::encryption::pod::elgamal::PodElGamalPubkey,
+        trezoa_zk_sdk::encryption::pod::elgamal::PodElGamalPubkey,
     },
 };
 
@@ -209,20 +209,20 @@ mod test {
     use {
         super::*,
         bytemuck::Zeroable,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        spl_token_2022_interface::{
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        tpl_token_2022_interface::{
             extension::confidential_transfer_fee::instruction::{
                 inner_withdraw_withheld_tokens_from_accounts,
                 inner_withdraw_withheld_tokens_from_mint,
             },
-            solana_zk_sdk::{
+            trezoa_zk_sdk::{
                 encryption::pod::auth_encryption::PodAeCiphertext,
                 zk_elgamal_proof_program::proof_data::CiphertextCiphertextEqualityProofData,
             },
         },
-        spl_token_confidential_transfer_proof_extraction::instruction::ProofLocation,
+        tpl_token_confidential_transfer_proof_extraction::instruction::ProofLocation,
         std::num::NonZero,
     };
 
@@ -249,7 +249,7 @@ mod test {
             ProofLocation::ContextStateAccount(&Pubkey::new_unique()),
         ] {
             let instruction = inner_withdraw_withheld_tokens_from_accounts(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &PodAeCiphertext::default(),
@@ -273,7 +273,7 @@ mod test {
             ProofLocation::ContextStateAccount(&Pubkey::new_unique()),
         ] {
             let instruction = inner_withdraw_withheld_tokens_from_mint(
-                &spl_token_2022_interface::id(),
+                &tpl_token_2022_interface::id(),
                 &Pubkey::new_unique(),
                 &Pubkey::new_unique(),
                 &PodAeCiphertext::default(),

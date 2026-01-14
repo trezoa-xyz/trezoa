@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -11,8 +11,8 @@
 
 pub use {
     crate::extract_memos::extract_and_fmt_memos,
-    solana_reward_info::RewardType,
-    solana_transaction_status_client_types::{
+    trezoa_reward_info::RewardType,
+    trezoa_transaction_status_client_types::{
         option_serializer, ConfirmedTransactionStatusWithSignature, EncodeError,
         EncodedConfirmedBlock, EncodedConfirmedTransactionWithStatusMeta, EncodedTransaction,
         EncodedTransactionWithStatusMeta, InnerInstruction, InnerInstructions, Reward, Rewards,
@@ -31,24 +31,24 @@ use {
         parse_accounts::{parse_legacy_message_accounts, parse_v0_message_accounts},
         parse_instruction::parse,
     },
-    agave_reserved_account_keys::ReservedAccountKeys,
+    trezoa_reserved_account_keys::ReservedAccountKeys,
     base64::{prelude::BASE64_STANDARD, Engine},
     serde::{Deserialize, Serialize},
-    solana_clock::{Slot, UnixTimestamp},
-    solana_hash::Hash,
-    solana_instruction::TRANSACTION_LEVEL_STACK_HEIGHT,
-    solana_message::{
+    trezoa_clock::{Slot, UnixTimestamp},
+    trezoa_hash::Hash,
+    trezoa_instruction::TRANSACTION_LEVEL_STACK_HEIGHT,
+    trezoa_message::{
         compiled_instruction::CompiledInstruction,
         v0::{self, LoadedAddresses, LoadedMessage},
         AccountKeys, Message, VersionedMessage,
     },
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_transaction::{
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_transaction::{
         versioned::{TransactionVersion, VersionedTransaction},
         Transaction,
     },
-    solana_transaction_error::TransactionError,
+    trezoa_transaction_error::TransactionError,
     std::collections::HashSet,
     thiserror::Error,
 };
@@ -125,10 +125,10 @@ pub fn parse_ui_instruction(
     }
 }
 
-/// Maps a list of inner instructions from `solana_sdk` into a list of this
+/// Maps a list of inner instructions from `trezoa_sdk` into a list of this
 /// crate's representation of inner instructions (with instruction indices).
 pub fn map_inner_instructions(
-    inner_instructions: solana_message::inner_instruction::InnerInstructionsList,
+    inner_instructions: trezoa_message::inner_instruction::InnerInstructionsList,
 ) -> impl Iterator<Item = InnerInstructions> {
     inner_instructions
         .into_iter()

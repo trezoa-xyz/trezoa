@@ -1,19 +1,19 @@
-# Solana Validator Docs Readme
+# Trezoa Validator Docs Readme
 
 This validator's documentation is built using [Docusaurus v2](https://v2.docusaurus.io/) with `npm`.
 Static content delivery is handled using `vercel`.
 
 > Note: The documentation within this repo is specifically focused on the
-> Agave validator client maintained by Anza. Solana protocol documentation, which applies
-> to all Solana validator implementations, is maintained within the
-> [`developer-content`](https://github.com/solana-foundation/developer-content/)
-> repo. Those protocol docs are managed by the Solana Foundation within their
+> Trezoa-team validator client maintained by Trezoa-team. Trezoa protocol documentation, which applies
+> to all Trezoa validator implementations, is maintained within the
+> [`developer-content`](https://github.com/trezoa-foundation/developer-content/)
+> repo. Those protocol docs are managed by the Trezoa Foundation within their
 > GitHub organization and are publicly accessible via
-> [solana.com/docs](https://solana.com/docs)
+> [trezoa.com/docs](https://trezoa.com/docs)
 
 ## Local Development
 
-To set up the Solana Validator Docs site locally:
+To set up the Trezoa Validator Docs site locally:
 
 - install dependencies using `npm`
 - build locally via `./build.sh`
@@ -38,11 +38,11 @@ The build script generates static content into the `build` directory and can be 
 ./build.sh
 ```
 
-Running this build script requires **Docker**, and will auto fetch the [solanalabs/rust](https://hub.docker.com/r/solanalabs/rust) image from Docker hub to compile the desired version of the [Solana CLI](https://docs.anza.xyz/cli) from source.
+Running this build script requires **Docker**, and will auto fetch the [trezoalabs/rust](https://hub.docker.com/r/trezoalabs/rust) image from Docker hub to compile the desired version of the [Trezoa CLI](https://docs.trezoa.xyz/cli) from source.
 
 This build script will also:
 
-- generate the `cli/usage.md` document from the output of each of the Solana CLI commands and sub-commands
+- generate the `cli/usage.md` document from the output of each of the Trezoa CLI commands and sub-commands
 - convert each of the `art/*.bob` files into SVG images used throughout the docs
 
 > Note: Running this build script is **required** before being able to run the site locally via the `npm run start` command since it will generate the `cli/usage.md` document.
@@ -65,9 +65,9 @@ The docs are built and published in GitHub Actions with the `docs.yml` workflow.
 
 In each post-commit build, docs are built and published using `vercel` to their respective domain depending on the build branch.
 
-- Master branch docs are published to `edge.docs.anza.xyz`
-- Beta branch docs are published to `beta.docs.anza.xyz`
-- Latest release tag docs are published to `docs.anza.xyz`
+- Master branch docs are published to `edge.docs.trezoa.xyz`
+- Beta branch docs are published to `beta.docs.trezoa.xyz`
+- Latest release tag docs are published to `docs.trezoa.xyz`
 
 ## Common Issues
 

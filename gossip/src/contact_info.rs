@@ -1,4 +1,4 @@
-pub use solana_client::connection_cache::Protocol;
+pub use trezoa_client::connection_cache::Protocol;
 use {
     crate::{
         crds_data::MAX_WALLCLOCK,
@@ -7,10 +7,10 @@ use {
     },
     assert_matches::{assert_matches, debug_assert_matches},
     serde::{Deserialize, Deserializer, Serialize},
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_sanitize::{Sanitize, SanitizeError},
-    solana_serde_varint as serde_varint, solana_short_vec as short_vec,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_sanitize::{Sanitize, SanitizeError},
+    trezoa_serde_varint as serde_varint, trezoa_short_vec as short_vec,
     static_assertions::const_assert_eq,
     std::{
         cmp::Ordering,
@@ -86,7 +86,7 @@ pub struct ContactInfo {
     // Identifies duplicate running instances.
     outset: u64,
     shred_version: u16,
-    version: solana_version::Version,
+    version: trezoa_version::Version,
     // All IP addresses are unique and referenced at least once in sockets.
     #[serde(with = "short_vec")]
     addrs: Vec<IpAddr>,
@@ -134,7 +134,7 @@ struct ContactInfoLite {
     wallclock: u64,
     outset: u64,
     shred_version: u16,
-    version: solana_version::Version,
+    version: trezoa_version::Version,
     #[serde(with = "short_vec")]
     addrs: Vec<IpAddr>,
     #[serde(with = "short_vec")]
@@ -215,7 +215,7 @@ impl ContactInfo {
             wallclock,
             outset: get_node_outset(),
             shred_version,
-            version: solana_version::Version::default(),
+            version: trezoa_version::Version::default(),
             addrs: Vec::<IpAddr>::default(),
             sockets: Vec::<SocketEntry>::default(),
             extensions: Vec::default(),
@@ -239,7 +239,7 @@ impl ContactInfo {
     }
 
     #[inline]
-    pub(crate) fn version(&self) -> &solana_version::Version {
+    pub(crate) fn version(&self) -> &trezoa_version::Version {
         &self.version
     }
 
@@ -416,8 +416,8 @@ impl ContactInfo {
     /// New random ContactInfo for tests and simulations.
     pub fn new_rand<R: rand::Rng>(rng: &mut R, pubkey: Option<Pubkey>) -> Self {
         let delay = 10 * 60 * 1000; // 10 minutes
-        let now = solana_time_utils::timestamp() - delay + rng.random_range(0..2 * delay);
-        let pubkey = pubkey.unwrap_or_else(solana_pubkey::new_rand);
+        let now = trezoa_time_utils::timestamp() - delay + rng.random_range(0..2 * delay);
+        let pubkey = pubkey.unwrap_or_else(trezoa_pubkey::new_rand);
         let mut node = ContactInfo::new_localhost(&pubkey, now);
         let _ = node.set_gossip((Ipv4Addr::LOCALHOST, rng.random_range(1024..u16::MAX)));
         node
@@ -427,7 +427,7 @@ impl ContactInfo {
     pub fn new_gossip_entry_point(gossip_addr: &SocketAddr) -> Self {
         let mut node = Self::new(
             Pubkey::default(),
-            solana_time_utils::timestamp(), // wallclock
+            trezoa_time_utils::timestamp(), // wallclock
             0,                              // shred_version
         );
         if let Err(err) = node.set_gossip(*gossip_addr) {
@@ -468,7 +468,7 @@ impl ContactInfo {
         assert_matches!(sanitize_socket(socket), Ok(()));
         let mut node = Self::new(
             *pubkey,
-            solana_time_utils::timestamp(), // wallclock,
+            trezoa_time_utils::timestamp(), // wallclock,
             0u16,                           // shred_version
         );
         let (addr, port) = (socket.ip(), socket.port());
@@ -660,14 +660,14 @@ fn sanitize_entries(addrs: &[IpAddr], sockets: &[SocketEntry]) -> Result<(), Err
 }
 
 #[cfg(all(test, feature = "frozen-abi"))]
-impl solana_frozen_abi::abi_example::AbiExample for ContactInfo {
+impl trezoa_frozen_abi::abi_example::AbiExample for ContactInfo {
     fn example() -> Self {
         Self {
             pubkey: Pubkey::example(),
             wallclock: u64::example(),
             outset: u64::example(),
             shred_version: u16::example(),
-            version: solana_version::Version::example(),
+            version: trezoa_version::Version::example(),
             addrs: Vec::<IpAddr>::example(),
             sockets: Vec::<SocketEntry>::example(),
             extensions: vec![],
@@ -701,8 +701,8 @@ mod tests {
             prelude::{IndexedRandom as _, SliceRandom as _},
             Rng,
         },
-        solana_keypair::Keypair,
-        solana_signer::Signer,
+        trezoa_keypair::Keypair,
+        trezoa_signer::Signer,
         std::{
             collections::{HashMap, HashSet},
             iter::repeat_with,
@@ -854,7 +854,7 @@ mod tests {
             wallclock: rng.random(),
             outset: rng.random(),
             shred_version: rng.random(),
-            version: solana_version::Version::default(),
+            version: trezoa_version::Version::default(),
             addrs: Vec::default(),
             sockets: Vec::default(),
             extensions: Vec::default(),

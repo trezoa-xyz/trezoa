@@ -1,8 +1,8 @@
 //! Memory translation utilities.
 
 use {
-    solana_sbpf::memory_region::{AccessType, MemoryMapping},
-    solana_transaction_context::vm_slice::VmSlice,
+    trezoa_sbpf::memory_region::{AccessType, MemoryMapping},
+    trezoa_transaction_context::vm_slice::VmSlice,
     std::{mem::align_of, slice::from_raw_parts_mut},
 };
 

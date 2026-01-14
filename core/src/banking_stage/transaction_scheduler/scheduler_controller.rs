@@ -20,11 +20,11 @@ use {
         },
         validator::SchedulerPacing,
     },
-    solana_clock::MAX_PROCESSING_AGE,
-    solana_cost_model::cost_tracker::SharedBlockCost,
-    solana_measure::measure_us,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_svm::transaction_error_metrics::TransactionErrorMetrics,
+    trezoa_clock::MAX_PROCESSING_AGE,
+    trezoa_cost_model::cost_tracker::SharedBlockCost,
+    trezoa_measure::measure_us,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_svm::transaction_error_metrics::TransactionErrorMetrics,
     std::{
         num::{NonZeroU64, Saturating},
         sync::{
@@ -215,7 +215,7 @@ where
                     &mut self.container,
                     scheduling_budget,
                     bank.feature_set
-                        .is_active(&agave_feature_set::relax_intrabatch_account_locks::ID),
+                        .is_active(&trezoa_feature_set::relax_intrabatch_account_locks::ID),
                     |txs, results| {
                         Self::pre_graph_filter(txs, results, bank, MAX_PROCESSING_AGE)
                     },
@@ -461,23 +461,23 @@ mod tests {
             },
             TransactionViewReceiveAndBuffer,
         },
-        agave_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
+        trezoa_banking_stage_ingress_types::{BankingPacketBatch, BankingPacketReceiver},
         crossbeam_channel::{unbounded, Receiver, Sender},
         itertools::Itertools,
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_fee_calculator::FeeRateGovernor,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::genesis_utils::GenesisConfigInfo,
-        solana_message::Message,
-        solana_perf::packet::{to_packet_batches, PacketBatch, NUM_PACKETS},
-        solana_poh::poh_recorder::{LeaderState, SharedLeaderState},
-        solana_pubkey::Pubkey,
-        solana_runtime::bank::Bank,
-        solana_runtime_transaction::transaction_meta::StaticMeta,
-        solana_signer::Signer,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::Transaction,
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_fee_calculator::FeeRateGovernor,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::genesis_utils::GenesisConfigInfo,
+        trezoa_message::Message,
+        trezoa_perf::packet::{to_packet_batches, PacketBatch, NUM_PACKETS},
+        trezoa_poh::poh_recorder::{LeaderState, SharedLeaderState},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::bank::Bank,
+        trezoa_runtime_transaction::transaction_meta::StaticMeta,
+        trezoa_signer::Signer,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::Transaction,
         std::sync::{Arc, RwLock},
     };
 
@@ -572,7 +572,7 @@ mod tests {
     ) -> Transaction {
         // Fund the sending key, so that the transaction does not get filtered by the fee-payer check.
         {
-            let transfer = solana_system_transaction::transfer(
+            let transfer = trezoa_system_transaction::transfer(
                 mint_keypair,
                 &from_keypair.pubkey(),
                 500_000, // just some amount that will always be enough

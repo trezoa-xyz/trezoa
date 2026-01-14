@@ -4,9 +4,9 @@ use {
         TowerVersions,
     },
     serde::{Deserialize, Serialize},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_signer::Signer,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
     std::{
         fs::{self, File},
         io::{self, BufReader},
@@ -228,10 +228,10 @@ pub mod test {
             tower1_7_14::{SavedTower1_7_14, Tower1_7_14},
             BlockhashStatus, Tower,
         },
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_vote::vote_transaction::VoteTransaction,
-        solana_vote_program::vote_state::{
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_vote::vote_transaction::VoteTransaction,
+        trezoa_vote_program::vote_state::{
             BlockTimestamp, Lockout, Vote, VoteState1_14_11, MAX_LOCKOUT_HISTORY,
         },
         tempfile::TempDir,

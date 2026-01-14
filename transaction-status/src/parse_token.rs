@@ -11,18 +11,18 @@ use {
     },
     serde::{Deserialize, Serialize},
     serde_json::{json, Map, Value},
-    solana_account_decoder::{
+    trezoa_account_decoder::{
         parse_account_data::SplTokenAdditionalDataV2, parse_token::token_amount_to_ui_amount_v3,
     },
-    solana_message::{compiled_instruction::CompiledInstruction, AccountKeys},
-    solana_program_option::COption,
-    solana_pubkey::Pubkey,
-    spl_token_2022_interface::{
+    trezoa_message::{compiled_instruction::CompiledInstruction, AccountKeys},
+    trezoa_program_option::COption,
+    trezoa_pubkey::Pubkey,
+    tpl_token_2022_interface::{
         extension::ExtensionType,
         instruction::{AuthorityType, TokenInstruction},
     },
-    spl_token_group_interface::instruction::TokenGroupInstruction,
-    spl_token_metadata_interface::instruction::TokenMetadataInstruction,
+    tpl_token_group_interface::instruction::TokenGroupInstruction,
+    tpl_token_metadata_interface::instruction::TokenMetadataInstruction,
 };
 
 mod extension;
@@ -887,15 +887,15 @@ fn map_coption_pubkey(pubkey: COption<Pubkey>) -> Option<String> {
 #[cfg(test)]
 mod test {
     use {
-        super::*, solana_message::Message, solana_pubkey::Pubkey,
-        spl_token_2022_interface::instruction::*, std::iter::repeat_with,
+        super::*, trezoa_message::Message, trezoa_pubkey::Pubkey,
+        tpl_token_2022_interface::instruction::*, std::iter::repeat_with,
     };
 
     fn test_parse_token(program_id: &Pubkey) {
         let mint_pubkey = Pubkey::new_unique();
         let mint_authority = Pubkey::new_unique();
         let freeze_authority = Pubkey::new_unique();
-        let rent_sysvar = solana_sdk_ids::sysvar::rent::id();
+        let rent_sysvar = trezoa_sdk_ids::sysvar::rent::id();
 
         // Test InitializeMint variations
         let initialize_mint_ix = initialize_mint(
@@ -1685,7 +1685,7 @@ mod test {
         let get_account_data_size_ix = get_account_data_size(
             program_id,
             &mint_pubkey,
-            &[], // This emulates the packed data of spl_token_interface::instruction::get_account_data_size
+            &[], // This emulates the packed data of tpl_token_interface::instruction::get_account_data_size
         )
         .unwrap();
         let message = Message::new(&[get_account_data_size_ix], None);
@@ -1772,19 +1772,19 @@ mod test {
 
     #[test]
     fn test_parse_token_v3() {
-        test_parse_token(&spl_token_interface::id());
+        test_parse_token(&tpl_token_interface::id());
     }
 
     #[test]
     fn test_parse_token_2022() {
-        test_parse_token(&spl_token_2022_interface::id());
+        test_parse_token(&tpl_token_2022_interface::id());
     }
 
     #[test]
     fn test_create_native_mint() {
         let payer = Pubkey::new_unique();
         let create_native_mint_ix =
-            create_native_mint(&spl_token_2022_interface::id(), &payer).unwrap();
+            create_native_mint(&tpl_token_2022_interface::id(), &payer).unwrap();
         let message = Message::new(&[create_native_mint_ix], None);
         let compiled_instruction = &message.instructions[0];
         assert_eq!(
@@ -1797,15 +1797,15 @@ mod test {
                 instruction_type: "createNativeMint".to_string(),
                 info: json!({
                    "payer": payer.to_string(),
-                   "nativeMint": spl_token_2022_interface::native_mint::id().to_string(),
-                   "systemProgram": solana_sdk_ids::system_program::id().to_string(),
+                   "nativeMint": tpl_token_2022_interface::native_mint::id().to_string(),
+                   "systemProgram": trezoa_sdk_ids::system_program::id().to_string(),
                 })
             }
         );
     }
 
     fn test_token_ix_not_enough_keys(program_id: &Pubkey) {
-        let keys: Vec<Pubkey> = repeat_with(solana_pubkey::new_rand).take(10).collect();
+        let keys: Vec<Pubkey> = repeat_with(trezoa_pubkey::new_rand).take(10).collect();
 
         // Test InitializeMint variations
         let initialize_mint_ix =
@@ -2151,11 +2151,11 @@ mod test {
 
     #[test]
     fn test_not_enough_keys_token_v3() {
-        test_token_ix_not_enough_keys(&spl_token_interface::id());
+        test_token_ix_not_enough_keys(&tpl_token_interface::id());
     }
 
     #[test]
     fn test_not_enough_keys_token_2022() {
-        test_token_ix_not_enough_keys(&spl_token_2022_interface::id());
+        test_token_ix_not_enough_keys(&tpl_token_2022_interface::id());
     }
 }

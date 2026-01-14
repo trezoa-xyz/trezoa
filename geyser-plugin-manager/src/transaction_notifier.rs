@@ -1,16 +1,16 @@
 /// Module responsible for notifying plugins of transactions
 use {
     crate::geyser_plugin_manager::GeyserPluginManager,
-    agave_geyser_plugin_interface::geyser_plugin_interface::{
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaTransactionInfoV3, ReplicaTransactionInfoVersions,
     },
     log::*,
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_rpc::transaction_notifier_interface::TransactionNotifier,
-    solana_signature::Signature,
-    solana_transaction::versioned::VersionedTransaction,
-    solana_transaction_status::TransactionStatusMeta,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_rpc::transaction_notifier_interface::TransactionNotifier,
+    trezoa_signature::Signature,
+    trezoa_transaction::versioned::VersionedTransaction,
+    trezoa_transaction_status::TransactionStatusMeta,
     std::sync::{Arc, RwLock},
 };
 

@@ -9,7 +9,7 @@
 #include <sol/assert.h>
 #include <sol/deserialize.h>
 #include <sol/return_data.h>
-#include <solana_sdk.h>
+#include <trezoa_sdk.h>
 
 static const uint8_t TEST_SUCCESS = 1;
 static const uint8_t TEST_PRIVILEGE_ESCALATION_SIGNER = 2;
@@ -34,7 +34,7 @@ static const uint8_t TEST_DUPLICATE_PRIVILEGE_ESCALATION_SIGNER = 20;
 static const uint8_t TEST_DUPLICATE_PRIVILEGE_ESCALATION_WRITABLE = 21;
 static const uint8_t TEST_MAX_ACCOUNT_INFOS_EXCEEDED_BEFORE_SIMD_0339 = 22;
 // TEST_CPI_INVALID_* must match the definitions in
-// https://github.com/solana-labs/solana/blob/master/programs/sbf/rust/invoke/src/instructions.rs
+// https://github.com/trezoa-labs/trezoa/blob/master/programs/sbf/rust/invoke/src/instructions.rs
 static const uint8_t TEST_CPI_INVALID_KEY_POINTER = 35;
 static const uint8_t TEST_CPI_INVALID_OWNER_POINTER = 36;
 static const uint8_t TEST_CPI_INVALID_LAMPORTS_POINTER = 37;

@@ -12,20 +12,20 @@ use {
         storable_accounts::StorableAccounts,
     },
     log::*,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_address_lookup_table_interface::{
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_address_lookup_table_interface::{
         self as address_lookup_table, error::AddressLookupError, state::AddressLookupTable,
     },
-    solana_clock::{BankId, Slot},
-    solana_message::v0::LoadedAddresses,
-    solana_pubkey::Pubkey,
-    solana_slot_hashes::SlotHashes,
-    solana_svm_transaction::{
+    trezoa_clock::{BankId, Slot},
+    trezoa_message::v0::LoadedAddresses,
+    trezoa_pubkey::Pubkey,
+    trezoa_slot_hashes::SlotHashes,
+    trezoa_svm_transaction::{
         message_address_table_lookup::SVMMessageAddressTableLookup, svm_message::SVMMessage,
     },
-    solana_transaction::sanitized::SanitizedTransaction,
-    solana_transaction_context::transaction_accounts::KeyedAccountSharedData,
-    solana_transaction_error::TransactionResult as Result,
+    trezoa_transaction::sanitized::SanitizedTransaction,
+    trezoa_transaction_context::transaction_accounts::KeyedAccountSharedData,
+    trezoa_transaction_error::TransactionResult as Result,
     std::{
         cmp::Reverse,
         collections::{BinaryHeap, HashMap, HashSet},
@@ -588,21 +588,21 @@ impl Accounts {
 mod tests {
     use {
         super::*,
-        agave_reserved_account_keys::ReservedAccountKeys,
-        solana_account::{AccountSharedData, WritableAccount},
-        solana_address_lookup_table_interface::state::LookupTableMeta,
-        solana_hash::Hash,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_keypair::Keypair,
-        solana_message::{
+        trezoa_reserved_account_keys::ReservedAccountKeys,
+        trezoa_account::{AccountSharedData, WritableAccount},
+        trezoa_address_lookup_table_interface::state::LookupTableMeta,
+        trezoa_hash::Hash,
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_keypair::Keypair,
+        trezoa_message::{
             compiled_instruction::CompiledInstruction, v0::MessageAddressTableLookup,
             LegacyMessage, Message, MessageHeader, SanitizedMessage,
         },
-        solana_sdk_ids::native_loader,
-        solana_signature::Signature,
-        solana_signer::{signers::Signers, Signer},
-        solana_transaction::{sanitized::MAX_TX_ACCOUNT_LOCKS, Transaction},
-        solana_transaction_error::TransactionError,
+        trezoa_sdk_ids::native_loader,
+        trezoa_signature::Signature,
+        trezoa_signer::{signers::Signers, Signer},
+        trezoa_transaction::{sanitized::MAX_TX_ACCOUNT_LOCKS, Transaction},
+        trezoa_transaction_error::TransactionError,
         std::{
             borrow::Cow,
             iter,
@@ -772,13 +772,13 @@ mod tests {
         let accounts = Accounts::new(Arc::new(accounts_db));
 
         // Load accounts owned by various programs into AccountsDb
-        let pubkey0 = solana_pubkey::new_rand();
+        let pubkey0 = trezoa_pubkey::new_rand();
         let account0 = AccountSharedData::new(1, 0, &Pubkey::from([2; 32]));
         accounts.store_for_tests(0, &pubkey0, &account0);
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
         let account1 = AccountSharedData::new(1, 0, &Pubkey::from([2; 32]));
         accounts.store_for_tests(0, &pubkey1, &account1);
-        let pubkey2 = solana_pubkey::new_rand();
+        let pubkey2 = trezoa_pubkey::new_rand();
         let account2 = AccountSharedData::new(1, 0, &Pubkey::from([3; 32]));
         accounts.store_for_tests(0, &pubkey2, &account2);
         accounts.add_root_and_flush_write_cache(0);
@@ -1329,14 +1329,14 @@ mod tests {
 
     #[test]
     fn huge_clean() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let accounts_db = AccountsDb::new_single_for_tests();
         let accounts = Accounts::new(Arc::new(accounts_db));
         let mut old_pubkey = Pubkey::default();
         let zero_account = AccountSharedData::new(0, 0, AccountSharedData::default().owner());
         info!("storing..");
         for i in 0..2_000 {
-            let pubkey = solana_pubkey::new_rand();
+            let pubkey = trezoa_pubkey::new_rand();
             let account = AccountSharedData::new(i + 1, 0, AccountSharedData::default().owner());
             accounts.store_for_tests(i, &pubkey, &account);
             accounts.store_for_tests(i, &old_pubkey, &zero_account);

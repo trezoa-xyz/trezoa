@@ -3,7 +3,7 @@
 # Convenience script to easily deploy a software update to a testnet
 #
 set -e
-SOLANA_ROOT="$(cd "$(dirname "$0")"/..; pwd)"
+TREZOA_ROOT="$(cd "$(dirname "$0")"/..; pwd)"
 
 maybeKeypair=
 while [[ ${1:0:2} = -- ]]; do
@@ -26,15 +26,15 @@ if [[ -z $URL || -z $TAG ]]; then
 fi
 
 if [[ ! -f update_manifest_keypair.json ]]; then
-  "$SOLANA_ROOT"/scripts/agave-install-update-manifest-keypair.sh "$OS"
+  "$TREZOA_ROOT"/scripts/trezoa-install-update-manifest-keypair.sh "$OS"
 fi
 
-source "$SOLANA_ROOT"/scripts/generate-target-triple.sh
+source "$TREZOA_ROOT"/scripts/generate-target-triple.sh
 TARGET="$BUILD_TARGET_TRIPLE"
 
 case $URL in
 stable)
-  URL=http://api.devnet.solana.com
+  URL=http://api.devnet.trezoa.com
   ;;
 localhost)
   URL=http://localhost:8899
@@ -45,23 +45,23 @@ esac
 
 case $TAG in
 edge|beta)
-  DOWNLOAD_URL=https://release.anza.xyz/"$TAG"/solana-release-$TARGET.tar.bz2
+  DOWNLOAD_URL=https://release.trezoa.xyz/"$TAG"/trezoa-release-$TARGET.tar.bz2
   ;;
 *)
-  DOWNLOAD_URL=https://github.com/anza-xyz/agave/releases/download/"$TAG"/solana-release-$TARGET.tar.bz2
+  DOWNLOAD_URL=https://github.com/trezoa-xyz/trezoa/releases/download/"$TAG"/trezoa-release-$TARGET.tar.bz2
   ;;
 esac
 
 # Prefer possible `cargo build` binaries over PATH binaries
-PATH="$SOLANA_ROOT"/target/debug:$PATH
+PATH="$TREZOA_ROOT"/target/debug:$PATH
 
 set -x
 # shellcheck disable=SC2086 # Don't want to double quote $maybeKeypair
-balance=$(solana $maybeKeypair --url "$URL" balance --lamports)
+balance=$(trezoa $maybeKeypair --url "$URL" balance --lamports)
 if [[ $balance = "0 lamports" ]]; then
   # shellcheck disable=SC2086 # Don't want to double quote $maybeKeypair
-  solana $maybeKeypair --url "$URL" airdrop 0.000000042
+  trezoa $maybeKeypair --url "$URL" airdrop 0.000000042
 fi
 
 # shellcheck disable=SC2086 # Don't want to double quote $maybeKeypair
-agave-install deploy $maybeKeypair --url "$URL" "$DOWNLOAD_URL" update_manifest_keypair.json
+trezoa-install deploy $maybeKeypair --url "$URL" "$DOWNLOAD_URL" update_manifest_keypair.json

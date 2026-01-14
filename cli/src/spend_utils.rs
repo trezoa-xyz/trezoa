@@ -6,15 +6,15 @@ use {
         stake,
     },
     clap::ArgMatches,
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         compute_budget::ComputeUnitLimit, input_parsers::lamports_of_sol, offline::SIGN_ONLY_ARG,
     },
-    solana_cli_output::display::build_balance_message,
-    solana_commitment_config::CommitmentConfig,
-    solana_hash::Hash,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_cli_output::display::build_balance_message,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_hash::Hash,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
 };
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -130,7 +130,7 @@ where
             } else {
                 0
             };
-        if amount == SpendAmount::Available && account.owner == solana_sdk_ids::stake::id() {
+        if amount == SpendAmount::Available && account.owner == trezoa_sdk_ids::stake::id() {
             let state = stake::get_account_stake_state(
                 rpc_client,
                 from_pubkey,

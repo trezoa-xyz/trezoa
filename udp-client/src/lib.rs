@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -17,15 +17,15 @@ use {
         nonblocking::udp_client::UdpClientConnection as NonblockingUdpConnection,
         udp_client::UdpClientConnection as BlockingUdpConnection,
     },
-    solana_connection_cache::{
+    trezoa_connection_cache::{
         connection_cache::{
             BaseClientConnection, ClientError, ConnectionManager, ConnectionPool,
             ConnectionPoolError, NewConnectionConfig, Protocol,
         },
         connection_cache_stats::ConnectionCacheStats,
     },
-    solana_keypair::Keypair,
-    solana_net_utils::sockets::{self, SocketConfiguration},
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::sockets::{self, SocketConfiguration},
     std::{
         net::{SocketAddr, UdpSocket},
         sync::Arc,
@@ -83,7 +83,7 @@ impl NewConnectionConfig for UdpConfig {
         // of the range for CI tests when this is running in CI
         let socket = sockets::bind_in_range_with_config(
             bind_ip,
-            solana_net_utils::VALIDATOR_PORT_RANGE,
+            trezoa_net_utils::VALIDATOR_PORT_RANGE,
             SocketConfiguration::default(),
         )
         .map_err(Into::<ClientError>::into)?;

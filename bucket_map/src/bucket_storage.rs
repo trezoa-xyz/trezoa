@@ -2,7 +2,7 @@ use {
     crate::{bucket_stats::BucketStats, MaxSearch},
     memmap2::MmapMut,
     rand::{rng, Rng},
-    solana_measure::measure::Measure,
+    trezoa_measure::measure::Measure,
     std::{
         fs::{remove_file, OpenOptions},
         io::{Seek, SeekFrom, Write},
@@ -628,7 +628,7 @@ mod test {
             count.clone(),
         )
         .is_none());
-        agave_logger::setup();
+        trezoa_logger::setup();
         for len in [0, 1, 47, 48, 49, 4097] {
             // create a zero len file. That will fail to load since it is too small.
             let path = tmpdir.path().join("small");

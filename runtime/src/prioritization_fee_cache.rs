@@ -2,11 +2,11 @@ use {
     crate::{bank::Bank, prioritization_fee::PrioritizationFee},
     crossbeam_channel::{unbounded, Receiver, Sender, TryRecvError},
     log::*,
-    solana_accounts_db::account_locks::validate_account_locks,
-    solana_clock::{BankId, Slot},
-    solana_measure::measure_us,
-    solana_pubkey::Pubkey,
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_accounts_db::account_locks::validate_account_locks,
+    trezoa_clock::{BankId, Slot},
+    trezoa_measure::measure_us,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
     std::{
         collections::{BTreeMap, HashMap},
         sync::{
@@ -249,7 +249,7 @@ impl PrioritizationFeeCache {
                     .collect();
 
                 let (prioritization_fee, calculate_prioritization_fee_us) = measure_us!({
-                    solana_fee_structure::FeeBudgetLimits::from(compute_budget_limits)
+                    trezoa_fee_structure::FeeBudgetLimits::from(compute_budget_limits)
                         .prioritization_fee
                 });
                 self.metrics
@@ -460,12 +460,12 @@ mod tests {
             bank_forks::BankForks,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
         },
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::{sanitized::SanitizedTransaction, Transaction},
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::{sanitized::SanitizedTransaction, Transaction},
     };
 
     fn build_sanitized_transaction_for_test(
@@ -534,7 +534,7 @@ mod tests {
 
     #[test]
     fn test_prioritization_fee_cache_update() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let write_account_a = Pubkey::new_unique();
         let write_account_b = Pubkey::new_unique();
         let write_account_c = Pubkey::new_unique();
@@ -586,7 +586,7 @@ mod tests {
         let bank0 = Bank::new_for_benches(&genesis_config);
         let bank_forks = BankForks::new_rw_arc(bank0);
         let bank = bank_forks.read().unwrap().working_bank();
-        let collector = solana_pubkey::new_rand();
+        let collector = trezoa_pubkey::new_rand();
 
         let bank1 = Arc::new(Bank::new_from_parent(bank.clone(), &collector, 1));
         sync_update(
@@ -629,7 +629,7 @@ mod tests {
 
     #[test]
     fn test_get_prioritization_fees() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let write_account_a = Pubkey::new_unique();
         let write_account_b = Pubkey::new_unique();
         let write_account_c = Pubkey::new_unique();
@@ -638,7 +638,7 @@ mod tests {
         let bank0 = Bank::new_for_benches(&genesis_config);
         let bank_forks = BankForks::new_rw_arc(bank0);
         let bank = bank_forks.read().unwrap().working_bank();
-        let collector = solana_pubkey::new_rand();
+        let collector = trezoa_pubkey::new_rand();
         let bank1 = Arc::new(Bank::new_from_parent(bank.clone(), &collector, 1));
         let bank2 = Arc::new(Bank::new_from_parent(bank.clone(), &collector, 2));
         let bank3 = Arc::new(Bank::new_from_parent(bank, &collector, 3));
@@ -881,7 +881,7 @@ mod tests {
     fn test_purge_duplicated_bank() {
         // duplicated bank can exists for same slot before OC.
         // prioritization_fee_cache should only have data from OC-ed bank
-        agave_logger::setup();
+        trezoa_logger::setup();
         let write_account_a = Pubkey::new_unique();
         let write_account_b = Pubkey::new_unique();
         let write_account_c = Pubkey::new_unique();
@@ -890,7 +890,7 @@ mod tests {
         let bank0 = Bank::new_for_benches(&genesis_config);
         let bank_forks = BankForks::new_rw_arc(bank0);
         let bank = bank_forks.read().unwrap().working_bank();
-        let collector = solana_pubkey::new_rand();
+        let collector = trezoa_pubkey::new_rand();
         let slot: Slot = 999;
         let bank1 = Arc::new(Bank::new_from_parent(bank.clone(), &collector, slot));
         let bank2 = Arc::new(Bank::new_from_parent(bank, &collector, slot + 1));

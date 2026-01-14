@@ -1,4 +1,4 @@
-use {super::*, spl_token_2022_interface::extension::ExtensionType};
+use {super::*, tpl_token_2022_interface::extension::ExtensionType};
 
 pub(in crate::parse_token) fn parse_reallocate_instruction(
     extension_types: Vec<ExtensionType>,
@@ -30,8 +30,8 @@ pub(in crate::parse_token) fn parse_reallocate_instruction(
 #[cfg(test)]
 mod test {
     use {
-        super::*, solana_message::Message, solana_pubkey::Pubkey,
-        spl_token_2022_interface::instruction::reallocate,
+        super::*, trezoa_message::Message, trezoa_pubkey::Pubkey,
+        tpl_token_2022_interface::instruction::reallocate,
     };
 
     #[test]
@@ -47,7 +47,7 @@ mod test {
         // Single owner
         let owner_pubkey = Pubkey::new_unique();
         let reallocate_ix = reallocate(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &account_pubkey,
             &payer_pubkey,
             &owner_pubkey,
@@ -69,7 +69,7 @@ mod test {
                     "account": account_pubkey.to_string(),
                     "payer": payer_pubkey.to_string(),
                     "owner": owner_pubkey.to_string(),
-                    "systemProgram": solana_sdk_ids::system_program::id().to_string(),
+                    "systemProgram": trezoa_sdk_ids::system_program::id().to_string(),
                     "extensionTypes": ["transferFeeAmount", "memoTransfer"],
                 })
             }
@@ -80,7 +80,7 @@ mod test {
         let multisig_signer0 = Pubkey::new_unique();
         let multisig_signer1 = Pubkey::new_unique();
         let reallocate_ix = reallocate(
-            &spl_token_2022_interface::id(),
+            &tpl_token_2022_interface::id(),
             &account_pubkey,
             &payer_pubkey,
             &multisig_pubkey,
@@ -106,7 +106,7 @@ mod test {
                         multisig_signer0.to_string(),
                         multisig_signer1.to_string(),
                     ],
-                    "systemProgram": solana_sdk_ids::system_program::id().to_string(),
+                    "systemProgram": trezoa_sdk_ids::system_program::id().to_string(),
                     "extensionTypes": ["transferFeeAmount", "memoTransfer"],
                 })
             }

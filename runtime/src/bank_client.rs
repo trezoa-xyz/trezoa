@@ -1,21 +1,21 @@
 use {
     crate::bank::Bank,
     crossbeam_channel::{unbounded, Receiver, Sender},
-    solana_account::Account,
-    solana_client_traits::{AsyncClient, Client, SyncClient},
-    solana_commitment_config::CommitmentConfig,
-    solana_epoch_info::EpochInfo,
-    solana_hash::Hash,
-    solana_instruction::Instruction,
-    solana_keypair::Keypair,
-    solana_message::{Message, SanitizedMessage},
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_signer::{signers::Signers, Signer},
-    solana_system_interface::instruction as system_instruction,
-    solana_sysvar::SysvarSerialize,
-    solana_transaction::{versioned::VersionedTransaction, Transaction},
-    solana_transaction_error::{TransportError, TransportResult as Result},
+    trezoa_account::Account,
+    trezoa_client_traits::{AsyncClient, Client, SyncClient},
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_epoch_info::EpochInfo,
+    trezoa_hash::Hash,
+    trezoa_instruction::Instruction,
+    trezoa_keypair::Keypair,
+    trezoa_message::{Message, SanitizedMessage},
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_signer::{signers::Signers, Signer},
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_sysvar::SysvarSerialize,
+    trezoa_transaction::{versioned::VersionedTransaction, Transaction},
+    trezoa_transaction_error::{TransportError, TransportResult as Result},
     std::{
         io,
         sync::Arc,
@@ -24,10 +24,10 @@ use {
     },
 };
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 #[cfg(feature = "dev-context-only-utils")]
-use {crate::bank_forks::BankForks, solana_clock as clock, std::sync::RwLock};
+use {crate::bank_forks::BankForks, trezoa_clock as clock, std::sync::RwLock};
 
 pub struct BankClient {
     bank: Arc<Bank>,
@@ -160,7 +160,7 @@ impl SyncClient for BankClient {
         signature: &Signature,
         min_confirmed_blocks: usize,
     ) -> Result<usize> {
-        // https://github.com/solana-labs/solana/issues/7199
+        // https://github.com/trezoa-labs/trezoa/issues/7199
         assert_eq!(
             min_confirmed_blocks, 1,
             "BankClient cannot observe the passage of multiple blocks, so min_confirmed_blocks \
@@ -304,8 +304,8 @@ impl BankClient {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, solana_genesis_config::create_genesis_config, solana_instruction::AccountMeta,
-        solana_native_token::LAMPORTS_PER_SOL,
+        super::*, trezoa_genesis_config::create_genesis_config, trezoa_instruction::AccountMeta,
+        trezoa_native_token::LAMPORTS_PER_SOL,
     };
 
     #[test]
@@ -320,7 +320,7 @@ mod tests {
         let amount = genesis_config.rent.minimum_balance(0);
 
         // Create 2-2 Multisig Transfer instruction.
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let mut transfer_instruction =
             system_instruction::transfer(&john_pubkey, &bob_pubkey, amount);
         transfer_instruction

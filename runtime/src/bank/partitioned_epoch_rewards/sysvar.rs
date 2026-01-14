@@ -2,8 +2,8 @@ use {
     super::Bank,
     crate::inflation_rewards::points::PointValue,
     log::info,
-    solana_account::{create_account_shared_data_with_fields as create_account, from_account},
-    solana_sysvar as sysvar,
+    trezoa_account::{create_account_shared_data_with_fields as create_account, from_account},
+    trezoa_sysvar as sysvar,
 };
 
 impl Bank {
@@ -105,9 +105,9 @@ impl Bank {
 #[cfg(test)]
 mod tests {
     use {
-        super::*, crate::bank::tests::create_genesis_config, solana_account::ReadableAccount,
-        solana_epoch_schedule::EpochSchedule, solana_native_token::LAMPORTS_PER_SOL,
-        solana_pubkey::Pubkey, std::sync::Arc,
+        super::*, crate::bank::tests::create_genesis_config, trezoa_account::ReadableAccount,
+        trezoa_epoch_schedule::EpochSchedule, trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_pubkey::Pubkey, std::sync::Arc,
     };
 
     /// Test `EpochRewards` sysvar creation, distribution, and burning.

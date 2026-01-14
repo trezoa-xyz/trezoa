@@ -7,11 +7,11 @@ use {
         result::{Result, TransactionViewError},
     },
     core::fmt::{Debug, Formatter},
-    solana_hash::Hash,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
-    solana_svm_transaction::message_address_table_lookup::SVMMessageAddressTableLookup,
+    trezoa_hash::Hash,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
+    trezoa_svm_transaction::message_address_table_lookup::SVMMessageAddressTableLookup,
 };
 
 // Each ATL has at least a Pubkey, one byte for the number of write indexes,
@@ -214,7 +214,7 @@ impl Debug for AddressTableLookupIterator<'_> {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_message::v0::MessageAddressTableLookup, solana_short_vec::ShortVec};
+    use {super::*, trezoa_message::v0::MessageAddressTableLookup, trezoa_short_vec::ShortVec};
 
     #[test]
     fn test_zero_atls() {

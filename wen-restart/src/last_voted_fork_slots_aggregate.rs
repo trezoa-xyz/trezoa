@@ -1,12 +1,12 @@
 use {
-    crate::solana::wen_restart_proto::LastVotedForkSlotsRecord,
+    crate::trezoa::wen_restart_proto::LastVotedForkSlotsRecord,
     anyhow::Result,
     log::*,
-    solana_clock::{Epoch, Slot},
-    solana_gossip::restart_crds_values::RestartLastVotedForkSlots,
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
-    solana_runtime::bank::Bank,
+    trezoa_clock::{Epoch, Slot},
+    trezoa_gossip::restart_crds_values::RestartLastVotedForkSlots,
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::bank::Bank,
     std::{
         collections::{BTreeSet, HashMap},
         str::FromStr,
@@ -242,22 +242,22 @@ impl LastVotedForkSlotsAggregate {
 mod tests {
     use {
         crate::{
-            last_voted_fork_slots_aggregate::*, solana::wen_restart_proto::LastVotedForkSlotsRecord,
+            last_voted_fork_slots_aggregate::*, trezoa::wen_restart_proto::LastVotedForkSlotsRecord,
         },
-        solana_clock::Slot,
-        solana_gossip::restart_crds_values::RestartLastVotedForkSlots,
-        solana_hash::Hash,
-        solana_runtime::{
+        trezoa_clock::Slot,
+        trezoa_gossip::restart_crds_values::RestartLastVotedForkSlots,
+        trezoa_hash::Hash,
+        trezoa_runtime::{
             bank::Bank,
             epoch_stakes::VersionedEpochStakes,
             genesis_utils::{
                 create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
             },
         },
-        solana_signer::Signer,
-        solana_time_utils::timestamp,
-        solana_vote::vote_account::VoteAccount,
-        solana_vote_program::vote_state::create_v4_account_with_authorized,
+        trezoa_signer::Signer,
+        trezoa_time_utils::timestamp,
+        trezoa_vote::vote_account::VoteAccount,
+        trezoa_vote_program::vote_state::create_v4_account_with_authorized,
     };
 
     const TOTAL_VALIDATOR_COUNT: u16 = 10;
@@ -273,7 +273,7 @@ mod tests {
     }
 
     fn test_aggregate_init() -> TestAggregateInitResult {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let validator_voting_keypairs: Vec<_> = (0..TOTAL_VALIDATOR_COUNT)
             .map(|_| ValidatorVoteKeypairs::new_rand())
             .collect();
@@ -688,7 +688,7 @@ mod tests {
 
     #[test]
     fn test_aggregate_from_record_failures() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut test_state = test_aggregate_init();
         let last_vote_bankhash = Hash::new_unique();
         let mut last_voted_fork_slots_record = LastVotedForkSlotsRecord {

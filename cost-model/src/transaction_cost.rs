@@ -1,9 +1,9 @@
 #[cfg(feature = "dev-context-only-utils")]
-use solana_compute_budget_instruction::compute_budget_instruction_details::ComputeBudgetInstructionDetails;
+use trezoa_compute_budget_instruction::compute_budget_instruction_details::ComputeBudgetInstructionDetails;
 use {
-    crate::block_cost_limits, solana_pubkey::Pubkey,
-    solana_runtime_transaction::transaction_meta::StaticMeta,
-    solana_svm_transaction::svm_message::SVMMessage,
+    crate::block_cost_limits, trezoa_pubkey::Pubkey,
+    trezoa_runtime_transaction::transaction_meta::StaticMeta,
+    trezoa_svm_transaction::svm_message::SVMMessage,
 };
 
 /// `TransactionCost`` is used to represent resources required to process a
@@ -33,7 +33,7 @@ impl<Tx> TransactionCost<'_, Tx> {
             Self::SimpleVote { .. } => {
                 const _: () = assert!(
                     SIMPLE_VOTE_USAGE_COST
-                        == solana_vote_program::vote_processor::DEFAULT_COMPUTE_UNITS
+                        == trezoa_vote_program::vote_processor::DEFAULT_COMPUTE_UNITS
                             + block_cost_limits::SIGNATURE_COST
                             + 2 * block_cost_limits::WRITE_LOCK_UNITS
                             + 8
@@ -47,7 +47,7 @@ impl<Tx> TransactionCost<'_, Tx> {
 
     pub fn programs_execution_cost(&self) -> u64 {
         match self {
-            Self::SimpleVote { .. } => solana_vote_program::vote_processor::DEFAULT_COMPUTE_UNITS,
+            Self::SimpleVote { .. } => trezoa_vote_program::vote_processor::DEFAULT_COMPUTE_UNITS,
             Self::Transaction(usage_cost) => usage_cost.programs_execution_cost,
         }
     }
@@ -179,7 +179,7 @@ impl<Tx> UsageCostDetails<'_, Tx> {
 pub struct WritableKeysTransaction(pub Vec<Pubkey>);
 
 #[cfg(feature = "dev-context-only-utils")]
-impl solana_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTransaction {
+impl trezoa_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTransaction {
     fn num_transaction_signatures(&self) -> u64 {
         unimplemented!("WritableKeysTransaction::num_transaction_signatures")
     }
@@ -188,7 +188,7 @@ impl solana_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTrans
         unimplemented!("WritableKeysTransaction::num_write_locks")
     }
 
-    fn recent_blockhash(&self) -> &solana_hash::Hash {
+    fn recent_blockhash(&self) -> &trezoa_hash::Hash {
         unimplemented!("WritableKeysTransaction::recent_blockhash")
     }
 
@@ -198,7 +198,7 @@ impl solana_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTrans
 
     fn instructions_iter(
         &self,
-    ) -> impl Iterator<Item = solana_svm_transaction::instruction::SVMInstruction<'_>> {
+    ) -> impl Iterator<Item = trezoa_svm_transaction::instruction::SVMInstruction<'_>> {
         core::iter::empty()
     }
 
@@ -207,7 +207,7 @@ impl solana_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTrans
     ) -> impl Iterator<
         Item = (
             &Pubkey,
-            solana_svm_transaction::instruction::SVMInstruction<'_>,
+            trezoa_svm_transaction::instruction::SVMInstruction<'_>,
         ),
     > + Clone {
         core::iter::empty()
@@ -228,7 +228,7 @@ impl solana_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTrans
     fn message_address_table_lookups(
         &self,
     ) -> impl Iterator<
-        Item = solana_svm_transaction::message_address_table_lookup::SVMMessageAddressTableLookup<
+        Item = trezoa_svm_transaction::message_address_table_lookup::SVMMessageAddressTableLookup<
             '_,
         >,
     > {
@@ -237,9 +237,9 @@ impl solana_svm_transaction::svm_message::SVMStaticMessage for WritableKeysTrans
 }
 
 #[cfg(feature = "dev-context-only-utils")]
-impl solana_svm_transaction::svm_message::SVMMessage for WritableKeysTransaction {
-    fn account_keys(&self) -> solana_message::AccountKeys<'_> {
-        solana_message::AccountKeys::new(&self.0, None)
+impl trezoa_svm_transaction::svm_message::SVMMessage for WritableKeysTransaction {
+    fn account_keys(&self) -> trezoa_message::AccountKeys<'_> {
+        trezoa_message::AccountKeys::new(&self.0, None)
     }
 
     fn is_writable(&self, _index: usize) -> bool {
@@ -256,19 +256,19 @@ impl solana_svm_transaction::svm_message::SVMMessage for WritableKeysTransaction
 }
 
 #[cfg(feature = "dev-context-only-utils")]
-impl solana_svm_transaction::svm_transaction::SVMTransaction for WritableKeysTransaction {
-    fn signature(&self) -> &solana_signature::Signature {
+impl trezoa_svm_transaction::svm_transaction::SVMTransaction for WritableKeysTransaction {
+    fn signature(&self) -> &trezoa_signature::Signature {
         unimplemented!("WritableKeysTransaction::signature")
     }
 
-    fn signatures(&self) -> &[solana_signature::Signature] {
+    fn signatures(&self) -> &[trezoa_signature::Signature] {
         unimplemented!("WritableKeysTransaction::signatures")
     }
 }
 
 #[cfg(feature = "dev-context-only-utils")]
-impl solana_runtime_transaction::transaction_meta::StaticMeta for WritableKeysTransaction {
-    fn message_hash(&self) -> &solana_hash::Hash {
+impl trezoa_runtime_transaction::transaction_meta::StaticMeta for WritableKeysTransaction {
+    fn message_hash(&self) -> &trezoa_hash::Hash {
         unimplemented!("WritableKeysTransaction::message_hash")
     }
 
@@ -276,9 +276,9 @@ impl solana_runtime_transaction::transaction_meta::StaticMeta for WritableKeysTr
         unimplemented!("WritableKeysTransaction::is_simple_vote_transaction")
     }
 
-    fn signature_details(&self) -> &solana_message::TransactionSignatureDetails {
-        const DUMMY: solana_message::TransactionSignatureDetails =
-            solana_message::TransactionSignatureDetails::new(0, 0, 0, 0);
+    fn signature_details(&self) -> &trezoa_message::TransactionSignatureDetails {
+        const DUMMY: trezoa_message::TransactionSignatureDetails =
+            trezoa_message::TransactionSignatureDetails::new(0, 0, 0, 0);
         &DUMMY
     }
 
@@ -292,17 +292,17 @@ impl solana_runtime_transaction::transaction_meta::StaticMeta for WritableKeysTr
 }
 
 #[cfg(feature = "dev-context-only-utils")]
-impl solana_runtime_transaction::transaction_with_meta::TransactionWithMeta
+impl trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta
     for WritableKeysTransaction
 {
     #[allow(refining_impl_trait)]
     fn as_sanitized_transaction(
         &self,
-    ) -> std::borrow::Cow<'_, solana_transaction::sanitized::SanitizedTransaction> {
+    ) -> std::borrow::Cow<'_, trezoa_transaction::sanitized::SanitizedTransaction> {
         unimplemented!("WritableKeysTransaction::as_sanitized_transaction");
     }
 
-    fn to_versioned_transaction(&self) -> solana_transaction::versioned::VersionedTransaction {
+    fn to_versioned_transaction(&self) -> trezoa_transaction::versioned::VersionedTransaction {
         unimplemented!("WritableKeysTransaction::to_versioned_transaction")
     }
 }
@@ -312,15 +312,15 @@ mod tests {
     use {
         super::*,
         crate::cost_model::CostModel,
-        agave_feature_set::FeatureSet,
-        agave_reserved_account_keys::ReservedAccountKeys,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::SimpleAddressLoader,
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_transaction::{sanitized::MessageHash, versioned::VersionedTransaction},
-        solana_vote::vote_transaction,
-        solana_vote_program::vote_state::TowerSync,
+        trezoa_feature_set::FeatureSet,
+        trezoa_reserved_account_keys::ReservedAccountKeys,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::SimpleAddressLoader,
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_transaction::{sanitized::MessageHash, versioned::VersionedTransaction},
+        trezoa_vote::vote_transaction,
+        trezoa_vote_program::vote_state::TowerSync,
     };
 
     fn get_example_transaction() -> VersionedTransaction {
@@ -341,7 +341,7 @@ mod tests {
 
     #[test]
     fn test_vote_transaction_cost() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // Create a sanitized vote transaction.
         let vote_transaction = RuntimeTransaction::try_create(
@@ -361,7 +361,7 @@ mod tests {
 
     #[test]
     fn test_non_vote_transaction_cost() {
-        agave_logger::setup();
+        trezoa_logger::setup();
 
         // Create a sanitized non-vote transaction.
         let non_vote_transaction = RuntimeTransaction::try_create(

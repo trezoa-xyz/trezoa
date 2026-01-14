@@ -4,34 +4,34 @@ use {
     log::*,
     rand::{rng, Rng},
     rayon::prelude::*,
-    solana_clap_utils::{
+    trezoa_clap_utils::{
         hidden_unless_forced, input_parsers::pubkey_of, input_validators::is_url_or_moniker,
     },
-    solana_cli_config::{ConfigInput, CONFIG_FILE},
-    solana_client::{
+    trezoa_cli_config::{ConfigInput, CONFIG_FILE},
+    trezoa_client::{
         rpc_client::SerializableTransaction, rpc_config::RpcBlockConfig,
         rpc_request::MAX_GET_CONFIRMED_BLOCKS_RANGE, transaction_executor::TransactionExecutor,
     },
-    solana_clock::Slot,
-    solana_commitment_config::CommitmentConfig,
-    solana_gossip::gossip_service::discover_peers,
-    solana_hash::Hash,
-    solana_instruction::{AccountMeta, Instruction},
-    solana_keypair::{read_keypair_file, Keypair},
-    solana_measure::measure::Measure,
-    solana_message::Message,
-    solana_net_utils::SocketAddrSpace,
-    solana_program_pack::Pack,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::request::TokenAccountsFilter,
-    solana_signature::Signature,
-    solana_signer::Signer,
-    solana_system_interface::{instruction as system_instruction, program as system_program},
-    solana_transaction::Transaction,
-    solana_transaction_status::UiTransactionEncoding,
+    trezoa_clock::Slot,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_gossip::gossip_service::discover_peers,
+    trezoa_hash::Hash,
+    trezoa_instruction::{AccountMeta, Instruction},
+    trezoa_keypair::{read_keypair_file, Keypair},
+    trezoa_measure::measure::Measure,
+    trezoa_message::Message,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_program_pack::Pack,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::request::TokenAccountsFilter,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
+    trezoa_system_interface::{instruction as system_instruction, program as system_program},
+    trezoa_transaction::Transaction,
+    trezoa_transaction_status::UiTransactionEncoding,
     spl_generic_token::token,
-    spl_token_interface::state::Account,
+    tpl_token_interface::state::Account,
     std::{
         cmp::min,
         collections::VecDeque,
@@ -219,8 +219,8 @@ fn make_create_message(
             )];
             if let Some(mint_address) = mint {
                 instructions.push(
-                    spl_token_interface::instruction::initialize_account(
-                        &spl_token_interface::id(),
+                    tpl_token_interface::instruction::initialize_account(
+                        &tpl_token_interface::id(),
                         &to_pubkey,
                         &mint_address,
                         &base_keypair.pubkey(),
@@ -228,8 +228,8 @@ fn make_create_message(
                     .unwrap(),
                 );
                 instructions.push(
-                    spl_token_interface::instruction::approve(
-                        &spl_token_interface::id(),
+                    tpl_token_interface::instruction::approve(
+                        &tpl_token_interface::id(),
                         &to_pubkey,
                         &base_keypair.pubkey(),
                         &base_keypair.pubkey(),
@@ -254,11 +254,11 @@ fn make_close_message(
     max_closed: &AtomicU64,
     num_instructions: usize,
     balance: u64,
-    spl_token: bool,
+    tpl_token: bool,
 ) -> Message {
     let instructions: Vec<_> = (0..num_instructions)
         .filter_map(|_| {
-            let program_id = if spl_token {
+            let program_id = if tpl_token {
                 token::id()
             } else {
                 system_program::id()
@@ -271,10 +271,10 @@ fn make_close_message(
             let seed = max_closed.fetch_add(1, Ordering::Relaxed).to_string();
             let address =
                 Pubkey::create_with_seed(&base_keypair.pubkey(), &seed, &program_id).unwrap();
-            if spl_token {
+            if tpl_token {
                 Some(
-                    spl_token_interface::instruction::close_account(
-                        &spl_token_interface::id(),
+                    tpl_token_interface::instruction::close_account(
+                        &tpl_token_interface::id(),
                         &address,
                         &keypair.pubkey(),
                         &base_keypair.pubkey(),
@@ -1136,10 +1136,10 @@ fn run_accounts_bench(
 }
 
 fn main() {
-    agave_logger::setup_with_default("solana=info");
+    trezoa_logger::setup_with_default("trezoa=info");
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg({
             let arg = Arg::with_name("config_file")
                 .short("C")
@@ -1162,7 +1162,7 @@ fn main() {
                 .validator(is_url_or_moniker)
                 .conflicts_with("entrypoint")
                 .help(
-                    "URL for Solana's JSON RPC or moniker (or their first letter): [mainnet-beta, \
+                    "URL for Trezoa's JSON RPC or moniker (or their first letter): [mainnet-beta, \
                      testnet, devnet, localhost]",
                 ),
         )
@@ -1338,7 +1338,7 @@ fn main() {
     }
 
     let client = if let Some(addr) = matches.value_of("entrypoint") {
-        let entrypoint_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        let entrypoint_addr = trezoa_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse entrypoint address: {e}");
             exit(1)
         });
@@ -1347,7 +1347,7 @@ fn main() {
                 Some(version)
             } else {
                 Some(
-                    solana_net_utils::get_cluster_shred_version(&entrypoint_addr).unwrap_or_else(
+                    trezoa_net_utils::get_cluster_shred_version(&entrypoint_addr).unwrap_or_else(
                         |err| {
                             eprintln!("Failed to get shred version: {err}");
                             exit(1);
@@ -1390,9 +1390,9 @@ fn main() {
         ))
     } else {
         let config = if let Some(config_file) = matches.value_of("config_file") {
-            solana_cli_config::Config::load(config_file).unwrap_or_default()
+            trezoa_cli_config::Config::load(config_file).unwrap_or_default()
         } else {
-            solana_cli_config::Config::default()
+            trezoa_cli_config::Config::default()
         };
         let (_, json_rpc_url) = ConfigInput::compute_json_rpc_url_setting(
             matches.value_of("json_rpc_url").unwrap_or(""),
@@ -1425,19 +1425,19 @@ fn main() {
 pub mod test {
     use {
         super::*,
-        solana_accounts_db::accounts_index::{AccountIndex, AccountSecondaryIndexes},
-        solana_core::validator::ValidatorConfig,
-        solana_faucet::faucet::run_local_faucet_for_tests,
-        solana_local_cluster::{
+        trezoa_accounts_db::accounts_index::{AccountIndex, AccountSecondaryIndexes},
+        trezoa_core::validator::ValidatorConfig,
+        trezoa_faucet::faucet::run_local_faucet_for_tests,
+        trezoa_local_cluster::{
             local_cluster::{ClusterConfig, LocalCluster},
             validator_configs::make_identical_validator_configs,
         },
-        solana_measure::measure::Measure,
-        solana_native_token::LAMPORTS_PER_SOL,
-        solana_poh_config::PohConfig,
-        solana_program_pack::Pack,
-        solana_test_validator::TestValidator,
-        spl_token_interface::state::{Account, Mint},
+        trezoa_measure::measure::Measure,
+        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_poh_config::PohConfig,
+        trezoa_program_pack::Pack,
+        trezoa_test_validator::TestValidator,
+        tpl_token_interface::state::{Account, Mint},
     };
 
     fn initialize_and_add_secondary_indexes(validator_config: &mut ValidatorConfig) {
@@ -1458,7 +1458,7 @@ pub mod test {
 
     #[test]
     fn test_accounts_cluster_bench() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut validator_config = ValidatorConfig::default_for_test();
         initialize_and_add_secondary_indexes(&mut validator_config);
         let num_nodes = 1;
@@ -1508,7 +1508,7 @@ pub mod test {
 
     #[test]
     fn test_halt_accounts_creation_at_max() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let mut validator_config = ValidatorConfig::default_for_test();
         initialize_and_add_secondary_indexes(&mut validator_config);
         let num_nodes = 1;
@@ -1557,8 +1557,8 @@ pub mod test {
     }
 
     #[test]
-    fn test_create_then_reclaim_spl_token_accounts() {
-        agave_logger::setup();
+    fn test_create_then_reclaim_tpl_token_accounts() {
+        trezoa_logger::setup();
         let mint_keypair = Keypair::new();
         let mint_pubkey = mint_keypair.pubkey();
         let faucet_addr = run_local_faucet_for_tests(
@@ -1606,8 +1606,8 @@ pub mod test {
                     spl_mint_len as u64,
                     &token::id(),
                 ),
-                spl_token_interface::instruction::initialize_mint(
-                    &spl_token_interface::id(),
+                tpl_token_interface::instruction::initialize_mint(
+                    &tpl_token_interface::id(),
                     &spl_mint_keypair.pubkey(),
                     &spl_mint_keypair.pubkey(),
                     None,

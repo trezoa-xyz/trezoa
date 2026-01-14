@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -33,7 +33,7 @@ impl std::fmt::Debug for DisplayError {
 }
 
 pub fn hidden_unless_forced() -> bool {
-    std::env::var("SOLANA_NO_HIDDEN_CLI_ARGS").is_err()
+    std::env::var("TREZOA_NO_HIDDEN_CLI_ARGS").is_err()
 }
 
 pub mod compute_budget;

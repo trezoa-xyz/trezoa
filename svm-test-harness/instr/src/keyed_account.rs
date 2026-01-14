@@ -1,7 +1,7 @@
 //! Keyed account helpers.
 
 use {
-    solana_account::Account, solana_builtins::BUILTINS, solana_pubkey::Pubkey, solana_rent::Rent,
+    trezoa_account::Account, trezoa_builtins::BUILTINS, trezoa_pubkey::Pubkey, trezoa_rent::Rent,
 };
 
 fn create_keyed_account_for_builtin_program(program_id: &Pubkey, name: &str) -> (Pubkey, Account) {
@@ -10,7 +10,7 @@ fn create_keyed_account_for_builtin_program(program_id: &Pubkey, name: &str) -> 
     let account = Account {
         lamports,
         data,
-        owner: solana_sdk_ids::native_loader::id(),
+        owner: trezoa_sdk_ids::native_loader::id(),
         executable: true,
         ..Default::default()
     };

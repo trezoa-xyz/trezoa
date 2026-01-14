@@ -3,12 +3,12 @@ use qualifier_attr::qualifiers;
 use {
     super::{transaction_priority_id::TransactionPriorityId, transaction_state::TransactionState},
     crate::banking_stage::scheduler_messages::TransactionId,
-    agave_transaction_view::resolved_transaction_view::ResolvedTransactionView,
+    trezoa_transaction_view::resolved_transaction_view::ResolvedTransactionView,
     itertools::MinMaxResult,
     min_max_heap::MinMaxHeap,
     slab::{Slab, VacantEntry},
-    solana_packet::PACKET_DATA_SIZE,
-    solana_runtime_transaction::{
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_runtime_transaction::{
         runtime_transaction::RuntimeTransaction, transaction_with_meta::TransactionWithMeta,
     },
     std::sync::Arc,
@@ -382,16 +382,16 @@ mod tests {
     use {
         super::*,
         crate::banking_stage::scheduler_messages::MaxAge,
-        agave_transaction_view::transaction_view::SanitizedTransactionView,
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_message::Message,
-        solana_perf::packet::Packet,
-        solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-        solana_signer::Signer,
-        solana_system_interface::instruction as system_instruction,
-        solana_transaction::{
+        trezoa_transaction_view::transaction_view::SanitizedTransactionView,
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_message::Message,
+        trezoa_perf::packet::Packet,
+        trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+        trezoa_signer::Signer,
+        trezoa_system_interface::instruction as system_instruction,
+        trezoa_transaction::{
             sanitized::{MessageHash, SanitizedTransaction},
             Transaction,
         },
@@ -404,7 +404,7 @@ mod tests {
     ) -> (RuntimeTransaction<SanitizedTransaction>, MaxAge, u64, u64) {
         let from_keypair = Keypair::new();
         let ixs = vec![
-            system_instruction::transfer(&from_keypair.pubkey(), &solana_pubkey::new_rand(), 1),
+            system_instruction::transfer(&from_keypair.pubkey(), &trezoa_pubkey::new_rand(), 1),
             ComputeBudgetInstruction::set_compute_unit_price(priority),
         ];
         let message = Message::new(&ixs, Some(&from_keypair.pubkey()));

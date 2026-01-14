@@ -2,14 +2,14 @@
 #![feature(test)]
 
 use {
-    agave_banking_stage_ingress_types::BankingPacketBatch,
-    solana_core::{
+    trezoa_banking_stage_ingress_types::BankingPacketBatch,
+    trezoa_core::{
         banking_stage::transaction_scheduler::scheduler_controller::SchedulerConfig,
         banking_trace::Channels,
         validator::{BlockProductionMethod, SchedulerPacing},
     },
-    solana_vote::vote_transaction::new_tower_sync_transaction,
-    solana_vote_program::vote_state::TowerSync,
+    trezoa_vote::vote_transaction::new_tower_sync_transaction,
+    trezoa_vote_program::vote_state::TowerSync,
     tokio::sync::mpsc,
 };
 
@@ -20,28 +20,28 @@ use {
     log::*,
     rand::{rng, Rng},
     rayon::prelude::*,
-    solana_core::{banking_stage::BankingStage, banking_trace::BankingTracer},
-    solana_entry::entry::{next_hash, Entry},
-    solana_genesis_config::GenesisConfig,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_core::{banking_stage::BankingStage, banking_trace::BankingTracer},
+    trezoa_entry::entry::{next_hash, Entry},
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore::Blockstore,
         blockstore_processor::process_entries_for_tests,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         get_tmp_ledger_path_auto_delete,
     },
-    solana_message::Message,
-    solana_perf::packet::to_packet_batches,
-    solana_poh::poh_recorder::{create_test_recorder, WorkingBankEntry},
-    solana_pubkey as pubkey,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_signature::Signature,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_system_transaction as system_transaction,
-    solana_time_utils::timestamp,
-    solana_transaction::{versioned::VersionedTransaction, Transaction},
+    trezoa_message::Message,
+    trezoa_perf::packet::to_packet_batches,
+    trezoa_poh::poh_recorder::{create_test_recorder, WorkingBankEntry},
+    trezoa_pubkey as pubkey,
+    trezoa_runtime::{bank::Bank, bank_forks::BankForks},
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_system_transaction as system_transaction,
+    trezoa_time_utils::timestamp,
+    trezoa_transaction::{versioned::VersionedTransaction, Transaction},
     std::{
         iter::repeat_with,
         sync::{atomic::Ordering, Arc},
@@ -138,7 +138,7 @@ fn bench_banking(
     tx_type: TransactionType,
     block_production_method: BlockProductionMethod,
 ) {
-    agave_logger::setup();
+    trezoa_logger::setup();
     let num_threads = BankingStage::default_num_workers();
     //   a multiple of packet chunk duplicates to avoid races
     const CHUNKS: usize = 8;

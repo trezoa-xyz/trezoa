@@ -14,7 +14,7 @@ Usage:
   create-release-tarball.sh [options] --target TRIPLE
 
 Options:
-  --build-dir DIR           Build directory (default: solana-release)
+  --build-dir DIR           Build directory (default: trezoa-release)
   --channel-or-tag VAL      Channel or tag to embed in version.yml (default: "unknown")
   --target TRIPLE           Target triple for version.yml and artifact names (required)
   --tarball-basename NAME   Base name for tarball and .yml outputs (default: build-dir)
@@ -25,7 +25,7 @@ EOF
 
 cd "$(dirname "$0")/.."
 
-build_dir="solana-release"
+build_dir="trezoa-release"
 channel_or_tag="unknown"
 target=""
 tarball_basename=""
@@ -107,18 +107,18 @@ source ci/rust-version.sh stable
 
 scripts/cargo-install-all.sh stable "${build_dir}"
 
-source scripts/agave-build-lists.sh
+source scripts/trezoa-build-lists.sh
 
 tmp_excludes="$(mktemp)"
 trap 'rm -f "$tmp_excludes"' EXIT
 
 if [[ "$include_val_bins" -eq 0 ]]; then
-  for bin in "${AGAVE_BINS_VAL_OP[@]}"; do
+  for bin in "${TREZOA_BINS_VAL_OP[@]}"; do
     find "${build_dir}" -type f -name "$bin" -print -quit >> "$tmp_excludes" || true
   done
 fi
 
-cp "${build_dir}/bin/agave-install-init" "agave-install-init-${target}"
+cp "${build_dir}/bin/trezoa-install-init" "trezoa-install-init-${target}"
 cp "${build_dir}/version.yml" "${tarball_basename}-${target}.yml"
 
 output_tar="${tarball_basename}-${target}.tar.bz2"

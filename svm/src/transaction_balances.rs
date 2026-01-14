@@ -5,10 +5,10 @@ use {
         account_loader::AccountLoader,
         transaction_processing_callback::TransactionProcessingCallback,
     },
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_pubkey::Pubkey,
-    solana_svm_transaction::svm_transaction::SVMTransaction,
-    spl_generic_token::{generic_token, is_known_spl_token_id},
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_pubkey::Pubkey,
+    trezoa_svm_transaction::svm_transaction::SVMTransaction,
+    spl_generic_token::{generic_token, is_known_tpl_token_id},
 };
 
 // we use internal aliases for clarity, the external type aliases are often confusing
@@ -83,7 +83,7 @@ impl BalanceCollector {
         let mut native_balances = Vec::with_capacity(transaction.account_keys().len());
         let mut token_balances = vec![];
 
-        let has_token_program = transaction.account_keys().iter().any(is_known_spl_token_id);
+        let has_token_program = transaction.account_keys().iter().any(is_known_tpl_token_id);
 
         for (index, key) in transaction.account_keys().iter().enumerate() {
             let Some(account) = account_loader.load_account(key) else {
@@ -95,8 +95,8 @@ impl BalanceCollector {
 
             if has_token_program
                 && !transaction.is_invoked(index)
-                && !is_known_spl_token_id(key)
-                && is_known_spl_token_id(account.owner())
+                && !is_known_tpl_token_id(key)
+                && is_known_tpl_token_id(account.owner())
             {
                 if let Some(token_info) =
                     SvmTokenInfo::unpack_token_account(account_loader, &account, index)

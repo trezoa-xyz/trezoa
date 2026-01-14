@@ -6,7 +6,7 @@ use {
         node_address_service::{RecentLeaderSlots, SlotEvent, SlotReceiver},
     },
     futures::StreamExt,
-    solana_clock::Slot,
+    trezoa_clock::Slot,
     std::pin::pin,
     thiserror::Error,
     tokio::{sync::watch, task::JoinHandle},

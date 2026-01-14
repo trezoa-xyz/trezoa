@@ -3,17 +3,17 @@
 use {
     crate::vote_state::{self, handler::VoteStateTargetVersion},
     log::*,
-    solana_bincode::limited_deserialize,
-    solana_instruction::error::InstructionError,
-    solana_program_runtime::{
+    trezoa_bincode::limited_deserialize,
+    trezoa_instruction::error::InstructionError,
+    trezoa_program_runtime::{
         declare_process_instruction, invoke_context::InvokeContext,
         sysvar_cache::get_sysvar_with_account_check,
     },
-    solana_pubkey::Pubkey,
-    solana_transaction_context::{
+    trezoa_pubkey::Pubkey,
+    trezoa_transaction_context::{
         instruction::InstructionContext, instruction_accounts::BorrowedInstructionAccount,
     },
-    solana_vote_interface::{instruction::VoteInstruction, program::id, state::VoteAuthorize},
+    trezoa_vote_interface::{instruction::VoteInstruction, program::id, state::VoteAuthorize},
     std::collections::HashSet,
 };
 
@@ -86,7 +86,7 @@ declare_process_instruction!(Entrypoint, DEFAULT_COMPUTE_UNITS, |invoke_context|
 
     let signers = instruction_context.get_signers()?;
     let is_bls_pubkey_feature_enabled = is_bls_pubkey_feature_enabled(invoke_context);
-    match limited_deserialize(data, solana_packet::PACKET_DATA_SIZE as u64)? {
+    match limited_deserialize(data, trezoa_packet::PACKET_DATA_SIZE as u64)? {
         VoteInstruction::InitializeAccount(vote_init) => {
             // If the BLS pubkey feature is active, reject the instruction
             if is_bls_pubkey_feature_enabled {
@@ -321,20 +321,20 @@ mod tests {
             },
         },
         bincode::serialize,
-        solana_account::{
+        trezoa_account::{
             self as account, state_traits::StateMut, Account, AccountSharedData, ReadableAccount,
         },
-        solana_clock::Clock,
-        solana_epoch_schedule::EpochSchedule,
-        solana_hash::Hash,
-        solana_instruction::{AccountMeta, Instruction},
-        solana_program_runtime::invoke_context::mock_process_instruction_with_feature_set,
-        solana_pubkey::Pubkey,
-        solana_rent::Rent,
-        solana_sdk_ids::sysvar,
-        solana_slot_hashes::SlotHashes,
-        solana_svm_feature_set::SVMFeatureSet,
-        solana_vote_interface::{
+        trezoa_clock::Clock,
+        trezoa_epoch_schedule::EpochSchedule,
+        trezoa_hash::Hash,
+        trezoa_instruction::{AccountMeta, Instruction},
+        trezoa_program_runtime::invoke_context::mock_process_instruction_with_feature_set,
+        trezoa_pubkey::Pubkey,
+        trezoa_rent::Rent,
+        trezoa_sdk_ids::sysvar,
+        trezoa_slot_hashes::SlotHashes,
+        trezoa_svm_feature_set::SVMFeatureSet,
+        trezoa_vote_interface::{
             instruction::{tower_sync, tower_sync_switch},
             state::{
                 VoterWithBLSArgs, BLS_PROOF_OF_POSSESSION_COMPRESSED_SIZE,
@@ -482,8 +482,8 @@ mod tests {
 
     fn create_test_account(vote_state_v4_enabled: bool) -> (Pubkey, AccountSharedData) {
         let rent = Rent::default();
-        let vote_pubkey = solana_pubkey::new_rand();
-        let node_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
 
         let account = if vote_state_v4_enabled {
             let balance = rent.minimum_balance(VoteStateV4::size_of());
@@ -512,9 +512,9 @@ mod tests {
     fn create_test_account_with_authorized(
         vote_state_v4_enabled: bool,
     ) -> (Pubkey, Pubkey, Pubkey, AccountSharedData) {
-        let vote_pubkey = solana_pubkey::new_rand();
-        let authorized_voter = solana_pubkey::new_rand();
-        let authorized_withdrawer = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
+        let authorized_voter = trezoa_pubkey::new_rand();
+        let authorized_withdrawer = trezoa_pubkey::new_rand();
         let account = create_test_account_with_provided_authorized(
             &authorized_voter,
             &authorized_withdrawer,
@@ -534,7 +534,7 @@ mod tests {
         authorized_withdrawer: &Pubkey,
         vote_state_v4_enabled: bool,
     ) -> AccountSharedData {
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
 
         if vote_state_v4_enabled {
             vote_state::create_v4_account_with_authorized(
@@ -611,8 +611,8 @@ mod tests {
         vote_state_v4_enabled: bool,
         credits_to_append: &[u64],
     ) -> (Pubkey, AccountSharedData) {
-        let vote_pubkey = solana_pubkey::new_rand();
-        let node_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
 
         let vote_init = VoteInit {
             node_pubkey,
@@ -701,9 +701,9 @@ mod tests {
         vote_state_v4: bool,
         bls_pubkey_management_in_vote_account: bool,
     ) {
-        let vote_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
         let vote_account = AccountSharedData::new(100, vote_state_size_of(vote_state_v4), &id());
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let node_account = AccountSharedData::default();
         let instruction_data = serialize(&VoteInstruction::InitializeAccount(VoteInit {
             node_pubkey,
@@ -845,9 +845,9 @@ mod tests {
         vote_state_v4: bool,
         bls_pubkey_management_in_vote_account: bool,
     ) {
-        let vote_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
         let vote_account = AccountSharedData::new(100, vote_state_size_of(vote_state_v4), &id());
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let node_account = AccountSharedData::default();
         let (bls_pubkey, bls_proof_of_possession) =
             create_bls_pubkey_and_proof_of_possession(&vote_pubkey);
@@ -989,9 +989,9 @@ mod tests {
 
     #[test]
     fn test_initialize_vote_account_v2_bad_proof_of_possession() {
-        let vote_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
         let vote_account = AccountSharedData::new(100, VoteStateV4::size_of(), &id());
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let node_account = AccountSharedData::default();
         let instruction_with_bad_pop =
             serialize(&VoteInstruction::InitializeAccountV2(VoteInitV2 {
@@ -1048,7 +1048,7 @@ mod tests {
     fn test_vote_update_validator_identity(vote_state_v4: bool) {
         let (vote_pubkey, _authorized_voter, authorized_withdrawer, vote_account) =
             create_test_account_with_authorized(vote_state_v4);
-        let node_pubkey = solana_pubkey::new_rand();
+        let node_pubkey = trezoa_pubkey::new_rand();
         let instruction_data = serialize(&VoteInstruction::UpdateValidatorIdentity).unwrap();
         let transaction_accounts = vec![
             (vote_pubkey, vote_account),
@@ -1282,7 +1282,7 @@ mod tests {
                 sysvar::slot_hashes::id(),
                 account::create_account_shared_data_for_test(&SlotHashes::new(&[(
                     *vote.slots.last().unwrap(),
-                    solana_sha256_hasher::hash(&[0u8]),
+                    trezoa_sha256_hasher::hash(&[0u8]),
                 )])),
             );
             process_instruction(
@@ -1341,7 +1341,7 @@ mod tests {
     #[test_matrix([false, true], [false, true])]
     fn test_authorize_voter(vote_state_v4: bool, bls_pubkey_management_in_vote_account: bool) {
         let (vote_pubkey, vote_account) = create_test_account(vote_state_v4);
-        let authorized_voter_pubkey = solana_pubkey::new_rand();
+        let authorized_voter_pubkey = trezoa_pubkey::new_rand();
         let clock = Clock {
             epoch: 1,
             leader_schedule_epoch: 2,
@@ -1526,9 +1526,9 @@ mod tests {
         vote_state_v4: bool,
         bls_pubkey_management_in_vote_account: bool,
     ) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (vote_pubkey, vote_account) = create_test_account(vote_state_v4);
-        let authorized_voter_pubkey = solana_pubkey::new_rand();
+        let authorized_voter_pubkey = trezoa_pubkey::new_rand();
         let clock = Clock {
             epoch: 1,
             leader_schedule_epoch: 2,
@@ -1574,7 +1574,7 @@ mod tests {
             // If both features are enabled, the old instruction should be accepted when
             // the account does not have a BLS key.
             let (new_vote_pubkey, vote_account_no_bls_key) = create_test_account(false);
-            let new_authorized_voter_pubkey = solana_pubkey::new_rand();
+            let new_authorized_voter_pubkey = trezoa_pubkey::new_rand();
             let old_instruction_data = serialize(&VoteInstruction::Authorize(
                 new_authorized_voter_pubkey,
                 VoteAuthorize::Voter,
@@ -1604,7 +1604,7 @@ mod tests {
             );
             // However, once the BLS key is set, the old instruction should be rejected
             let (new_vote_pubkey, vote_account_with_bls_key) = create_test_account(true);
-            let new_authorized_voter_pubkey = solana_pubkey::new_rand();
+            let new_authorized_voter_pubkey = trezoa_pubkey::new_rand();
             let old_instruction_data = serialize(&VoteInstruction::Authorize(
                 new_authorized_voter_pubkey,
                 VoteAuthorize::Voter,
@@ -1766,7 +1766,7 @@ mod tests {
     #[test]
     fn test_authorize_voter_with_bls_bad_proof_of_possession() {
         let (vote_pubkey, vote_account) = create_test_account(true);
-        let authorized_voter_pubkey = solana_pubkey::new_rand();
+        let authorized_voter_pubkey = trezoa_pubkey::new_rand();
         let clock = Clock {
             epoch: 1,
             leader_schedule_epoch: 2,
@@ -1816,7 +1816,7 @@ mod tests {
     #[test_case(true ; "VoteStateV4")]
     fn test_authorize_withdrawer(vote_state_v4: bool) {
         let (vote_pubkey, vote_account) = create_test_account(vote_state_v4);
-        let authorized_withdrawer_pubkey = solana_pubkey::new_rand();
+        let authorized_withdrawer_pubkey = trezoa_pubkey::new_rand();
         let instruction_data = serialize(&VoteInstruction::Authorize(
             authorized_withdrawer_pubkey,
             VoteAuthorize::Withdrawer,
@@ -1882,7 +1882,7 @@ mod tests {
         );
 
         // should pass, verify authorized_withdrawer can authorize a new authorized_voter
-        let authorized_voter_pubkey = solana_pubkey::new_rand();
+        let authorized_voter_pubkey = trezoa_pubkey::new_rand();
         transaction_accounts.push((authorized_voter_pubkey, AccountSharedData::default()));
         let instruction_data = serialize(&VoteInstruction::Authorize(
             authorized_voter_pubkey,
@@ -1903,7 +1903,7 @@ mod tests {
     fn test_vote_withdraw(vote_state_v4: bool) {
         let (vote_pubkey, vote_account) = create_test_account(vote_state_v4);
         let lamports = vote_account.lamports();
-        let authorized_withdrawer_pubkey = solana_pubkey::new_rand();
+        let authorized_withdrawer_pubkey = trezoa_pubkey::new_rand();
         let mut transaction_accounts = vec![
             (vote_pubkey, vote_account.clone()),
             (sysvar::clock::id(), create_default_clock_account()),
@@ -2005,7 +2005,7 @@ mod tests {
     #[test_case(false ; "VoteStateV3")]
     #[test_case(true ; "VoteStateV4")]
     fn test_vote_state_withdraw(vote_state_v4: bool) {
-        let authorized_withdrawer_pubkey = solana_pubkey::new_rand();
+        let authorized_withdrawer_pubkey = trezoa_pubkey::new_rand();
         let (vote_pubkey_1, vote_account_with_epoch_credits_1) =
             create_test_account_with_epoch_credits(vote_state_v4, &[2, 1]);
         let (vote_pubkey_2, vote_account_with_epoch_credits_2) =
@@ -2807,7 +2807,7 @@ mod tests {
     #[test_case(false ; "VoteStateV3")]
     #[test_case(true ; "VoteStateV4")]
     fn test_vote_process_instruction(vote_state_v4: bool) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let instructions = create_account_with_config(
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),
@@ -3107,7 +3107,7 @@ mod tests {
     #[test_case(true ; "VoteStateV4")]
     fn test_uninitialized_vote_account(vote_state_v4: bool) {
         // Set up uninitialized vote account.
-        let vote_pubkey = solana_pubkey::new_rand();
+        let vote_pubkey = trezoa_pubkey::new_rand();
         let vote_account = AccountSharedData::new(100, vote_state_size_of(vote_state_v4), &id());
 
         let expected_error = if vote_state_v4 {
@@ -3123,7 +3123,7 @@ mod tests {
 
         // VoteInstruction::Authorize
         {
-            let new_authorized_pubkey = solana_pubkey::new_rand();
+            let new_authorized_pubkey = trezoa_pubkey::new_rand();
 
             let instruction_data = serialize(&VoteInstruction::Authorize(
                 new_authorized_pubkey,

@@ -1,7 +1,7 @@
 [package]
-name = "agave-banking-stage-ingress-types"
-description = "Agave banking stage ingress types"
-documentation = "https://docs.rs/agave-banking-stage-ingress-types"
+name = "trezoa-banking-stage-ingress-types"
+description = "Trezoa-team banking stage ingress types"
+documentation = "https://docs.rs/trezoa-banking-stage-ingress-types"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,8 +10,8 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 crossbeam-channel = { workspace = true }
-solana-perf = { workspace = true }
+trezoa-perf = { workspace = true }

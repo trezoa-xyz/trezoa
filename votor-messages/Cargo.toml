@@ -1,6 +1,6 @@
 [package]
-name = "agave-votor-messages"
-documentation = "https://docs.rs/agave-votor-messages"
+name = "trezoa-votor-messages"
+documentation = "https://docs.rs/trezoa-votor-messages"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -10,34 +10,34 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 frozen-abi = [
-    "dep:solana-frozen-abi",
-    "dep:solana-frozen-abi-macro",
-    "solana-hash/frozen-abi",
-    "solana-bls-signatures/frozen-abi",
+    "dep:trezoa-frozen-abi",
+    "dep:trezoa-frozen-abi-macro",
+    "trezoa-hash/frozen-abi",
+    "trezoa-bls-signatures/frozen-abi",
 ]
 
 [dependencies]
-agave-feature-set = { workspace = true }
-agave-logger = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-logger = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
-solana-address = { workspace = true, features = ["curve25519"] }
-solana-bls-signatures = { workspace = true, features = [
-    "bytemuck", "solana-signer-derive",
+trezoa-address = { workspace = true, features = ["curve25519"] }
+trezoa-bls-signatures = { workspace = true, features = [
+    "bytemuck", "trezoa-signer-derive",
 ] }
-solana-clock = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-frozen-abi = { workspace = true, optional = true, features = [
+trezoa-clock = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-frozen-abi = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-frozen-abi-macro = { workspace = true, optional = true, features = [
+trezoa-frozen-abi-macro = { workspace = true, optional = true, features = [
     "frozen-abi",
 ] }
-solana-hash = { workspace = true, features = ["serde"] }
-solana-pubkey = { workspace = true }
+trezoa-hash = { workspace = true, features = ["serde"] }
+trezoa-pubkey = { workspace = true }
 
 [lints]
 workspace = true

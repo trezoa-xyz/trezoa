@@ -1,15 +1,15 @@
 use {
     bytemuck::{bytes_of, Pod},
-    solana_account::Account,
-    solana_instruction::error::InstructionError,
-    solana_keypair::Keypair,
-    solana_program_test::*,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_system_interface::instruction as system_instruction,
-    solana_transaction::Transaction,
-    solana_transaction_error::TransactionError,
-    solana_zk_sdk::{
+    trezoa_account::Account,
+    trezoa_instruction::error::InstructionError,
+    trezoa_keypair::Keypair,
+    trezoa_program_test::*,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_system_interface::instruction as system_instruction,
+    trezoa_transaction::Transaction,
+    trezoa_transaction_error::TransactionError,
+    trezoa_zk_sdk::{
         encryption::{
             elgamal::{ElGamalKeypair, ElGamalSecretKey},
             grouped_elgamal::GroupedElGamal,
@@ -1385,11 +1385,11 @@ trait WithMaxComputeUnitLimit {
     fn with_max_compute_unit_limit(self) -> Self;
 }
 
-impl WithMaxComputeUnitLimit for Vec<solana_instruction::Instruction> {
+impl WithMaxComputeUnitLimit for Vec<trezoa_instruction::Instruction> {
     fn with_max_compute_unit_limit(mut self) -> Self {
         self.push(
-            solana_compute_budget_interface::ComputeBudgetInstruction::set_compute_unit_limit(
-                solana_compute_budget::compute_budget_limits::MAX_COMPUTE_UNIT_LIMIT,
+            trezoa_compute_budget_interface::ComputeBudgetInstruction::set_compute_unit_limit(
+                trezoa_compute_budget::compute_budget_limits::MAX_COMPUTE_UNIT_LIMIT,
             ),
         );
         self

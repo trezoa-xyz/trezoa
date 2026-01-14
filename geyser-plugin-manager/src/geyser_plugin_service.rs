@@ -11,9 +11,9 @@ use {
     },
     crossbeam_channel::Receiver,
     log::*,
-    solana_accounts_db::accounts_update_notifier_interface::AccountsUpdateNotifier,
-    solana_ledger::entry_notifier_interface::EntryNotifierArc,
-    solana_rpc::{
+    trezoa_accounts_db::accounts_update_notifier_interface::AccountsUpdateNotifier,
+    trezoa_ledger::entry_notifier_interface::EntryNotifierArc,
+    trezoa_rpc::{
         optimistically_confirmed_bank_tracker::SlotNotification,
         slot_status_notifier::SlotStatusNotifier,
         transaction_notifier_interface::TransactionNotifierArc,

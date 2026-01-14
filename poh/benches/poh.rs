@@ -1,23 +1,23 @@
-// This bench attempts to justify the value of `solana_core::poh_service::NUM_HASHES_PER_BATCH`
+// This bench attempts to justify the value of `trezoa_core::poh_service::NUM_HASHES_PER_BATCH`
 
 #![feature(test)]
 extern crate test;
 
 use {
-    solana_entry::poh::Poh,
-    solana_hash::Hash,
-    solana_ledger::{
+    trezoa_entry::poh::Poh,
+    trezoa_hash::Hash,
+    trezoa_ledger::{
         blockstore::Blockstore,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         get_tmp_ledger_path_auto_delete,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_perf::test_tx::test_tx,
-    solana_poh::{poh_recorder::PohRecorder, poh_service::DEFAULT_HASHES_PER_BATCH},
-    solana_poh_config::PohConfig,
-    solana_runtime::bank::Bank,
-    solana_sha256_hasher::hash,
-    solana_transaction::sanitized::SanitizedTransaction,
+    trezoa_perf::test_tx::test_tx,
+    trezoa_poh::{poh_recorder::PohRecorder, poh_service::DEFAULT_HASHES_PER_BATCH},
+    trezoa_poh_config::PohConfig,
+    trezoa_runtime::bank::Bank,
+    trezoa_sha256_hasher::hash,
+    trezoa_transaction::sanitized::SanitizedTransaction,
     std::sync::{
         atomic::{AtomicBool, Ordering},
         Arc, Mutex,
@@ -101,7 +101,7 @@ fn bench_poh_recorder_record(bencher: &mut Bencher) {
         &PohConfig::default(),
         Arc::new(AtomicBool::default()),
     );
-    let h1 = hash(b"hello Agave, hello Anza!");
+    let h1 = hash(b"hello Trezoa-team, hello Trezoa-team!");
 
     poh_recorder.set_bank_for_test(bank.clone());
     poh_recorder.tick();

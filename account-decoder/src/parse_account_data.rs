@@ -1,4 +1,4 @@
-pub use solana_account_decoder_client_types::ParsedAccount;
+pub use trezoa_account_decoder_client_types::ParsedAccount;
 use {
     crate::{
         parse_address_lookup_table::parse_address_lookup_table,
@@ -8,13 +8,13 @@ use {
     },
     inflector::Inflector,
     serde::{Deserialize, Serialize},
-    solana_clock::UnixTimestamp,
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
-    solana_sdk_ids::{
+    trezoa_clock::UnixTimestamp,
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_sdk_ids::{
         address_lookup_table, bpf_loader_upgradeable, config, stake, system_program, sysvar, vote,
     },
-    spl_token_2022_interface::extension::{
+    tpl_token_2022_interface::extension::{
         interest_bearing_mint::InterestBearingConfig, scaled_ui_amount::ScaledUiAmountConfig,
     },
     std::collections::HashMap,
@@ -35,10 +35,10 @@ pub static PARSABLE_PROGRAM_IDS: std::sync::LazyLock<HashMap<Pubkey, ParsableAcc
         m.insert(config::id(), ParsableAccount::Config);
         m.insert(system_program::id(), ParsableAccount::Nonce);
         m.insert(
-            spl_token_2022_interface::id(),
+            tpl_token_2022_interface::id(),
             ParsableAccount::SplToken2022,
         );
-        m.insert(spl_token_interface::id(), ParsableAccount::SplToken);
+        m.insert(tpl_token_interface::id(), ParsableAccount::SplToken);
         m.insert(stake::id(), ParsableAccount::Stake);
         m.insert(sysvar::id(), ParsableAccount::Sysvar);
         m.insert(vote::id(), ParsableAccount::Vote);
@@ -79,7 +79,7 @@ pub enum ParsableAccount {
 
 #[derive(Clone, Copy, Default)]
 pub struct AccountAdditionalDataV3 {
-    pub spl_token_additional_data: Option<SplTokenAdditionalDataV2>,
+    pub tpl_token_additional_data: Option<SplTokenAdditionalDataV2>,
 }
 
 #[derive(Clone, Copy, Default)]
@@ -143,7 +143,7 @@ pub fn parse_account_data_v3(
         ParsableAccount::Config => serde_json::to_value(parse_config(data, pubkey)?)?,
         ParsableAccount::Nonce => serde_json::to_value(parse_nonce(data)?)?,
         ParsableAccount::SplToken | ParsableAccount::SplToken2022 => serde_json::to_value(
-            parse_token_v3(data, additional_data.spl_token_additional_data.as_ref())?,
+            parse_token_v3(data, additional_data.tpl_token_additional_data.as_ref())?,
         )?,
         ParsableAccount::Stake => serde_json::to_value(parse_stake(data)?)?,
         ParsableAccount::Sysvar => serde_json::to_value(parse_sysvar(data, pubkey)?)?,
@@ -160,11 +160,11 @@ pub fn parse_account_data_v3(
 mod test {
     use {
         super::*,
-        solana_nonce::{
+        trezoa_nonce::{
             state::{Data, State},
             versions::Versions,
         },
-        solana_vote_interface::{
+        trezoa_vote_interface::{
             program::id as vote_program_id,
             state::{VoteStateV4, VoteStateVersions},
         },
@@ -172,8 +172,8 @@ mod test {
 
     #[test]
     fn test_parse_account_data() {
-        let account_pubkey = solana_pubkey::new_rand();
-        let other_program = solana_pubkey::new_rand();
+        let account_pubkey = trezoa_pubkey::new_rand();
+        let other_program = trezoa_pubkey::new_rand();
         let data = vec![0; 4];
         assert!(parse_account_data_v3(&account_pubkey, &other_program, &data, None).is_err());
 

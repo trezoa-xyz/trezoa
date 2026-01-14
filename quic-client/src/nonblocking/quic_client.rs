@@ -11,23 +11,23 @@ use {
         ConnectionError, Endpoint, EndpointConfig, IdleTimeout, TokioRuntime, TransportConfig,
         WriteError,
     },
-    solana_connection_cache::{
+    trezoa_connection_cache::{
         client_connection::ClientStats, connection_cache_stats::ConnectionCacheStats,
         nonblocking::client_connection::ClientConnection,
     },
-    solana_keypair::Keypair,
-    solana_measure::measure::Measure,
-    solana_net_utils::sockets,
-    solana_quic_definitions::{
+    trezoa_keypair::Keypair,
+    trezoa_measure::measure::Measure,
+    trezoa_net_utils::sockets,
+    trezoa_quic_definitions::{
         QUIC_CONNECTION_HANDSHAKE_TIMEOUT, QUIC_KEEP_ALIVE, QUIC_MAX_TIMEOUT, QUIC_SEND_FAIRNESS,
     },
-    solana_rpc_client_api::client_error::ErrorKind as ClientErrorKind,
-    solana_streamer::nonblocking::quic::ALPN_TPU_PROTOCOL_ID,
-    solana_tls_utils::{
+    trezoa_rpc_client_api::client_error::ErrorKind as ClientErrorKind,
+    trezoa_streamer::nonblocking::quic::ALPN_TPU_PROTOCOL_ID,
+    trezoa_tls_utils::{
         new_dummy_x509_certificate, socket_addr_to_quic_server_name, tls_client_config_builder,
         QuicClientCertificate,
     },
-    solana_transaction_error::TransportResult,
+    trezoa_transaction_error::TransportResult,
     std::{
         net::{SocketAddr, UdpSocket},
         sync::{atomic::Ordering, Arc},
@@ -82,7 +82,7 @@ impl QuicLazyInitializedEndpoint {
             // of the range for CI tests when this is running in CI
             let client_socket = sockets::bind_in_range_with_config(
                 std::net::IpAddr::V4(std::net::Ipv4Addr::UNSPECIFIED),
-                solana_net_utils::VALIDATOR_PORT_RANGE,
+                trezoa_net_utils::VALIDATOR_PORT_RANGE,
                 sockets::SocketConfiguration::default(),
             )
             .expect("QuicLazyInitializedEndpoint::create_endpoint bind_in_range")

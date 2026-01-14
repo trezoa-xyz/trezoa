@@ -8,32 +8,32 @@ use {
         },
         xdp::XdpSender,
     },
-    agave_votor::event::VotorEvent,
+    trezoa_votor::event::VotorEvent,
     crossbeam_channel::{Receiver, RecvError, Sender, TryRecvError},
     lru::LruCache,
     rand::Rng,
     rayon::{prelude::*, ThreadPool, ThreadPoolBuilder},
-    solana_clock::Slot,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    trezoa_clock::Slot,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_ledger::{
         leader_schedule_cache::LeaderScheduleCache,
         shred::{self, ShredFlags, ShredId, ShredType},
     },
-    solana_measure::measure::Measure,
-    solana_net_utils::SocketAddrSpace,
-    solana_perf::deduper::Deduper,
-    solana_pubkey::Pubkey,
-    solana_rpc::{
+    trezoa_measure::measure::Measure,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_perf::deduper::Deduper,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc::{
         max_slots::MaxSlots, rpc_subscriptions::RpcSubscriptions,
         slot_status_notifier::SlotStatusNotifier,
     },
-    solana_rpc_client_api::response::SlotUpdate,
-    solana_runtime::{
+    trezoa_rpc_client_api::response::SlotUpdate,
+    trezoa_runtime::{
         bank::{Bank, MAX_LEADER_SCHEDULE_STAKES},
         bank_forks::BankForks,
     },
-    solana_streamer::sendmmsg::{multi_target_send, SendPktsError},
-    solana_time_utils::timestamp,
+    trezoa_streamer::sendmmsg::{multi_target_send, SendPktsError},
+    trezoa_time_utils::timestamp,
     std::{
         borrow::Cow,
         collections::{HashMap, HashSet},
@@ -56,7 +56,7 @@ const DEDUPER_RESET_CYCLE: Duration = Duration::from_secs(5 * 60);
 const PAR_ITER_MIN_NUM_SHREDS: usize = 2;
 
 const _: () = const {
-    // From https://github.com/anza-xyz/agave/pull/1735#discussion_r1644899183:
+    // From https://github.com/trezoa-xyz/trezoa/pull/1735#discussion_r1644899183:
     // 1. There must be at least two epochs because near an epoch boundary you might receive
     //    shreds from the other side of the epoch boundary.
     // 2. It does not make sense to have capacity more than the number of epoch-stakes in Bank.
@@ -899,10 +899,10 @@ mod tests {
         super::*,
         rand::SeedableRng,
         rand_chacha::ChaChaRng,
-        solana_entry::entry::create_ticks,
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
+        trezoa_entry::entry::create_ticks,
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::shred::{ProcessShredsStats, ReedSolomonCache, Shredder},
     };
 
     fn get_keypair() -> Keypair {

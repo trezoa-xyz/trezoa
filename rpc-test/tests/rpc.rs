@@ -6,28 +6,28 @@ use {
     log::*,
     reqwest::{self, header::CONTENT_TYPE},
     serde_json::{json, Value},
-    solana_account_decoder::UiAccount,
-    solana_commitment_config::CommitmentConfig,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_net_utils::{sockets, SocketAddrSpace},
-    solana_pubkey::Pubkey,
-    solana_pubsub_client::nonblocking::pubsub_client::PubsubClient,
-    solana_rent::Rent,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_account_decoder::UiAccount,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_net_utils::{sockets, SocketAddrSpace},
+    trezoa_pubkey::Pubkey,
+    trezoa_pubsub_client::nonblocking::pubsub_client::PubsubClient,
+    trezoa_rent::Rent,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         client_error::{ErrorKind as ClientErrorKind, Result as ClientResult},
         config::{RpcAccountInfoConfig, RpcSignatureSubscribeConfig, RpcSimulateTransactionConfig},
         request::RpcError,
         response::{Response as RpcResponse, RpcSignatureResult, SlotUpdate},
     },
-    solana_signature::Signature,
-    solana_signer::Signer,
-    solana_system_transaction as system_transaction,
-    solana_test_validator::TestValidator,
-    solana_tpu_client_next::{client_builder::ClientBuilder, leader_updater::LeaderUpdater},
-    solana_transaction::Transaction,
-    solana_transaction_status::TransactionStatus,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
+    trezoa_system_transaction as system_transaction,
+    trezoa_test_validator::TestValidator,
+    trezoa_tpu_client_next::{client_builder::ClientBuilder, leader_updater::LeaderUpdater},
+    trezoa_transaction::Transaction,
+    trezoa_transaction_status::TransactionStatus,
     std::{
         collections::HashSet,
         net::SocketAddr,
@@ -65,14 +65,14 @@ fn post_rpc(request: Value, rpc_url: &str) -> Value {
 
 #[test]
 fn test_rpc_send_tx() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
     let rpc_url = test_validator.rpc_url();
 
-    let bob_pubkey = solana_pubkey::new_rand();
+    let bob_pubkey = trezoa_pubkey::new_rand();
 
     let req = json_req!("getLatestBlockhash", json!([]));
     let json = post_rpc(req, &rpc_url);
@@ -101,7 +101,7 @@ fn test_rpc_send_tx() {
 
     let request = json_req!("getSignatureStatuses", [[signature]]);
 
-    for _ in 0..solana_clock::DEFAULT_TICKS_PER_SLOT {
+    for _ in 0..trezoa_clock::DEFAULT_TICKS_PER_SLOT {
         let json = post_rpc(request.clone(), &rpc_url);
 
         let result: Option<TransactionStatus> =
@@ -119,8 +119,8 @@ fn test_rpc_send_tx() {
     assert!(confirmed_tx);
 
     use {
-        solana_account_decoder::UiAccountEncoding,
-        solana_rpc_client_api::config::RpcAccountInfoConfig,
+        trezoa_account_decoder::UiAccountEncoding,
+        trezoa_rpc_client_api::config::RpcAccountInfoConfig,
     };
     let config = RpcAccountInfoConfig {
         encoding: Some(UiAccountEncoding::Base64),
@@ -138,7 +138,7 @@ fn test_rpc_send_tx() {
 
 #[test]
 fn test_simulation_replaced_blockhash() -> ClientResult<()> {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let validator = TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
@@ -183,14 +183,14 @@ fn test_simulation_replaced_blockhash() -> ClientResult<()> {
 
 #[test]
 fn test_rpc_invalid_requests() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
     let rpc_url = test_validator.rpc_url();
 
-    let bob_pubkey = solana_pubkey::new_rand();
+    let bob_pubkey = trezoa_pubkey::new_rand();
 
     // test invalid get_balance request
     let req = json_req!("getBalance", json!(["invalid9999"]));
@@ -216,7 +216,7 @@ fn test_rpc_invalid_requests() {
 
 #[test]
 fn test_rpc_slot_updates() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let test_validator =
         TestValidator::with_no_fees(Pubkey::new_unique(), None, SocketAddrSpace::Unspecified);
@@ -298,7 +298,7 @@ impl LeaderUpdater for TestLeaderUpdater {
 
 #[test]
 fn test_rpc_subscriptions() {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
@@ -313,7 +313,7 @@ fn test_rpc_subscriptions() {
         .map(|_| {
             system_transaction::transfer(
                 &alice,
-                &solana_pubkey::new_rand(),
+                &trezoa_pubkey::new_rand(),
                 transfer_amount,
                 recent_blockhash,
             )
@@ -569,7 +569,7 @@ fn test_run_tpu_send_transaction() {
 
 #[test]
 fn deserialize_rpc_error() -> ClientResult<()> {
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let alice = Keypair::new();
     let validator = TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);

@@ -4,7 +4,7 @@ use {
     },
     borsh::BorshDeserialize,
     serde_json::json,
-    solana_message::{compiled_instruction::CompiledInstruction, AccountKeys},
+    trezoa_message::{compiled_instruction::CompiledInstruction, AccountKeys},
     spl_associated_token_account_interface::instruction::AssociatedTokenAccountInstruction,
 };
 
@@ -86,10 +86,10 @@ fn check_num_associated_token_accounts(
 mod test {
     use {
         super::*,
-        solana_instruction::AccountMeta,
-        solana_message::Message,
-        solana_pubkey::Pubkey,
-        solana_sdk_ids::sysvar,
+        trezoa_instruction::AccountMeta,
+        trezoa_message::Message,
+        trezoa_pubkey::Pubkey,
+        trezoa_sdk_ids::sysvar,
         spl_associated_token_account_interface::{
             address::{get_associated_token_address, get_associated_token_address_with_program_id},
             instruction::{
@@ -105,7 +105,7 @@ mod test {
         let wallet_address = Pubkey::new_unique();
         let mint = Pubkey::new_unique();
         let associated_account_address = get_associated_token_address(&wallet_address, &mint);
-        let token_program_id = spl_token_interface::id();
+        let token_program_id = tpl_token_interface::id();
         // mimic the deprecated instruction
         let mut create_ix =
             create_associated_token_account(&funder, &wallet_address, &mint, &token_program_id);
@@ -122,7 +122,7 @@ mod test {
                 "account": associated_account_address.to_string(),
                 "wallet": wallet_address.to_string(),
                 "mint": mint.to_string(),
-                "systemProgram": solana_sdk_ids::system_program::id().to_string(),
+                "systemProgram": trezoa_sdk_ids::system_program::id().to_string(),
                 "tokenProgram": token_program_id.to_string(),
             }),
         };
@@ -185,7 +185,7 @@ mod test {
                     "account": associated_account_address.to_string(),
                     "wallet": wallet_address.to_string(),
                     "mint": mint.to_string(),
-                    "systemProgram": solana_sdk_ids::system_program::id().to_string(),
+                    "systemProgram": trezoa_sdk_ids::system_program::id().to_string(),
                     "tokenProgram": token_program_id.to_string(),
                 })
             }
@@ -227,7 +227,7 @@ mod test {
                     "account": associated_account_address.to_string(),
                     "wallet": wallet_address.to_string(),
                     "mint": mint.to_string(),
-                    "systemProgram": solana_sdk_ids::system_program::id().to_string(),
+                    "systemProgram": trezoa_sdk_ids::system_program::id().to_string(),
                     "tokenProgram": token_program_id.to_string(),
                 })
             }

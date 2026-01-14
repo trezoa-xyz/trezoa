@@ -212,7 +212,7 @@ pub fn multi_bind_in_range_with_config(
     mut num: usize,
 ) -> io::Result<(u16, Vec<UdpSocket>)> {
     if !PLATFORM_SUPPORTS_SOCKET_CONFIGS && num != 1 {
-        // See https://github.com/solana-labs/solana/issues/4607
+        // See https://github.com/trezoa-labs/trezoa/issues/4607
         warn!(
             "multi_bind_in_range_with_config() only supports 1 socket on this platform ({num} \
              requested)"
@@ -424,7 +424,7 @@ mod tests {
 
     #[test]
     fn test_bind_two_in_range_with_offset() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let config = SocketConfiguration::default();
         let ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let offset = 6;
@@ -460,7 +460,7 @@ mod tests {
 
     #[test]
     fn test_get_public_ip_addr_none() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let (pr_s, pr_e) = localhost_port_range_for_tests();
         let config = SocketConfiguration::default();
@@ -489,7 +489,7 @@ mod tests {
 
     #[test]
     fn test_get_public_ip_addr_reachable() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let port_range = localhost_port_range_for_tests();
         let config = SocketConfiguration::default();
@@ -529,7 +529,7 @@ mod tests {
 
     #[test]
     fn test_verify_ports_tcp_unreachable() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let port_range = localhost_port_range_for_tests();
         let config = SocketConfiguration::default();
@@ -552,7 +552,7 @@ mod tests {
 
     #[test]
     fn test_verify_ports_udp_unreachable() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let port_range = unique_port_range_for_tests(2);
         let config = SocketConfiguration::default();
@@ -578,7 +578,7 @@ mod tests {
 
     #[test]
     fn test_verify_many_ports_reachable() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let ip_addr = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let config = SocketConfiguration::default();
         let mut tcp_listeners = vec![];
@@ -631,7 +631,7 @@ mod tests {
     #[cfg(not(target_os = "macos"))]
     #[test]
     fn test_verify_udp_multiple_ips_reachable() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let config = SocketConfiguration::default();
         let ip_a = IpAddr::V4(Ipv4Addr::LOCALHOST);
         let ip_b = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 2));

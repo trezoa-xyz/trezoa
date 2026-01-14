@@ -1,9 +1,9 @@
 use {
     crate::{parse_account_data::ParseAccountError, StringAmount},
     serde::{Deserialize, Serialize},
-    solana_clock::{Epoch, Slot},
-    solana_pubkey::Pubkey,
-    solana_vote_interface::state::{BlockTimestamp, LandedVote, Lockout, VoteStateV4},
+    trezoa_clock::{Epoch, Slot},
+    trezoa_pubkey::Pubkey,
+    trezoa_vote_interface::state::{BlockTimestamp, LandedVote, Lockout, VoteStateV4},
 };
 
 pub fn parse_vote(data: &[u8], vote_pubkey: &Pubkey) -> Result<VoteAccountType, ParseAccountError> {
@@ -138,7 +138,7 @@ struct UiEpochCredits {
 
 #[cfg(test)]
 mod test {
-    use {super::*, solana_vote_interface::state::VoteStateVersions};
+    use {super::*, trezoa_vote_interface::state::VoteStateVersions};
 
     #[test]
     fn test_parse_vote() {

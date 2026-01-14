@@ -8,54 +8,54 @@ use {
         feature::{status_from_account, CliFeatureStatus},
         program::calculate_max_chunk_size,
     },
-    agave_feature_set::{raise_cpi_nesting_limit_to_8, FeatureSet, FEATURE_NAMES},
+    trezoa_feature_set::{raise_cpi_nesting_limit_to_8, FeatureSet, FEATURE_NAMES},
     clap::{value_t, App, AppSettings, Arg, ArgMatches, SubCommand},
     log::*,
-    solana_account::Account,
-    solana_account_decoder::{UiAccount, UiAccountEncoding, UiDataSliceConfig},
-    solana_clap_utils::{
+    trezoa_account::Account,
+    trezoa_account_decoder::{UiAccount, UiAccountEncoding, UiDataSliceConfig},
+    trezoa_clap_utils::{
         compute_budget::{compute_unit_price_arg, ComputeUnitLimit},
         input_parsers::{pubkey_of, pubkey_of_signer, signer_of},
         input_validators::{is_valid_pubkey, is_valid_signer},
         keypair::{DefaultSigner, SignerIndex},
         offline::{OfflineArgs, DUMP_TRANSACTION_MESSAGE, SIGN_ONLY_ARG},
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         return_signers_with_config, CliProgramId, CliProgramV4, CliProgramsV4, ReturnSignersConfig,
     },
-    solana_client::{
+    trezoa_client::{
         connection_cache::ConnectionCache,
         send_and_confirm_transactions_in_parallel::{
             send_and_confirm_transactions_in_parallel_v2, SendAndConfirmConfigV2,
         },
     },
-    solana_instruction::Instruction,
-    solana_loader_v4_interface::{
+    trezoa_instruction::Instruction,
+    trezoa_loader_v4_interface::{
         instruction,
         state::{
             LoaderV4State,
             LoaderV4Status::{self, Retracted},
         },
     },
-    solana_message::Message,
-    solana_program_runtime::{
+    trezoa_message::Message,
+    trezoa_program_runtime::{
         execution_budget::SVMTransactionExecutionBudget, invoke_context::InvokeContext,
     },
-    solana_pubkey::Pubkey,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::nonblocking::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_pubkey::Pubkey,
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
         filter::{Memcmp, RpcFilterType},
         request::MAX_MULTIPLE_ACCOUNTS,
     },
-    solana_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
-    solana_sbpf::{elf::Executable, verifier::RequisiteVerifier},
-    solana_sdk_ids::{loader_v4, system_program},
-    solana_signer::Signer,
-    solana_system_interface::{instruction as system_instruction, MAX_PERMITTED_DATA_LENGTH},
-    solana_tpu_client::tpu_client::TpuClientConfig,
-    solana_transaction::Transaction,
+    trezoa_rpc_client_nonce_utils::nonblocking::blockhash_query::BlockhashQuery,
+    trezoa_sbpf::{elf::Executable, verifier::RequisiteVerifier},
+    trezoa_sdk_ids::{loader_v4, system_program},
+    trezoa_signer::Signer,
+    trezoa_system_interface::{instruction as system_instruction, MAX_PERMITTED_DATA_LENGTH},
+    trezoa_tpu_client::tpu_client::TpuClientConfig,
+    trezoa_transaction::Transaction,
     std::{
         cmp::Ordering,
         fs::File,
@@ -735,7 +735,7 @@ pub async fn process_deploy_program(
                 }
             });
     }
-    let program_runtime_environment = agave_syscalls::create_program_runtime_environment_v1(
+    let program_runtime_environment = trezoa_syscalls::create_program_runtime_environment_v1(
         &feature_set.runtime_features(),
         &SVMTransactionExecutionBudget::new_with_defaults(
             feature_set.is_active(&raise_cpi_nesting_limit_to_8::id()),
@@ -1073,7 +1073,7 @@ async fn process_show(
             .value
         {
             if loader_v4::check_id(&account.owner) {
-                if let Ok(state) = solana_loader_v4_program::get_state(&account.data) {
+                if let Ok(state) = trezoa_loader_v4_program::get_state(&account.data) {
                     let status = match state.status {
                         LoaderV4Status::Retracted => "retracted",
                         LoaderV4Status::Deployed => "deployed",
@@ -1146,7 +1146,7 @@ pub async fn process_dump(
             performance and resource usage"
 )]
 pub fn process_deploy_program_sync(
-    rpc_client_blocking: Arc<solana_rpc_client::rpc_client::RpcClient>,
+    rpc_client_blocking: Arc<trezoa_rpc_client::rpc_client::RpcClient>,
     config: &CliConfig<'_>,
     additional_cli_config: &AdditionalCliConfig,
     program_address: &Pubkey,
@@ -1193,7 +1193,7 @@ pub fn process_deploy_program_sync(
             and resource usage"
 )]
 pub fn process_dump_sync(
-    rpc_client_blocking: Arc<solana_rpc_client::rpc_client::RpcClient>,
+    rpc_client_blocking: Arc<trezoa_rpc_client::rpc_client::RpcClient>,
     config: &CliConfig<'_>,
     account_pubkey: Option<Pubkey>,
     output_location: &str,
@@ -1254,7 +1254,7 @@ async fn send_messages(
             .await?;
             messages.push(message);
         }
-        Ok::<Vec<solana_message::Message>, Box<dyn std::error::Error>>(messages)
+        Ok::<Vec<trezoa_message::Message>, Box<dyn std::error::Error>>(messages)
     };
     let initial_messages = simulate_messages(initial_messages).await?;
     let write_messages = simulate_messages(write_messages).await?;
@@ -1336,7 +1336,7 @@ async fn send_messages(
 
         let transaction_errors = match connection_cache {
             ConnectionCache::Udp(cache) => {
-                solana_tpu_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
+                trezoa_tpu_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
                     rpc_client.clone(),
                     &config.websocket_url,
                     TpuClientConfig::default(),
@@ -1353,9 +1353,9 @@ async fn send_messages(
                 let tpu_client = if additional_cli_config.use_rpc {
                     None
                 } else {
-                    // `solana_client` type currently required by `send_and_confirm_transactions_in_parallel_v2`
+                    // `trezoa_client` type currently required by `send_and_confirm_transactions_in_parallel_v2`
                     Some(
-                        solana_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
+                        trezoa_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
                             rpc_client.clone(),
                             &config.websocket_url,
                             TpuClientConfig::default(),
@@ -1416,7 +1416,7 @@ fn build_retract_instruction(
         slot: _,
         authority_address_or_next_version,
         status,
-    }) = solana_loader_v4_program::get_state(&account.data)
+    }) = trezoa_loader_v4_program::get_state(&account.data)
     {
         if authority != authority_address_or_next_version {
             return Err(
@@ -1471,7 +1471,7 @@ async fn build_set_program_length_instructions(
             slot: _,
             authority_address_or_next_version,
             status,
-        }) = solana_loader_v4_program::get_state(&account.data)
+        }) = trezoa_loader_v4_program::get_state(&account.data)
         {
             if &authority_pubkey != authority_address_or_next_version {
                 return Err(
@@ -1581,7 +1581,7 @@ async fn get_programs(
             "It should be impossible at this point for the account data not to be decodable. \
              Ensure that the account was fetched using a binary encoding.",
         );
-        if let Ok(state) = solana_loader_v4_program::get_state(data_bytes.as_slice()) {
+        if let Ok(state) = trezoa_loader_v4_program::get_state(data_bytes.as_slice()) {
             let status = match state.status {
                 LoaderV4Status::Retracted => "retracted",
                 LoaderV4Status::Deployed => "deployed",
@@ -1610,15 +1610,15 @@ mod tests {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
         serde_json::json,
-        solana_keypair::{keypair_from_seed, read_keypair_file, write_keypair_file, Keypair},
-        solana_rpc_client_api::{
+        trezoa_keypair::{keypair_from_seed, read_keypair_file, write_keypair_file, Keypair},
+        trezoa_rpc_client_api::{
             request::RpcRequest,
             response::{Response, RpcResponseContext},
         },
         std::collections::HashMap,
     };
 
-    fn program_authority() -> solana_keypair::Keypair {
+    fn program_authority() -> trezoa_keypair::Keypair {
         keypair_from_seed(&[3u8; 32]).unwrap()
     }
 

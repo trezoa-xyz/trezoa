@@ -2,14 +2,14 @@ use {
     super::Bank,
     crate::{bank::CollectorFeeDetails, reward_info::RewardInfo},
     log::debug,
-    solana_account::{ReadableAccount, WritableAccount},
-    solana_fee::FeeFeatures,
-    solana_fee_structure::FeeBudgetLimits,
-    solana_pubkey::Pubkey,
-    solana_reward_info::RewardType,
-    solana_runtime_transaction::transaction_with_meta::TransactionWithMeta,
-    solana_svm::rent_calculator::{get_account_rent_state, transition_allowed},
-    solana_system_interface::program as system_program,
+    trezoa_account::{ReadableAccount, WritableAccount},
+    trezoa_fee::FeeFeatures,
+    trezoa_fee_structure::FeeBudgetLimits,
+    trezoa_pubkey::Pubkey,
+    trezoa_reward_info::RewardType,
+    trezoa_runtime_transaction::transaction_with_meta::TransactionWithMeta,
+    trezoa_svm::rent_calculator::{get_account_rent_state, transition_allowed},
+    trezoa_system_interface::program as system_program,
     std::{result::Result, sync::atomic::Ordering::Relaxed},
     thiserror::Error,
 };
@@ -68,7 +68,7 @@ impl Bank {
     ) -> u64 {
         let (_last_hash, last_lamports_per_signature) =
             self.last_blockhash_and_lamports_per_signature();
-        let fee_details = solana_fee::calculate_fee_details(
+        let fee_details = trezoa_fee::calculate_fee_details(
             transaction,
             last_lamports_per_signature == 0,
             self.fee_structure().lamports_per_signature,
@@ -101,9 +101,9 @@ impl Bank {
         // NOTE: burn percent is statically 50%, in case it needs to change in the future,
         // burn_percent can be bank property that being passed down from bank to bank, without
         // needing fee-rate-governor
-        static_assertions::const_assert!(solana_fee_calculator::DEFAULT_BURN_PERCENT <= 100);
+        static_assertions::const_assert!(trezoa_fee_calculator::DEFAULT_BURN_PERCENT <= 100);
 
-        solana_fee_calculator::DEFAULT_BURN_PERCENT as u64
+        trezoa_fee_calculator::DEFAULT_BURN_PERCENT as u64
     }
 
     /// Attempts to deposit the given `deposit` amount into the fee collector account.
@@ -184,10 +184,10 @@ pub mod tests {
     use {
         super::*,
         crate::genesis_utils::{create_genesis_config, create_genesis_config_with_leader},
-        solana_account::AccountSharedData,
-        solana_pubkey as pubkey,
-        solana_rent::Rent,
-        solana_signer::Signer,
+        trezoa_account::AccountSharedData,
+        trezoa_pubkey as pubkey,
+        trezoa_rent::Rent,
+        trezoa_signer::Signer,
         std::sync::RwLock,
     };
 

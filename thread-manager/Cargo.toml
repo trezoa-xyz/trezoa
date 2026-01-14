@@ -1,6 +1,6 @@
 [package]
-name = "agave-thread-manager"
-description = "Thread pool manager for agave"
+name = "trezoa-thread-manager"
+description = "Thread pool manager for trezoa"
 
 version = { workspace = true }
 authors = { workspace = true }
@@ -10,7 +10,7 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = []
 
 [dependencies]
@@ -20,7 +20,7 @@ log = { workspace = true }
 num_cpus = { workspace = true }
 rayon = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-solana-metrics = { workspace = true }
+trezoa-metrics = { workspace = true }
 thread-priority = { workspace = true }
 tokio = { workspace = true, features = ["time", "rt-multi-thread"] }
 
@@ -28,7 +28,7 @@ tokio = { workspace = true, features = ["time", "rt-multi-thread"] }
 affinity = "0.1.2"
 
 [dev-dependencies]
-agave-thread-manager = { path = ".", features = ["agave-unstable-api", "dev-context-only-utils"] }
+trezoa-thread-manager = { path = ".", features = ["trezoa-unstable-api", "dev-context-only-utils"] }
 axum = { workspace = true }
 env_logger = { workspace = true }
 hyper = { workspace = true, features = ["http1", "client", "stream", "tcp"] }

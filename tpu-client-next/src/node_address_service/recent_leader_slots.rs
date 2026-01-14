@@ -1,5 +1,5 @@
 //! This module provides [`RecentLeaderSlots`] to track recent leader slots.
-use {crate::node_address_service::SlotEvent, solana_clock::Slot, std::collections::VecDeque};
+use {crate::node_address_service::SlotEvent, trezoa_clock::Slot, std::collections::VecDeque};
 
 // 48 chosen because it's unlikely that 12 leaders in a row will miss their slots
 const MAX_SLOT_SKIP_DISTANCE: u64 = 48;
@@ -67,7 +67,7 @@ impl RecentLeaderSlots {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_clock::Slot};
+    use {super::*, trezoa_clock::Slot};
 
     impl From<Vec<Slot>> for RecentLeaderSlots {
         fn from(recent_slots: Vec<Slot>) -> Self {

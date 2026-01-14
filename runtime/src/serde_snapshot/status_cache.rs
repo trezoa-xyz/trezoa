@@ -8,10 +8,10 @@ use {
     crate::{bank::BankSlotDelta, snapshot_utils, status_cache::KeySlice},
     bincode::{self, Options as _},
     serde::{Deserialize, Serialize},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_instruction::error::InstructionError,
-    solana_transaction_error::TransactionError,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_instruction::error::InstructionError,
+    trezoa_transaction_error::TransactionError,
     std::{collections::HashMap, path::Path, sync::Arc},
 };
 
@@ -29,7 +29,7 @@ type SerdeStatus<T> = ahash::HashMap<Hash, (usize, Vec<(KeySlice, T)>)>;
 pub fn serialize_status_cache(
     slot_deltas: &[BankSlotDelta],
     status_cache_path: &Path,
-) -> agave_snapshots::Result<u64> {
+) -> trezoa_snapshots::Result<u64> {
     snapshot_utils::serialize_snapshot_data_file(status_cache_path, |stream| {
         let snapshot_slot_deltas = slot_deltas
             .iter()
@@ -69,7 +69,7 @@ pub fn serialize_status_cache(
 /// This fn deserializes the status cache from a snapshot.
 pub fn deserialize_status_cache(
     status_cache_path: &Path,
-) -> agave_snapshots::Result<Vec<BankSlotDelta>> {
+) -> trezoa_snapshots::Result<Vec<BankSlotDelta>> {
     snapshot_utils::deserialize_snapshot_data_file(status_cache_path, |stream| {
         let snapshot_slot_deltas: Vec<SerdeBankSlotDelta> = bincode::options()
             .with_limit(snapshot_utils::MAX_SNAPSHOT_DATA_FILE_SIZE)

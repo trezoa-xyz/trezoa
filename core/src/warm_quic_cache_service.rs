@@ -3,11 +3,11 @@
 
 use {
     rand::{rng, Rng},
-    solana_client::connection_cache::{ConnectionCache, Protocol},
-    solana_connection_cache::client_connection::ClientConnection as TpuConnection,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfoQuery},
-    solana_poh::poh_recorder::PohRecorder,
-    solana_pubkey::Pubkey,
+    trezoa_client::connection_cache::{ConnectionCache, Protocol},
+    trezoa_connection_cache::client_connection::ClientConnection as TpuConnection,
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfoQuery},
+    trezoa_poh::poh_recorder::PohRecorder,
+    trezoa_pubkey::Pubkey,
     std::{
         net::SocketAddr,
         sync::{

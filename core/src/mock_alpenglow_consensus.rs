@@ -4,15 +4,15 @@ use {
     bytemuck::{Pod, Zeroable},
     crossbeam_channel::{bounded, Receiver, Sender},
     serde::{de::DeserializeOwned, Deserialize, Serialize},
-    solana_clock::{Slot, DEFAULT_MS_PER_SLOT},
-    solana_gossip::{cluster_info::ClusterInfo, epoch_specs::EpochSpecs},
-    solana_keypair::Keypair,
-    solana_packet::{Meta, Packet},
-    solana_pubkey::{Pubkey, PUBKEY_BYTES},
-    solana_runtime::bank::Bank,
-    solana_signature::SIGNATURE_BYTES,
-    solana_signer::Signer,
-    solana_streamer::{recvmmsg::recv_mmsg, sendmmsg::batch_send},
+    trezoa_clock::{Slot, DEFAULT_MS_PER_SLOT},
+    trezoa_gossip::{cluster_info::ClusterInfo, epoch_specs::EpochSpecs},
+    trezoa_keypair::Keypair,
+    trezoa_packet::{Meta, Packet},
+    trezoa_pubkey::{Pubkey, PUBKEY_BYTES},
+    trezoa_runtime::bank::Bank,
+    trezoa_signature::SIGNATURE_BYTES,
+    trezoa_signer::Signer,
+    trezoa_streamer::{recvmmsg::recv_mmsg, sendmmsg::batch_send},
     std::{
         collections::HashMap,
         iter::once,
@@ -745,7 +745,7 @@ fn compute_stake_weighted_means(
 
 // Pubkey for the account that is used to control the test via on-chain state
 mod control_pubkey {
-    solana_pubkey::declare_id!("9PsiyXopc2M9DMEmsEeafNHHHAUmPKe9mHYgrk6fHPyx");
+    trezoa_pubkey::declare_id!("9PsiyXopc2M9DMEmsEeafNHHHAUmPKe9mHYgrk6fHPyx");
 }
 
 /// Actual on-chain state that controls the mock alpenglow test
@@ -778,11 +778,11 @@ mod tests {
             VotorMessageType, MOCK_VOTE_HEADER_SIZE, MOCK_VOTE_PACKET_SIZE, NUM_VOTOR_TYPES,
         },
         crossbeam_channel::bounded,
-        solana_clock::Slot,
-        solana_keypair::Keypair,
-        solana_net_utils::sockets::bind_to_localhost_unique,
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
+        trezoa_clock::Slot,
+        trezoa_keypair::Keypair,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
         std::{
             collections::HashMap,
             net::UdpSocket,
@@ -804,7 +804,7 @@ mod tests {
     fn test_mock_alpenglow_statemachine() {
         let test_timeout = Duration::from_secs(3);
         let max_slots = 5;
-        agave_logger::setup_with("trace");
+        trezoa_logger::setup_with("trace");
         let num_nodes = 10;
         let keypairs: Vec<Keypair> = (0..num_nodes).map(|_| Keypair::new()).collect();
         let peers: Vec<(Pubkey, UdpSocket)> = keypairs

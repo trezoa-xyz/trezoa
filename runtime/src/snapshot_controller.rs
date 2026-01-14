@@ -5,10 +5,10 @@ use {
         },
         bank::{Bank, SquashTiming},
     },
-    agave_snapshots::{snapshot_config::SnapshotConfig, SnapshotInterval},
+    trezoa_snapshots::{snapshot_config::SnapshotConfig, SnapshotInterval},
     log::*,
-    solana_clock::Slot,
-    solana_measure::measure::Measure,
+    trezoa_clock::Slot,
+    trezoa_measure::measure::Measure,
     std::{
         sync::{
             atomic::{AtomicBool, AtomicU64, Ordering},
@@ -164,8 +164,8 @@ impl SnapshotController {
 mod tests {
     use {
         super::*, crate::accounts_background_service::SnapshotRequestKind,
-        agave_snapshots::snapshot_config::SnapshotConfig, crossbeam_channel::unbounded,
-        solana_genesis_config::create_genesis_config, solana_pubkey::Pubkey, std::sync::Arc,
+        trezoa_snapshots::snapshot_config::SnapshotConfig, crossbeam_channel::unbounded,
+        trezoa_genesis_config::create_genesis_config, trezoa_pubkey::Pubkey, std::sync::Arc,
         test_case::test_case,
     };
 

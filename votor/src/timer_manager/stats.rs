@@ -1,5 +1,5 @@
 use {
-    solana_metrics::datapoint_info,
+    trezoa_metrics::datapoint_info,
     std::time::{Duration, Instant},
 };
 

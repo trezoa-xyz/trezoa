@@ -23,13 +23,13 @@ use {
     itertools::{Either, Itertools},
     rayon::{prelude::*, ThreadPool},
     reed_solomon_erasure::Error::{InvalidIndex, TooFewParityShards},
-    solana_clock::Slot,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_sha256_hasher::hashv,
-    solana_signature::Signature,
-    solana_signer::Signer,
+    trezoa_clock::Slot,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_sha256_hasher::hashv,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
     static_assertions::const_assert_eq,
     std::{
         cmp::Ordering,
@@ -519,7 +519,7 @@ impl<'a> ShredTrait<'a> for ShredData {
         Payload: From<T>,
     {
         let mut payload = Payload::from(payload);
-        // see: https://github.com/solana-labs/solana/pull/10109
+        // see: https://github.com/trezoa-labs/trezoa/pull/10109
         if payload.len() < Self::SIZE_OF_PAYLOAD {
             return Err(Error::InvalidPayloadSize(payload.len()));
         }
@@ -567,7 +567,7 @@ impl<'a> ShredTrait<'a> for ShredCode {
     type SignedData = Hash;
 
     impl_shred_common!();
-    const SIZE_OF_PAYLOAD: usize = solana_packet::PACKET_DATA_SIZE - SIZE_OF_NONCE;
+    const SIZE_OF_PAYLOAD: usize = trezoa_packet::PACKET_DATA_SIZE - SIZE_OF_NONCE;
     const SIZE_OF_HEADERS: usize = SIZE_OF_CODING_SHRED_HEADERS;
 
     fn from_payload<T>(payload: T) -> Result<Self, Error>
@@ -580,7 +580,7 @@ impl<'a> ShredTrait<'a> for ShredCode {
         if !matches!(common_header.shred_variant, ShredVariant::MerkleCode { .. }) {
             return Err(Error::InvalidShredVariant);
         }
-        // see: https://github.com/solana-labs/solana/pull/10109
+        // see: https://github.com/trezoa-labs/trezoa/pull/10109
         if payload.len() < Self::SIZE_OF_PAYLOAD {
             return Err(Error::InvalidPayloadSize(payload.len()));
         }
@@ -1344,9 +1344,9 @@ mod test {
         rand::{seq::SliceRandom, CryptoRng, Rng},
         rayon::ThreadPoolBuilder,
         reed_solomon_erasure::Error::TooFewShardsPresent,
-        solana_keypair::Keypair,
-        solana_packet::PACKET_DATA_SIZE,
-        solana_signer::Signer,
+        trezoa_keypair::Keypair,
+        trezoa_packet::PACKET_DATA_SIZE,
+        trezoa_signer::Signer,
         std::{cmp::Ordering, collections::HashMap, iter::repeat_with},
         test_case::{test_case, test_matrix},
     };

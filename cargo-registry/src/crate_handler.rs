@@ -1,5 +1,5 @@
 #[allow(deprecated)]
-use solana_cli::program_v4::{process_deploy_program_sync, process_dump_sync};
+use trezoa_cli::program_v4::{process_deploy_program_sync, process_dump_sync};
 use {
     crate::{
         client::Client,
@@ -14,10 +14,10 @@ use {
     serde::{Deserialize, Serialize},
     serde_json::from_slice,
     sha2::{Digest, Sha256},
-    solana_cli::program_v4::AdditionalCliConfig,
-    solana_keypair::Keypair,
-    solana_pubkey::Pubkey,
-    solana_signer::{EncodableKey, Signer},
+    trezoa_cli::program_v4::AdditionalCliConfig,
+    trezoa_keypair::Keypair,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::{EncodableKey, Signer},
     std::{
         collections::BTreeMap,
         fs,

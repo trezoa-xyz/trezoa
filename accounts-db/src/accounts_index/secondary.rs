@@ -1,8 +1,8 @@
 use {
     dashmap::{mapref::entry::Entry::Occupied, DashMap},
     log::*,
-    solana_pubkey::Pubkey,
-    solana_time_utils::AtomicInterval,
+    trezoa_pubkey::Pubkey,
+    trezoa_time_utils::AtomicInterval,
     std::{
         collections::HashSet,
         fmt::Debug,

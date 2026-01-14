@@ -9,7 +9,7 @@ use {
         },
         FileInfo,
     },
-    agave_io_uring::{Completion, FixedSlab, Ring, RingOp},
+    trezoa_io_uring::{Completion, FixedSlab, Ring, RingOp},
     core::slice,
     io_uring::{opcode, squeue, types, IoUring},
     libc::{O_CREAT, O_NOATIME, O_NOFOLLOW, O_RDWR, O_TRUNC},

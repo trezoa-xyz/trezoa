@@ -18,20 +18,20 @@ use {
         unfrozen_gossip_verified_vote_hashes::UnfrozenGossipVerifiedVoteHashes,
     },
     crossbeam_channel::unbounded,
-    solana_clock::Slot,
-    solana_epoch_schedule::EpochSchedule,
-    solana_hash::Hash,
-    solana_pubkey::Pubkey,
-    solana_runtime::{
+    trezoa_clock::Slot,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_hash::Hash,
+    trezoa_pubkey::Pubkey,
+    trezoa_runtime::{
         bank::Bank,
         bank_forks::BankForks,
         genesis_utils::{
             create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
         },
     },
-    solana_signer::Signer,
-    solana_vote::vote_transaction,
-    solana_vote_program::vote_state::{Lockout, TowerSync},
+    trezoa_signer::Signer,
+    trezoa_vote::vote_transaction,
+    trezoa_vote_program::vote_state::{Lockout, TowerSync},
     std::{
         collections::{HashMap, HashSet, VecDeque},
         sync::{Arc, RwLock},

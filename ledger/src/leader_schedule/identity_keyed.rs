@@ -1,8 +1,8 @@
 use {
     super::{stake_weighted_slot_leaders, LeaderScheduleVariant},
     itertools::Itertools,
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
     std::{collections::HashMap, ops::Index},
 };
 
@@ -72,8 +72,8 @@ mod tests {
 
     #[test]
     fn test_leader_schedule_index() {
-        let pubkey0 = solana_pubkey::new_rand();
-        let pubkey1 = solana_pubkey::new_rand();
+        let pubkey0 = trezoa_pubkey::new_rand();
+        let pubkey1 = trezoa_pubkey::new_rand();
         let leader_schedule = LeaderSchedule::new_from_schedule(vec![pubkey0, pubkey1]);
         assert_eq!(leader_schedule[0], pubkey0);
         assert_eq!(leader_schedule[1], pubkey1);
@@ -84,7 +84,7 @@ mod tests {
     fn test_leader_schedule_basic() {
         let num_keys = 10;
         let stakes: HashMap<_, _> = (0..num_keys)
-            .map(|i| (solana_pubkey::new_rand(), i))
+            .map(|i| (trezoa_pubkey::new_rand(), i))
             .collect();
 
         let epoch: Epoch = rand::random();
@@ -100,7 +100,7 @@ mod tests {
     fn test_repeated_leader_schedule() {
         let num_keys = 10;
         let stakes: HashMap<_, _> = (0..num_keys)
-            .map(|i| (solana_pubkey::new_rand(), i))
+            .map(|i| (trezoa_pubkey::new_rand(), i))
             .collect();
 
         let epoch = rand::random::<Epoch>();
@@ -120,8 +120,8 @@ mod tests {
 
     #[test]
     fn test_repeated_leader_schedule_specific() {
-        let alice_pubkey = solana_pubkey::new_rand();
-        let bob_pubkey = solana_pubkey::new_rand();
+        let alice_pubkey = trezoa_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let stakes: HashMap<_, _> = [(alice_pubkey, 2), (bob_pubkey, 1)].into_iter().collect();
 
         let epoch = 0;
@@ -164,10 +164,10 @@ mod tests {
 
     #[test]
     fn test_invert_slot_leaders() {
-        let alice_pubkey = solana_pubkey::new_rand();
-        let bob_pubkey = solana_pubkey::new_rand();
-        let victor_pubkey = solana_pubkey::new_rand();
-        let peggy_pubkey = solana_pubkey::new_rand();
+        let alice_pubkey = trezoa_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
+        let victor_pubkey = trezoa_pubkey::new_rand();
+        let peggy_pubkey = trezoa_pubkey::new_rand();
 
         let leaders = &[
             alice_pubkey,

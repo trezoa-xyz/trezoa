@@ -1,13 +1,13 @@
-//! The `rpc` module implements the Solana RPC interface.
+//! The `rpc` module implements the Trezoa RPC interface.
 #[cfg(feature = "dev-context-only-utils")]
-use solana_runtime::installed_scheduler_pool::BankWithScheduler;
+use trezoa_runtime::installed_scheduler_pool::BankWithScheduler;
 use {
     crate::{
         filter::filter_allows, max_slots::MaxSlots,
         optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
         parsed_token_accounts::*, rpc_cache::LargestAccountsCache, rpc_health::*,
     },
-    agave_snapshots::{paths as snapshot_paths, snapshot_config::SnapshotConfig},
+    trezoa_snapshots::{paths as snapshot_paths, snapshot_config::SnapshotConfig},
     base64::{prelude::BASE64_STANDARD, Engine},
     bincode::{config::Options, serialize},
     crossbeam_channel::{unbounded, Receiver, Sender},
@@ -17,41 +17,41 @@ use {
         BoxFuture, Error, Metadata, Result,
     },
     jsonrpc_derive::rpc,
-    solana_account::{AccountSharedData, ReadableAccount},
-    solana_account_decoder::{
+    trezoa_account::{AccountSharedData, ReadableAccount},
+    trezoa_account_decoder::{
         encode_ui_account,
         parse_account_data::SplTokenAdditionalDataV2,
-        parse_token::{is_known_spl_token_id, token_amount_to_ui_amount_v3, UiTokenAmount},
+        parse_token::{is_known_tpl_token_id, token_amount_to_ui_amount_v3, UiTokenAmount},
         UiAccount, UiAccountEncoding, UiDataSliceConfig, MAX_BASE58_BYTES,
     },
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts::AccountAddressFilter,
         accounts_index::{
             AccountIndex, AccountSecondaryIndexes, IndexKey, ScanConfig, ScanOrder, ScanResult,
         },
     },
-    solana_client::connection_cache::Protocol,
-    solana_clock::{Slot, UnixTimestamp, MAX_PROCESSING_AGE},
-    solana_commitment_config::{CommitmentConfig, CommitmentLevel},
-    solana_entry::entry::Entry,
-    solana_epoch_info::EpochInfo,
-    solana_epoch_rewards_hasher::EpochRewardsHasher,
-    solana_epoch_schedule::EpochSchedule,
-    solana_faucet::faucet::request_airdrop_transaction,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::{
+    trezoa_client::connection_cache::Protocol,
+    trezoa_clock::{Slot, UnixTimestamp, MAX_PROCESSING_AGE},
+    trezoa_commitment_config::{CommitmentConfig, CommitmentLevel},
+    trezoa_entry::entry::Entry,
+    trezoa_epoch_info::EpochInfo,
+    trezoa_epoch_rewards_hasher::EpochRewardsHasher,
+    trezoa_epoch_schedule::EpochSchedule,
+    trezoa_faucet::faucet::request_airdrop_transaction,
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::{
         blockstore::{Blockstore, BlockstoreError, SignatureInfosForAddress},
         blockstore_meta::{PerfSample, PerfSampleV1, PerfSampleV2},
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_message::{AddressLoader, SanitizedMessage},
-    solana_metrics::inc_new_counter_info,
-    solana_perf::packet::PACKET_DATA_SIZE,
-    solana_program_pack::Pack,
-    solana_pubkey::{Pubkey, PUBKEY_BYTES},
-    solana_rpc_client_api::{
+    trezoa_message::{AddressLoader, SanitizedMessage},
+    trezoa_metrics::inc_new_counter_info,
+    trezoa_perf::packet::PACKET_DATA_SIZE,
+    trezoa_program_pack::Pack,
+    trezoa_pubkey::{Pubkey, PUBKEY_BYTES},
+    trezoa_rpc_client_api::{
         config::*,
         custom_error::RpcCustomError,
         filter::{Memcmp, RpcFilterType},
@@ -64,7 +64,7 @@ use {
         },
         response::{Response as RpcResponse, *},
     },
-    solana_runtime::{
+    trezoa_runtime::{
         bank::{Bank, TransactionSimulationResult},
         bank_forks::BankForks,
         commitment::{BlockCommitmentArray, BlockCommitmentCache},
@@ -72,31 +72,31 @@ use {
         prioritization_fee_cache::PrioritizationFeeCache,
         stake_utils,
     },
-    solana_runtime_transaction::runtime_transaction::RuntimeTransaction,
-    solana_send_transaction_service::send_transaction_service::TransactionInfo,
-    solana_signature::Signature,
-    solana_signer::Signer,
-    solana_storage_bigtable::Error as StorageError,
-    solana_transaction::{
+    trezoa_runtime_transaction::runtime_transaction::RuntimeTransaction,
+    trezoa_send_transaction_service::send_transaction_service::TransactionInfo,
+    trezoa_signature::Signature,
+    trezoa_signer::Signer,
+    trezoa_storage_bigtable::Error as StorageError,
+    trezoa_transaction::{
         sanitized::{MessageHash, SanitizedTransaction, MAX_TX_ACCOUNT_LOCKS},
         versioned::VersionedTransaction,
     },
-    solana_transaction_context::transaction_accounts::KeyedAccountSharedData,
-    solana_transaction_error::TransactionError,
-    solana_transaction_status::{
+    trezoa_transaction_context::transaction_accounts::KeyedAccountSharedData,
+    trezoa_transaction_error::TransactionError,
+    trezoa_transaction_status::{
         map_inner_instructions, BlockEncodingOptions, ConfirmedBlock,
         ConfirmedTransactionStatusWithSignature, ConfirmedTransactionWithStatusMeta,
         EncodedConfirmedTransactionWithStatusMeta, Reward, RewardType, Rewards,
         TransactionBinaryEncoding, TransactionConfirmationStatus, TransactionStatus,
         UiConfirmedBlock, UiTransactionEncoding,
     },
-    solana_validator_exit::Exit,
-    solana_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
+    trezoa_validator_exit::Exit,
+    trezoa_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
     spl_generic_token::{
         token::{SPL_TOKEN_ACCOUNT_MINT_OFFSET, SPL_TOKEN_ACCOUNT_OWNER_OFFSET},
         token_2022::{self, ACCOUNTTYPE_ACCOUNT},
     },
-    spl_token_2022_interface::{
+    tpl_token_2022_interface::{
         extension::{
             interest_bearing_mint::InterestBearingConfig, scaled_ui_amount::ScaledUiAmountConfig,
             BaseStateWithExtensions, StateWithExtensions,
@@ -120,18 +120,18 @@ use {
 };
 #[cfg(test)]
 use {
-    solana_gossip::contact_info::ContactInfo,
-    solana_ledger::get_tmp_ledger_path,
-    solana_net_utils::SocketAddrSpace,
-    solana_runtime::commitment::CommitmentSlots,
-    solana_send_transaction_service::{
+    trezoa_gossip::contact_info::ContactInfo,
+    trezoa_ledger::get_tmp_ledger_path,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_runtime::commitment::CommitmentSlots,
+    trezoa_send_transaction_service::{
         send_transaction_service::Config as SendTransactionServiceConfig,
         send_transaction_service::SendTransactionService, test_utils::ClientWithCreator,
     },
 };
 
 mod transaction {
-    pub use solana_transaction_error::TransactionResult as Result;
+    pub use trezoa_transaction_error::TransactionResult as Result;
 }
 
 pub mod account_resolver;
@@ -221,14 +221,14 @@ pub struct RpcBigtableConfig {
 
 impl Default for RpcBigtableConfig {
     fn default() -> Self {
-        let bigtable_instance_name = solana_storage_bigtable::DEFAULT_INSTANCE_NAME.to_string();
-        let bigtable_app_profile_id = solana_storage_bigtable::DEFAULT_APP_PROFILE_ID.to_string();
+        let bigtable_instance_name = trezoa_storage_bigtable::DEFAULT_INSTANCE_NAME.to_string();
+        let bigtable_app_profile_id = trezoa_storage_bigtable::DEFAULT_APP_PROFILE_ID.to_string();
         Self {
             enable_bigtable_ledger_upload: false,
             bigtable_instance_name,
             bigtable_app_profile_id,
             timeout: None,
-            max_message_size: solana_storage_bigtable::DEFAULT_MAX_MESSAGE_SIZE,
+            max_message_size: trezoa_storage_bigtable::DEFAULT_MAX_MESSAGE_SIZE,
         }
     }
 }
@@ -246,7 +246,7 @@ pub struct JsonRpcRequestProcessor {
     cluster_info: Arc<ClusterInfo>,
     genesis_hash: Hash,
     transaction_sender: Sender<TransactionInfo>,
-    bigtable_ledger_storage: Option<solana_storage_bigtable::LedgerStorage>,
+    bigtable_ledger_storage: Option<trezoa_storage_bigtable::LedgerStorage>,
     optimistically_confirmed_bank: Arc<RwLock<OptimisticallyConfirmedBank>>,
     largest_accounts_cache: Arc<RwLock<LargestAccountsCache>>,
     max_slots: Arc<MaxSlots>,
@@ -385,7 +385,7 @@ impl JsonRpcRequestProcessor {
             // BlockCommitmentCache should hold an `Arc<Bank>` everywhere it currently holds
             // a slot.
             //
-            // For more information, see https://github.com/solana-labs/solana/issues/11078
+            // For more information, see https://github.com/trezoa-labs/trezoa/issues/11078
             warn!(
                 "Bank with {:?} not found at slot: {:?}",
                 commitment.commitment, slot
@@ -409,7 +409,7 @@ impl JsonRpcRequestProcessor {
         health: Arc<RpcHealth>,
         cluster_info: Arc<ClusterInfo>,
         genesis_hash: Hash,
-        bigtable_ledger_storage: Option<solana_storage_bigtable::LedgerStorage>,
+        bigtable_ledger_storage: Option<trezoa_storage_bigtable::LedgerStorage>,
         optimistically_confirmed_bank: Arc<RwLock<OptimisticallyConfirmedBank>>,
         largest_accounts_cache: Arc<RwLock<LargestAccountsCache>>,
         max_slots: Arc<MaxSlots>,
@@ -460,7 +460,7 @@ impl JsonRpcRequestProcessor {
             let keypair = Arc::new(Keypair::new());
             let contact_info = ContactInfo::new_localhost(
                 &keypair.pubkey(),
-                solana_time_utils::timestamp(), // wallclock
+                trezoa_time_utils::timestamp(), // wallclock
             );
             ClusterInfo::new(contact_info, keypair, socket_addr_space)
         });
@@ -615,8 +615,8 @@ impl JsonRpcRequestProcessor {
         let encoding = encoding.unwrap_or(UiAccountEncoding::Binary);
         optimize_filters(&mut filters);
         let keyed_accounts = {
-            if let Some(owner) = get_spl_token_owner_filter(&program_id, &filters)? {
-                self.get_filtered_spl_token_accounts_by_owner(
+            if let Some(owner) = get_tpl_token_owner_filter(&program_id, &filters)? {
+                self.get_filtered_tpl_token_accounts_by_owner(
                     Arc::clone(&bank),
                     program_id,
                     owner,
@@ -624,8 +624,8 @@ impl JsonRpcRequestProcessor {
                     sort_results,
                 )
                 .await?
-            } else if let Some(mint) = get_spl_token_mint_filter(&program_id, &filters)? {
-                self.get_filtered_spl_token_accounts_by_mint(
+            } else if let Some(mint) = get_tpl_token_mint_filter(&program_id, &filters)? {
+                self.get_filtered_tpl_token_accounts_by_mint(
                     Arc::clone(&bank),
                     program_id,
                     mint,
@@ -643,7 +643,7 @@ impl JsonRpcRequestProcessor {
                 .await?
             }
         };
-        let accounts = if is_known_spl_token_id(&program_id)
+        let accounts = if is_known_tpl_token_id(&program_id)
             && encoding == UiAccountEncoding::JsonParsed
         {
             get_parsed_token_accounts(Arc::clone(&bank), keyed_accounts.into_iter()).collect()
@@ -1260,9 +1260,9 @@ impl JsonRpcRequestProcessor {
 
     fn check_bigtable_result<T>(
         &self,
-        result: &std::result::Result<T, solana_storage_bigtable::Error>,
+        result: &std::result::Result<T, trezoa_storage_bigtable::Error>,
     ) -> Result<()> {
-        if let Err(solana_storage_bigtable::Error::BlockNotFound(slot)) = result {
+        if let Err(trezoa_storage_bigtable::Error::BlockNotFound(slot)) = result {
             return Err(RpcCustomError::LongTermStorageSlotSkipped { slot: *slot }.into());
         }
         Ok(())
@@ -1964,7 +1964,7 @@ impl JsonRpcRequestProcessor {
             Error::invalid_params("Invalid param: could not find account".to_string())
         })?;
 
-        if !is_known_spl_token_id(account.owner()) {
+        if !is_known_tpl_token_id(account.owner()) {
             return Err(Error::invalid_params(
                 "Invalid param: not a Token account".to_string(),
             ));
@@ -1987,7 +1987,7 @@ impl JsonRpcRequestProcessor {
         let mint_account = bank.get_account(mint).ok_or_else(|| {
             Error::invalid_params("Invalid param: could not find account".to_string())
         })?;
-        if !is_known_spl_token_id(mint_account.owner()) {
+        if !is_known_tpl_token_id(mint_account.owner()) {
             return Err(Error::invalid_params(
                 "Invalid param: not a Token mint".to_string(),
             ));
@@ -2024,7 +2024,7 @@ impl JsonRpcRequestProcessor {
     ) -> Result<RpcResponse<Vec<RpcTokenAccountBalance>>> {
         let bank = self.bank(commitment);
         let (mint_owner, data) = get_mint_owner_and_additional_data(&bank, &mint)?;
-        if !is_known_spl_token_id(&mint_owner) {
+        if !is_known_tpl_token_id(&mint_owner) {
             return Err(Error::invalid_params(
                 "Invalid param: not a Token mint".to_string(),
             ));
@@ -2033,7 +2033,7 @@ impl JsonRpcRequestProcessor {
         let mut token_balances =
             BinaryHeap::<Reverse<(u64, Pubkey)>>::with_capacity(NUM_LARGEST_ACCOUNTS);
         for (address, account) in self
-            .get_filtered_spl_token_accounts_by_mint(
+            .get_filtered_tpl_token_accounts_by_mint(
                 Arc::clone(&bank),
                 mint_owner,
                 mint,
@@ -2103,7 +2103,7 @@ impl JsonRpcRequestProcessor {
         }
 
         let keyed_accounts = self
-            .get_filtered_spl_token_accounts_by_owner(
+            .get_filtered_tpl_token_accounts_by_owner(
                 Arc::clone(&bank),
                 token_program_id,
                 owner,
@@ -2158,7 +2158,7 @@ impl JsonRpcRequestProcessor {
         ];
         // Optional filter on Mint address, uses mint account index for scan
         let keyed_accounts = if let Some(mint) = mint {
-            self.get_filtered_spl_token_accounts_by_mint(
+            self.get_filtered_tpl_token_accounts_by_mint(
                 Arc::clone(&bank),
                 token_program_id,
                 mint,
@@ -2250,8 +2250,8 @@ impl JsonRpcRequestProcessor {
         }
     }
 
-    /// Get an iterator of spl-token accounts by owner address
-    async fn get_filtered_spl_token_accounts_by_owner(
+    /// Get an iterator of tpl-token accounts by owner address
+    async fn get_filtered_tpl_token_accounts_by_owner(
         &self,
         bank: Arc<Bank>,
         program_id: Pubkey,
@@ -2299,8 +2299,8 @@ impl JsonRpcRequestProcessor {
         }
     }
 
-    /// Get an iterator of spl-token accounts by mint address
-    async fn get_filtered_spl_token_accounts_by_mint(
+    /// Get an iterator of tpl-token accounts by mint address
+    async fn get_filtered_tpl_token_accounts_by_mint(
         &self,
         bank: Arc<Bank>,
         program_id: Pubkey,
@@ -2376,7 +2376,7 @@ impl JsonRpcRequestProcessor {
         let bank = self.get_bank_with_config(config)?;
         let stake_minimum_delegation = stake_utils::get_minimum_delegation(
             bank.feature_set
-                .is_active(&agave_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
+                .is_active(&trezoa_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
         );
         Ok(new_response(&bank, stake_minimum_delegation))
     }
@@ -2503,7 +2503,7 @@ fn get_encoded_account(
 ) -> Result<Option<UiAccount>> {
     match account_resolver::get_account_from_overwrites_or_bank(pubkey, bank, overwrite_accounts) {
         Some(account) => {
-            let response = if is_known_spl_token_id(account.owner())
+            let response = if is_known_tpl_token_id(account.owner())
                 && encoding == UiAccountEncoding::JsonParsed
             {
                 get_parsed_token_account(bank, pubkey, account, overwrite_accounts)
@@ -2544,15 +2544,15 @@ fn encode_account<T: ReadableAccount>(
     }
 }
 
-/// Analyze custom filters to determine if the result will be a subset of spl-token accounts by
+/// Analyze custom filters to determine if the result will be a subset of tpl-token accounts by
 /// owner.
 /// NOTE: `optimize_filters()` should almost always be called before using this method because of
 /// the requirement that `Memcmp::raw_bytes_as_ref().is_some()`.
-fn get_spl_token_owner_filter(
+fn get_tpl_token_owner_filter(
     program_id: &Pubkey,
     filters: &[RpcFilterType],
 ) -> Result<Option<Pubkey>> {
-    if !is_known_spl_token_id(program_id) {
+    if !is_known_tpl_token_id(program_id) {
         return Ok(None);
     }
     let mut data_size_filter: Option<u64> = None;
@@ -2590,20 +2590,20 @@ fn get_spl_token_owner_filter(
     {
         Ok(owner_key)
     } else {
-        debug!("spl_token program filters do not match by-owner index requisites");
+        debug!("tpl_token program filters do not match by-owner index requisites");
         Ok(None)
     }
 }
 
-/// Analyze custom filters to determine if the result will be a subset of spl-token accounts by
+/// Analyze custom filters to determine if the result will be a subset of tpl-token accounts by
 /// mint.
 /// NOTE: `optimize_filters()` should almost always be called before using this method because of
 /// the requirement that `Memcmp::raw_bytes_as_ref().is_some()`.
-fn get_spl_token_mint_filter(
+fn get_tpl_token_mint_filter(
     program_id: &Pubkey,
     filters: &[RpcFilterType],
 ) -> Result<Option<Pubkey>> {
-    if !is_known_spl_token_id(program_id) {
+    if !is_known_tpl_token_id(program_id) {
         return Ok(None);
     }
     let mut data_size_filter: Option<u64> = None;
@@ -2641,7 +2641,7 @@ fn get_spl_token_mint_filter(
     {
         Ok(mint)
     } else {
-        debug!("spl_token program filters do not match by-mint index requisites");
+        debug!("tpl_token program filters do not match by-mint index requisites");
         Ok(None)
     }
 }
@@ -2655,7 +2655,7 @@ fn get_token_program_id_and_mint(
     match token_account_filter {
         TokenAccountsFilter::Mint(mint) => {
             let (mint_owner, _) = get_mint_owner_and_additional_data(bank, &mint)?;
-            if !is_known_spl_token_id(&mint_owner) {
+            if !is_known_tpl_token_id(&mint_owner) {
                 return Err(Error::invalid_params(
                     "Invalid param: not a Token mint".to_string(),
                 ));
@@ -2663,7 +2663,7 @@ fn get_token_program_id_and_mint(
             Ok((mint_owner, Some(mint)))
         }
         TokenAccountsFilter::ProgramId(program_id) => {
-            if is_known_spl_token_id(&program_id) {
+            if is_known_tpl_token_id(&program_id) {
                 Ok((program_id, None))
             } else {
                 Err(Error::invalid_params(
@@ -2755,7 +2755,7 @@ pub mod rpc_minimal {
         #[rpc(meta, name = "getVersion")]
         fn get_version(&self, meta: Self::Metadata) -> Result<RpcVersionInfo>;
 
-        // TODO: Refactor `agave-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `trezoa-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         #[rpc(meta, name = "getVoteAccounts")]
         fn get_vote_accounts(
@@ -2764,7 +2764,7 @@ pub mod rpc_minimal {
             config: Option<RpcGetVoteAccountsConfig>,
         ) -> Result<RpcVoteAccountStatus>;
 
-        // TODO: Refactor `agave-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `trezoa-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         #[rpc(meta, name = "getLeaderSchedule")]
         fn get_leader_schedule(
@@ -2883,14 +2883,14 @@ pub mod rpc_minimal {
 
         fn get_version(&self, _: Self::Metadata) -> Result<RpcVersionInfo> {
             debug!("get_version rpc request received");
-            let version = solana_version::Version::default();
+            let version = trezoa_version::Version::default();
             Ok(RpcVersionInfo {
-                solana_core: version.to_string(),
+                trezoa_core: version.to_string(),
                 feature_set: Some(version.feature_set),
             })
         }
 
-        // TODO: Refactor `agave-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `trezoa-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         fn get_vote_accounts(
             &self,
@@ -2901,7 +2901,7 @@ pub mod rpc_minimal {
             meta.get_vote_accounts(config)
         }
 
-        // TODO: Refactor `agave-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `trezoa-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         fn get_leader_schedule(
             &self,
@@ -2927,7 +2927,7 @@ pub mod rpc_minimal {
                 .get_epoch_leader_schedule(epoch)
                 .map(|leader_schedule| {
                     let mut schedule_by_identity =
-                        solana_ledger::leader_schedule_utils::leader_schedule_by_identity(
+                        trezoa_ledger::leader_schedule_utils::leader_schedule_by_identity(
                             leader_schedule.get_slot_leaders().iter().enumerate(),
                         );
                     if let Some(identity) = config.identity {
@@ -3002,7 +3002,7 @@ pub mod rpc_bank {
             commitment: Option<CommitmentConfig>,
         ) -> Result<u64> {
             debug!("get_minimum_balance_for_rent_exemption rpc request received: {data_len:?}");
-            if data_len as u64 > solana_system_interface::MAX_PERMITTED_DATA_LENGTH {
+            if data_len as u64 > trezoa_system_interface::MAX_PERMITTED_DATA_LENGTH {
                 return Err(Error::invalid_request());
             }
             Ok(meta.get_minimum_balance_for_rent_exemption(data_len, commitment))
@@ -3124,7 +3124,7 @@ pub mod rpc_bank {
                 }
 
                 let entry = block_production.entry(identity).or_default();
-                if slot_history.check(slot) == solana_slot_history::Check::Found {
+                if slot_history.check(slot) == trezoa_slot_history::Check::Found {
                     entry.1 += 1; // Increment blocks_produced
                 }
                 entry.0 += 1; // Increment leader_slots
@@ -3179,8 +3179,8 @@ pub mod rpc_accounts {
             block: Slot,
         ) -> Result<RpcBlockCommitment<BlockCommitmentArray>>;
 
-        // SPL Token-specific RPC endpoints
-        // See https://github.com/solana-labs/solana-program-library/releases/tag/token-v2.0.0 for
+        // TRZ Token-specific RPC endpoints
+        // See https://github.com/trezoa-labs/trezoa-program-library/releases/tag/token-v2.0.0 for
         // program details
 
         #[rpc(meta, name = "getTokenAccountBalance")]
@@ -3311,8 +3311,8 @@ pub mod rpc_accounts_scan {
             config: Option<RpcSupplyConfig>,
         ) -> BoxFuture<Result<RpcResponse<RpcSupply>>>;
 
-        // SPL Token-specific RPC endpoints
-        // See https://github.com/solana-labs/solana-program-library/releases/tag/token-v2.0.0 for
+        // TRZ Token-specific RPC endpoints
+        // See https://github.com/trezoa-labs/trezoa-program-library/releases/tag/token-v2.0.0 for
         // program details
 
         #[rpc(meta, name = "getTokenLargestAccounts")]
@@ -3445,8 +3445,8 @@ pub mod rpc_accounts_scan {
 pub mod rpc_full {
     use {
         super::*,
-        solana_message::{SanitizedVersionedMessage, VersionedMessage},
-        solana_transaction_status::{parse_ui_inner_instructions, UiLoadedAddresses},
+        trezoa_message::{SanitizedVersionedMessage, VersionedMessage},
+        trezoa_transaction_status::{parse_ui_inner_instructions, UiLoadedAddresses},
     };
     #[rpc]
     pub trait Full {
@@ -3834,7 +3834,7 @@ pub mod rpc_full {
                 preflight_bank.get_reserved_account_keys(),
                 preflight_bank
                     .feature_set
-                    .is_active(&agave_feature_set::static_instruction_limit::id()),
+                    .is_active(&trezoa_feature_set::static_instruction_limit::id()),
             )?;
             let blockhash = *transaction.message().recent_blockhash();
             let message_hash = *transaction.message_hash();
@@ -3996,7 +3996,7 @@ pub mod rpc_full {
                 bank,
                 bank.get_reserved_account_keys(),
                 bank.feature_set
-                    .is_active(&agave_feature_set::static_instruction_limit::id()),
+                    .is_active(&trezoa_feature_set::static_instruction_limit::id()),
             )?;
 
             let verification_error = if sig_verify {
@@ -4096,10 +4096,10 @@ pub mod rpc_full {
                     pre_balances,
                     post_balances,
                     pre_token_balances: pre_token_balances.map(|balances| {
-                        balances.into_iter().map(|balance| solana_ledger::transaction_balances::svm_token_info_to_token_balance(balance).into()).collect()
+                        balances.into_iter().map(|balance| trezoa_ledger::transaction_balances::svm_token_info_to_token_balance(balance).into()).collect()
                     }),
                     post_token_balances: post_token_balances.map(|balances| {
-                        balances.into_iter().map(|balance| solana_ledger::transaction_balances::svm_token_info_to_token_balance(balance).into()).collect()
+                        balances.into_iter().map(|balance| trezoa_ledger::transaction_balances::svm_token_info_to_token_balance(balance).into()).collect()
                     }),
                     loaded_addresses: Some(UiLoadedAddresses::from(&transaction.get_loaded_addresses())),
                 },
@@ -4441,23 +4441,23 @@ pub fn create_test_transaction_entries(
     let mut signatures = Vec::new();
     // Generate transactions for processing
     // Successful transaction
-    let success_tx = solana_system_transaction::transfer(
+    let success_tx = trezoa_system_transaction::transfer(
         mint_keypair,
         &keypair1.pubkey(),
         rent_exempt_amount,
         blockhash,
     );
     signatures.push(success_tx.signatures[0]);
-    let entry_1 = solana_entry::entry::next_entry(&blockhash, 1, vec![success_tx]);
+    let entry_1 = trezoa_entry::entry::next_entry(&blockhash, 1, vec![success_tx]);
     // Failed transaction, InstructionError
-    let ix_error_tx = solana_system_transaction::transfer(
+    let ix_error_tx = trezoa_system_transaction::transfer(
         keypair2,
         &keypair3.pubkey(),
         2 * rent_exempt_amount,
         blockhash,
     );
     signatures.push(ix_error_tx.signatures[0]);
-    let entry_2 = solana_entry::entry::next_entry(&entry_1.hash, 1, vec![ix_error_tx]);
+    let entry_2 = trezoa_entry::entry::next_entry(&entry_1.hash, 1, vec![ix_error_tx]);
     (vec![entry_1, entry_2], signatures)
 }
 
@@ -4471,7 +4471,7 @@ pub fn populate_blockstore_for_tests(
     let slot = bank.slot();
     let parent_slot = bank.parent_slot();
     let shreds =
-        solana_ledger::blockstore::entries_to_test_shreds(&entries, slot, parent_slot, true, 0);
+        trezoa_ledger::blockstore::entries_to_test_shreds(&entries, slot, parent_slot, true, 0);
     blockstore.insert_shreds(shreds, None, false).unwrap();
     blockstore.set_roots(std::iter::once(&slot)).unwrap();
 
@@ -4493,11 +4493,11 @@ pub fn populate_blockstore_for_tests(
     // Check that process_entries successfully writes can_commit transactions statuses, and
     // that they are matched properly by get_rooted_block
     assert_eq!(
-        solana_ledger::blockstore_processor::process_entries_for_tests(
+        trezoa_ledger::blockstore_processor::process_entries_for_tests(
             &BankWithScheduler::new_without_scheduler(bank),
             entries,
             Some(
-                &solana_ledger::blockstore_processor::TransactionStatusSender {
+                &trezoa_ledger::blockstore_processor::TransactionStatusSender {
                     sender: transaction_status_sender,
                     dependency_tracker: None,
                 },
@@ -4523,41 +4523,41 @@ pub mod tests {
             rpc_service::service_runtime,
             rpc_subscriptions::RpcSubscriptions,
         },
-        agave_reserved_account_keys::ReservedAccountKeys,
+        trezoa_reserved_account_keys::ReservedAccountKeys,
         bincode::deserialize,
         jsonrpc_core::{futures, ErrorCode, MetaIoHandler, Output, Response, Value},
         jsonrpc_core_client::transports::local,
         serde::de::DeserializeOwned,
-        solana_account::{state_traits::StateMut, Account},
-        solana_accounts_db::accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
-        solana_address_lookup_table_interface::{
+        trezoa_account::{state_traits::StateMut, Account},
+        trezoa_accounts_db::accounts_db::{AccountsDbConfig, ACCOUNTS_DB_CONFIG_FOR_TESTING},
+        trezoa_address_lookup_table_interface::{
             self as address_lookup_table,
             state::{AddressLookupTable, LookupTableMeta},
         },
-        solana_compute_budget_interface::ComputeBudgetInstruction,
-        solana_entry::entry::next_versioned_entry,
-        solana_fee_calculator::FeeRateGovernor,
-        solana_gossip::{contact_info::ContactInfo, socketaddr},
-        solana_instruction::{error::InstructionError, AccountMeta, Instruction},
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_compute_budget_interface::ComputeBudgetInstruction,
+        trezoa_entry::entry::next_versioned_entry,
+        trezoa_fee_calculator::FeeRateGovernor,
+        trezoa_gossip::{contact_info::ContactInfo, socketaddr},
+        trezoa_instruction::{error::InstructionError, AccountMeta, Instruction},
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore_meta::PerfSampleV2,
             blockstore_processor::fill_blockstore_slot_with_ticks,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path,
         },
-        solana_message::{
+        trezoa_message::{
             v0::{self, MessageAddressTableLookup},
             Message, MessageHeader, SimpleAddressLoader, VersionedMessage,
         },
-        solana_nonce::{self as nonce, state::DurableNonce},
-        solana_program_option::COption,
-        solana_program_runtime::{
+        trezoa_nonce::{self as nonce, state::DurableNonce},
+        trezoa_program_option::COption,
+        trezoa_program_runtime::{
             invoke_context::InvokeContext,
             loaded_programs::ProgramCacheEntry,
-            solana_sbpf::{declare_builtin_function, memory_region::MemoryMapping},
+            trezoa_sbpf::{declare_builtin_function, memory_region::MemoryMapping},
         },
-        solana_rpc_client_api::{
+        trezoa_rpc_client_api::{
             custom_error::{
                 JSON_RPC_SERVER_ERROR_BLOCK_NOT_AVAILABLE,
                 JSON_RPC_SERVER_ERROR_TRANSACTION_HISTORY_NOT_AVAILABLE,
@@ -4565,36 +4565,36 @@ pub mod tests {
             },
             filter::MemcmpEncodedBytes,
         },
-        solana_runtime::{
+        trezoa_runtime::{
             bank::BankTestConfig,
             commitment::{BlockCommitment, CommitmentSlots},
             non_circulating_supply::non_circulating_accounts,
         },
-        solana_sdk_ids::bpf_loader_upgradeable,
-        solana_send_transaction_service::{
+        trezoa_sdk_ids::bpf_loader_upgradeable,
+        trezoa_send_transaction_service::{
             test_utils::CreateClient, transaction_client::TpuClientNextClient,
         },
-        solana_sha256_hasher::hash,
-        solana_signer::Signer,
-        solana_svm::account_loader::TRANSACTION_ACCOUNT_BASE_SIZE,
-        solana_svm_log_collector::ic_logger_msg,
-        solana_system_interface::{instruction as system_instruction, program as system_program},
-        solana_system_transaction as system_transaction,
-        solana_sysvar::slot_hashes::SlotHashes,
-        solana_time_utils::slot_duration_from_slots_per_year,
-        solana_transaction::{versioned::TransactionVersion, Transaction},
-        solana_transaction_error::TransactionError,
-        solana_transaction_status::{
+        trezoa_sha256_hasher::hash,
+        trezoa_signer::Signer,
+        trezoa_svm::account_loader::TRANSACTION_ACCOUNT_BASE_SIZE,
+        trezoa_svm_log_collector::ic_logger_msg,
+        trezoa_system_interface::{instruction as system_instruction, program as system_program},
+        trezoa_system_transaction as system_transaction,
+        trezoa_sysvar::slot_hashes::SlotHashes,
+        trezoa_time_utils::slot_duration_from_slots_per_year,
+        trezoa_transaction::{versioned::TransactionVersion, Transaction},
+        trezoa_transaction_error::TransactionError,
+        trezoa_transaction_status::{
             EncodedConfirmedBlock, EncodedTransaction, EncodedTransactionWithStatusMeta,
             TransactionDetails,
         },
-        solana_vote_interface::state::VoteStateV4,
-        solana_vote_program::{
+        trezoa_vote_interface::state::VoteStateV4,
+        trezoa_vote_program::{
             vote_instruction,
             vote_state::{TowerSync, VoteInit, VoteStateVersions, MAX_LOCKOUT_HISTORY},
         },
         spl_pod::optional_keys::OptionalNonZeroPubkey,
-        spl_token_2022_interface::{
+        tpl_token_2022_interface::{
             extension::{
                 immutable_owner::ImmutableOwner, memo_transfer::MemoTransfer,
                 mint_close_authority::MintCloseAuthority, BaseStateWithExtensionsMut,
@@ -4614,7 +4614,7 @@ pub mod tests {
         let keypair = Arc::new(Keypair::new());
         let contact_info = ContactInfo::new_localhost(
             &keypair.pubkey(),
-            solana_time_utils::timestamp(), // wallclock
+            trezoa_time_utils::timestamp(), // wallclock
         );
         ClusterInfo::new(contact_info, keypair, SocketAddrSpace::Unspecified)
     }
@@ -4729,7 +4729,7 @@ pub mod tests {
         const COMPUTE_UNITS: u64 = 800;
         const NAME: &str = "test_builtin";
         const PROGRAM_ID: Pubkey =
-            solana_pubkey::pubkey!("TestProgram11111111111111111111111111111111");
+            trezoa_pubkey::pubkey!("TestProgram11111111111111111111111111111111");
 
         fn cache_entry() -> ProgramCacheEntry {
             ProgramCacheEntry::new_builtin(0, Self::NAME.len(), Self::vm)
@@ -5052,7 +5052,7 @@ pub mod tests {
             let space = VoteStateV4::size_of();
             let balance = bank.get_minimum_balance_for_rent_exemption(space);
             let mut vote_account =
-                AccountSharedData::new(balance, space, &solana_vote_program::id());
+                AccountSharedData::new(balance, space, &trezoa_vote_program::id());
             vote_account.set_state(&versioned).unwrap();
             bank.store_account(vote_pubkey, &vote_account);
         }
@@ -5087,7 +5087,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_request_processor_new() {
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let genesis = create_genesis_config(100);
         let bank = Bank::new_for_tests(&genesis.genesis_config);
         let meta = JsonRpcRequestProcessor::new_from_bank::<TpuClientNextClient>(
@@ -5171,7 +5171,7 @@ pub mod tests {
     #[test]
     fn test_rpc_get_cluster_nodes() {
         let rpc = RpcHandler::start();
-        let version = solana_version::Version::default();
+        let version = trezoa_version::Version::default();
         let request = create_test_request("getClusterNodes", None);
         let result: Value = parse_success_result(rpc.handle_request_sync(request));
         let expected = json!([{
@@ -5264,7 +5264,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_tx_count() {
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let genesis = create_genesis_config(10);
         let bank = Bank::new_for_tests(&genesis.genesis_config);
         let meta = JsonRpcRequestProcessor::new_from_bank::<TpuClientNextClient>(
@@ -6014,7 +6014,7 @@ pub mod tests {
             ref meta, ref io, ..
         } = rpc;
 
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let mut tx = system_transaction::transfer(
             &rpc.mint_keypair,
             &bob_pubkey,
@@ -6049,7 +6049,7 @@ pub mod tests {
                  ]
             }}"#,
             tx_serialized_encoded,
-            solana_pubkey::new_rand(),
+            trezoa_pubkey::new_rand(),
             bob_pubkey,
         );
         let res = io.handle_request_sync(&req, meta.clone());
@@ -6356,11 +6356,11 @@ pub mod tests {
 
         // init mint
         let mint_rent_exempt_amount =
-            bank.get_minimum_balance_for_rent_exemption(spl_token_interface::state::Mint::LEN);
+            bank.get_minimum_balance_for_rent_exemption(tpl_token_interface::state::Mint::LEN);
         let mint_pubkey = Pubkey::from_str("mint111111111111111111111111111111111111111").unwrap();
-        let mut mint_data = [0u8; spl_token_interface::state::Mint::LEN];
+        let mut mint_data = [0u8; tpl_token_interface::state::Mint::LEN];
         Pack::pack_into_slice(
-            &spl_token_interface::state::Mint {
+            &tpl_token_interface::state::Mint {
                 mint_authority: COption::None,
                 supply: 0,
                 decimals: 8,
@@ -6372,7 +6372,7 @@ pub mod tests {
         let account = AccountSharedData::create_from_existing_shared_data(
             mint_rent_exempt_amount,
             Arc::new(mint_data.into()),
-            spl_token_interface::id(),
+            tpl_token_interface::id(),
             false,
             0,
         );
@@ -6380,17 +6380,17 @@ pub mod tests {
 
         // init token account
         let token_account_rent_exempt_amount =
-            bank.get_minimum_balance_for_rent_exemption(spl_token_interface::state::Account::LEN);
+            bank.get_minimum_balance_for_rent_exemption(tpl_token_interface::state::Account::LEN);
         let token_account_pubkey = Pubkey::new_unique();
         let owner_pubkey = Pubkey::from_str("owner11111111111111111111111111111111111111").unwrap();
-        let mut token_account_data = [0u8; spl_token_interface::state::Account::LEN];
+        let mut token_account_data = [0u8; tpl_token_interface::state::Account::LEN];
         Pack::pack_into_slice(
-            &spl_token_interface::state::Account {
+            &tpl_token_interface::state::Account {
                 mint: mint_pubkey,
                 owner: owner_pubkey,
                 amount: 1,
                 delegate: COption::None,
-                state: spl_token_interface::state::AccountState::Initialized,
+                state: tpl_token_interface::state::AccountState::Initialized,
                 is_native: COption::None,
                 delegated_amount: 0,
                 close_authority: COption::None,
@@ -6400,7 +6400,7 @@ pub mod tests {
         let account = AccountSharedData::create_from_existing_shared_data(
             token_account_rent_exempt_amount,
             Arc::new(token_account_data.into()),
-            spl_token_interface::id(),
+            tpl_token_interface::id(),
             false,
             0,
         );
@@ -6434,7 +6434,7 @@ pub mod tests {
                  ]
             }}"#,
             tx_serialized_encoded,
-            solana_pubkey::new_rand(),
+            trezoa_pubkey::new_rand(),
             token_account_pubkey,
         );
         let res = io.handle_request_sync(&req, meta.clone());
@@ -6462,14 +6462,14 @@ pub mod tests {
                                   },
                                   "type": "account"
                                 },
-                                "program": "spl-token",
+                                "program": "tpl-token",
                                 "space": 165
                               },
                               "executable": false,
                               "lamports": (token_account_rent_exempt_amount + 1),
-                              "owner": bs58::encode(spl_token_interface::id()).into_string(),
+                              "owner": bs58::encode(tpl_token_interface::id()).into_string(),
                               "rentEpoch": u64::MAX,
-                              "space": spl_token_interface::state::Account::LEN
+                              "space": tpl_token_interface::state::Account::LEN
                         },
                     ],
                     "err": null,
@@ -6763,7 +6763,7 @@ pub mod tests {
         assert_eq!(None, result.confirmations);
 
         // Test getSignatureStatus request on unprocessed tx
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let tx = system_transaction::transfer(
             &mint_keypair,
             &bob_pubkey,
@@ -6817,7 +6817,7 @@ pub mod tests {
         let RpcHandler { meta, io, .. } = RpcHandler::start();
 
         // Expect internal error because no faucet is available
-        let bob_pubkey = solana_pubkey::new_rand();
+        let bob_pubkey = trezoa_pubkey::new_rand();
         let req = format!(
             r#"{{"jsonrpc":"2.0","id":1,"method":"requestAirdrop","params":["{bob_pubkey}", 50]}}"#
         );
@@ -6926,7 +6926,7 @@ pub mod tests {
 
         let mut bad_transaction = system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             42,
             Hash::default(),
         );
@@ -6961,7 +6961,7 @@ pub mod tests {
         );
         let mut bad_transaction = system_transaction::transfer(
             &mint_keypair,
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             42,
             recent_blockhash,
         );
@@ -7066,7 +7066,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_verify_pubkey() {
-        let pubkey = solana_pubkey::new_rand();
+        let pubkey = trezoa_pubkey::new_rand();
         assert_eq!(verify_pubkey(&pubkey.to_string()).unwrap(), pubkey);
         let bad_pubkey = "a1b2c3d4";
         assert_eq!(
@@ -7079,7 +7079,7 @@ pub mod tests {
     fn test_rpc_verify_signature() {
         let tx = system_transaction::transfer(
             &Keypair::new(),
-            &solana_pubkey::new_rand(),
+            &trezoa_pubkey::new_rand(),
             20,
             hash(&[0]),
         );
@@ -7160,9 +7160,9 @@ pub mod tests {
         let request = create_test_request("getVersion", None);
         let result: Value = parse_success_result(rpc.handle_request_sync(request));
         let expected = {
-            let version = solana_version::Version::default();
+            let version = trezoa_version::Version::default();
             json!({
-                "solana-core": version.to_string(),
+                "trezoa-core": version.to_string(),
                 "feature-set": version.feature_set,
             })
         };
@@ -7793,7 +7793,7 @@ pub mod tests {
         // Subtract one because the last vote always carries over to the next epoch
         // Each slot earned maximum credits
         let credits_per_slot =
-            solana_vote_program::vote_state::VOTE_CREDITS_MAXIMUM_PER_SLOT as u64;
+            trezoa_vote_program::vote_state::VOTE_CREDITS_MAXIMUM_PER_SLOT as u64;
         let expected_credits =
             (TEST_SLOTS_PER_EPOCH - MAX_LOCKOUT_HISTORY as u64 - 1) * credits_per_slot;
         assert_eq!(
@@ -7934,15 +7934,15 @@ pub mod tests {
 
     #[test]
     fn test_token_rpcs() {
-        for program_id in solana_account_decoder::parse_token::spl_token_ids() {
+        for program_id in trezoa_account_decoder::parse_token::tpl_token_ids() {
             let rpc = RpcHandler::start();
             let bank = rpc.working_bank();
             let RpcHandler { io, meta, .. } = rpc;
             let mint = Pubkey::new_from_array([2; 32]);
             let owner = Pubkey::new_from_array([3; 32]);
             let delegate = Pubkey::new_from_array([4; 32]);
-            let token_account_pubkey = solana_pubkey::new_rand();
-            let token_with_different_mint_pubkey = solana_pubkey::new_rand();
+            let token_account_pubkey = trezoa_pubkey::new_rand();
+            let token_with_different_mint_pubkey = trezoa_pubkey::new_rand();
             let new_mint = Pubkey::new_from_array([5; 32]);
             if program_id == spl_generic_token::token_2022::id() {
                 // Add the token account
@@ -8017,7 +8017,7 @@ pub mod tests {
                 bank.store_account(&Pubkey::from_str(&mint.to_string()).unwrap(), &mint_account);
 
                 // Add another token account with the same owner, delegate, and mint
-                let other_token_account_pubkey = solana_pubkey::new_rand();
+                let other_token_account_pubkey = trezoa_pubkey::new_rand();
                 bank.store_account(&other_token_account_pubkey, &token_account);
 
                 // Add another token account with the same owner and delegate but different mint
@@ -8081,7 +8081,7 @@ pub mod tests {
                 bank.store_account(&Pubkey::from_str(&mint.to_string()).unwrap(), &mint_account);
 
                 // Add another token account with the same owner, delegate, and mint
-                let other_token_account_pubkey = solana_pubkey::new_rand();
+                let other_token_account_pubkey = trezoa_pubkey::new_rand();
                 bank.store_account(&other_token_account_pubkey, &token_account);
 
                 // Add another token account with the same owner and delegate but different mint
@@ -8123,7 +8123,7 @@ pub mod tests {
             // Test non-existent token account
             let req = format!(
                 r#"{{"jsonrpc":"2.0","id":1,"method":"getTokenAccountBalance","params":["{}"]}}"#,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
             );
             let res = io.handle_request_sync(&req, meta.clone());
             let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -8148,7 +8148,7 @@ pub mod tests {
             // Test non-existent mint address
             let req = format!(
                 r#"{{"jsonrpc":"2.0","id":1,"method":"getTokenSupply","params":["{}"]}}"#,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
             );
             let res = io.handle_request_sync(&req, meta.clone());
             let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -8232,7 +8232,7 @@ pub mod tests {
                     "params":["{}", {{"programId": "{}"}}]
                 }}"#,
                 owner,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
             );
             let res = io.handle_request_sync(&req, meta.clone());
             let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -8246,7 +8246,7 @@ pub mod tests {
                     "params":["{}", {{"mint": "{}"}}]
                 }}"#,
                 owner,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
             );
             let res = io.handle_request_sync(&req, meta.clone());
             let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -8261,7 +8261,7 @@ pub mod tests {
                     "method":"getTokenAccountsByOwner",
                     "params":["{}", {{"programId": "{}"}}]
                 }}"#,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
                 program_id,
             );
             let res = io.handle_request_sync(&req, meta.clone());
@@ -8312,7 +8312,7 @@ pub mod tests {
                     "params":["{}", {{"programId": "{}"}}]
                 }}"#,
                 delegate,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
             );
             let res = io.handle_request_sync(&req, meta.clone());
             let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -8326,7 +8326,7 @@ pub mod tests {
                     "params":["{}", {{"mint": "{}"}}]
                 }}"#,
                 delegate,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
             );
             let res = io.handle_request_sync(&req, meta.clone());
             let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -8341,7 +8341,7 @@ pub mod tests {
                     "method":"getTokenAccountsByDelegate",
                     "params":["{}", {{"programId": "{}"}}]
                 }}"#,
-                solana_pubkey::new_rand(),
+                trezoa_pubkey::new_rand(),
                 program_id,
             );
             let res = io.handle_request_sync(&req, meta.clone());
@@ -8389,7 +8389,7 @@ pub mod tests {
                 owner: program_id,
                 ..Account::default()
             });
-            let token_with_smaller_balance = solana_pubkey::new_rand();
+            let token_with_smaller_balance = trezoa_pubkey::new_rand();
             bank.store_account(&token_with_smaller_balance, &token_account);
 
             // Test largest token accounts
@@ -8427,9 +8427,9 @@ pub mod tests {
         }
     }
 
-    #[test_case(spl_token_interface::id(), None, None; "spl_token")]
-    #[test_case(spl_token_2022_interface::id(), Some(InterestBearingConfig { pre_update_average_rate: 500.into(), current_rate: 500.into(),..Default::default() }), None; "spl_token_2022_with _interest")]
-    #[test_case(spl_token_2022_interface::id(), None, Some(ScaledUiAmountConfig { new_multiplier: 2.0f64.into(), ..Default::default() }); "spl-token-2022 with multiplier")]
+    #[test_case(tpl_token_interface::id(), None, None; "tpl_token")]
+    #[test_case(tpl_token_2022_interface::id(), Some(InterestBearingConfig { pre_update_average_rate: 500.into(), current_rate: 500.into(),..Default::default() }), None; "tpl_token_2022_with _interest")]
+    #[test_case(tpl_token_2022_interface::id(), None, Some(ScaledUiAmountConfig { new_multiplier: 2.0f64.into(), ..Default::default() }); "tpl-token-2022 with multiplier")]
     fn test_token_parsing(
         program_id: Pubkey,
         mut interest_bearing_config: Option<InterestBearingConfig>,
@@ -8442,7 +8442,7 @@ pub mod tests {
         let mint = Pubkey::new_from_array([2; 32]);
         let owner = Pubkey::new_from_array([3; 32]);
         let delegate = Pubkey::new_from_array([4; 32]);
-        let token_account_pubkey = solana_pubkey::new_rand();
+        let token_account_pubkey = trezoa_pubkey::new_rand();
         let amount = 420;
         let delegated_amount = 30;
         let rent_exempt_amount = 10;
@@ -8547,7 +8547,7 @@ pub mod tests {
                 ..Account::default()
             });
             bank.store_account(&Pubkey::from_str(&mint.to_string()).unwrap(), &mint_account);
-            ("spl-token-2022", account_size, mint_size, additional_data)
+            ("tpl-token-2022", account_size, mint_size, additional_data)
         } else {
             let account_size = TokenAccount::get_packed_len();
             let mut account_data = vec![0; account_size];
@@ -8589,7 +8589,7 @@ pub mod tests {
             });
             bank.store_account(&Pubkey::from_str(&mint.to_string()).unwrap(), &mint_account);
             let additional_data = SplTokenAdditionalDataV2::with_decimals(decimals);
-            ("spl-token", account_size, mint_size, additional_data)
+            ("tpl-token", account_size, mint_size, additional_data)
         };
 
         let req = format!(
@@ -8701,12 +8701,12 @@ pub mod tests {
     }
 
     #[test]
-    fn test_get_spl_token_owner_filter() {
+    fn test_get_tpl_token_owner_filter() {
         // Filtering on token-v3 length
         let owner = Pubkey::new_unique();
         assert_eq!(
-            get_spl_token_owner_filter(
-                &spl_token_interface::id(),
+            get_tpl_token_owner_filter(
+                &tpl_token_interface::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
                     RpcFilterType::DataSize(165)
@@ -8719,7 +8719,7 @@ pub mod tests {
 
         // Filtering on token-2022 account type
         assert_eq!(
-            get_spl_token_owner_filter(
+            get_tpl_token_owner_filter(
                 &token_2022::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
@@ -8733,7 +8733,7 @@ pub mod tests {
 
         // Filtering on token account state
         assert_eq!(
-            get_spl_token_owner_filter(
+            get_tpl_token_owner_filter(
                 &token_2022::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
@@ -8746,7 +8746,7 @@ pub mod tests {
         );
 
         // Can't filter on account type for token-v3
-        assert!(get_spl_token_owner_filter(
+        assert!(get_tpl_token_owner_filter(
             &spl_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
@@ -8757,7 +8757,7 @@ pub mod tests {
         .is_none());
 
         // Filtering on mint instead of owner
-        assert!(get_spl_token_owner_filter(
+        assert!(get_tpl_token_owner_filter(
             &spl_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, owner.to_bytes().to_vec())),
@@ -8768,7 +8768,7 @@ pub mod tests {
         .is_none());
 
         // Wrong program id
-        assert!(get_spl_token_owner_filter(
+        assert!(get_tpl_token_owner_filter(
             &Pubkey::new_unique(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
@@ -8777,7 +8777,7 @@ pub mod tests {
         )
         .unwrap()
         .is_none());
-        assert!(get_spl_token_owner_filter(
+        assert!(get_tpl_token_owner_filter(
             &Pubkey::new_unique(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
@@ -8793,7 +8793,7 @@ pub mod tests {
         let owner = Pubkey::new_unique();
         let mut first_half_bytes = owner.to_bytes().to_vec();
         first_half_bytes.resize(16, 0);
-        assert!(get_spl_token_owner_filter(
+        assert!(get_tpl_token_owner_filter(
             &spl_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, first_half_bytes)),
@@ -8805,11 +8805,11 @@ pub mod tests {
     }
 
     #[test]
-    fn test_get_spl_token_mint_filter() {
+    fn test_get_tpl_token_mint_filter() {
         // Filtering on token-v3 length
         let mint = Pubkey::new_unique();
         assert_eq!(
-            get_spl_token_mint_filter(
+            get_tpl_token_mint_filter(
                 &spl_generic_token::token::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
@@ -8823,7 +8823,7 @@ pub mod tests {
 
         // Filtering on token-2022 account type
         assert_eq!(
-            get_spl_token_mint_filter(
+            get_tpl_token_mint_filter(
                 &spl_generic_token::token_2022::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
@@ -8837,7 +8837,7 @@ pub mod tests {
 
         // Filtering on token account state
         assert_eq!(
-            get_spl_token_mint_filter(
+            get_tpl_token_mint_filter(
                 &spl_generic_token::token::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
@@ -8850,7 +8850,7 @@ pub mod tests {
         );
 
         // Can't filter on account type for token-v3
-        assert!(get_spl_token_mint_filter(
+        assert!(get_tpl_token_mint_filter(
             &spl_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
@@ -8861,7 +8861,7 @@ pub mod tests {
         .is_none());
 
         // Filtering on owner instead of mint
-        assert!(get_spl_token_mint_filter(
+        assert!(get_tpl_token_mint_filter(
             &spl_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, mint.to_bytes().to_vec())),
@@ -8872,7 +8872,7 @@ pub mod tests {
         .is_none());
 
         // Wrong program id
-        assert!(get_spl_token_mint_filter(
+        assert!(get_tpl_token_mint_filter(
             &Pubkey::new_unique(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
@@ -8881,7 +8881,7 @@ pub mod tests {
         )
         .unwrap()
         .is_none());
-        assert!(get_spl_token_mint_filter(
+        assert!(get_tpl_token_mint_filter(
             &Pubkey::new_unique(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
@@ -8897,7 +8897,7 @@ pub mod tests {
         let owner = Pubkey::new_unique();
         let mut first_half_bytes = owner.to_bytes().to_vec();
         first_half_bytes.resize(16, 0);
-        assert!(get_spl_token_mint_filter(
+        assert!(get_tpl_token_mint_filter(
             &spl_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, first_half_bytes)),
@@ -9106,7 +9106,7 @@ pub mod tests {
             decode_and_deserialize::<Transaction>(tx58, TransactionBinaryEncoding::Base58)
                 .unwrap_err(),
             Error::invalid_params(format!(
-                "base58 encoded solana_transaction::Transaction too large: {tx58_len} bytes (max: \
+                "base58 encoded trezoa_transaction::Transaction too large: {tx58_len} bytes (max: \
                  encoded/raw {MAX_BASE58_SIZE}/{PACKET_DATA_SIZE})",
             ))
         );
@@ -9117,7 +9117,7 @@ pub mod tests {
             decode_and_deserialize::<Transaction>(tx64, TransactionBinaryEncoding::Base64)
                 .unwrap_err(),
             Error::invalid_params(format!(
-                "base64 encoded solana_transaction::Transaction too large: {tx64_len} bytes (max: \
+                "base64 encoded trezoa_transaction::Transaction too large: {tx64_len} bytes (max: \
                  encoded/raw {MAX_BASE64_SIZE}/{PACKET_DATA_SIZE})",
             ))
         );
@@ -9129,7 +9129,7 @@ pub mod tests {
             decode_and_deserialize::<Transaction>(tx58, TransactionBinaryEncoding::Base58)
                 .unwrap_err(),
             Error::invalid_params(format!(
-                "decoded solana_transaction::Transaction too large: {too_big} bytes (max: \
+                "decoded trezoa_transaction::Transaction too large: {too_big} bytes (max: \
                  {PACKET_DATA_SIZE} bytes)"
             ))
         );
@@ -9139,7 +9139,7 @@ pub mod tests {
             decode_and_deserialize::<Transaction>(tx64, TransactionBinaryEncoding::Base64)
                 .unwrap_err(),
             Error::invalid_params(format!(
-                "decoded solana_transaction::Transaction too large: {too_big} bytes (max: \
+                "decoded trezoa_transaction::Transaction too large: {too_big} bytes (max: \
                  {PACKET_DATA_SIZE} bytes)"
             ))
         );
@@ -9150,7 +9150,7 @@ pub mod tests {
             decode_and_deserialize::<Transaction>(tx64.clone(), TransactionBinaryEncoding::Base64)
                 .unwrap_err(),
             Error::invalid_params(
-                "failed to deserialize solana_transaction::Transaction: invalid value: continue \
+                "failed to deserialize trezoa_transaction::Transaction: invalid value: continue \
                  signal on byte-three, expected a terminal signal on or before byte-three"
                     .to_string()
             )
@@ -9168,7 +9168,7 @@ pub mod tests {
             decode_and_deserialize::<Transaction>(tx58.clone(), TransactionBinaryEncoding::Base58)
                 .unwrap_err(),
             Error::invalid_params(
-                "failed to deserialize solana_transaction::Transaction: invalid value: continue \
+                "failed to deserialize trezoa_transaction::Transaction: invalid value: continue \
                  signal on byte-three, expected a terminal signal on or before byte-three"
                     .to_string()
             )
@@ -9249,7 +9249,7 @@ pub mod tests {
         let bank = rpc.working_bank();
         let expected_stake_minimum_delegation = stake_utils::get_minimum_delegation(
             bank.feature_set
-                .is_active(&agave_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
+                .is_active(&trezoa_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
         );
 
         let request = create_test_request("getStakeMinimumDelegation", None);

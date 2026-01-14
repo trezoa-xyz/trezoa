@@ -1,7 +1,7 @@
 [package]
-name = "agave-io-uring"
-description = "Agave io_uring wrapper"
-documentation = "https://docs.rs/agave-io-uring"
+name = "trezoa-io-uring"
+description = "Trezoa-team io_uring wrapper"
+documentation = "https://docs.rs/trezoa-io-uring"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -10,7 +10,7 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
 libc = { workspace = true }

@@ -1,7 +1,7 @@
 [package]
-name = "agave-verified-packet-receiver"
-description = "Agave Verified Packet Receiver Receiver"
-documentation = "https://docs.rs/agave-verified-packet-receiver"
+name = "trezoa-verified-packet-receiver"
+description = "Trezoa-team Verified Packet Receiver Receiver"
+documentation = "https://docs.rs/trezoa-verified-packet-receiver"
 publish = true
 version = { workspace = true }
 authors = { workspace = true }
@@ -15,15 +15,15 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "agave_verified_packet_receiver"
+name = "trezoa_verified_packet_receiver"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-solana-perf = { workspace = true }
-solana-streamer = { workspace = true }
+trezoa-perf = { workspace = true }
+trezoa-streamer = { workspace = true }
 
 [dev-dependencies]
 assert_matches = { workspace = true }
-solana-streamer = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-streamer = { workspace = true, features = ["dev-context-only-utils"] }

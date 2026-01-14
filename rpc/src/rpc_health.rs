@@ -1,7 +1,7 @@
 use {
     crate::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
-    solana_clock::Slot,
-    solana_ledger::blockstore::Blockstore,
+    trezoa_clock::Slot,
+    trezoa_ledger::blockstore::Blockstore,
     std::sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
@@ -129,14 +129,14 @@ impl RpcHealth {
 pub mod tests {
     use {
         super::*,
-        solana_clock::UnixTimestamp,
-        solana_hash::Hash,
-        solana_ledger::{
+        trezoa_clock::UnixTimestamp,
+        trezoa_hash::Hash,
+        trezoa_ledger::{
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
         },
-        solana_pubkey::Pubkey,
-        solana_runtime::{bank::Bank, bank_forks::BankForks},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{bank::Bank, bank_forks::BankForks},
     };
 
     #[test]

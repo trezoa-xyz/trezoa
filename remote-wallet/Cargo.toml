@@ -1,6 +1,6 @@
 [package]
-name = "solana-remote-wallet"
-documentation = "https://docs.rs/solana-remote-wallet"
+name = "trezoa-remote-wallet"
+documentation = "https://docs.rs/trezoa-remote-wallet"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
@@ -14,7 +14,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
 default = ["linux-static-hidraw"]
-agave-unstable-api = []
+trezoa-unstable-api = []
 linux-shared-hidraw = ["hidapi/linux-shared-hidraw"]
 linux-shared-libusb = ["hidapi/linux-shared-libusb"]
 linux-static-hidraw = ["hidapi/linux-static-hidraw"]
@@ -30,11 +30,11 @@ num-traits = { workspace = true }
 parking_lot = { workspace = true }
 qstring = { workspace = true }
 semver = { workspace = true }
-solana-derivation-path = { workspace = true }
-solana-offchain-message = { workspace = true }
-solana-pubkey = { workspace = true, features = ["std"] }
-solana-signature = { workspace = true, features = ["std"] }
-solana-signer = { workspace = true }
+trezoa-derivation-path = { workspace = true }
+trezoa-offchain-message = { workspace = true }
+trezoa-pubkey = { workspace = true, features = ["std"] }
+trezoa-signature = { workspace = true, features = ["std"] }
+trezoa-signer = { workspace = true }
 thiserror = { workspace = true }
 trezor-client = { workspace = true }
 uriparse = { workspace = true }
@@ -42,4 +42,4 @@ uriparse = { workspace = true }
 [dev-dependencies]
 assert_matches = { workspace = true }
 serial_test = { workspace = true }
-solana-pubkey = { workspace = true, features = ["rand"] }
+trezoa-pubkey = { workspace = true, features = ["rand"] }

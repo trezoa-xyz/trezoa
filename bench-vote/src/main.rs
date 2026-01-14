@@ -3,19 +3,19 @@
 use {
     clap::{crate_description, crate_name, value_t, value_t_or_exit, App, Arg},
     crossbeam_channel::unbounded,
-    solana_clap_utils::{input_parsers::keypair_of, input_validators::is_keypair_or_ask_keyword},
-    solana_client::connection_cache::ConnectionCache,
-    solana_connection_cache::client_connection::ClientConnection,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_net_utils::{
+    trezoa_clap_utils::{input_parsers::keypair_of, input_validators::is_keypair_or_ask_keyword},
+    trezoa_client::connection_cache::ConnectionCache,
+    trezoa_connection_cache::client_connection::ClientConnection,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_net_utils::{
         bind_to_unspecified,
         sockets::{multi_bind_in_range_with_config, SocketConfiguration as SocketConfig},
     },
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_streamer::{
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_streamer::{
         nonblocking::swqos::SwQosConfig,
         packet::PacketBatchRecycler,
         quic::{
@@ -24,8 +24,8 @@ use {
         },
         streamer::{receiver, PacketBatchReceiver, StakedNodes, StreamerReceiveStats},
     },
-    solana_transaction::Transaction,
-    solana_vote_program::{vote_instruction, vote_state::Vote},
+    trezoa_transaction::Transaction,
+    trezoa_vote_program::{vote_instruction, vote_state::Vote},
     std::{
         cmp::max,
         collections::HashMap,
@@ -80,7 +80,7 @@ const TRANSACTIONS_PER_THREAD: u64 = 1_000_000; // Number of transactions per th
 fn main() -> Result<()> {
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::with_name("identity")
                 .short("i")
@@ -156,7 +156,7 @@ fn main() -> Result<()> {
                 .long("server-address")
                 .value_name("HOST:PORT")
                 .takes_value(true)
-                .validator(|arg| solana_net_utils::is_host_port(arg.to_string()))
+                .validator(|arg| trezoa_net_utils::is_host_port(arg.to_string()))
                 .help(
                     "The destination streamer address to which the client will send transactions \
                      to",
@@ -184,7 +184,7 @@ fn main() -> Result<()> {
         )
         .get_matches();
 
-    agave_logger::setup();
+    trezoa_logger::setup();
 
     let mut num_sockets = 1usize;
     if let Some(n) = matches.value_of("num-recv-sockets") {
@@ -212,7 +212,7 @@ fn main() -> Result<()> {
         let addr = matches
             .value_of("server-address")
             .expect("Server address must be set when --client-only is used");
-        solana_net_utils::parse_host_port(addr).expect("Expecting a valid server address")
+        trezoa_net_utils::parse_host_port(addr).expect("Expecting a valid server address")
     });
 
     let port = destination.map_or(0, |addr| addr.port());

@@ -1,5 +1,5 @@
 use {
-    agave_snapshots::{
+    trezoa_snapshots::{
         paths as snapshot_paths, snapshot_archive_info::SnapshotArchiveInfoGetter as _,
         SnapshotArchiveKind,
     },
@@ -7,27 +7,27 @@ use {
     log::*,
     rand::{rng, seq::SliceRandom, Rng},
     rayon::prelude::*,
-    solana_account::ReadableAccount,
-    solana_clock::Slot,
-    solana_commitment_config::CommitmentConfig,
-    solana_core::validator::{ValidatorConfig, ValidatorStartProgress},
-    solana_download_utils::{download_snapshot_archive, DownloadProgressRecord},
-    solana_genesis_utils::download_then_check_genesis_hash,
-    solana_gossip::{
+    trezoa_account::ReadableAccount,
+    trezoa_clock::Slot,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_core::validator::{ValidatorConfig, ValidatorStartProgress},
+    trezoa_download_utils::{download_snapshot_archive, DownloadProgressRecord},
+    trezoa_genesis_utils::download_then_check_genesis_hash,
+    trezoa_gossip::{
         cluster_info::ClusterInfo,
         contact_info::{ContactInfo, Protocol},
         crds_data,
         gossip_service::GossipService,
         node::Node,
     },
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_metrics::datapoint_info,
-    solana_net_utils::SocketAddrSpace,
-    solana_pubkey::Pubkey,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_signer::Signer,
-    solana_vote_program::vote_state::VoteStateV4,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_metrics::datapoint_info,
+    trezoa_net_utils::SocketAddrSpace,
+    trezoa_pubkey::Pubkey,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_signer::Signer,
+    trezoa_vote_program::vote_state::VoteStateV4,
     std::{
         collections::{hash_map::RandomState, HashMap, HashSet},
         net::{SocketAddr, TcpListener, TcpStream, UdpSocket},
@@ -95,7 +95,7 @@ fn verify_reachable_ports(
         udp_sockets.extend(node.sockets.broadcast.iter());
         udp_sockets.extend(node.sockets.retransmit_sockets.iter());
     }
-    if !solana_net_utils::verify_all_reachable_udp(
+    if !trezoa_net_utils::verify_all_reachable_udp(
         &cluster_entrypoint.gossip().unwrap(),
         &udp_sockets,
     ) {
@@ -122,7 +122,7 @@ fn verify_reachable_ports(
         tcp_listeners.push(ip_echo);
     }
 
-    solana_net_utils::verify_all_reachable_tcp(&cluster_entrypoint.gossip().unwrap(), tcp_listeners)
+    trezoa_net_utils::verify_all_reachable_tcp(&cluster_entrypoint.gossip().unwrap(), tcp_listeners)
 }
 
 fn is_known_validator(id: &Pubkey, known_validators: &Option<HashSet<Pubkey>>) -> bool {
@@ -242,7 +242,7 @@ fn check_vote_account(
         .value
         .ok_or_else(|| format!("vote account does not exist: {vote_account_address}"))?;
 
-    if vote_account.owner != solana_vote_program::id() {
+    if vote_account.owner != trezoa_vote_program::id() {
         return Err(format!(
             "not a vote account (owned by {}): {}",
             vote_account.owner, vote_account_address
@@ -417,7 +417,7 @@ pub fn attempt_download_genesis_and_snapshot(
         )
         .unwrap_or_else(|err| {
             // Consider failures here to be more likely due to user error (eg,
-            // incorrect `agave-validator` command-line arguments) rather than the
+            // incorrect `trezoa-validator` command-line arguments) rather than the
             // RPC node failing.
             //
             // Power users can always use the `--no-check-vote-account` option to
@@ -498,7 +498,7 @@ fn get_vetted_rpc_nodes(
                             if let Some(ping_time) = ping_time {
                                 info!(
                                     "RPC node version: {} Ping: {}ms",
-                                    rpc_version.solana_core,
+                                    rpc_version.trezoa_core,
                                     ping_time.as_millis()
                                 );
                                 true
@@ -1218,7 +1218,7 @@ fn download_snapshot(
     };
     let desired_snapshot_hash = (
         desired_snapshot_hash.0,
-        agave_snapshots::snapshot_hash::SnapshotHash(desired_snapshot_hash.1),
+        trezoa_snapshots::snapshot_hash::SnapshotHash(desired_snapshot_hash.1),
     );
     download_snapshot_archive(
         &rpc_contact_info
@@ -1361,7 +1361,7 @@ mod tests {
 
     #[test]
     fn test_build_known_snapshot_hashes() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let full_snapshot_hash1 = (400_000, Hash::new_unique());
         let full_snapshot_hash2 = (400_000, Hash::new_unique());
 

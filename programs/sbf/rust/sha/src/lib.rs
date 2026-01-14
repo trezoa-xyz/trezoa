@@ -1,25 +1,25 @@
 //! SHA Syscall test
 
 use {
-    solana_msg::msg,
-    solana_program_entrypoint::{custom_heap_default, custom_panic_default},
+    trezoa_msg::msg,
+    trezoa_program_entrypoint::{custom_heap_default, custom_panic_default},
 };
 
 fn test_sha256_hasher() {
-    use solana_sha256_hasher::hashv;
+    use trezoa_sha256_hasher::hashv;
     let vals = &["Gaggablaghblagh!".as_ref(), "flurbos".as_ref()];
-    #[cfg(target_os = "solana")]
+    #[cfg(target_os = "trezoa")]
     let hash = {
         use sha2::Digest;
         let mut hasher = sha2::Sha256::default();
         for val in vals {
             hasher.update(val);
         }
-        solana_hash::Hash::new_from_array(hasher.finalize().into())
+        trezoa_hash::Hash::new_from_array(hasher.finalize().into())
     };
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     let hash = {
-        let mut hasher = solana_sha256_hasher::Hasher::default();
+        let mut hasher = trezoa_sha256_hasher::Hasher::default();
         hasher.hashv(vals);
         hasher.result()
     };
@@ -27,20 +27,20 @@ fn test_sha256_hasher() {
 }
 
 fn test_keccak256_hasher() {
-    use solana_keccak_hasher::hashv;
+    use trezoa_keccak_hasher::hashv;
     let vals = &["Gaggablaghblagh!".as_ref(), "flurbos".as_ref()];
-    #[cfg(target_os = "solana")]
+    #[cfg(target_os = "trezoa")]
     let hash = {
         use sha3::Digest;
         let mut hasher = sha3::Keccak256::default();
         for val in vals {
             hasher.update(val);
         }
-        solana_hash::Hash::new_from_array(hasher.finalize().into())
+        trezoa_hash::Hash::new_from_array(hasher.finalize().into())
     };
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     let hash = {
-        let mut hasher = solana_keccak_hasher::Hasher::default();
+        let mut hasher = trezoa_keccak_hasher::Hasher::default();
         hasher.hashv(vals);
         hasher.result()
     };
@@ -48,7 +48,7 @@ fn test_keccak256_hasher() {
 }
 
 fn test_blake3_hasher() {
-    use solana_blake3_hasher::hashv;
+    use trezoa_blake3_hasher::hashv;
     let v0: &[u8] = b"Gaggablaghblagh!";
     let v1: &[u8] = b"flurbos!";
     let vals: &[&[u8]] = &[v0, v1];

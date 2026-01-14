@@ -1,18 +1,18 @@
 #![allow(clippy::arithmetic_side_effects)]
 
 use {
-    solana_account_info::{next_account_info, AccountInfo},
-    solana_clock::Clock,
-    solana_msg::msg,
-    solana_program_error::ProgramResult,
-    solana_pubkey::{declare_id, Pubkey},
-    solana_sysvar::{Sysvar, SysvarSerialize},
+    trezoa_account_info::{next_account_info, AccountInfo},
+    trezoa_clock::Clock,
+    trezoa_msg::msg,
+    trezoa_program_error::ProgramResult,
+    trezoa_pubkey::{declare_id, Pubkey},
+    trezoa_sysvar::{Sysvar, SysvarSerialize},
     std::convert::TryInto,
 };
 
 declare_id!("Sim1jD5C35odT8mzctm8BWnjic8xW5xgeb5MbcbErTo");
 
-solana_program_entrypoint::entrypoint_no_alloc!(process_instruction);
+trezoa_program_entrypoint::entrypoint_no_alloc!(process_instruction);
 
 pub fn process_instruction(
     _program_id: &Pubkey,

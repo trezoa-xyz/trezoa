@@ -1,6 +1,6 @@
 use {
-    crate::is_zero_lamport::IsZeroLamport, solana_account::ReadableAccount, solana_clock::Epoch,
-    solana_pubkey::Pubkey,
+    crate::is_zero_lamport::IsZeroLamport, trezoa_account::ReadableAccount, trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
 };
 
 /// Account type with fields that reference into a storage

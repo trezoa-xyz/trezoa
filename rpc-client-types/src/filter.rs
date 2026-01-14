@@ -196,7 +196,7 @@ impl Memcmp {
     }
 
     /// Returns reference to bytes if variant is MemcmpEncodedBytes::Bytes;
-    /// otherwise returns None. Used exclusively by solana-rpc to check
+    /// otherwise returns None. Used exclusively by trezoa-rpc to check
     /// SPL-token filters.
     pub fn raw_bytes_as_ref(&self) -> Option<&[u8]> {
         use MemcmpEncodedBytes::*;

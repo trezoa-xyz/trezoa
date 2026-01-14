@@ -1,9 +1,9 @@
 use {
     crate::common::certificate_limits_and_votes,
-    agave_votor_messages::consensus_message::{Certificate, CertificateType, VoteMessage},
+    trezoa_votor_messages::consensus_message::{Certificate, CertificateType, VoteMessage},
     bitvec::prelude::*,
-    solana_bls_signatures::{BlsError, SignatureProjective},
-    solana_signer_store::{encode_base2, encode_base3, EncodeError},
+    trezoa_bls_signatures::{BlsError, SignatureProjective},
+    trezoa_signer_store::{encode_base2, encode_base3, EncodeError},
     thiserror::Error,
 };
 
@@ -245,16 +245,16 @@ impl CertificateBuilder {
 mod tests {
     use {
         super::*,
-        agave_votor_messages::{
+        trezoa_votor_messages::{
             consensus_message::{CertificateType, VoteMessage},
             vote::Vote,
         },
-        solana_bls_signatures::{
+        trezoa_bls_signatures::{
             Keypair as BLSKeypair, PubkeyProjective as BLSPubkeyProjective,
             Signature as BLSSignature, SignatureProjective, VerifiablePubkey,
         },
-        solana_hash::Hash,
-        solana_signer_store::{decode, Decoded},
+        trezoa_hash::Hash,
+        trezoa_signer_store::{decode, Decoded},
     };
 
     #[test]

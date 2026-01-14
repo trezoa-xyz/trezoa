@@ -6,14 +6,14 @@ use {
         *,
     },
     crate::cluster_nodes::ClusterNodesCache,
-    solana_entry::entry::Entry,
-    solana_hash::Hash,
-    solana_keypair::Keypair,
-    solana_ledger::shred::{
+    trezoa_entry::entry::Entry,
+    trezoa_hash::Hash,
+    trezoa_keypair::Keypair,
+    trezoa_ledger::shred::{
         ProcessShredsStats, ReedSolomonCache, Shred, ShredType, Shredder, MAX_CODE_SHREDS_PER_SLOT,
         MAX_DATA_SHREDS_PER_SLOT,
     },
-    solana_time_utils::AtomicInterval,
+    trezoa_time_utils::AtomicInterval,
     std::{borrow::Cow, sync::RwLock},
 };
 
@@ -212,7 +212,7 @@ impl StandardBroadcastRun {
             }
             // If blockstore already has shreds for this slot,
             // it should not recreate the slot:
-            // https://github.com/solana-labs/solana/blob/92a0b310c/ledger/src/leader_schedule_cache.rs##L139-L148
+            // https://github.com/trezoa-labs/trezoa/blob/92a0b310c/ledger/src/leader_schedule_cache.rs##L139-L148
             if blockstore
                 .meta(bank.slot())
                 .unwrap()
@@ -273,11 +273,11 @@ impl StandardBroadcastRun {
         // that the leader started this block. This must be done before the
         // blocks are sent out over the wire, so that the slots we have already
         // sent a shred for are skipped (even if the node reboots):
-        // https://github.com/solana-labs/solana/blob/92a0b310c/ledger/src/leader_schedule_cache.rs#L139-L148
+        // https://github.com/trezoa-labs/trezoa/blob/92a0b310c/ledger/src/leader_schedule_cache.rs#L139-L148
         // preventing the node from broadcasting duplicate blocks:
-        // https://github.com/solana-labs/solana/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L132-L142
+        // https://github.com/trezoa-labs/trezoa/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L132-L142
         // By contrast Self::insert skips the 1st data shred with index zero:
-        // https://github.com/solana-labs/solana/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L367-L373
+        // https://github.com/trezoa-labs/trezoa/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L367-L373
         if let Some(shred) = shreds.iter().find(|shred| shred.is_data()) {
             if shred.index() == 0 {
                 blockstore
@@ -335,7 +335,7 @@ impl StandardBroadcastRun {
         // Insert shreds into blockstore
         let insert_shreds_start = Instant::now();
         // The first data shred is inserted synchronously.
-        // https://github.com/solana-labs/solana/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L268-L283
+        // https://github.com/trezoa-labs/trezoa/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L268-L283
         let offset = shreds
             .first()
             .map(|shred| shred.is_data() && shred.index() == 0)
@@ -474,20 +474,20 @@ mod test {
     use {
         super::*,
         rand::Rng,
-        solana_entry::entry::create_ticks,
-        solana_genesis_config::GenesisConfig,
-        solana_gossip::{cluster_info::ClusterInfo, node::Node},
-        solana_hash::Hash,
-        solana_keypair::Keypair,
-        solana_ledger::{
+        trezoa_entry::entry::create_ticks,
+        trezoa_genesis_config::GenesisConfig,
+        trezoa_gossip::{cluster_info::ClusterInfo, node::Node},
+        trezoa_hash::Hash,
+        trezoa_keypair::Keypair,
+        trezoa_ledger::{
             blockstore::Blockstore,
             genesis_utils::create_genesis_config,
             get_tmp_ledger_path,
             shred::{max_ticks_per_n_shreds, DATA_SHREDS_PER_FEC_BLOCK},
         },
-        solana_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
-        solana_runtime::bank::Bank,
-        solana_signer::Signer,
+        trezoa_net_utils::{sockets::bind_to_localhost_unique, SocketAddrSpace},
+        trezoa_runtime::bank::Bank,
+        trezoa_signer::Signer,
         std::{ops::Deref, sync::Arc, time::Duration},
     };
 
@@ -782,12 +782,12 @@ mod test {
 
     #[test]
     fn entries_to_shreds_max() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let keypair = Keypair::new();
         let mut bs = StandardBroadcastRun::new(0);
         bs.slot = 1;
         bs.parent = 0;
-        let entries = create_ticks(10_000, 1, solana_hash::Hash::default());
+        let entries = create_ticks(10_000, 1, trezoa_hash::Hash::default());
 
         let mut stats = ProcessShredsStats::default();
 

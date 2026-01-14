@@ -1,7 +1,7 @@
 [package]
-name = "solana-rpc"
-description = "Solana RPC"
-documentation = "https://docs.rs/solana-rpc"
+name = "trezoa-rpc"
+description = "Trezoa RPC"
+documentation = "https://docs.rs/trezoa-rpc"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,18 +14,18 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "solana_rpc"
+name = "trezoa_rpc"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 dev-context-only-utils = [
-    "solana-ledger/dev-context-only-utils",
-    "solana-rpc/dev-context-only-utils",
+    "trezoa-ledger/dev-context-only-utils",
+    "trezoa-rpc/dev-context-only-utils",
 ]
 
 [dependencies]
-agave-feature-set = { workspace = true }
-agave-snapshots = { workspace = true }
+trezoa-feature-set = { workspace = true }
+trezoa-snapshots = { workspace = true }
 base64 = { workspace = true }
 bincode = { workspace = true }
 bs58 = { workspace = true }
@@ -44,90 +44,90 @@ regex = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 soketto = { workspace = true }
-solana-account = { workspace = true }
-solana-account-decoder = { workspace = true }
-solana-accounts-db = { workspace = true }
-solana-cli-output = { workspace = true }
-solana-client = { workspace = true }
-solana-clock = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-entry = { workspace = true }
-solana-epoch-info = { workspace = true }
-solana-epoch-rewards-hasher = { workspace = true }
-solana-epoch-schedule = { workspace = true }
-solana-faucet = { workspace = true }
-solana-genesis-config = { workspace = true }
-solana-gossip = { workspace = true }
-solana-hash = { workspace = true }
-solana-keypair = { workspace = true }
-solana-ledger = { workspace = true }
-solana-measure = { workspace = true }
-solana-message = { workspace = true }
-solana-metrics = { workspace = true }
-solana-native-token = { workspace = true }
-solana-perf = { workspace = true }
-solana-poh = { workspace = true }
-solana-poh-config = { workspace = true }
-solana-program-pack = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-quic-definitions = { workspace = true }
-solana-rayon-threadlimit = { workspace = true }
-solana-rpc-client-api = { workspace = true }
-solana-runtime = { workspace = true }
-solana-runtime-transaction = { workspace = true }
-solana-send-transaction-service = { workspace = true }
-solana-signature = { workspace = true }
-solana-signer = { workspace = true }
-solana-slot-history = { workspace = true }
-solana-storage-bigtable = { workspace = true }
-solana-svm = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-system-transaction = { workspace = true }
-solana-sysvar = { workspace = true }
-solana-time-utils = { workspace = true }
-solana-tpu-client = { workspace = true }
-solana-transaction = { workspace = true }
-solana-transaction-context = { workspace = true }
-solana-transaction-error = { workspace = true }
-solana-transaction-status = { workspace = true }
-solana-validator-exit = { workspace = true }
-solana-version = { workspace = true }
-solana-vote = { workspace = true }
-solana-vote-program = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-account-decoder = { workspace = true }
+trezoa-accounts-db = { workspace = true }
+trezoa-cli-output = { workspace = true }
+trezoa-client = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-commitment-config = { workspace = true }
+trezoa-entry = { workspace = true }
+trezoa-epoch-info = { workspace = true }
+trezoa-epoch-rewards-hasher = { workspace = true }
+trezoa-epoch-schedule = { workspace = true }
+trezoa-faucet = { workspace = true }
+trezoa-genesis-config = { workspace = true }
+trezoa-gossip = { workspace = true }
+trezoa-hash = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-ledger = { workspace = true }
+trezoa-measure = { workspace = true }
+trezoa-message = { workspace = true }
+trezoa-metrics = { workspace = true }
+trezoa-native-token = { workspace = true }
+trezoa-perf = { workspace = true }
+trezoa-poh = { workspace = true }
+trezoa-poh-config = { workspace = true }
+trezoa-program-pack = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-quic-definitions = { workspace = true }
+trezoa-rayon-threadlimit = { workspace = true }
+trezoa-rpc-client-api = { workspace = true }
+trezoa-runtime = { workspace = true }
+trezoa-runtime-transaction = { workspace = true }
+trezoa-send-transaction-service = { workspace = true }
+trezoa-signature = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-slot-history = { workspace = true }
+trezoa-storage-bigtable = { workspace = true }
+trezoa-svm = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-system-transaction = { workspace = true }
+trezoa-sysvar = { workspace = true }
+trezoa-time-utils = { workspace = true }
+trezoa-tpu-client = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-transaction-context = { workspace = true }
+trezoa-transaction-error = { workspace = true }
+trezoa-transaction-status = { workspace = true }
+trezoa-validator-exit = { workspace = true }
+trezoa-version = { workspace = true }
+trezoa-vote = { workspace = true }
+trezoa-vote-program = { workspace = true }
 spl-generic-token = { workspace = true }
-spl-token-2022-interface = { workspace = true }
-spl-token-interface = { workspace = true }
+tpl-token-2022-interface = { workspace = true }
+tpl-token-interface = { workspace = true }
 stream-cancel = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 tokio-util = { workspace = true, features = ["codec", "compat"] }
 
 [dev-dependencies]
-agave-reserved-account-keys = { workspace = true }
+trezoa-reserved-account-keys = { workspace = true }
 serial_test = { workspace = true }
-solana-address-lookup-table-interface = { workspace = true }
-solana-cluster-type = { workspace = true }
-solana-compute-budget-interface = { workspace = true }
-solana-fee-calculator = { workspace = true }
-solana-fee-structure = { workspace = true }
-solana-instruction = { workspace = true }
-solana-net-utils = { workspace = true }
-solana-nonce = { workspace = true }
-solana-nonce-account = { workspace = true }
-solana-program-option = { workspace = true }
-solana-program-runtime = { workspace = true }
-solana-rent = { workspace = true }
-solana-rpc = { path = ".", features = ["dev-context-only-utils"] }
-solana-runtime = { workspace = true, features = ["dev-context-only-utils"] }
-solana-runtime-transaction = { workspace = true, features = [
+trezoa-address-lookup-table-interface = { workspace = true }
+trezoa-cluster-type = { workspace = true }
+trezoa-compute-budget-interface = { workspace = true }
+trezoa-fee-calculator = { workspace = true }
+trezoa-fee-structure = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-net-utils = { workspace = true }
+trezoa-nonce = { workspace = true }
+trezoa-nonce-account = { workspace = true }
+trezoa-program-option = { workspace = true }
+trezoa-program-runtime = { workspace = true }
+trezoa-rent = { workspace = true }
+trezoa-rpc = { path = ".", features = ["dev-context-only-utils"] }
+trezoa-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-runtime-transaction = { workspace = true, features = [
     "dev-context-only-utils",
 ] }
-solana-sdk-ids = { workspace = true }
-solana-send-transaction-service = { workspace = true, features = ["dev-context-only-utils"] }
-solana-sha256-hasher = { workspace = true }
-solana-stake-interface = { workspace = true }
-solana-svm-log-collector = { workspace = true }
-solana-vote-interface = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-send-transaction-service = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-sha256-hasher = { workspace = true }
+trezoa-stake-interface = { workspace = true }
+trezoa-svm-log-collector = { workspace = true }
+trezoa-vote-interface = { workspace = true }
 spl-pod = { workspace = true }
 symlink = { workspace = true }
 test-case = { workspace = true }

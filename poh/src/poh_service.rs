@@ -6,13 +6,13 @@ use {
         poh_recorder::{PohRecorder, Record},
         record_channels::RecordReceiver,
     },
-    agave_votor_messages::migration::MigrationStatus,
+    trezoa_votor_messages::migration::MigrationStatus,
     crossbeam_channel::Sender,
     log::*,
-    solana_clock::DEFAULT_HASHES_PER_SECOND,
-    solana_entry::poh::Poh,
-    solana_measure::measure::Measure,
-    solana_poh_config::PohConfig,
+    trezoa_clock::DEFAULT_HASHES_PER_SECOND,
+    trezoa_entry::poh::Poh,
+    trezoa_measure::measure::Measure,
+    trezoa_poh_config::PohConfig,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -677,26 +677,26 @@ mod tests {
         },
         crossbeam_channel::bounded,
         rand::{rng, Rng},
-        solana_clock::{DEFAULT_HASHES_PER_TICK, DEFAULT_MS_PER_SLOT, DEFAULT_TICKS_PER_SLOT},
-        solana_hash::Hash,
-        solana_ledger::{
+        trezoa_clock::{DEFAULT_HASHES_PER_TICK, DEFAULT_MS_PER_SLOT, DEFAULT_TICKS_PER_SLOT},
+        trezoa_hash::Hash,
+        trezoa_ledger::{
             blockstore::Blockstore,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
             leader_schedule_cache::LeaderScheduleCache,
         },
-        solana_measure::measure::Measure,
-        solana_perf::test_tx::test_tx,
-        solana_runtime::bank::Bank,
-        solana_sha256_hasher::hash,
-        solana_transaction::versioned::VersionedTransaction,
+        trezoa_measure::measure::Measure,
+        trezoa_perf::test_tx::test_tx,
+        trezoa_runtime::bank::Bank,
+        trezoa_sha256_hasher::hash,
+        trezoa_transaction::versioned::VersionedTransaction,
         std::{thread::sleep, time::Duration},
     };
 
     #[test]
     #[ignore]
     fn test_poh_service() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = create_genesis_config(2);
@@ -773,7 +773,7 @@ mod tests {
                                 .reset(bank.clone(), next_leader_slot);
                             bank = Arc::new(Bank::new_from_parent(
                                 bank.clone(),
-                                &solana_pubkey::new_rand(),
+                                &trezoa_pubkey::new_rand(),
                                 bank.slot() + 1,
                             ));
                             poh_recorder
@@ -896,7 +896,7 @@ mod tests {
 
     #[test]
     fn test_poh_service_record_race() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = create_genesis_config(2);

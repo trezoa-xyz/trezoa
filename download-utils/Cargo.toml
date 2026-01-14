@@ -1,7 +1,7 @@
 [package]
-name = "solana-download-utils"
-description = "Solana Download Utils"
-documentation = "https://docs.rs/solana-download-utils"
+name = "trezoa-download-utils"
+description = "Trezoa Download Utils"
+documentation = "https://docs.rs/trezoa-download-utils"
 version = { workspace = true }
 authors = { workspace = true }
 repository = { workspace = true }
@@ -14,18 +14,18 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 [lib]
 crate-type = ["lib"]
-name = "solana_download_utils"
+name = "trezoa_download_utils"
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dependencies]
-agave-snapshots = { workspace = true }
+trezoa-snapshots = { workspace = true }
 log = { workspace = true }
-solana-clock = { workspace = true }
-solana-file-download = { workspace = true }
-solana-genesis-config = { workspace = true }
-solana-runtime = { workspace = true }
+trezoa-clock = { workspace = true }
+trezoa-file-download = { workspace = true }
+trezoa-genesis-config = { workspace = true }
+trezoa-runtime = { workspace = true }
 
 [dev-dependencies]
-solana-runtime = { workspace = true, features = ["dev-context-only-utils"] }
+trezoa-runtime = { workspace = true, features = ["dev-context-only-utils"] }

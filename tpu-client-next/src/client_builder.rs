@@ -49,7 +49,7 @@ use {
         transaction_batch::TransactionBatch,
         ConnectionWorkersScheduler, ConnectionWorkersSchedulerError, SendTransactionStats,
     },
-    solana_keypair::Keypair,
+    trezoa_keypair::Keypair,
     std::{future::Future, net::UdpSocket, pin::Pin, sync::Arc},
     thiserror::Error,
     tokio::{

@@ -1,4 +1,4 @@
-use solana_pubkey::Pubkey;
+use trezoa_pubkey::Pubkey;
 
 #[derive(Default)]
 pub struct AddressGenerator {

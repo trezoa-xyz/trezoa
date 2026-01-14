@@ -4,7 +4,7 @@ use {
     log::{debug, error, info, warn},
     regex::Regex,
     serde::{Deserialize, Serialize},
-    solana_file_download::{download_file, download_file_with_headers},
+    trezoa_file_download::{download_file, download_file_with_headers},
     std::{
         env,
         ffi::OsString,
@@ -39,10 +39,10 @@ const GITHUB_API_BYTES_RESPONSE_HEADERS: [(&str, &str); 3] = [
 ];
 
 fn find_installed_platform_tools() -> Vec<String> {
-    let solana = home_dir().join(".cache").join("solana");
+    let trezoa = home_dir().join(".cache").join("trezoa");
     let package = "platform-tools";
 
-    if let Ok(dir) = std::fs::read_dir(solana) {
+    if let Ok(dir) = std::fs::read_dir(trezoa) {
         dir.filter_map(|e| match e {
             Err(_) => None,
             Ok(e) => {
@@ -60,7 +60,7 @@ fn find_installed_platform_tools() -> Vec<String> {
 }
 
 fn get_latest_platform_tools_version() -> Result<String, String> {
-    let url = "https://github.com/anza-xyz/platform-tools/releases/latest";
+    let url = "https://github.com/trezoa-xyz/platform-tools/releases/latest";
     let resp = reqwest::blocking::get(url).map_err(|err| format!("Failed to GET {url}: {err}"))?;
     let path = std::path::Path::new(resp.url().path());
     let version = path.file_name().unwrap().to_string_lossy().to_string();
@@ -131,7 +131,7 @@ pub(crate) fn validate_platform_tools_version(
 pub(crate) fn make_platform_tools_path_for_version(version: &str) -> PathBuf {
     home_dir()
         .join(".cache")
-        .join("solana")
+        .join("trezoa")
         .join(version)
         .join("platform-tools")
 }
@@ -170,7 +170,7 @@ fn retrieve_file_from_github_api(
     }
 
     let client = reqwest::blocking::Client::new();
-    let query_url = format!("https://api.github.com/repos/anza-xyz/platform-tools/releases/tags/{platform_tools_version}");
+    let query_url = format!("https://api.github.com/repos/trezoa-xyz/platform-tools/releases/tags/{platform_tools_version}");
 
     let mut query_headers = reqwest::header::HeaderMap::new();
     for item in GITHUB_API_JSON_RESPONSE_HEADERS {
@@ -207,7 +207,7 @@ fn retrieve_file_from_browser_url(
     platform_tools_version: &str,
     download_file_path: &Path,
 ) -> Result<(), String> {
-    let url = format!("https://github.com/anza-xyz/platform-tools/releases/download/{platform_tools_version}/{download_file_name}");
+    let url = format!("https://github.com/trezoa-xyz/platform-tools/releases/download/{platform_tools_version}/{download_file_name}");
     download_file(url.as_str(), download_file_path, true, &mut None)
 }
 
@@ -266,7 +266,7 @@ pub(crate) fn install_if_missing(
             .map_err(|err| format!("could not remove {target_path:?}: {err}"))?;
     }
 
-    // Check whether the package is already in ~/.cache/solana.
+    // Check whether the package is already in ~/.cache/trezoa.
     // Download it and place in the proper location if not found.
     if !target_path.is_dir()
         && !target_path
@@ -344,7 +344,7 @@ pub(crate) fn corrupted_toolchain(platform_tools_dir: &Path) -> bool {
 
 pub(crate) fn generate_toolchain_name(requested_toolchain_version: &str) -> String {
     if requested_toolchain_version == DEFAULT_PLATFORM_TOOLS_VERSION {
-        return format!("{DEFAULT_RUST_VERSION}-sbpf-solana-{DEFAULT_PLATFORM_TOOLS_VERSION}");
+        return format!("{DEFAULT_RUST_VERSION}-sbpf-trezoa-{DEFAULT_PLATFORM_TOOLS_VERSION}");
     }
 
     let rustc_version_string = get_base_rust_version(requested_toolchain_version);
@@ -353,14 +353,14 @@ pub(crate) fn generate_toolchain_name(requested_toolchain_version: &str) -> Stri
     // Jump 'rustc'
     let _ = it.next();
     format!(
-        "{}-sbpf-solana-{}",
+        "{}-sbpf-trezoa-{}",
         it.next().unwrap(),
         requested_toolchain_version
     )
 }
 
-// check whether custom solana toolchain is linked, and link it if it is not.
-fn link_solana_toolchain(
+// check whether custom trezoa toolchain is linked, and link it if it is not.
+fn link_trezoa_toolchain(
     config: &Config,
     platform_tools_dir: &Path,
     requested_toolchain_version: &str,
@@ -381,7 +381,7 @@ fn link_solana_toolchain(
     for line in rustup_output.lines() {
         let substrings: Vec<&str> = line.split(' ').collect();
         let installed_toolchain_name = *substrings.first().unwrap();
-        if installed_toolchain_name.contains("solana") {
+        if installed_toolchain_name.contains("trezoa") {
             // Paths are always the last item in the output of 'rust toolchain list -v'
             let path = substrings.last();
             if *path.unwrap() != toolchain_path.to_str().unwrap()
@@ -453,13 +453,13 @@ pub(crate) fn install_and_link_tools(
     let platform_tools_version = config.platform_tools_version.unwrap_or_else(|| {
         let workspace_tools_version = metadata
             .workspace_metadata
-            .get("solana")
+            .get("trezoa")
             .and_then(|v| v.get("tools-version"))
             .and_then(|v| v.as_str());
         let package_tools_version = package
             .map(|p| {
                 p.metadata
-                    .get("solana")
+                    .get("trezoa")
                     .and_then(|v| v.get("tools-version"))
                     .and_then(|v| v.as_str())
             })
@@ -489,17 +489,17 @@ pub(crate) fn install_and_link_tools(
 
     if config.no_rustup_override {
         let target_triple = rust_target_triple(config);
-        check_solana_target_installed(&target_triple);
+        check_trezoa_target_installed(&target_triple);
     } else {
         let platform_tools_dir = make_platform_tools_path_for_version(&platform_tools_version);
-        link_solana_toolchain(config, &platform_tools_dir, &platform_tools_version);
+        link_trezoa_toolchain(config, &platform_tools_dir, &platform_tools_version);
         // RUSTC variable overrides cargo +<toolchain> mechanism of
         // selecting the rust compiler and makes cargo run a rust compiler
-        // other than the one linked in Solana toolchain. We have to prevent
+        // other than the one linked in Trezoa toolchain. We have to prevent
         // this by removing RUSTC from the child process environment.
         if env::var("RUSTC").is_ok() {
             warn!(
-                "Removed RUSTC from cargo environment, because it overrides +solana cargo command \
+                "Removed RUSTC from cargo environment, because it overrides +trezoa cargo command \
                  line option."
             );
             // Safety: cargo-build-sbf doesn't spawn any threads until final child process is spawned
@@ -511,13 +511,13 @@ pub(crate) fn install_and_link_tools(
 }
 
 // allow user to set proper `rustc` into RUSTC or into PATH
-fn check_solana_target_installed(target: &str) {
+fn check_trezoa_target_installed(target: &str) {
     let rustc = env::var("RUSTC").unwrap_or("rustc".to_owned());
     let rustc = PathBuf::from(rustc);
     let output = spawn(&rustc, ["--print", "target-list"], false);
     if !output.contains(target) {
         error!(
-            "Provided {rustc:?} does not have {target} target. The Solana rustc must be available \
+            "Provided {rustc:?} does not have {target} target. The Trezoa rustc must be available \
              in $PATH or the $RUSTC environment variable for the build to succeed."
         );
         exit(1);
@@ -534,11 +534,11 @@ pub(crate) fn rust_target_triple(config: &Config) -> String {
     let sbpf_minimum_version = semver::Version::parse(&semver_version("v1.44")).unwrap();
 
     if config.arch == "v0" && tools_version < sbpf_minimum_version {
-        "sbf-solana-solana".to_string()
+        "sbf-trezoa-trezoa".to_string()
     } else if config.arch == "v0" {
-        "sbpf-solana-solana".to_string()
+        "sbpf-trezoa-trezoa".to_string()
     } else {
-        format!("sbpf{}-solana-solana", config.arch)
+        format!("sbpf{}-trezoa-trezoa", config.arch)
     }
 }
 
@@ -593,7 +593,7 @@ fn nix_patch_bin_or_dylib(out: &Path, fname: &Path) {
         const NIX_EXPR: &str = "
         with (import <nixpkgs> {});
         symlinkJoin {
-            name = \"solana-sbf-dependencies\";
+            name = \"trezoa-sbf-dependencies\";
             paths = [
                 libedit
                 python310

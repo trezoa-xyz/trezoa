@@ -15,11 +15,11 @@ use {
         Endpoint, IdleTimeout, ServerConfig, VarInt,
     },
     rustls::KeyLogFile,
-    solana_keypair::Keypair,
-    solana_packet::PACKET_DATA_SIZE,
-    solana_perf::packet::PacketBatch,
-    solana_quic_definitions::{NotifyKeyUpdate, QUIC_MAX_TIMEOUT},
-    solana_tls_utils::{new_dummy_x509_certificate, tls_server_config_builder},
+    trezoa_keypair::Keypair,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_perf::packet::PacketBatch,
+    trezoa_quic_definitions::{NotifyKeyUpdate, QUIC_MAX_TIMEOUT},
+    trezoa_tls_utils::{new_dummy_x509_certificate, tls_server_config_builder},
     std::{
         net::UdpSocket,
         num::NonZeroUsize,
@@ -125,7 +125,7 @@ pub(crate) fn configure_server(
     // Disable GSO. The server only accepts inbound unidirectional streams initiated by clients,
     // which means that reply data never exceeds one MTU. By disabling GSO, we make
     // quinn_proto::Connection::poll_transmit allocate only 1 MTU vs 10 * MTU for _each_ transmit.
-    // See https://github.com/anza-xyz/agave/pull/1647.
+    // See https://github.com/trezoa-xyz/trezoa/pull/1647.
     config.enable_segmentation_offload(false);
 
     Ok((server_config, cert_chain_pem))
@@ -732,9 +732,9 @@ mod test {
             testing_utilities::{check_multiple_streams, make_client_endpoint},
         },
         crossbeam_channel::{unbounded, Receiver},
-        solana_net_utils::sockets::bind_to_localhost_unique,
-        solana_pubkey::Pubkey,
-        solana_signer::Signer,
+        trezoa_net_utils::sockets::bind_to_localhost_unique,
+        trezoa_pubkey::Pubkey,
+        trezoa_signer::Signer,
         std::{collections::HashMap, net::SocketAddr, time::Instant},
         tokio::time::sleep,
     };
@@ -821,7 +821,7 @@ mod test {
 
     #[test]
     fn test_quic_timeout() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (t, receiver, server_address, cancel) = setup_swqos_quic_server();
         let runtime = rt_for_test();
         runtime.block_on(check_timeout(receiver, server_address));
@@ -831,7 +831,7 @@ mod test {
 
     #[test]
     fn test_quic_server_block_multiple_connections() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (t, _receiver, server_address, cancel) = setup_swqos_quic_server();
 
         let runtime = rt_for_test();
@@ -842,7 +842,7 @@ mod test {
 
     #[test]
     fn test_quic_server_multiple_streams() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let s = bind_to_localhost_unique().expect("should bind");
         let (sender, receiver) = unbounded();
         let keypair = Keypair::new();
@@ -879,7 +879,7 @@ mod test {
 
     #[test]
     fn test_quic_server_multiple_writes() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let (t, receiver, server_address, cancel) = setup_swqos_quic_server();
 
         let runtime = rt_for_test();
@@ -892,7 +892,7 @@ mod test {
     fn test_quic_server_multiple_packets_with_simple_qos() {
         // Send multiple writes from a staked node with simple QoS mode
         // and verify pubkey is sent along with packets.
-        agave_logger::setup();
+        trezoa_logger::setup();
         let client_keypair = Keypair::new();
         let rich_node_keypair = Keypair::new();
 
@@ -934,7 +934,7 @@ mod test {
 
     #[test]
     fn test_quic_server_unstaked_node_connect_failure() {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let s = bind_to_localhost_unique().expect("should bind");
         let (sender, _) = unbounded();
         let keypair = Keypair::new();

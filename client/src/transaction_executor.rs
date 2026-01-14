@@ -1,12 +1,12 @@
 #![allow(clippy::arithmetic_side_effects)]
 use {
     log::*,
-    solana_commitment_config::CommitmentConfig,
-    solana_measure::measure::Measure,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_signature::Signature,
-    solana_time_utils::timestamp,
-    solana_transaction::Transaction,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_measure::measure::Measure,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_signature::Signature,
+    trezoa_time_utils::timestamp,
+    trezoa_transaction::Transaction,
     std::{
         net::SocketAddr,
         sync::{

@@ -372,8 +372,8 @@ mod tests {
             SendTransactionStats,
         },
         quinn::Endpoint,
-        solana_net_utils::sockets::{bind_to_localhost_unique, unique_port_range_for_tests},
-        solana_tls_utils::QuicClientCertificate,
+        trezoa_net_utils::sockets::{bind_to_localhost_unique, unique_port_range_for_tests},
+        trezoa_tls_utils::QuicClientCertificate,
         std::{
             net::{Ipv4Addr, SocketAddr},
             sync::Arc,

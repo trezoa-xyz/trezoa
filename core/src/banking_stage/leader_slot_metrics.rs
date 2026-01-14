@@ -5,9 +5,9 @@ use {
         vote_storage::VoteBatchInsertionMetrics,
     },
     crate::banking_stage::vote_packet_receiver::PacketReceiverStats,
-    solana_clock::Slot,
-    solana_runtime::bank::Bank,
-    solana_svm::transaction_error_metrics::*,
+    trezoa_clock::Slot,
+    trezoa_runtime::bank::Bank,
+    trezoa_svm::transaction_error_metrics::*,
     std::{num::Saturating, sync::Arc},
 };
 
@@ -789,8 +789,8 @@ impl LeaderSlotMetricsTracker {
 mod tests {
     use {
         super::*,
-        solana_pubkey::Pubkey,
-        solana_runtime::{bank::Bank, genesis_utils::create_genesis_config},
+        trezoa_pubkey::Pubkey,
+        trezoa_runtime::{bank::Bank, genesis_utils::create_genesis_config},
         std::{mem, sync::Arc},
     };
 

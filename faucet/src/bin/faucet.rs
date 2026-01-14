@@ -1,13 +1,13 @@
 #[allow(deprecated)]
-use solana_faucet::{
+use trezoa_faucet::{
     faucet::{run_faucet, Faucet, FAUCET_PORT},
     socketaddr,
 };
 use {
     clap::{crate_description, crate_name, values_t, App, Arg},
     log::*,
-    solana_clap_utils::input_parsers::{lamports_of_sol, value_of},
-    solana_keypair::read_keypair_file,
+    trezoa_clap_utils::input_parsers::{lamports_of_sol, value_of},
+    trezoa_keypair::read_keypair_file,
     std::{
         collections::HashSet,
         net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -18,13 +18,13 @@ use {
 
 #[tokio::main]
 async fn main() {
-    let default_keypair = solana_cli_config::Config::default().keypair_path;
+    let default_keypair = trezoa_cli_config::Config::default().keypair_path;
 
-    agave_logger::setup_with_default_filter();
-    solana_metrics::set_panic_hook("faucet", /*version:*/ None);
+    trezoa_logger::setup_with_default_filter();
+    trezoa_metrics::set_panic_hook("faucet", /*version:*/ None);
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::with_name("keypair")
                 .short("k")
@@ -48,14 +48,14 @@ async fn main() {
                 .alias("cap")
                 .value_name("NUM")
                 .takes_value(true)
-                .help("Request limit for time slice, in SOL"),
+                .help("Request limit for time slice, in TRZ"),
         )
         .arg(
             Arg::with_name("per_request_cap")
                 .long("per-request-cap")
                 .value_name("NUM")
                 .takes_value(true)
-                .help("Request limit for a single request, in SOL"),
+                .help("Request limit for a single request, in TRZ"),
         )
         .arg(
             Arg::with_name("allowed_ip")

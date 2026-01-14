@@ -8,7 +8,7 @@ use {
         leader_schedule_cache::LeaderScheduleCache,
         use_snapshot_archives_at_startup::{self, UseSnapshotArchivesAtStartup},
     },
-    agave_snapshots::{
+    trezoa_snapshots::{
         error::SnapshotError,
         paths as snapshot_paths,
         snapshot_archive_info::{
@@ -18,9 +18,9 @@ use {
         snapshot_hash::{FullSnapshotHash, IncrementalSnapshotHash, StartingSnapshotHashes},
     },
     log::*,
-    solana_accounts_db::accounts_update_notifier_interface::AccountsUpdateNotifier,
-    solana_genesis_config::GenesisConfig,
-    solana_runtime::{bank_forks::BankForks, snapshot_bank_utils, snapshot_utils},
+    trezoa_accounts_db::accounts_update_notifier_interface::AccountsUpdateNotifier,
+    trezoa_genesis_config::GenesisConfig,
+    trezoa_runtime::{bank_forks::BankForks, snapshot_bank_utils, snapshot_utils},
     std::{
         path::PathBuf,
         result,

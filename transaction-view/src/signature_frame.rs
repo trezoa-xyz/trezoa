@@ -3,9 +3,9 @@ use {
         bytes::{advance_offset_for_array, read_byte},
         result::{Result, TransactionViewError},
     },
-    solana_packet::PACKET_DATA_SIZE,
-    solana_pubkey::Pubkey,
-    solana_signature::Signature,
+    trezoa_packet::PACKET_DATA_SIZE,
+    trezoa_pubkey::Pubkey,
+    trezoa_signature::Signature,
 };
 
 // The packet has a maximum length of 1232 bytes.
@@ -53,7 +53,7 @@ impl SignatureFrame {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_short_vec::ShortVec};
+    use {super::*, trezoa_short_vec::ShortVec};
 
     #[test]
     fn test_zero_signatures() {

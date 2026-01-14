@@ -1,16 +1,16 @@
 use {
-    agave_feature_set::FeatureSet,
+    trezoa_feature_set::FeatureSet,
     criterion::{Criterion, Throughput, criterion_group, criterion_main},
-    solana_compute_budget_instruction::instructions_processor::process_compute_budget_instructions,
-    solana_compute_budget_interface::ComputeBudgetInstruction,
-    solana_instruction::Instruction,
-    solana_keypair::Keypair,
-    solana_message::Message,
-    solana_pubkey::Pubkey,
-    solana_signer::Signer,
-    solana_svm_transaction::svm_message::SVMStaticMessage,
-    solana_system_interface::instruction::transfer,
-    solana_transaction::{Transaction, sanitized::SanitizedTransaction},
+    trezoa_compute_budget_instruction::instructions_processor::process_compute_budget_instructions,
+    trezoa_compute_budget_interface::ComputeBudgetInstruction,
+    trezoa_instruction::Instruction,
+    trezoa_keypair::Keypair,
+    trezoa_message::Message,
+    trezoa_pubkey::Pubkey,
+    trezoa_signer::Signer,
+    trezoa_svm_transaction::svm_message::SVMStaticMessage,
+    trezoa_system_interface::instruction::transfer,
+    trezoa_transaction::{Transaction, sanitized::SanitizedTransaction},
     std::hint::black_box,
 };
 
@@ -115,18 +115,18 @@ fn bench_process_compute_budget_instructions_builtins(c: &mut Criterion) {
             .throughput(Throughput::Elements(NUM_TRANSACTIONS_PER_ITER as u64))
             .bench_function("4 dummy builtins", |bencher| {
                 let ixs = vec![
-                    Instruction::new_with_bincode(solana_sdk_ids::bpf_loader::id(), &(), vec![]),
+                    Instruction::new_with_bincode(trezoa_sdk_ids::bpf_loader::id(), &(), vec![]),
                     Instruction::new_with_bincode(
-                        solana_sdk_ids::secp256k1_program::id(),
+                        trezoa_sdk_ids::secp256k1_program::id(),
                         &(),
                         vec![],
                     ),
                     Instruction::new_with_bincode(
-                        solana_sdk_ids::address_lookup_table::id(),
+                        trezoa_sdk_ids::address_lookup_table::id(),
                         &(),
                         vec![],
                     ),
-                    Instruction::new_with_bincode(solana_sdk_ids::loader_v4::id(), &(), vec![]),
+                    Instruction::new_with_bincode(trezoa_sdk_ids::loader_v4::id(), &(), vec![]),
                 ];
                 let tx = build_sanitized_transaction(&Keypair::new(), &ixs);
                 bencher.iter(|| {

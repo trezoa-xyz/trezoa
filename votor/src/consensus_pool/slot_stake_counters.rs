@@ -11,8 +11,8 @@ use {
         consensus_pool::stats::ConsensusPoolStats,
         event::VotorEvent,
     },
-    agave_votor_messages::vote::Vote,
-    solana_hash::Hash,
+    trezoa_votor_messages::vote::Vote,
+    trezoa_hash::Hash,
     std::collections::BTreeMap,
 };
 
@@ -129,7 +129,7 @@ impl SlotStakeCounters {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, agave_votor_messages::vote::Vote};
+    use {super::*, trezoa_votor_messages::vote::Vote};
 
     #[test]
     fn test_safe_to_notar() {

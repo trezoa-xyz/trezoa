@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -12,7 +12,7 @@
 //! and can efficiently detect bugs in concurrent code. The downside is that we need to replace
 //! all imports by those from Shuttle.
 //!
-//! Instead of importing from std, rand, and so on, import the following from solana-type-override,
+//! Instead of importing from std, rand, and so on, import the following from trezoa-type-override,
 //! and include the 'shuttle-test' feature in your crate to use shuttle.
 
 #[cfg(feature = "executor")]

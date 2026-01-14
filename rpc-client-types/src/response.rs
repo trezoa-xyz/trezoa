@@ -1,8 +1,8 @@
 use {
     serde::{Deserialize, Deserializer, Serialize, Serializer},
-    solana_clock::{Epoch, Slot, UnixTimestamp},
-    solana_inflation::Inflation,
-    solana_transaction_status_client_types::ConfirmedTransactionStatusWithSignature,
+    trezoa_clock::{Epoch, Slot, UnixTimestamp},
+    trezoa_inflation::Inflation,
+    trezoa_transaction_status_client_types::ConfirmedTransactionStatusWithSignature,
     std::{collections::HashMap, fmt, net::SocketAddr, str::FromStr},
     thiserror::Error,
 };
@@ -10,18 +10,18 @@ use {
 // and recursively re-export types that are part of those types' public APIs
 pub use {
     serde_json::Value, // used in ParsedInstruction
-    solana_account_decoder_client_types::{
+    trezoa_account_decoder_client_types::{
         token::UiTokenAmount,
         ParsedAccount, // used in UiAccountData
         UiAccount,
         UiAccountData,     // used in UiAccount
         UiAccountEncoding, // used in UiAccountData
     },
-    solana_fee_calculator::{FeeCalculator, FeeRateGovernor},
-    solana_reward_info::RewardType,    // used in Reward
-    solana_transaction as transaction, // used in EncodedTransaction (may as well re-export the whole crate)
-    solana_transaction_error::{TransactionError, TransactionResult},
-    solana_transaction_status_client_types::{
+    trezoa_fee_calculator::{FeeCalculator, FeeRateGovernor},
+    trezoa_reward_info::RewardType,    // used in Reward
+    trezoa_transaction as transaction, // used in EncodedTransaction (may as well re-export the whole crate)
+    trezoa_transaction_error::{TransactionError, TransactionResult},
+    trezoa_transaction_status_client_types::{
         option_serializer::OptionSerializer, // used in UiTransactionStatusMeta
         EncodedTransaction,                  // used in EncodedTransactionWithStatusMeta
         EncodedTransactionWithStatusMeta,    // used in UiConfirmedBlock
@@ -86,7 +86,7 @@ impl std::ops::Deref for RpcApiVersion {
 
 impl Default for RpcApiVersion {
     fn default() -> Self {
-        Self(solana_version::Version::default().as_semver_version())
+        Self(trezoa_version::Version::default().as_semver_version())
     }
 }
 
@@ -344,25 +344,25 @@ pub struct RpcBlockProduction {
 #[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 #[serde(rename_all = "kebab-case")]
 pub struct RpcVersionInfo {
-    /// The current version of solana-core
-    pub solana_core: String,
+    /// The current version of trezoa-core
+    pub trezoa_core: String,
     /// first 4 bytes of the FeatureSet identifier
     pub feature_set: Option<u32>,
 }
 
 impl fmt::Debug for RpcVersionInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.solana_core)
+        write!(f, "{}", self.trezoa_core)
     }
 }
 
 impl fmt::Display for RpcVersionInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if let Some(version) = self.solana_core.split_whitespace().next() {
+        if let Some(version) = self.trezoa_core.split_whitespace().next() {
             // Display just the semver if possible
             write!(f, "{version}")
         } else {
-            write!(f, "{}", self.solana_core)
+            write!(f, "{}", self.trezoa_core)
         }
     }
 }

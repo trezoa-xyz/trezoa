@@ -1,8 +1,8 @@
 # This package only exists to avoid circular dependencies during cargo publish:
-# solana-bpf-loader-program -> solana-program-test -> solana-bpf-loader-program
+# trezoa-bpf-loader-program -> trezoa-program-test -> trezoa-bpf-loader-program
 
 [package]
-name = "solana-bpf-loader-program-tests"
+name = "trezoa-bpf-loader-program-tests"
 publish = false
 version = { workspace = true }
 authors = { workspace = true }
@@ -15,20 +15,20 @@ edition = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [features]
-agave-unstable-api = []
+trezoa-unstable-api = []
 
 [dev-dependencies]
 assert_matches = { workspace = true }
 bincode = { workspace = true }
-solana-account = { workspace = true }
-solana-bpf-loader-program = { workspace = true }
-solana-instruction = { workspace = true }
-solana-keypair = { workspace = true }
-solana-loader-v3-interface = { workspace = true }
-solana-program-test = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-sdk-ids = { workspace = true }
-solana-signer = { workspace = true }
-solana-system-interface = { workspace = true }
-solana-transaction = { workspace = true }
-solana-transaction-error = { workspace = true }
+trezoa-account = { workspace = true }
+trezoa-bpf-loader-program = { workspace = true }
+trezoa-instruction = { workspace = true }
+trezoa-keypair = { workspace = true }
+trezoa-loader-v3-interface = { workspace = true }
+trezoa-program-test = { workspace = true }
+trezoa-pubkey = { workspace = true }
+trezoa-sdk-ids = { workspace = true }
+trezoa-signer = { workspace = true }
+trezoa-system-interface = { workspace = true }
+trezoa-transaction = { workspace = true }
+trezoa-transaction-error = { workspace = true }

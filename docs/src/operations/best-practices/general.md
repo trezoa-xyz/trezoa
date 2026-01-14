@@ -1,5 +1,5 @@
 ---
-title: Agave Validator Operations Best Practices
+title: Trezoa-team Validator Operations Best Practices
 sidebar_label: General Operations
 pagination_label: "Best Practices: Validator Operations"
 ---
@@ -9,7 +9,7 @@ After you have successfully setup and started a
 of your choice), you will want to become familiar with how to operate your
 validator on a day-to-day basis. During daily operations, you will be
 [monitoring your server](./monitoring.md), updating software regularly (both the
-Solana validator software and operating system packages), and managing your vote
+Trezoa validator software and operating system packages), and managing your vote
 account and identity account.
 
 All of these skills are critical to practice. Maximizing your validator uptime
@@ -17,47 +17,47 @@ is an important part of being a good operator.
 
 ## Educational Workshops
 
-The Solana validator community holds regular educational workshops. You can
+The Trezoa validator community holds regular educational workshops. You can
 watch past workshops through the
-[Solana validator educational workshops playlist](https://www.youtube.com/watch?v=86zySQ5vGW8&list=PLilwLeBwGuK6jKrmn7KOkxRxS9tvbRa5p).
+[Trezoa validator educational workshops playlist](https://www.youtube.com/watch?v=86zySQ5vGW8&list=PLilwLeBwGuK6jKrmn7KOkxRxS9tvbRa5p).
 
 ## Community Validator calls
 
-The Solana validator community holds regular calls. 
-There is the 'Solana Foundation Validator Discussion' which is hosted by the Solana Foundation and the 'Community Led Validator Call'
+The Trezoa validator community holds regular calls. 
+There is the 'Trezoa Foundation Validator Discussion' which is hosted by the Trezoa Foundation and the 'Community Led Validator Call'
 which is hosted by the community itself. 
 
-### Solana Foundation Validator Discussion
+### Trezoa Foundation Validator Discussion
 
-This is a monthly call that is hosted by the Solana Foundation. 
+This is a monthly call that is hosted by the Trezoa Foundation. 
 - Schedule: every second Thursday of the month 18:00 CET
 - Agenda: See [validator-announcements channel in Discord](https://discord.com/channels/428295358100013066/586252910506016798). 
 - This call **is recorded** and past calls can be watched back on the [Community Validator Discussions playlist](https://www.youtube.com/playlist?list=PLilwLeBwGuK78yjGBZwYhTf7rao0t13Zw)
 
 ### Community Led Validator Call
 
-This is also a monthly call hosted by the Solana validator community itself.
+This is also a monthly call hosted by the Trezoa validator community itself.
 - Schedule: every fourth Thursday of the month 18:00 CET
-- Agenda: See [HackMD site](https://hackmd.io/1DFauFMWTZG37-U7CXhxMg?view#Solana-Community-Validator-Call-Agendas). 
+- Agenda: See [HackMD site](https://hackmd.io/1DFauFMWTZG37-U7CXhxMg?view#Trezoa-Community-Validator-Call-Agendas). 
 - This call is **not recorded**
 
 ***Please note that the scheduling of these calls can be changed last minute due to any circumstances. For the most up-to-date information go to the [validator-announcements channel in Discord](https://discord.com/channels/428295358100013066/586252910506016798).***
 
 ## Help with the validator command line
 
-From within the Solana CLI, you can execute the `agave-validator` command with
+From within the Trezoa CLI, you can execute the `trezoa-validator` command with
 the `--help` flag to get a better understanding of the flags and sub commands
 available.
 
 ```
-agave-validator --help
+trezoa-validator --help
 ```
 
 ## Restarting your validator
 
 There are many operational reasons you may want to restart your validator. As a
 best practice, you should avoid a restart during a leader slot. A
-[leader slot](https://solana.com/docs/terminology#leader-schedule) is the time
+[leader slot](https://trezoa.com/docs/terminology#leader-schedule) is the time
 when your validator is expected to produce blocks. For the health of the cluster
 and also for your validator's ability to earn transaction fee rewards, you do
 not want your validator to be offline during an opportunity to produce blocks.
@@ -65,26 +65,26 @@ not want your validator to be offline during an opportunity to produce blocks.
 To see the full leader schedule for an epoch, use the following command:
 
 ```
-solana leader-schedule
+trezoa leader-schedule
 ```
 
 Based on the current slot and the leader schedule, you can calculate open time
 windows where your validator is not expected to produce blocks.
 
-Assuming you are ready to restart, you may use the `agave-validator exit`
+Assuming you are ready to restart, you may use the `trezoa-validator exit`
 command. The command exits your validator process when an appropriate idle time
 window is reached. Assuming that you have systemd implemented for your validator
 process, the validator should restart automatically after the exit. See the
 below help command for details:
 
 ```
-agave-validator exit --help
+trezoa-validator exit --help
 ```
 
 ## Upgrading
 
 There are many ways to upgrade the
-[Solana CLI software](../../cli/install.md). As an operator, you
+[Trezoa CLI software](../../cli/install.md). As an operator, you
 will need to upgrade often, so it is important to get comfortable with this
 process.
 
@@ -94,14 +94,14 @@ process.
 
 ### Building the newest version from source
 
-The easiest way to upgrade the Solana CLI software is to build the newest
+The easiest way to upgrade the Trezoa CLI software is to build the newest
 version from source. See the
 [build from source](../../cli/install.md#build-from-source) instructions for details.
 
 ### Restart
 
 The validator process will need to be restarted before
-the newly installed version is in use. Use `agave-validator exit` to restart
+the newly installed version is in use. Use `trezoa-validator exit` to restart
 your validator process.
 
 ### Verifying version
@@ -127,14 +127,14 @@ have state locally. In other cases, such as restarts for upgrades, a snapshot
 download should be avoided.
 
 To avoid downloading a snapshot on restart, add the following flag to the
-`agave-validator` command:
+`trezoa-validator` command:
 
 ```
 --no-snapshot-fetch
 ```
 
-If you use this flag with the `agave-validator` command, make sure that you run
-`solana catchup <pubkey>` after your validator starts to make sure that the
+If you use this flag with the `trezoa-validator` command, make sure that you run
+`trezoa catchup <pubkey>` after your validator starts to make sure that the
 validator is catching up in a reasonable time. After some time (potentially a
 few hours), if it appears that your validator continues to fall behind, then you
 may have to download a new snapshot.
@@ -159,15 +159,15 @@ It is important that you do not accidentally run out of funds in your identity
 account, as your node will stop voting. It is also important to note that this
 account keypair is the most vulnerable of the three keypairs in a vote account
 because the keypair for the identity account is stored on your validator when
-running the `agave-validator` software. How much SOL you should store there is
+running the `trezoa-validator` software. How much SOL you should store there is
 up to you. As a best practice, make sure to check the account regularly and
 refill or deduct from it as needed. To check the account balance do:
 
 ```
-solana balance validator-keypair.json
+trezoa balance validator-keypair.json
 ```
 
-> **Note** `agave-watchtower` can monitor for a minimum validator identity
+> **Note** `trezoa-watchtower` can monitor for a minimum validator identity
 > balance. See [monitoring best practices](./monitoring.md) for details.
 
 ## Withdrawing From The Vote Account
@@ -177,20 +177,20 @@ server. It should be stored on a hardware wallet, paper wallet, or multisig
 mitigates the risk of hacking and theft of funds.
 
 To withdraw your funds from your vote account, you will need to run
-`solana withdraw-from-vote-account` on a trusted computer. For example, on a
+`trezoa withdraw-from-vote-account` on a trusted computer. For example, on a
 trusted computer, you could withdraw all of the funds from your vote account
 (excluding the rent exempt minimum). The below example assumes you have a
 separate keypair to store your funds called `person-keypair.json`
 
 ```
-solana withdraw-from-vote-account \
+trezoa withdraw-from-vote-account \
    vote-account-keypair.json \
    person-keypair.json ALL \
    --authorized-withdrawer authorized-withdrawer-keypair.json
 ```
 
 To get more information on the command, use
-`solana withdraw-from-vote-account --help`.
+`trezoa withdraw-from-vote-account --help`.
 
 For a more detailed explanation of the different keypairs and other related
 operations refer to

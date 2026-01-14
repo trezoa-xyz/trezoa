@@ -1,9 +1,9 @@
 #![cfg_attr(
-    not(feature = "agave-unstable-api"),
+    not(feature = "trezoa-unstable-api"),
     deprecated(
         since = "3.1.0",
-        note = "This crate has been marked for formal inclusion in the Agave Unstable API. From \
-                v4.0.0 onward, the `agave-unstable-api` crate feature must be specified to \
+        note = "This crate has been marked for formal inclusion in the Trezoa-team Unstable API. From \
+                v4.0.0 onward, the `trezoa-unstable-api` crate feature must be specified to \
                 acknowledge use of an interface that may break without warning."
     )
 )]
@@ -22,16 +22,16 @@ pub mod parse_token_extension;
 pub mod parse_vote;
 pub mod validator_info;
 
-pub use solana_account_decoder_client_types::{
+pub use trezoa_account_decoder_client_types::{
     UiAccount, UiAccountData, UiAccountEncoding, UiDataSliceConfig,
 };
 use {
     crate::parse_account_data::{parse_account_data_v3, AccountAdditionalDataV3},
     base64::{prelude::BASE64_STANDARD, Engine},
     serde::{Deserialize, Serialize},
-    solana_account::ReadableAccount,
-    solana_fee_calculator::FeeCalculator,
-    solana_pubkey::Pubkey,
+    trezoa_account::ReadableAccount,
+    trezoa_fee_calculator::FeeCalculator,
+    trezoa_pubkey::Pubkey,
     std::io::Write,
 };
 
@@ -149,7 +149,7 @@ mod test {
     use {
         super::*,
         assert_matches::assert_matches,
-        solana_account::{Account, AccountSharedData},
+        trezoa_account::{Account, AccountSharedData},
     };
 
     #[test]

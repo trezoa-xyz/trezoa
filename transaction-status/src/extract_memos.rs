@@ -1,9 +1,9 @@
 use {
     crate::{parse_instruction::parse_memo_data, VersionedTransactionWithStatusMeta},
-    solana_message::{
+    trezoa_message::{
         compiled_instruction::CompiledInstruction, AccountKeys, Message, SanitizedMessage,
     },
-    solana_pubkey::Pubkey,
+    trezoa_pubkey::Pubkey,
 };
 
 pub fn extract_and_fmt_memos<T: ExtractMemos>(message: &T) -> Option<String> {

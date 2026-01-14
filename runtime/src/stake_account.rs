@@ -1,10 +1,10 @@
 #[cfg(feature = "frozen-abi")]
-use solana_frozen_abi::abi_example::AbiExample;
+use trezoa_frozen_abi::abi_example::AbiExample;
 use {
-    solana_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
-    solana_instruction::error::InstructionError,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::{
+    trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
+    trezoa_instruction::error::InstructionError,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::{
         program as stake_program,
         state::{Delegation, Stake, StakeStateV2},
     },
@@ -102,8 +102,8 @@ impl<S, T> PartialEq<StakeAccount<S>> for StakeAccount<T> {
 impl AbiExample for StakeAccount<Delegation> {
     fn example() -> Self {
         use {
-            solana_account::Account,
-            solana_stake_interface::{
+            trezoa_account::Account,
+            trezoa_stake_interface::{
                 stake_flags::StakeFlags,
                 state::{Meta, Stake},
             },

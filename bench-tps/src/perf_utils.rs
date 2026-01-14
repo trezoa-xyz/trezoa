@@ -1,7 +1,7 @@
 use {
     log::*,
-    solana_commitment_config::CommitmentConfig,
-    solana_tps_client::TpsClient,
+    trezoa_commitment_config::CommitmentConfig,
+    trezoa_tps_client::TpsClient,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},

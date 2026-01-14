@@ -1,5 +1,5 @@
 use {
-    agave_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin,
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin,
     jsonrpc_core::{ErrorCode, Result as JsonRpcResult},
     libloading::Library,
     log::*,
@@ -447,7 +447,7 @@ mod tests {
         crate::geyser_plugin_manager::{
             GeyserPluginManager, LoadedGeyserPlugin, TESTPLUGIN2_CONFIG, TESTPLUGIN_CONFIG,
         },
-        agave_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin,
+        trezoa_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin,
         libloading::Library,
         std::sync::{Arc, RwLock},
     };

@@ -1,11 +1,11 @@
 use {
     crate::stakes::{DeserializableStakes, SerdeStakesToStakeFormat, Stakes},
     serde::{Deserialize, Serialize},
-    solana_bls_signatures::{Pubkey as BLSPubkey, PubkeyCompressed as BLSPubkeyCompressed},
-    solana_clock::Epoch,
-    solana_pubkey::Pubkey,
-    solana_stake_interface::state::Stake,
-    solana_vote::vote_account::VoteAccountsHashMap,
+    trezoa_bls_signatures::{Pubkey as BLSPubkey, PubkeyCompressed as BLSPubkeyCompressed},
+    trezoa_clock::Epoch,
+    trezoa_pubkey::Pubkey,
+    trezoa_stake_interface::state::Stake,
+    trezoa_vote::vote_account::VoteAccountsHashMap,
     std::{
         collections::HashMap,
         sync::{Arc, OnceLock},
@@ -160,7 +160,7 @@ impl VersionedEpochStakes {
         Self::new(
             SerdeStakesToStakeFormat::Account(crate::stakes::Stakes::new_for_tests(
                 0,
-                solana_vote::vote_account::VoteAccounts::from(Arc::new(vote_accounts_hash_map)),
+                trezoa_vote::vote_account::VoteAccounts::from(Arc::new(vote_accounts_hash_map)),
                 im::HashMap::default(),
             )),
             leader_schedule_epoch,
@@ -276,10 +276,10 @@ impl VersionedEpochStakes {
 #[cfg(test)]
 pub(crate) mod tests {
     use {
-        super::*, solana_account::AccountSharedData,
-        solana_bls_signatures::keypair::Keypair as BLSKeypair,
-        solana_vote::vote_account::VoteAccount,
-        solana_vote_program::vote_state::create_v4_account_with_authorized, std::iter,
+        super::*, trezoa_account::AccountSharedData,
+        trezoa_bls_signatures::keypair::Keypair as BLSKeypair,
+        trezoa_vote::vote_account::VoteAccount,
+        trezoa_vote_program::vote_state::create_v4_account_with_authorized, std::iter,
         test_case::test_case,
     };
 
@@ -297,11 +297,11 @@ pub(crate) mod tests {
         // Create some vote accounts for each pubkey
         (0..num_nodes)
             .map(|_| {
-                let node_id = solana_pubkey::new_rand();
+                let node_id = trezoa_pubkey::new_rand();
                 (
                     node_id,
                     iter::repeat_with(|| {
-                        let authorized_voter = solana_pubkey::new_rand();
+                        let authorized_voter = trezoa_pubkey::new_rand();
                         let bls_pubkey_compressed: BLSPubkeyCompressed =
                             BLSKeypair::new().public.try_into().unwrap();
                         let bls_pubkey_compressed_serialized =
@@ -330,7 +330,7 @@ pub(crate) mod tests {
                             )
                         };
                         VoteAccountInfo {
-                            vote_account: solana_pubkey::new_rand(),
+                            vote_account: trezoa_pubkey::new_rand(),
                             account,
                             authorized_voter,
                         }
@@ -452,7 +452,7 @@ pub(crate) mod tests {
     #[test_case(1; "single_vote_account")]
     #[test_case(2; "multiple_vote_accounts")]
     fn test_bls_pubkey_rank_map(num_vote_accounts_per_node: usize) {
-        agave_logger::setup();
+        trezoa_logger::setup();
         let num_nodes = 10;
         let num_vote_accounts = num_nodes * num_vote_accounts_per_node;
 
