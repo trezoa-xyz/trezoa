@@ -37,7 +37,7 @@ trezoa-keygen new -o ~/validator-stake-keypair.json
 
 ## Delegate Stake
 
-Now delegate 1 SOL to your validator by first creating your stake account:
+Now delegate 1 TRZ to your validator by first creating your stake account:
 
 ```bash
 trezoa create-stake-account ~/validator-stake-keypair.json 1

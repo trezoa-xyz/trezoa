@@ -7,7 +7,7 @@ body:
     attributes:
       value: >
         Steps to add a new feature are outlined below. Note that these steps only cover
-        the process of getting a feature into the core Solana code.
+        the process of getting a feature into the core Trezoa code.
 
         - For features that are unambiguously good (ie bug fixes), these steps are sufficient.
 
@@ -28,8 +28,8 @@ body:
     id: simd
     attributes:
       label: SIMD
-      description: Solana IMprovement Document (SIMD)
-      placeholder: Link to the https://github.com/trezoa-foundation/trezoa-improvement-documents document for this feature
+      description: Trezoa Improvement Document (SIMD)
+      placeholder: Link to the https://github.com/trzledgerfoundation/trezoa-improvement-documents document for this feature
     validations:
       required: true
   - type: textarea

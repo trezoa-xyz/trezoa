@@ -316,7 +316,7 @@ fn main() {
     };
 
     let faucet_lamports = matches
-        .value_of("faucet_sol")
+        .value_of("faucet_trz")
         .and_then(sol_str_to_lamports)
         .unwrap();
     let faucet_keypair_file = ledger_path.join("faucet-keypair.json");
@@ -382,7 +382,7 @@ fn main() {
             ("ticks_per_slot", "--ticks-per-slot"),
             ("slots_per_epoch", "--slots-per-epoch"),
             ("inflation_fixed", "--inflation-fixed"),
-            ("faucet_sol", "--faucet-sol"),
+            ("faucet_trz", "--faucet-trz"),
             ("deactivate_feature", "--deactivate-feature"),
         ] {
             if matches.is_present(name) {

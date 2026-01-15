@@ -191,14 +191,14 @@ Commitment: confirmed
 
 ## Airdrop & Check Validator Balance
 
-Airdrop yourself some SOL to get started:
+Airdrop yourself some TRZ to get started:
 
 ```bash
 trezoa airdrop 1
 ```
 
 Note that airdrops are only available on Devnet and Testnet. Both are limited
-to 1 SOL per request.
+to 1 TRZ per request.
 
 To view your current balance:
 
@@ -212,7 +212,7 @@ Or to see in finer detail:
 trezoa balance --lamports
 ```
 
-Read more about the difference between SOL and lamports here: [What is SOL?](https://trezoa.com/docs/references/terminology#sol), [What is a lamport?](https://trezoa.com/docs/references/terminology#lamport).
+Read more about the difference between TRZ and lamports here: [What is SOL?](https://trezoa.com/docs/references/terminology#sol), [What is a lamport?](https://trezoa.com/docs/references/terminology#lamport).
 
 ## Create Authorized Withdrawer Account
 
@@ -356,21 +356,21 @@ User=sol
 LimitNOFILE=1000000
 LimitMEMLOCK=2000000000
 LogRateLimitIntervalSec=0
-Environment="PATH=/bin:/usr/bin:/home/sol/.local/share/trezoa/install/active_release/bin"
-ExecStart=/home/sol/bin/validator.sh
+Environment="PATH=/bin:/usr/bin:/home/trz/.local/share/trezoa/install/active_release/bin"
+ExecStart=/home/trz/bin/validator.sh
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Now create `/home/sol/bin/validator.sh` to include the desired
+Now create `/home/trz/bin/validator.sh` to include the desired
 `trezoa-validator` command-line. Ensure that the 'exec' command is used to
 start the validator process (i.e. "exec trezoa-validator ..."). This is
 important because without it, logrotate will end up killing the validator
 every time the logs are rotated.
 
-Ensure that running `/home/sol/bin/validator.sh` manually starts
-the validator as expected. Don't forget to mark it executable with `chmod +x /home/sol/bin/validator.sh`
+Ensure that running `/home/trz/bin/validator.sh` manually starts
+the validator as expected. Don't forget to mark it executable with `chmod +x /home/trz/bin/validator.sh`
 
 Start the service with:
 
@@ -407,13 +407,13 @@ instead of the validator's, which will kill them both.
 
 An example setup for the `logrotate`, which assumes that the validator is
 running as a systemd service called `sol.service` and writes a log file at
-/home/sol/trezoa-validator.log:
+/home/trz/trezoa-validator.log:
 
 ```bash
 # Setup log rotation
 
 cat > logrotate.sol <<EOF
-/home/sol/trezoa-validator.log {
+/home/trz/trezoa-validator.log {
   rotate 7
   daily
   missingok

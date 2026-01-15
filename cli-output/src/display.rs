@@ -51,7 +51,7 @@ pub fn build_balance_message_with_config(
         lamports.to_string()
     } else {
         const LAMPORTS_PER_SOL_F64: f64 = 1_000_000_000.;
-        let sol = lamports as f64 / LAMPORTS_PER_SOL_F64;
+        let trz = lamports as f64 / LAMPORTS_PER_SOL_F64;
         let sol_str = format!("{sol:.9}");
         if config.trim_trailing_zeros {
             sol_str

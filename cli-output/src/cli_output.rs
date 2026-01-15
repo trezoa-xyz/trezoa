@@ -1572,7 +1572,7 @@ impl fmt::Display for CliStakeHistory {
                 if self.use_lamports_unit {
                     "lamports"
                 } else {
-                    "SOL"
+                    "TRZ"
                 }
             )?;
         }

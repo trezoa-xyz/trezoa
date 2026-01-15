@@ -120,7 +120,7 @@ trezoa-tokens distribute-stake --stake-account-address <ACCOUNT_ADDRESS> \
     --stake-authority <KEYPAIR> --withdraw-authority <KEYPAIR> --fee-payer <KEYPAIR>
 ```
 
-Currently, this will subtract 1 SOL from each allocation and store it in the
+Currently, this will subtract 1 TRZ from each allocation and store it in the
 recipient address. That SOL can be used to pay transaction fees on staking
 operations such as delegating stake. The rest of the allocation is put in
 a stake account. The new stake account address is output in the transaction

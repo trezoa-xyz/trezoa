@@ -14,7 +14,7 @@ best for you based on your interests, technical background, and goals.
 
 As a validator your primary focus is maintaining the network and making sure
 that your node is performing optimally so that you can fully participate in the
-cluster consensus. You will want to attract a delegation of SOL to your
+cluster consensus. You will want to attract a delegation of TRZ to your
 validator which will allow your validator the opportunity to produce more blocks
 and earn rewards.
 
@@ -31,7 +31,7 @@ produces that is added to the blockchain.
 
 Since all votes in Trezoa happen on the blockchain, a validator incurs a
 transaction cost for each vote that it makes. These transaction fees amount to
-approximately 1.0 SOL per day.
+approximately 1.0 TRZ per day.
 
 > It is important to make sure your validator always has enough SOL in its
 > identity account to pay for these transactions!
@@ -42,7 +42,7 @@ As an operator, it is important to understand how a consensus validator spends
 and earns sol through the protocol.
 
 All validators who vote (consensus validators) must pay vote transaction fees
-for blocks that they agree with. The cost of voting can be up to 1.1 SOL per
+for blocks that they agree with. The cost of voting can be up to 1.1 TRZ per
 day.
 
 A voting validator can earn SOL through 2 methods:

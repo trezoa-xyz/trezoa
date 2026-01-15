@@ -209,7 +209,7 @@ pub fn lamports_of_sol(matches: &ArgMatches<'_>, name: &str) -> Option<u64> {
             None
         } else {
             let (sol, lamports) = value.split_once('.').unwrap_or((value, ""));
-            let sol = if sol.is_empty() {
+            let trz = if sol.is_empty() {
                 0
             } else {
                 sol.parse::<u64>().ok()?

@@ -1,14 +1,14 @@
 ---
-title: Staking SOL with the Trezoa CLI
+title: Staking TRZ with the Trezoa CLI
 pagination_label: "Trezoa CLI: Staking"
 sidebar_label: Staking
 ---
 
-After you have [received SOL](./transfer-tokens.md), you might consider putting it
+After you have [received TRZ](./transfer-tokens.md), you might consider putting it
 to use by delegating _stake_ to a validator. Stake is what we call tokens in a
 _stake account_. Trezoa weights validator votes by the amount of stake delegated
 to them, which gives those validators more influence in determining the next
-valid block of transactions in the blockchain. Trezoa then generates new SOL
+valid block of transactions in the blockchain. Trezoa then generates new TRZ
 periodically to reward stakers and validators. You earn more rewards the more
 stake you delegate.
 
@@ -50,7 +50,7 @@ trezoa create-stake-account --from <KEYPAIR> stake-account.json <AMOUNT> \
 `<AMOUNT>` tokens are transferred from the account at the "from" `<KEYPAIR>` to
 a new stake account at the public key of stake-account.json.
 
-Instead of a numeric amount, you can also use the keyword `ALL` to send all available SOL from the `--from` account.
+Instead of a numeric amount, you can also use the keyword `ALL` to send all available TRZ from the `--from` account.
 
 The stake-account.json file can now be discarded. To authorize additional
 actions, you will use the `--stake-authority` or `--withdraw-authority` keypair,
@@ -65,7 +65,7 @@ trezoa stake-account <STAKE_ACCOUNT_ADDRESS>
 The output will look similar to this:
 
 ```text
-Total Stake: 5000 SOL
+Total Stake: 5000 TRZ
 Stake account is undelegated
 Stake Authority: EXU95vqs93yPeCeAU7mPPu6HbRUmTFPEiGug9oCdvQ5F
 Withdraw Authority: EXU95vqs93yPeCeAU7mPPu6HbRUmTFPEiGug9oCdvQ5F
@@ -151,9 +151,9 @@ You will see new fields "Delegated Stake" and "Delegated Vote Account Address"
 in the output. The output will look similar to this:
 
 ```text
-Total Stake: 5000 SOL
+Total Stake: 5000 TRZ
 Credits Observed: 147462
-Delegated Stake: 4999.99771712 SOL
+Delegated Stake: 4999.99771712 TRZ
 Delegated Vote Account Address: CcaHc2L43ZWjwCHART3oZoJvHLAe9hzT2DJNUpBzoTN1
 Stake activates starting from epoch: 42
 Stake Authority: EXU95vqs93yPeCeAU7mPPu6HbRUmTFPEiGug9oCdvQ5F
@@ -204,7 +204,7 @@ trezoa withdraw-stake --withdraw-authority <KEYPAIR> <STAKE_ACCOUNT_ADDRESS> <RE
 as `--withdraw-authority` is the withdraw authority, and `<AMOUNT>` is the number
 of tokens to transfer to `<RECIPIENT_ADDRESS>`.
 
-`<AMOUNT>` may be a numeric value in SOL or one of the keywords:
+`<AMOUNT>` may be a numeric value in TRZ or one of the keywords:
 
 - `ALL` – withdraw the maximum amount allowed from the stake account
 - `AVAILABLE` – withdraw only the portion that is currently withdrawable.
@@ -234,14 +234,14 @@ the cluster's minimum delegation amount, otherwise the command will fail.
 
 The new stake account must also be rent-exempt. When signing the transaction
 offline, you must provide the rent-exempt reserve explicitly using the
-`--rent-exempt-reserve-sol` flag:
+`--rent-exempt-reserve-trz` flag:
 
 ```bash
 trezoa split-stake --stake-authority <KEYPAIR> <STAKE_ACCOUNT_ADDRESS> <NEW_STAKE_ACCOUNT_KEYPAIR> <AMOUNT> \
-    --rent-exempt-reserve-sol <RENT_EXEMPT_AMOUNT> --fee-payer <KEYPAIR>
+    --rent-exempt-reserve-trz <RENT_EXEMPT_AMOUNT> --fee-payer <KEYPAIR>
 ```
 
-`<RENT_EXEMPT_AMOUNT>` is the additional SOL sent to the new stake account to make
+`<RENT_EXEMPT_AMOUNT>` is the additional TRZ sent to the new stake account to make
 it rent-exempt, in addition to `<AMOUNT>` of stake being split.
 
 To split a stake account into a derived account address, use the `--seed`
