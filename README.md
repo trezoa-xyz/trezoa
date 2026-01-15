@@ -1,9 +1,3 @@
-<p align="center">
-  <a href="https://trezoa.xyz">
-    <img alt="Trezoa-team" src="https://i.postimg.cc/VkKTnMM9/trezoa-logo-talc-1.png" width="250" />
-  </a>
-</p>
-
 [![Trezoa-team validator](https://img.shields.io/crates/v/trezoa-validator.svg)](https://crates.io/crates/trezoa-validator)
 [![Trezoa-team documentation](https://docs.rs/trezoa-validator/badge.svg)](https://docs.rs/trezoa-validator)
 [![Build status](https://badge.buildkite.com/b2b925facfdbb575573084bb4b7e1f1ce7f395239672941bf7.svg?branch=master)](https://buildkite.com/anza/trezoa-secondary)
