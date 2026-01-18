@@ -1,12 +1,12 @@
 use {
     clap::{crate_description, crate_name, values_t, App, Arg},
     log::*,
-    solana_clap_utils::input_parsers::{lamports_of_sol, value_of},
-    solana_faucet::{
+    trezoa_clap_utils::input_parsers::{lamports_of_sol, value_of},
+    trezoa_faucet::{
         faucet::{run_faucet, Faucet, FAUCET_PORT},
         socketaddr,
     },
-    solana_sdk::signature::read_keypair_file,
+    trezoa_sdk::signature::read_keypair_file,
     std::{
         collections::HashSet,
         net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -17,13 +17,13 @@ use {
 
 #[tokio::main]
 async fn main() {
-    let default_keypair = solana_cli_config::Config::default().keypair_path;
+    let default_keypair = trezoa_cli_config::Config::default().keypair_path;
 
-    solana_logger::setup_with_default_filter();
-    solana_metrics::set_panic_hook("faucet", /*version:*/ None);
+    trezoa_logger::setup_with_default_filter();
+    trezoa_metrics::set_panic_hook("faucet", /*version:*/ None);
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::with_name("keypair")
                 .short("k")

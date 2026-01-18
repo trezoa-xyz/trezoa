@@ -2,12 +2,12 @@ use {
     crate::transaction_notifier_interface::TransactionNotifierArc,
     crossbeam_channel::{Receiver, RecvTimeoutError},
     itertools::izip,
-    solana_accounts_db::transaction_results::{DurableNonceFee, TransactionExecutionDetails},
-    solana_ledger::{
+    trezoa_accounts_db::transaction_results::{DurableNonceFee, TransactionExecutionDetails},
+    trezoa_ledger::{
         blockstore::Blockstore,
         blockstore_processor::{TransactionStatusBatch, TransactionStatusMessage},
     },
-    solana_transaction_status::{
+    trezoa_transaction_status::{
         extract_and_fmt_memos, map_inner_instructions, Reward, TransactionStatusMeta,
     },
     std::{
@@ -211,14 +211,14 @@ pub(crate) mod tests {
         crate::transaction_notifier_interface::TransactionNotifier,
         crossbeam_channel::unbounded,
         dashmap::DashMap,
-        solana_account_decoder::parse_token::token_amount_to_ui_amount,
-        solana_accounts_db::{
+        trezoa_account_decoder::parse_token::token_amount_to_ui_amount,
+        trezoa_accounts_db::{
             nonce_info::{NonceFull, NoncePartial},
             rent_debits::RentDebits,
         },
-        solana_ledger::{genesis_utils::create_genesis_config, get_tmp_ledger_path_auto_delete},
-        solana_runtime::bank::{Bank, TransactionBalancesSet},
-        solana_sdk::{
+        trezoa_ledger::{genesis_utils::create_genesis_config, get_tmp_ledger_path_auto_delete},
+        trezoa_runtime::bank::{Bank, TransactionBalancesSet},
+        trezoa_sdk::{
             account_utils::StateMut,
             clock::Slot,
             hash::Hash,
@@ -234,7 +234,7 @@ pub(crate) mod tests {
                 VersionedTransaction,
             },
         },
-        solana_transaction_status::{
+        trezoa_transaction_status::{
             token_balances::TransactionTokenBalancesSet, TransactionStatusMeta,
             TransactionTokenBalance,
         },

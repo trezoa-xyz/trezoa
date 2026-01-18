@@ -3,7 +3,7 @@
 use {
     bip39::{Mnemonic, MnemonicType, Seed},
     clap::{crate_description, crate_name, value_parser, Arg, ArgMatches, Command},
-    solana_clap_v3_utils::{
+    trezoa_clap_v3_utils::{
         input_parsers::STDOUT_OUTFILE_TOKEN,
         input_validators::is_prompt_signer_source,
         keygen::{
@@ -21,9 +21,9 @@ use {
         },
         DisplayError,
     },
-    solana_cli_config::{Config, CONFIG_FILE},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    trezoa_cli_config::{Config, CONFIG_FILE},
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_sdk::{
         instruction::{AccountMeta, Instruction},
         message::Message,
         pubkey::{write_pubkey_file, Pubkey},
@@ -46,7 +46,7 @@ use {
 };
 
 mod smallest_length_44_public_key {
-    use solana_sdk::{pubkey, pubkey::Pubkey};
+    use trezoa_sdk::{pubkey, pubkey::Pubkey};
 
     pub(super) static PUBKEY: Pubkey = pubkey!("21111111111111111111111111111111111111111111");
 
@@ -74,7 +74,7 @@ fn get_keypair_from_matches(
     } else if !config.keypair_path.is_empty() {
         &config.keypair_path
     } else {
-        path.extend([".config", "solana", "id.json"]);
+        path.extend([".config", "trezoa", "id.json"]);
         path.to_str().unwrap()
     };
     signer_from_path(matches, path, "pubkey recovery", wallet_manager)
@@ -429,7 +429,7 @@ fn app<'a>(num_threads: &'a str, crate_version: &'a str) -> Command<'a> {
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     let default_num_threads = num_cpus::get().to_string();
-    let matches = app(&default_num_threads, solana_version::version!())
+    let matches = app(&default_num_threads, trezoa_version::version!())
         .try_get_matches()
         .unwrap_or_else(|e| e.exit());
     do_main(&matches).map_err(|err| DisplayError::new_as_boxed(err).into())
@@ -466,7 +466,7 @@ fn do_main(matches: &ArgMatches) -> Result<(), Box<dyn error::Error>> {
             } else if matches.is_present(NO_OUTFILE_ARG.name) {
                 None
             } else {
-                path.extend([".config", "solana", "id.json"]);
+                path.extend([".config", "trezoa", "id.json"]);
                 Some(path.to_str().unwrap())
             };
 
@@ -515,7 +515,7 @@ fn do_main(matches: &ArgMatches) -> Result<(), Box<dyn error::Error>> {
             let outfile = if matches.is_present("outfile") {
                 matches.value_of("outfile").unwrap()
             } else {
-                path.extend([".config", "solana", "id.json"]);
+                path.extend([".config", "trezoa", "id.json"]);
                 path.to_str().unwrap()
             };
 
@@ -752,8 +752,8 @@ mod tests {
 
     fn process_test_command(args: &[&str]) -> Result<(), Box<dyn error::Error>> {
         let default_num_threads = num_cpus::get().to_string();
-        let solana_version = solana_version::version!();
-        let app_matches = app(&default_num_threads, solana_version).get_matches_from(args);
+        let trezoa_version = trezoa_version::version!();
+        let app_matches = app(&default_num_threads, trezoa_version).get_matches_from(args);
         do_main(&app_matches)
     }
 
@@ -789,10 +789,10 @@ mod tests {
     #[test]
     fn test_arguments() {
         let default_num_threads = num_cpus::get().to_string();
-        let solana_version = solana_version::version!();
+        let trezoa_version = trezoa_version::version!();
 
         // run clap internal assert statements
-        app(&default_num_threads, solana_version).debug_assert();
+        app(&default_num_threads, trezoa_version).debug_assert();
     }
 
     #[test]
@@ -804,7 +804,7 @@ mod tests {
 
         // success case using a keypair file
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "verify",
             &correct_pubkey.to_string(),
             &keypair_path,
@@ -813,7 +813,7 @@ mod tests {
 
         // success case using a config file
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "verify",
             &correct_pubkey.to_string(),
             "--config",
@@ -824,7 +824,7 @@ mod tests {
         // fail case using a keypair file
         let incorrect_pubkey = Pubkey::new_unique();
         let result = process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "verify",
             &incorrect_pubkey.to_string(),
             &keypair_path,
@@ -837,7 +837,7 @@ mod tests {
 
         // fail case using a config file
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "verify",
             &incorrect_pubkey.to_string(),
             "--config",
@@ -856,7 +856,7 @@ mod tests {
             create_tmp_keypair_and_config_file(&alt_keypair_out_dir, &alt_config_out_dir);
 
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "verify",
             &correct_pubkey.to_string(),
             &keypair_path,
@@ -866,7 +866,7 @@ mod tests {
         .unwrap();
 
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "verify",
             &correct_pubkey.to_string(),
             &alt_keypair_path,
@@ -893,7 +893,7 @@ mod tests {
             let outfile_path = tmp_outfile_path(&outfile_dir, &expected_pubkey.to_string());
 
             process_test_command(&[
-                "solana-keygen",
+                "trezoa-keygen",
                 "pubkey",
                 &keypair_path,
                 "--outfile",
@@ -901,7 +901,7 @@ mod tests {
             ])
             .unwrap();
 
-            let result_pubkey = solana_sdk::pubkey::read_pubkey_file(&outfile_path).unwrap();
+            let result_pubkey = trezoa_sdk::pubkey::read_pubkey_file(&outfile_path).unwrap();
             assert_eq!(result_pubkey, expected_pubkey);
         }
 
@@ -911,7 +911,7 @@ mod tests {
             let outfile_path = tmp_outfile_path(&outfile_dir, &expected_pubkey.to_string());
 
             process_test_command(&[
-                "solana-keygen",
+                "trezoa-keygen",
                 "pubkey",
                 "--config",
                 &config_path,
@@ -920,7 +920,7 @@ mod tests {
             ])
             .unwrap();
 
-            let result_pubkey = solana_sdk::pubkey::read_pubkey_file(&outfile_path).unwrap();
+            let result_pubkey = trezoa_sdk::pubkey::read_pubkey_file(&outfile_path).unwrap();
             assert_eq!(result_pubkey, expected_pubkey);
         }
 
@@ -934,7 +934,7 @@ mod tests {
             let outfile_path = tmp_outfile_path(&outfile_dir, &expected_pubkey.to_string());
 
             process_test_command(&[
-                "solana-keygen",
+                "trezoa-keygen",
                 "pubkey",
                 &keypair_path,
                 "--config",
@@ -944,7 +944,7 @@ mod tests {
             ])
             .unwrap();
 
-            let result_pubkey = solana_sdk::pubkey::read_pubkey_file(&outfile_path).unwrap();
+            let result_pubkey = trezoa_sdk::pubkey::read_pubkey_file(&outfile_path).unwrap();
             assert_eq!(result_pubkey, expected_pubkey);
         }
 
@@ -954,7 +954,7 @@ mod tests {
             let outfile_path = tmp_outfile_path(&outfile_dir, &expected_pubkey.to_string());
 
             process_test_command(&[
-                "solana-keygen",
+                "trezoa-keygen",
                 "pubkey",
                 &keypair_path,
                 "--outfile",
@@ -963,7 +963,7 @@ mod tests {
             .unwrap();
 
             let result = process_test_command(&[
-                "solana-keygen",
+                "trezoa-keygen",
                 "pubkey",
                 "--config",
                 &config_path,
@@ -990,7 +990,7 @@ mod tests {
 
         // general success case
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "new",
             "--outfile",
             &outfile_path,
@@ -1000,7 +1000,7 @@ mod tests {
 
         // refuse to overwrite file
         let result = process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "new",
             "--outfile",
             &outfile_path,
@@ -1014,7 +1014,7 @@ mod tests {
 
         // no outfile
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "new",
             "--no-bip39-passphrase",
             "--no-outfile",
@@ -1037,7 +1037,7 @@ mod tests {
         for language in languages {
             for word_count in word_counts {
                 process_test_command(&[
-                    "solana-keygen",
+                    "trezoa-keygen",
                     "new",
                     "--no-outfile",
                     "--no-bip39-passphrase",
@@ -1052,7 +1052,7 @@ mod tests {
 
         // sanity check derivation path
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "new",
             "--no-bip39-passphrase",
             "--no-outfile",
@@ -1062,7 +1062,7 @@ mod tests {
         .unwrap();
 
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "new",
             "--no-bip39-passphrase",
             "--no-outfile",
@@ -1072,7 +1072,7 @@ mod tests {
         .unwrap();
 
         let result = process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "new",
             "--no-bip39-passphrase",
             "--no-outfile",
@@ -1090,7 +1090,7 @@ mod tests {
     fn test_grind() {
         // simple sanity checks
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "grind",
             "--no-outfile",
             "--no-bip39-passphrase",
@@ -1101,7 +1101,7 @@ mod tests {
         .unwrap();
 
         process_test_command(&[
-            "solana-keygen",
+            "trezoa-keygen",
             "grind",
             "--no-outfile",
             "--no-bip39-passphrase",

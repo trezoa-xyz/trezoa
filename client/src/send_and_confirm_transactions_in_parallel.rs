@@ -6,21 +6,21 @@ use {
     bincode::serialize,
     dashmap::DashMap,
     futures_util::future::join_all,
-    solana_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
-    solana_rpc_client::spinner::{self, SendTransactionProgress},
-    solana_rpc_client_api::{
+    trezoa_quic_client::{QuicConfig, QuicConnectionManager, QuicPool},
+    trezoa_rpc_client::spinner::{self, SendTransactionProgress},
+    trezoa_rpc_client_api::{
         client_error::ErrorKind,
         request::{RpcError, RpcResponseErrorData, MAX_GET_SIGNATURE_STATUSES_QUERY_ITEMS},
         response::RpcSimulateTransactionResult,
     },
-    solana_sdk::{
+    trezoa_sdk::{
         hash::Hash,
         message::Message,
         signature::{Signature, SignerError},
         signers::Signers,
         transaction::{Transaction, TransactionError},
     },
-    solana_tpu_client::tpu_client::{Result, TpuSenderError},
+    trezoa_tpu_client::tpu_client::{Result, TpuSenderError},
     std::{
         sync::{
             atomic::{AtomicU64, AtomicUsize, Ordering},
@@ -35,7 +35,7 @@ const BLOCKHASH_REFRESH_RATE: Duration = Duration::from_secs(5);
 const SEND_INTERVAL: Duration = Duration::from_millis(10);
 // This is a "reasonable" constant for how long it should
 // take to fan the transactions out, taken from
-// `solana_tpu_client::nonblocking::tpu_client::send_wire_transaction_futures`
+// `trezoa_tpu_client::nonblocking::tpu_client::send_wire_transaction_futures`
 const SEND_TIMEOUT_INTERVAL: Duration = Duration::from_secs(5);
 
 type QuicTpuClient = TpuClient<QuicPool, QuicConnectionManager, QuicConfig>;

@@ -60,9 +60,9 @@ use {
     rayon::ThreadPool,
     reed_solomon_erasure::Error::TooFewShardsPresent,
     serde::{Deserialize, Serialize},
-    solana_entry::entry::{create_ticks, Entry},
-    solana_perf::packet::Packet,
-    solana_sdk::{
+    trezoa_entry::entry::{create_ticks, Entry},
+    trezoa_perf::packet::Packet,
+    trezoa_sdk::{
         clock::Slot,
         hash::{hashv, Hash},
         pubkey::Pubkey,
@@ -1199,7 +1199,7 @@ mod tests {
         rand::Rng,
         rand_chacha::{rand_core::SeedableRng, ChaChaRng},
         rayon::ThreadPoolBuilder,
-        solana_sdk::{shred_version, signature::Signer, signer::keypair::keypair_from_seed},
+        trezoa_sdk::{shred_version, signature::Signer, signer::keypair::keypair_from_seed},
         std::io::{Cursor, Seek, SeekFrom, Write},
         test_case::test_case,
     };
@@ -1323,7 +1323,7 @@ mod tests {
     #[test_case(true, false)]
     #[test_case(true, true)]
     fn test_should_discard_shred(chained: bool, is_last_in_slot: bool) {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let mut rng = rand::thread_rng();
         let thread_pool = ThreadPoolBuilder::new().num_threads(2).build().unwrap();
         let reed_solomon_cache = ReedSolomonCache::default();

@@ -1,16 +1,16 @@
-// Re-exported since these have moved to `solana_sdk`.
+// Re-exported since these have moved to `trezoa_sdk`.
 #[deprecated(
     since = "1.18.0",
-    note = "Please use `solana_sdk::inner_instruction` types instead"
+    note = "Please use `trezoa_sdk::inner_instruction` types instead"
 )]
-pub use solana_sdk::inner_instruction::{InnerInstruction, InnerInstructionsList};
+pub use trezoa_sdk::inner_instruction::{InnerInstruction, InnerInstructionsList};
 use {
     crate::{
         nonce_info::{NonceFull, NonceInfo, NoncePartial},
         rent_debits::RentDebits,
     },
-    solana_program_runtime::loaded_programs::LoadedProgramsForTxBatch,
-    solana_sdk::{
+    trezoa_program_runtime::loaded_programs::LoadedProgramsForTxBatch,
+    trezoa_sdk::{
         instruction::{CompiledInstruction, TRANSACTION_LEVEL_STACK_HEIGHT},
         transaction::{self, TransactionError},
         transaction_context::{TransactionContext, TransactionReturnData},
@@ -167,7 +167,7 @@ pub fn inner_instructions_list_from_instruction_trace(
 mod tests {
     use {
         super::*,
-        solana_sdk::{sysvar::rent::Rent, transaction_context::TransactionContext},
+        trezoa_sdk::{sysvar::rent::Rent, transaction_context::TransactionContext},
     };
 
     #[test]

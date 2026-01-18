@@ -1,7 +1,7 @@
 use {
     super::immutable_deserialized_packet::ImmutableDeserializedPacket,
-    solana_cost_model::block_cost_limits::BUILT_IN_INSTRUCTION_COSTS,
-    solana_sdk::{ed25519_program, saturating_add_assign, secp256k1_program},
+    trezoa_cost_model::block_cost_limits::BUILT_IN_INSTRUCTION_COSTS,
+    trezoa_sdk::{ed25519_program, saturating_add_assign, secp256k1_program},
     thiserror::Error,
 };
 

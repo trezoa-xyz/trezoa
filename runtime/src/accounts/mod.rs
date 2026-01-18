@@ -7,7 +7,7 @@ use {
     },
     itertools::Itertools,
     log::warn,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_overrides::AccountOverrides,
         accounts::{LoadedTransaction, TransactionLoadResult, TransactionRent},
         accounts_db::AccountsDb,
@@ -19,11 +19,11 @@ use {
         transaction_error_metrics::TransactionErrorMetrics,
         transaction_results::TransactionCheckResult,
     },
-    solana_program_runtime::{
+    trezoa_program_runtime::{
         compute_budget_processor::process_compute_budget_instructions,
         loaded_programs::LoadedProgramsForTxBatch,
     },
-    solana_sdk::{
+    trezoa_sdk::{
         account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
         feature_set::{include_loaded_accounts_data_size_in_fee_calculation, FeatureSet},
         fee::FeeStructure,
@@ -37,7 +37,7 @@ use {
         transaction::{Result, SanitizedTransaction, TransactionError},
         transaction_context::IndexOfAccount,
     },
-    solana_system_program::{get_system_account_kind, SystemAccountKind},
+    trezoa_system_program::{get_system_account_kind, SystemAccountKind},
     std::{collections::HashMap, num::NonZeroUsize},
 };
 
@@ -158,7 +158,7 @@ fn load_transaction_accounts(
     let mut rent_debits = RentDebits::default();
 
     let set_exempt_rent_epoch_max =
-        feature_set.is_active(&solana_sdk::feature_set::set_exempt_rent_epoch_max::id());
+        feature_set.is_active(&trezoa_sdk::feature_set::set_exempt_rent_epoch_max::id());
 
     let requested_loaded_accounts_data_size_limit =
         get_requested_loaded_accounts_data_size_limit(tx)?;
@@ -177,7 +177,7 @@ fn load_transaction_accounts(
         .map(|(i, key)| {
             let mut account_found = true;
             #[allow(clippy::collapsible_else_if)]
-            let account = if solana_sdk::sysvar::instructions::check_id(key) {
+            let account = if trezoa_sdk::sysvar::instructions::check_id(key) {
                 construct_instructions_account(message)
             } else {
                 let instruction_account = u8::try_from(i)
@@ -266,7 +266,7 @@ fn load_transaction_accounts(
 
                 if in_reward_interval
                     && message.is_writable(i)
-                    && solana_stake_program::check_id(account.owner())
+                    && trezoa_stake_program::check_id(account.owner())
                 {
                     error_counters.program_execution_temporarily_restricted += 1;
                     return Err(TransactionError::ProgramExecutionTemporarilyRestricted {
@@ -493,12 +493,12 @@ mod tests {
     use {
         super::*,
         nonce::state::Versions as NonceVersions,
-        solana_accounts_db::{accounts::Accounts, rent_collector::RentCollector},
-        solana_program_runtime::{
+        trezoa_accounts_db::{accounts::Accounts, rent_collector::RentCollector},
+        trezoa_program_runtime::{
             compute_budget_processor,
             prioritization_fee::{PrioritizationFeeDetails, PrioritizationFeeType},
         },
-        solana_sdk::{
+        trezoa_sdk::{
             account::{AccountSharedData, WritableAccount},
             bpf_loader_upgradeable,
             compute_budget::ComputeBudgetInstruction,
@@ -717,7 +717,7 @@ mod tests {
         let keypair = Keypair::new();
         let key0 = keypair.pubkey();
 
-        let account = AccountSharedData::new(1, 1, &solana_sdk::pubkey::new_rand()); // <-- owner is not the system program
+        let account = AccountSharedData::new(1, 1, &trezoa_sdk::pubkey::new_rand()); // <-- owner is not the system program
         accounts.push((key0, account));
 
         let instructions = vec![CompiledInstruction::new(1, &(), vec![0])];
@@ -1032,16 +1032,16 @@ mod tests {
 
     #[test]
     fn test_instructions() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let accounts_db = AccountsDb::new_single_for_tests();
         let accounts = Accounts::new(Arc::new(accounts_db));
 
-        let instructions_key = solana_sdk::sysvar::instructions::id();
+        let instructions_key = trezoa_sdk::sysvar::instructions::id();
         let keypair = Keypair::new();
         let instructions = vec![CompiledInstruction::new(1, &(), vec![0, 1])];
         let tx = Transaction::new_with_compiled_instructions(
             &[&keypair],
-            &[solana_sdk::pubkey::new_rand(), instructions_key],
+            &[trezoa_sdk::pubkey::new_rand(), instructions_key],
             Hash::default(),
             vec![native_loader::id()],
             instructions,
@@ -1054,7 +1054,7 @@ mod tests {
 
     #[test]
     fn test_overrides() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let accounts_db = AccountsDb::new_single_for_tests();
         let accounts = Accounts::new(Arc::new(accounts_db));
         let mut account_overrides = AccountOverrides::default();
@@ -1136,7 +1136,7 @@ mod tests {
     fn test_get_requested_loaded_accounts_data_size_limit() {
         // an prrivate helper function
         fn test(
-            instructions: &[solana_sdk::instruction::Instruction],
+            instructions: &[trezoa_sdk::instruction::Instruction],
             expected_result: &Result<Option<NonZeroUsize>>,
         ) {
             let payer_keypair = Keypair::new();
@@ -1151,20 +1151,20 @@ mod tests {
             );
         }
 
-        let tx_not_set_limit = &[solana_sdk::instruction::Instruction::new_with_bincode(
+        let tx_not_set_limit = &[trezoa_sdk::instruction::Instruction::new_with_bincode(
             Pubkey::new_unique(),
             &0_u8,
             vec![],
         )];
         let tx_set_limit_99 =
             &[
-                solana_sdk::compute_budget::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(99u32),
-                solana_sdk::instruction::Instruction::new_with_bincode(Pubkey::new_unique(), &0_u8, vec![]),
+                trezoa_sdk::compute_budget::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(99u32),
+                trezoa_sdk::instruction::Instruction::new_with_bincode(Pubkey::new_unique(), &0_u8, vec![]),
             ];
         let tx_set_limit_0 =
             &[
-                solana_sdk::compute_budget::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(0u32),
-                solana_sdk::instruction::Instruction::new_with_bincode(Pubkey::new_unique(), &0_u8, vec![]),
+                trezoa_sdk::compute_budget::ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(0u32),
+                trezoa_sdk::instruction::Instruction::new_with_bincode(Pubkey::new_unique(), &0_u8, vec![]),
             ];
 
         let result_default_limit = Ok(Some(
@@ -1189,7 +1189,7 @@ mod tests {
 
     #[test]
     fn test_load_accounts_too_high_prioritization_fee() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let lamports_per_signature = 5000_u64;
         let request_units = 1_000_000_u32;
         let request_unit_price = 2_000_000_000_u64;

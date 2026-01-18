@@ -3,17 +3,17 @@ use {
     clap::{value_t, value_t_or_exit, values_t_or_exit, ArgMatches},
     crossbeam_channel::unbounded,
     log::*,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         hardened_unpack::open_genesis_config, utils::create_all_accounts_run_and_snapshot_dirs,
     },
-    solana_core::{
+    trezoa_core::{
         accounts_hash_verifier::AccountsHashVerifier, validator::BlockVerificationMethod,
     },
-    solana_geyser_plugin_manager::geyser_plugin_service::{
+    trezoa_geyser_plugin_manager::geyser_plugin_service::{
         GeyserPluginService, GeyserPluginServiceError,
     },
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-    solana_ledger::{
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+    trezoa_ledger::{
         bank_forks_utils::{self, BankForksUtilsError},
         blockstore::{Blockstore, BlockstoreError},
         blockstore_options::{
@@ -25,9 +25,9 @@ use {
         },
         use_snapshot_archives_at_startup::UseSnapshotArchivesAtStartup,
     },
-    solana_measure::measure,
-    solana_rpc::transaction_status_service::TransactionStatusService,
-    solana_runtime::{
+    trezoa_measure::measure,
+    trezoa_rpc::transaction_status_service::TransactionStatusService,
+    trezoa_runtime::{
         accounts_background_service::{
             AbsRequestHandlers, AbsRequestSender, AccountsBackgroundService,
             PrunedBanksRequestHandler, SnapshotRequestHandler,
@@ -40,12 +40,12 @@ use {
             self, clean_orphaned_account_snapshot_dirs, move_and_async_delete_path_contents,
         },
     },
-    solana_sdk::{
+    trezoa_sdk::{
         clock::Slot, genesis_config::GenesisConfig, pubkey::Pubkey, signature::Signer,
         signer::keypair::Keypair, timing::timestamp, transaction::VersionedTransaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_unified_scheduler_pool::DefaultSchedulerPool,
+    trezoa_streamer::socket::SocketAddrSpace,
+    trezoa_unified_scheduler_pool::DefaultSchedulerPool,
     std::{
         path::{Path, PathBuf},
         process::exit,
@@ -190,14 +190,14 @@ pub fn load_and_process_ledger(
     }
 
     let account_paths = if let Some(account_paths) = arg_matches.value_of("account_paths") {
-        // If this blockstore access is Primary, no other process (agave-validator) can hold
+        // If this blockstore access is Primary, no other process (trezoa-validator) can hold
         // Primary access. So, allow a custom accounts path without worry of wiping the accounts
-        // of agave-validator.
+        // of trezoa-validator.
         if !blockstore.is_primary_access() {
             // Attempt to open the Blockstore in Primary access; if successful, no other process
             // was holding Primary so allow things to proceed with custom accounts path. Release
-            // the Primary access instead of holding it to give priority to agave-validator over
-            // agave-ledger-tool should agave-validator start before we've finished.
+            // the Primary access instead of holding it to give priority to trezoa-validator over
+            // trezoa-ledger-tool should trezoa-validator start before we've finished.
             info!(
                 "Checking if another process currently holding Primary access to {:?}",
                 blockstore.ledger_path()

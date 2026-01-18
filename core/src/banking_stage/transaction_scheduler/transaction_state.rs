@@ -1,4 +1,4 @@
-use solana_sdk::{clock::Slot, transaction::SanitizedTransaction};
+use trezoa_sdk::{clock::Slot, transaction::SanitizedTransaction};
 
 /// Simple wrapper type to tie a sanitized transaction to max age slot.
 pub(crate) struct SanitizedTransactionTTL {
@@ -186,7 +186,7 @@ impl TransactionState {
 mod tests {
     use {
         super::*,
-        solana_sdk::{
+        trezoa_sdk::{
             compute_budget::ComputeBudgetInstruction, hash::Hash, message::Message,
             signature::Keypair, signer::Signer, system_instruction, transaction::Transaction,
         },
@@ -197,7 +197,7 @@ mod tests {
         let ixs = vec![
             system_instruction::transfer(
                 &from_keypair.pubkey(),
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 1,
             ),
             ComputeBudgetInstruction::set_compute_unit_price(priority),

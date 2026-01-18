@@ -64,15 +64,15 @@ loadConfigFile
 
 initCompleteFile=init-complete-node.log
 
-cat > ~/solana/on-reboot <<EOF
+cat > ~/trezoa/on-reboot <<EOF
 #!/usr/bin/env bash
-cd ~/solana
+cd ~/trezoa
 source scripts/oom-score-adj.sh
 
 now=\$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 ln -sfT validator.log.\$now validator.log
 EOF
-chmod +x ~/solana/on-reboot
+chmod +x ~/trezoa/on-reboot
 
 GPU_CUDA_OK=false
 GPU_FAIL_IF_NONE=false
@@ -103,7 +103,7 @@ local|tar|skip)
 
   ./fetch-perf-libs.sh
 
-cat >> ~/solana/on-reboot <<EOF
+cat >> ~/trezoa/on-reboot <<EOF
   PATH="$HOME"/.cargo/bin:"$PATH"
   export USE_INSTALL=1
 
@@ -121,7 +121,7 @@ cat >> ~/solana/on-reboot <<EOF
   echo \$! > system-stats.pid
 
   if ${GPU_CUDA_OK} && [[ -e /dev/nvidia0 ]]; then
-    echo Selecting agave-validator-cuda
+    echo Selecting trezoa-validator-cuda
     export SOLANA_CUDA=1
   elif ${GPU_FAIL_IF_NONE} ; then
     echo "Expected GPU, found none!"
@@ -150,17 +150,17 @@ EOF
             cp net/keypairs/"$name".json config/"$name".json
           fi
         else
-          solana-keygen new --no-passphrase -so config/"$name".json
+          trezoa-keygen new --no-passphrase -so config/"$name".json
           if [[ "$name" =~ ^validator-identity- ]]; then
             name="${name//-identity-/-vote-}"
-            solana-keygen new --no-passphrase -so config/"$name".json
+            trezoa-keygen new --no-passphrase -so config/"$name".json
             name="${name//-vote-/-stake-}"
-            solana-keygen new --no-passphrase -so config/"$name".json
+            trezoa-keygen new --no-passphrase -so config/"$name".json
           fi
         fi
         if [[ -n $internalNodesLamports ]]; then
           declare pubkey
-          pubkey="$(solana-keygen pubkey config/"$name".json)"
+          pubkey="$(trezoa-keygen pubkey config/"$name".json)"
           cat >> config/validator-balances.yml <<EOF
 $pubkey:
   balance: $internalNodesLamports
@@ -187,7 +187,7 @@ EOF
 
       for i in $(seq 0 $((numBenchTpsClients-1))); do
         # shellcheck disable=SC2086 # Do not want to quote $benchTpsExtraArgs
-        solana-bench-tps --write-client-keys config/bench-tps"$i".yml \
+        trezoa-bench-tps --write-client-keys config/bench-tps"$i".yml \
           --target-lamports-per-signature "$lamports_per_signature" $benchTpsExtraArgs
         # Skip first line, as it contains header
         tail -n +2 -q config/bench-tps"$i".yml >> config/client-accounts.yml
@@ -231,9 +231,9 @@ EOF
           extraPrimordialStakes=$numNodes
         fi
         for i in $(seq "$extraPrimordialStakes"); do
-          args+=(--bootstrap-validator "$(solana-keygen pubkey "config/validator-identity-$i.json")"
-                                       "$(solana-keygen pubkey "config/validator-vote-$i.json")"
-                                       "$(solana-keygen pubkey "config/validator-stake-$i.json")"
+          args+=(--bootstrap-validator "$(trezoa-keygen pubkey "config/validator-identity-$i.json")"
+                                       "$(trezoa-keygen pubkey "config/validator-vote-$i.json")"
+                                       "$(trezoa-keygen pubkey "config/validator-stake-$i.json")"
           )
         done
       fi
@@ -257,13 +257,13 @@ EOF
 
       if [[ -n "$maybeWarpSlot" ]]; then
         # shellcheck disable=SC2086 # Do not want to quote $maybeWarSlot
-        agave-ledger-tool -l config/bootstrap-validator create-snapshot 0 config/bootstrap-validator $maybeWarpSlot
+        trezoa-ledger-tool -l config/bootstrap-validator create-snapshot 0 config/bootstrap-validator $maybeWarpSlot
       fi
 
-      agave-ledger-tool -l config/bootstrap-validator shred-version --max-genesis-archive-unpacked-size 1073741824 | tee config/shred-version
+      trezoa-ledger-tool -l config/bootstrap-validator shred-version --max-genesis-archive-unpacked-size 1073741824 | tee config/shred-version
 
       if [[ -n "$maybeWaitForSupermajority" ]]; then
-        bankHash=$(agave-ledger-tool -l config/bootstrap-validator bank-hash --halt-at-slot 0)
+        bankHash=$(trezoa-ledger-tool -l config/bootstrap-validator bank-hash --halt-at-slot 0)
         extraNodeArgs="$extraNodeArgs --expected-bank-hash $bankHash"
         echo "$bankHash" > config/bank-hash
       fi
@@ -275,7 +275,7 @@ EOF
     )
 
     if [[ "$tmpfsAccounts" = "true" ]]; then
-      args+=(--accounts /mnt/solana-accounts)
+      args+=(--accounts /mnt/trezoa-accounts)
     fi
 
     if $maybeFullRpc; then
@@ -293,20 +293,20 @@ EOF
     fi
 
     if [[ $airdropsEnabled = true ]]; then
-cat >> ~/solana/on-reboot <<EOF
+cat >> ~/trezoa/on-reboot <<EOF
       ./multinode-demo/faucet.sh > faucet.log 2>&1 &
 EOF
     fi
     # shellcheck disable=SC2206 # Don't want to double quote $extraNodeArgs
     args+=($extraNodeArgs)
 
-cat >> ~/solana/on-reboot <<EOF
+cat >> ~/trezoa/on-reboot <<EOF
     nohup ./multinode-demo/bootstrap-validator.sh ${args[@]} > validator.log.\$now 2>&1 &
     pid=\$!
     oom_score_adj "\$pid" 1000
     disown
 EOF
-    ~/solana/on-reboot
+    ~/trezoa/on-reboot
 
     if $waitForNodeInit; then
       net/remote/remote-node-wait-init.sh 600
@@ -323,23 +323,23 @@ EOF
 
       if [[ $nodeType = blockstreamer ]]; then
         net/scripts/rsync-retry.sh -vPrc \
-          "$entrypointIp":~/solana/config/blockstreamer-identity.json "$SOLANA_CONFIG_DIR"/validator-identity.json
+          "$entrypointIp":~/trezoa/config/blockstreamer-identity.json "$SOLANA_CONFIG_DIR"/validator-identity.json
       else
         net/scripts/rsync-retry.sh -vPrc \
-          "$entrypointIp":~/solana/config/validator-identity-"$nodeIndex".json "$SOLANA_CONFIG_DIR"/validator-identity.json
+          "$entrypointIp":~/trezoa/config/validator-identity-"$nodeIndex".json "$SOLANA_CONFIG_DIR"/validator-identity.json
         net/scripts/rsync-retry.sh -vPrc \
-          "$entrypointIp":~/solana/config/validator-stake-"$nodeIndex".json "$SOLANA_CONFIG_DIR"/stake-account.json
+          "$entrypointIp":~/trezoa/config/validator-stake-"$nodeIndex".json "$SOLANA_CONFIG_DIR"/stake-account.json
         net/scripts/rsync-retry.sh -vPrc \
-          "$entrypointIp":~/solana/config/validator-vote-"$nodeIndex".json "$SOLANA_CONFIG_DIR"/vote-account.json
+          "$entrypointIp":~/trezoa/config/validator-vote-"$nodeIndex".json "$SOLANA_CONFIG_DIR"/vote-account.json
       fi
       net/scripts/rsync-retry.sh -vPrc \
-        "$entrypointIp":~/solana/config/shred-version "$SOLANA_CONFIG_DIR"/shred-version
+        "$entrypointIp":~/trezoa/config/shred-version "$SOLANA_CONFIG_DIR"/shred-version
 
       net/scripts/rsync-retry.sh -vPrc \
-        "$entrypointIp":~/solana/config/bank-hash "$SOLANA_CONFIG_DIR"/bank-hash || true
+        "$entrypointIp":~/trezoa/config/bank-hash "$SOLANA_CONFIG_DIR"/bank-hash || true
 
       net/scripts/rsync-retry.sh -vPrc \
-        "$entrypointIp":~/solana/config/faucet.json "$SOLANA_CONFIG_DIR"/faucet.json
+        "$entrypointIp":~/trezoa/config/faucet.json "$SOLANA_CONFIG_DIR"/faucet.json
     fi
 
     args=(
@@ -350,7 +350,7 @@ EOF
     )
     if [[ $nodeType = blockstreamer ]]; then
       args+=(
-        --blockstream /tmp/solana-blockstream.sock
+        --blockstream /tmp/trezoa-blockstream.sock
         --no-voting
         --dev-no-sigverify
         --enable-rpc-transaction-history
@@ -362,11 +362,11 @@ EOF
     fi
 
     if [[ ! -f "$SOLANA_CONFIG_DIR"/validator-identity.json ]]; then
-      solana-keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/validator-identity.json
+      trezoa-keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/validator-identity.json
     fi
     args+=(--identity "$SOLANA_CONFIG_DIR"/validator-identity.json)
     if [[ ! -f "$SOLANA_CONFIG_DIR"/vote-account.json ]]; then
-      solana-keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/vote-account.json
+      trezoa-keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/vote-account.json
     fi
     args+=(--vote-account "$SOLANA_CONFIG_DIR"/vote-account.json)
 
@@ -383,14 +383,14 @@ EOF
     set -x
     # Add the faucet keypair to validators for convenient access from tools
     # like bench-tps and add to blocktreamers to run a faucet
-    scp "$entrypointIp":~/solana/config/faucet.json "$SOLANA_CONFIG_DIR"/
+    scp "$entrypointIp":~/trezoa/config/faucet.json "$SOLANA_CONFIG_DIR"/
     if [[ $nodeType = blockstreamer ]]; then
       # Run another faucet with the same keypair on the blockstreamer node.
       # Typically the blockstreamer node has a static IP/DNS name for hosting
       # the blockexplorer web app, and is a location that somebody would expect
       # to be able to airdrop from
       if [[ $airdropsEnabled = true ]]; then
-cat >> ~/solana/on-reboot <<EOF
+cat >> ~/trezoa/on-reboot <<EOF
         multinode-demo/faucet.sh > faucet.log 2>&1 &
 EOF
       fi
@@ -412,7 +412,7 @@ EOF
     fi
 
     if [[ "$tmpfsAccounts" = "true" ]]; then
-      args+=(--accounts /mnt/solana-accounts)
+      args+=(--accounts /mnt/trezoa-accounts)
     fi
 
     if $maybeFullRpc; then
@@ -428,14 +428,14 @@ EOF
       args+=(--tpu-enable-udp)
     fi
 
-cat >> ~/solana/on-reboot <<EOF
+cat >> ~/trezoa/on-reboot <<EOF
     $maybeSkipAccountsCreation
     nohup multinode-demo/validator.sh ${args[@]} > validator.log.\$now 2>&1 &
     pid=\$!
     oom_score_adj "\$pid" 1000
     disown
 EOF
-    ~/solana/on-reboot
+    ~/trezoa/on-reboot
 
     if $waitForNodeInit; then
       net/remote/remote-node-wait-init.sh 600
@@ -444,7 +444,7 @@ EOF
     if [[ $skipSetup != true && $nodeType != blockstreamer && -z $maybeSkipAccountsCreation ]]; then
       # Wait for the validator to catch up to the bootstrap validator before
       # delegating stake to it
-      solana --url http://"$entrypointIp":8899 catchup config/validator-identity.json
+      trezoa --url http://"$entrypointIp":8899 catchup config/validator-identity.json
 
       args=(
         --url http://"$entrypointIp":8899

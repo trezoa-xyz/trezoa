@@ -18,11 +18,11 @@ use {
     log::*,
     rand::{thread_rng, Rng},
     rayon::iter::{IntoParallelIterator, ParallelIterator},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::CalcAccountsHashDataSource, accounts_hash::CalcAccountsHashConfig,
     },
-    solana_measure::{measure::Measure, measure_us},
-    solana_sdk::clock::{BankId, Slot},
+    trezoa_measure::{measure::Measure, measure_us},
+    trezoa_sdk::clock::{BankId, Slot},
     stats::StatsManager,
     std::{
         boxed::Box,
@@ -45,7 +45,7 @@ const CLEAN_INTERVAL_BLOCKS: u64 = 100;
 // (Anyway, the dropping part is outside the AccountsDb::recycle_stores lock
 // and dropped in this AccountsBackgroundServe, so this shouldn't matter much)
 const RECYCLE_STORE_EXPIRATION_INTERVAL_SECS: u64 =
-    solana_accounts_db::accounts_db::EXPIRATION_TTL_SECONDS / 3;
+    trezoa_accounts_db::accounts_db::EXPIRATION_TTL_SECONDS / 3;
 
 pub type SnapshotRequestSender = Sender<SnapshotRequest>;
 pub type SnapshotRequestReceiver = Receiver<SnapshotRequest>;
@@ -64,7 +64,7 @@ struct PrunedBankQueueLenReporter {
 
 impl PrunedBankQueueLenReporter {
     fn report(&self, q_len: usize) {
-        let now = solana_sdk::timing::timestamp();
+        let now = trezoa_sdk::timing::timestamp();
         let last_report_time = self.last_report_time.load(Ordering::Acquire);
         if q_len > MAX_DROP_BANK_SIGNAL_QUEUE_SIZE
             && now.saturating_sub(last_report_time) > BANK_DROP_SIGNAL_CHANNEL_REPORT_INTERVAL
@@ -883,8 +883,8 @@ mod test {
         super::*,
         crate::{bank::epoch_accounts_hash_utils, genesis_utils::create_genesis_config},
         crossbeam_channel::unbounded,
-        solana_accounts_db::epoch_accounts_hash::EpochAccountsHash,
-        solana_sdk::{
+        trezoa_accounts_db::epoch_accounts_hash::EpochAccountsHash,
+        trezoa_sdk::{
             account::AccountSharedData, epoch_schedule::EpochSchedule, hash::Hash, pubkey::Pubkey,
         },
     };

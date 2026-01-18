@@ -5,20 +5,20 @@
 use {
     assert_matches::assert_matches,
     serde_json::Value,
-    solana_cli::{
+    trezoa_cli::{
         cli::{process_command, CliCommand, CliConfig},
         program::{ProgramCliCommand, CLOSE_PROGRAM_WARNING},
         test_utils::wait_n_slots,
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_client::{
+    trezoa_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    trezoa_client::{
         rpc_client::GetConfirmedSignaturesForAddress2Config, rpc_config::RpcTransactionConfig,
     },
-    solana_faucet::faucet::run_local_faucet,
-    solana_rpc::rpc::JsonRpcConfig,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_nonce_utils::blockhash_query::BlockhashQuery,
-    solana_sdk::{
+    trezoa_faucet::faucet::run_local_faucet,
+    trezoa_rpc::rpc::JsonRpcConfig,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_nonce_utils::blockhash_query::BlockhashQuery,
+    trezoa_sdk::{
         account_utils::StateMut,
         borsh1::try_from_slice_unchecked,
         bpf_loader_upgradeable::{self, UpgradeableLoaderState},
@@ -31,9 +31,9 @@ use {
         system_program,
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::{TestValidator, TestValidatorGenesis},
-    solana_transaction_status::UiTransactionEncoding,
+    trezoa_streamer::socket::SocketAddrSpace,
+    trezoa_test_validator::{TestValidator, TestValidatorGenesis},
+    trezoa_transaction_status::UiTransactionEncoding,
     std::{
         env,
         fs::File,
@@ -46,7 +46,7 @@ use {
 
 #[test]
 fn test_cli_program_deploy_non_upgradeable() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -239,7 +239,7 @@ fn test_cli_program_deploy_non_upgradeable() {
 
 #[test]
 fn test_cli_program_deploy_no_authority() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -333,7 +333,7 @@ fn test_cli_program_deploy_no_authority() {
 
 #[test]
 fn test_cli_program_deploy_with_authority() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -696,7 +696,7 @@ fn test_cli_program_deploy_with_authority() {
 
 #[test]
 fn test_cli_program_close_program() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -803,7 +803,7 @@ fn test_cli_program_close_program() {
 
 #[test]
 fn test_cli_program_extend_program() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -959,7 +959,7 @@ fn test_cli_program_extend_program() {
 
 #[test]
 fn test_cli_program_write_buffer() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1319,7 +1319,7 @@ fn test_cli_program_write_buffer() {
 
 #[test]
 fn test_cli_program_set_buffer_authority() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1480,7 +1480,7 @@ fn test_cli_program_set_buffer_authority() {
 
 #[test]
 fn test_cli_program_mismatch_buffer_authority() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1589,7 +1589,7 @@ fn test_cli_program_mismatch_buffer_authority() {
 #[test_case(true; "offline signer will be fee payer")]
 #[test_case(false; "online signer will be fee payer")]
 fn test_cli_program_deploy_with_offline_signing(use_offline_signer_as_fee_payer: bool) {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1780,7 +1780,7 @@ fn test_cli_program_deploy_with_offline_signing(use_offline_signer_as_fee_payer:
 
 #[test]
 fn test_cli_program_show() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");
@@ -1975,7 +1975,7 @@ fn test_cli_program_show() {
 
 #[test]
 fn test_cli_program_dump() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut noop_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     noop_path.push("tests");

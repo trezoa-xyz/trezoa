@@ -1,15 +1,15 @@
 /// Module responsible for notifying plugins about entries
 use {
     crate::geyser_plugin_manager::GeyserPluginManager,
-    agave_geyser_plugin_interface::geyser_plugin_interface::{
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaEntryInfoV2, ReplicaEntryInfoVersions,
     },
     log::*,
-    solana_entry::entry::EntrySummary,
-    solana_ledger::entry_notifier_interface::EntryNotifier,
-    solana_measure::measure::Measure,
-    solana_metrics::*,
-    solana_sdk::clock::Slot,
+    trezoa_entry::entry::EntrySummary,
+    trezoa_ledger::entry_notifier_interface::EntryNotifier,
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::*,
+    trezoa_sdk::clock::Slot,
     std::sync::{Arc, RwLock},
 };
 

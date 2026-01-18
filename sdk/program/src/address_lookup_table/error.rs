@@ -1,5 +1,5 @@
-#[cfg(not(target_os = "solana"))]
-use solana_program::message::AddressLoaderError;
+#[cfg(not(target_os = "trezoa"))]
+use trezoa_program::message::AddressLoaderError;
 use thiserror::Error;
 
 #[derive(Debug, Error, PartialEq, Eq, Clone)]
@@ -21,7 +21,7 @@ pub enum AddressLookupError {
     InvalidLookupIndex,
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 impl From<AddressLookupError> for AddressLoaderError {
     fn from(err: AddressLookupError) -> Self {
         match err {

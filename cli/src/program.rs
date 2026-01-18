@@ -9,9 +9,9 @@ use {
     bip39::{Language, Mnemonic, MnemonicType, Seed},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     log::*,
-    solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
-    solana_bpf_loader_program::syscalls::create_program_runtime_environment_v1,
-    solana_clap_utils::{
+    trezoa_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
+    trezoa_bpf_loader_program::syscalls::create_program_runtime_environment_v1,
+    trezoa_clap_utils::{
         self,
         compute_unit_price::compute_unit_price_arg,
         fee_payer::{fee_payer_arg, FEE_PAYER_ARG},
@@ -21,13 +21,13 @@ use {
         keypair::*,
         offline::{OfflineArgs, DUMP_TRANSACTION_MESSAGE, SIGN_ONLY_ARG},
     },
-    solana_cli_output::{
+    trezoa_cli_output::{
         return_signers_with_config, CliProgram, CliProgramAccountType, CliProgramAuthority,
         CliProgramBuffer, CliProgramId, CliUpgradeableBuffer, CliUpgradeableBuffers,
         CliUpgradeableProgram, CliUpgradeableProgramClosed, CliUpgradeableProgramExtended,
         CliUpgradeablePrograms, ReturnSignersConfig,
     },
-    solana_client::{
+    trezoa_client::{
         connection_cache::ConnectionCache,
         rpc_config::RpcSimulateTransactionConfig,
         send_and_confirm_transactions_in_parallel::{
@@ -35,20 +35,20 @@ use {
         },
         tpu_client::{TpuClient, TpuClientConfig},
     },
-    solana_program_runtime::{
+    trezoa_program_runtime::{
         compute_budget::ComputeBudget, compute_budget_processor::MAX_COMPUTE_UNIT_LIMIT,
         invoke_context::InvokeContext,
     },
-    solana_rbpf::{elf::Executable, verifier::RequisiteVerifier},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::{
+    trezoa_rbpf::{elf::Executable, verifier::RequisiteVerifier},
+    trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::{
         client_error::ErrorKind as ClientErrorKind,
         config::{RpcAccountInfoConfig, RpcProgramAccountsConfig, RpcSendTransactionConfig},
         filter::{Memcmp, RpcFilterType},
     },
-    solana_rpc_client_nonce_utils::blockhash_query::BlockhashQuery,
-    solana_sdk::{
+    trezoa_rpc_client_nonce_utils::blockhash_query::BlockhashQuery,
+    trezoa_sdk::{
         account::Account,
         account_utils::StateMut,
         borsh1::try_from_slice_unchecked,
@@ -594,7 +594,7 @@ impl ProgramSubCommands for App<'_, '_> {
         .subcommand(
             SubCommand::with_name("deploy")
                 .about(
-                    "Deploy has been removed. Use `solana program deploy` instead to deploy \
+                    "Deploy has been removed. Use `trezoa program deploy` instead to deploy \
                      upgradeable programs",
                 )
                 .setting(AppSettings::Hidden),
@@ -2797,10 +2797,10 @@ fn send_deploy_messages(
                     &[fee_payer_signer, write_signer],
                 ),
                 ConnectionCache::Quic(cache) => {
-                    let tpu_client_fut = solana_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
+                    let tpu_client_fut = trezoa_client::nonblocking::tpu_client::TpuClient::new_with_connection_cache(
                         rpc_client.get_inner_client().clone(),
                         config.websocket_url.as_str(),
-                        solana_client::tpu_client::TpuClientConfig::default(),
+                        trezoa_client::tpu_client::TpuClientConfig::default(),
                         cache,
                     );
                     let tpu_client = (!use_rpc).then(|| rpc_client
@@ -2878,12 +2878,12 @@ fn report_ephemeral_mnemonic(words: usize, mnemonic: bip39::Mnemonic) {
     let phrase: &str = mnemonic.phrase();
     let divider = String::from_utf8(vec![b'='; phrase.len()]).unwrap();
     eprintln!("{divider}\nRecover the intermediate account's ephemeral keypair file with");
-    eprintln!("`solana-keygen recover` and the following {words}-word seed phrase:");
+    eprintln!("`trezoa-keygen recover` and the following {words}-word seed phrase:");
     eprintln!("{divider}\n{phrase}\n{divider}");
     eprintln!("To resume a deploy, pass the recovered keypair as the");
-    eprintln!("[BUFFER_SIGNER] to `solana program deploy` or `solana program write-buffer'.");
+    eprintln!("[BUFFER_SIGNER] to `trezoa program deploy` or `trezoa program write-buffer'.");
     eprintln!("Or to recover the account's lamports, pass it as the");
-    eprintln!("[BUFFER_ACCOUNT_ADDRESS] argument to `solana program close`.\n{divider}");
+    eprintln!("[BUFFER_ACCOUNT_ADDRESS] argument to `trezoa program close`.\n{divider}");
 }
 
 fn set_compute_budget_ixs_if_needed(ixs: &mut Vec<Instruction>, compute_unit_price: Option<u64>) {
@@ -2913,8 +2913,8 @@ mod tests {
             cli::{parse_command, process_command},
         },
         serde_json::Value,
-        solana_cli_output::OutputFormat,
-        solana_sdk::signature::write_keypair_file,
+        trezoa_cli_output::OutputFormat,
+        trezoa_sdk::signature::write_keypair_file,
     };
 
     fn make_tmp_path(name: &str) -> String {
@@ -3928,7 +3928,7 @@ mod tests {
 
     #[test]
     fn test_cli_keypair_file() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let default_keypair = Keypair::new();
         let program_pubkey = Keypair::new();

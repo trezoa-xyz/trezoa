@@ -13,7 +13,7 @@ use {
     bincode::{self, config::Options, Error},
     log::*,
     serde::{de::DeserializeOwned, Deserialize, Serialize},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         account_storage::meta::StoredMetaWriteVersion,
         accounts::Accounts,
         accounts_db::{
@@ -28,8 +28,8 @@ use {
         epoch_accounts_hash::EpochAccountsHash,
         rent_collector::RentCollector,
     },
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    trezoa_measure::measure::Measure,
+    trezoa_sdk::{
         clock::{Epoch, Slot, UnixTimestamp},
         deserialize_utils::default_on_eof,
         epoch_schedule::EpochSchedule,
@@ -60,7 +60,7 @@ mod tests;
 mod utils;
 
 pub(crate) use {
-    solana_accounts_db::accounts_hash::{
+    trezoa_accounts_db::accounts_hash::{
         SerdeAccountsDeltaHash, SerdeAccountsHash, SerdeIncrementalAccountsHash,
     },
     storage::SerializedAppendVecId,
@@ -572,7 +572,7 @@ impl<'a, C: TypeContext<'a>> Serialize for SerializableAccountsDb<'a, C> {
 }
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl<'a, C> solana_frozen_abi::abi_example::IgnoreAsHelper for SerializableAccountsDb<'a, C> {}
+impl<'a, C> trezoa_frozen_abi::abi_example::IgnoreAsHelper for SerializableAccountsDb<'a, C> {}
 
 #[allow(clippy::too_many_arguments)]
 fn reconstruct_bank_from_fields<E>(

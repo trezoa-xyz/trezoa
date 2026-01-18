@@ -1,14 +1,14 @@
 //! The `wen-restart` module handles automatic repair during a cluster restart
 
 use {
-    crate::solana::wen_restart_proto::{
+    crate::trezoa::wen_restart_proto::{
         MyLastVotedForkSlots, State as RestartState, WenRestartProgress,
     },
     log::*,
     prost::Message,
-    solana_gossip::{cluster_info::ClusterInfo, epoch_slots::MAX_SLOTS_PER_ENTRY},
-    solana_ledger::{ancestor_iterator::AncestorIterator, blockstore::Blockstore},
-    solana_vote_program::vote_state::VoteTransaction,
+    trezoa_gossip::{cluster_info::ClusterInfo, epoch_slots::MAX_SLOTS_PER_ENTRY},
+    trezoa_ledger::{ancestor_iterator::AncestorIterator, blockstore::Blockstore},
+    trezoa_vote_program::vote_state::VoteTransaction,
     std::{
         fs::File,
         io::{Error, Write},
@@ -66,21 +66,21 @@ fn write_wen_restart_records(
 mod tests {
     use {
         crate::wen_restart::*,
-        solana_entry::entry,
-        solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-        solana_ledger::{blockstore, get_tmp_ledger_path_auto_delete},
-        solana_program::{hash::Hash, vote::state::Vote},
-        solana_sdk::{
+        trezoa_entry::entry,
+        trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+        trezoa_ledger::{blockstore, get_tmp_ledger_path_auto_delete},
+        trezoa_program::{hash::Hash, vote::state::Vote},
+        trezoa_sdk::{
             signature::{Keypair, Signer},
             timing::timestamp,
         },
-        solana_streamer::socket::SocketAddrSpace,
+        trezoa_streamer::socket::SocketAddrSpace,
         std::{fs::read, sync::Arc},
     };
 
     #[test]
     fn test_wen_restart_normal_flow() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let node_keypair = Arc::new(Keypair::new());
         let cluster_info = Arc::new(ClusterInfo::new(
             {

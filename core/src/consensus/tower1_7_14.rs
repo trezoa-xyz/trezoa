@@ -1,12 +1,12 @@
 use {
     crate::consensus::{Result, SwitchForkDecision, TowerError},
-    solana_sdk::{
+    trezoa_sdk::{
         clock::Slot,
         hash::Hash,
         pubkey::Pubkey,
         signature::{Signature, Signer},
     },
-    solana_vote_program::vote_state::{vote_state_1_14_11::VoteState1_14_11, BlockTimestamp, Vote},
+    trezoa_vote_program::vote_state::{vote_state_1_14_11::VoteState1_14_11, BlockTimestamp, Vote},
 };
 
 #[frozen_abi(digest = "9Kc3Cpak93xdL8bCnEwMWA8ZLGCBNfqh9PLo1o5RiPyT")]

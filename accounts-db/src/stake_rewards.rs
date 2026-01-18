@@ -2,7 +2,7 @@
 
 use {
     crate::storable_accounts::StorableAccounts,
-    solana_sdk::{
+    trezoa_sdk::{
         account::AccountSharedData, clock::Slot, pubkey::Pubkey, reward_type::RewardType,
     },
 };
@@ -54,13 +54,13 @@ impl<'a> StorableAccounts<'a, AccountSharedData> for (Slot, &'a [StakeReward]) {
 #[cfg(feature = "dev-context-only-utils")]
 use {
     rand::Rng,
-    solana_sdk::{
+    trezoa_sdk::{
         account::WritableAccount,
         rent::Rent,
         signature::{Keypair, Signer},
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::vote_state,
+    trezoa_stake_program::stake_state,
+    trezoa_vote_program::vote_state,
 };
 
 // These functions/fields are only usable from a dev context (i.e. tests and benches)
@@ -71,7 +71,7 @@ impl StakeReward {
 
         let rent = Rent::free();
 
-        let validator_pubkey = solana_sdk::pubkey::new_rand();
+        let validator_pubkey = trezoa_sdk::pubkey::new_rand();
         let validator_stake_lamports = 20;
         let validator_staking_keypair = Keypair::new();
         let validator_voting_keypair = Keypair::new();

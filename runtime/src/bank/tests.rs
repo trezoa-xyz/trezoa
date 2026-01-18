@@ -1,6 +1,6 @@
 #![cfg(test)]
 #[allow(deprecated)]
-use solana_sdk::sysvar::fees::Fees;
+use trezoa_sdk::sysvar::fees::Fees;
 use {
     super::{
         test_utils::{goto_end_of_slot, update_vote_account_timestamp},
@@ -25,7 +25,7 @@ use {
     rand::Rng,
     rayon::ThreadPoolBuilder,
     serde::{Deserialize, Serialize},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts::AccountAddressFilter,
         accounts_db::{AccountShrinkThreshold, DEFAULT_ACCOUNTS_SHRINK_RATIO},
         accounts_index::{
@@ -33,14 +33,14 @@ use {
         },
         accounts_partition::{self, PartitionIndex, RentPayingAccountsByPartition},
         ancestors::Ancestors,
-        inline_spl_token,
+        inline_tpl_token,
         nonce_info::NonceFull,
         partitioned_rewards::TestPartitionedEpochRewards,
         rent_collector::RENT_EXEMPT_RENT_EPOCH,
         transaction_error_metrics::TransactionErrorMetrics,
     },
-    solana_logger,
-    solana_program_runtime::{
+    trezoa_logger,
+    trezoa_program_runtime::{
         compute_budget::ComputeBudget,
         compute_budget_processor::{self, MAX_COMPUTE_UNIT_LIMIT},
         declare_process_instruction,
@@ -48,7 +48,7 @@ use {
         prioritization_fee::{PrioritizationFeeDetails, PrioritizationFeeType},
         timings::ExecuteTimings,
     },
-    solana_sdk::{
+    trezoa_sdk::{
         account::{
             accounts_equal, create_account_shared_data_with_fields as create_account, from_account,
             Account, AccountSharedData, ReadableAccount, WritableAccount,
@@ -103,8 +103,8 @@ use {
         },
         transaction_context::{TransactionAccount, TransactionContext},
     },
-    solana_stake_program::stake_state::{self, StakeStateV2},
-    solana_vote_program::{
+    trezoa_stake_program::stake_state::{self, StakeStateV2},
+    trezoa_vote_program::{
         vote_instruction,
         vote_state::{
             self, BlockTimestamp, Vote, VoteInit, VoteState, VoteStateVersions, MAX_LOCKOUT_HISTORY,
@@ -135,7 +135,7 @@ impl VoteReward {
     pub fn new_random() -> Self {
         let mut rng = rand::thread_rng();
 
-        let validator_pubkey = solana_sdk::pubkey::new_rand();
+        let validator_pubkey = trezoa_sdk::pubkey::new_rand();
         let validator_stake_lamports = rng.gen_range(1..200);
         let validator_voting_keypair = Keypair::new();
 
@@ -171,7 +171,7 @@ fn new_bank_from_parent_with_bank_forks(
 
 fn create_genesis_config_no_tx_fee_no_rent(lamports: u64) -> (GenesisConfig, Keypair) {
     // genesis_util creates config with no tx fee and no rent
-    let genesis_config_info = solana_runtime::genesis_utils::create_genesis_config(lamports);
+    let genesis_config_info = trezoa_runtime::genesis_utils::create_genesis_config(lamports);
     (
         genesis_config_info.genesis_config,
         genesis_config_info.mint_keypair,
@@ -182,22 +182,22 @@ fn create_genesis_config_no_tx_fee(lamports: u64) -> (GenesisConfig, Keypair) {
     // genesis_config creates config with default fee rate and default rent
     // override to set fee rate to zero.
     let (mut genesis_config, mint_keypair) =
-        solana_sdk::genesis_config::create_genesis_config(lamports);
+        trezoa_sdk::genesis_config::create_genesis_config(lamports);
     genesis_config.fee_rate_governor = FeeRateGovernor::new(0, 0);
     (genesis_config, mint_keypair)
 }
 
 fn create_genesis_config(lamports: u64) -> (GenesisConfig, Keypair) {
-    solana_sdk::genesis_config::create_genesis_config(lamports)
+    trezoa_sdk::genesis_config::create_genesis_config(lamports)
 }
 
 #[test]
 fn test_race_register_tick_freeze() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let (mut genesis_config, _) = create_genesis_config(50);
     genesis_config.ticks_per_slot = 1;
-    let p = solana_sdk::pubkey::new_rand();
+    let p = trezoa_sdk::pubkey::new_rand();
     let hash = hash(p.as_ref());
 
     for _ in 0..1000 {
@@ -273,7 +273,7 @@ fn test_bank_unix_timestamp_from_genesis() {
 #[test]
 #[allow(clippy::float_cmp)]
 fn test_bank_new() {
-    let dummy_leader_pubkey = solana_sdk::pubkey::new_rand();
+    let dummy_leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let dummy_leader_stake_lamports = bootstrap_validator_stake_lamports();
     let mint_lamports = 10_000;
     let GenesisConfigInfo {
@@ -403,7 +403,7 @@ fn test_bank_capitalization() {
         accounts: (0..42)
             .map(|_| {
                 (
-                    solana_sdk::pubkey::new_rand(),
+                    trezoa_sdk::pubkey::new_rand(),
                     Account::new(42, 0, &Pubkey::default()),
                 )
             })
@@ -447,7 +447,7 @@ fn rent_with_exemption_threshold(exemption_threshold: f64) -> Rent {
 /// results in the same state as if just rent collection ran (and emptied the accounts that have too few lamports)
 fn test_credit_debit_rent_no_side_effect_on_hash() {
     for set_exempt_rent_epoch_max in [false, true] {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let (mut genesis_config, _mint_keypair) = create_genesis_config_no_tx_fee(10);
 
@@ -714,7 +714,7 @@ declare_process_instruction!(MockBuiltin, 1, |_invoke_context| {
 #[test]
 fn test_store_account_and_update_capitalization_missing() {
     let bank = create_simple_test_bank(0);
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
 
     let some_lamports = 400;
     let account = AccountSharedData::new(some_lamports, 0, &system_program::id());
@@ -795,9 +795,9 @@ fn test_store_account_and_update_capitalization_unchanged() {
 #[test]
 #[ignore]
 fn test_rent_distribution() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
-    let bootstrap_validator_pubkey = solana_sdk::pubkey::new_rand();
+    let bootstrap_validator_pubkey = trezoa_sdk::pubkey::new_rand();
     let bootstrap_validator_stake_lamports = 30;
     let mut genesis_config = create_genesis_config_with_leader(
         10,
@@ -822,7 +822,7 @@ fn test_rent_distribution() {
 
     let rent = Rent::free();
 
-    let validator_1_pubkey = solana_sdk::pubkey::new_rand();
+    let validator_1_pubkey = trezoa_sdk::pubkey::new_rand();
     let validator_1_stake_lamports = 20;
     let validator_1_staking_keypair = Keypair::new();
     let validator_1_voting_keypair = Keypair::new();
@@ -855,7 +855,7 @@ fn test_rent_distribution() {
         Account::from(validator_1_vote_account),
     );
 
-    let validator_2_pubkey = solana_sdk::pubkey::new_rand();
+    let validator_2_pubkey = trezoa_sdk::pubkey::new_rand();
     let validator_2_stake_lamports = 20;
     let validator_2_staking_keypair = Keypair::new();
     let validator_2_voting_keypair = Keypair::new();
@@ -888,7 +888,7 @@ fn test_rent_distribution() {
         Account::from(validator_2_vote_account),
     );
 
-    let validator_3_pubkey = solana_sdk::pubkey::new_rand();
+    let validator_3_pubkey = trezoa_sdk::pubkey::new_rand();
     let validator_3_stake_lamports = 30;
     let validator_3_staking_keypair = Keypair::new();
     let validator_3_voting_keypair = Keypair::new();
@@ -1042,9 +1042,9 @@ fn test_rent_exempt_executable_account() {
     let bank =
         create_child_bank_for_rent_test(root_bank, &genesis_config, bank_forks.as_ref(), None);
 
-    let account_pubkey = solana_sdk::pubkey::new_rand();
+    let account_pubkey = trezoa_sdk::pubkey::new_rand();
     let account_balance = 1;
-    let mut account = AccountSharedData::new(account_balance, 0, &solana_sdk::pubkey::new_rand());
+    let mut account = AccountSharedData::new(account_balance, 0, &trezoa_sdk::pubkey::new_rand());
     account.set_executable(true);
     account.set_owner(bpf_loader_upgradeable::id());
     bank.store_account(&account_pubkey, &account);
@@ -1067,7 +1067,7 @@ fn test_rent_exempt_executable_account() {
 #[ignore]
 #[allow(clippy::cognitive_complexity)]
 fn test_rent_complex() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let mock_program_id = Pubkey::from([2u8; 32]);
 
     #[derive(Serialize, Deserialize)]
@@ -1311,7 +1311,7 @@ fn test_rent_eager_across_epoch_without_gap() {
 
 #[test]
 fn test_rent_eager_across_epoch_without_gap_mnb() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (mut genesis_config, _mint_keypair) = create_genesis_config(1);
     genesis_config.cluster_type = ClusterType::MainnetBeta;
 
@@ -1377,7 +1377,7 @@ fn test_rent_eager_across_epoch_with_half_gap() {
 #[test]
 #[allow(clippy::cognitive_complexity)]
 fn test_rent_eager_across_epoch_without_gap_under_multi_epoch_cycle() {
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let leader_lamports = 3;
     let mut genesis_config =
         create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -1447,7 +1447,7 @@ fn test_rent_eager_across_epoch_without_gap_under_multi_epoch_cycle() {
 
 #[test]
 fn test_rent_eager_across_epoch_with_gap_under_multi_epoch_cycle() {
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let leader_lamports = 3;
     let mut genesis_config =
         create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -1505,7 +1505,7 @@ fn test_rent_eager_across_epoch_with_gap_under_multi_epoch_cycle() {
 
 #[test]
 fn test_rent_eager_with_warmup_epochs_under_multi_epoch_cycle() {
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let leader_lamports = 3;
     let mut genesis_config =
         create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -1561,8 +1561,8 @@ fn test_rent_eager_with_warmup_epochs_under_multi_epoch_cycle() {
 
 #[test]
 fn test_rent_eager_under_fixed_cycle_for_development() {
-    solana_logger::setup();
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    trezoa_logger::setup();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let leader_lamports = 3;
     let mut genesis_config =
         create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -1645,21 +1645,21 @@ impl Bank {
 #[test_case(true; "enable rent fees collection")]
 #[test_case(false; "disable rent fees collection")]
 fn test_rent_eager_collect_rent_in_partition(should_collect_rent: bool) {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let (mut genesis_config, _mint_keypair) = create_genesis_config(1_000_000);
     for feature_id in FeatureSet::default().inactive {
-        if feature_id != solana_sdk::feature_set::set_exempt_rent_epoch_max::id()
+        if feature_id != trezoa_sdk::feature_set::set_exempt_rent_epoch_max::id()
             && (!should_collect_rent
-                || feature_id != solana_sdk::feature_set::disable_rent_fees_collection::id())
+                || feature_id != trezoa_sdk::feature_set::disable_rent_fees_collection::id())
         {
             activate_feature(&mut genesis_config, feature_id);
         }
     }
 
-    let zero_lamport_pubkey = solana_sdk::pubkey::new_rand();
-    let rent_due_pubkey = solana_sdk::pubkey::new_rand();
-    let rent_exempt_pubkey = solana_sdk::pubkey::new_rand();
+    let zero_lamport_pubkey = trezoa_sdk::pubkey::new_rand();
+    let rent_due_pubkey = trezoa_sdk::pubkey::new_rand();
+    let rent_exempt_pubkey = trezoa_sdk::pubkey::new_rand();
     let mut bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
     assert_eq!(should_collect_rent, bank.should_collect_rent());
@@ -1769,7 +1769,7 @@ fn new_from_parent_next_epoch(
 #[test]
 /// tests that an account which has already had rent collected IN this slot does not skip rewrites
 fn test_collect_rent_from_accounts() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     for skip_rewrites in [false, true] {
         let zero_lamport_pubkey = Pubkey::from([0; 32]);
@@ -1821,11 +1821,11 @@ fn test_collect_rent_from_accounts() {
 
 #[test]
 fn test_rent_eager_collect_rent_zero_lamport_deterministic() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let (genesis_config, _mint_keypair) = create_genesis_config(1);
 
-    let zero_lamport_pubkey = solana_sdk::pubkey::new_rand();
+    let zero_lamport_pubkey = trezoa_sdk::pubkey::new_rand();
 
     let genesis_bank1 = Arc::new(Bank::new_for_tests(&genesis_config));
     let genesis_bank2 = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -1894,14 +1894,14 @@ fn check_bank_update_vote_stake_rewards<F>(load_vote_and_stake_accounts: F)
 where
     F: Fn(&Bank) -> LoadVoteAndStakeAccountsResult,
 {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // create a bank that ticks really slowly...
     let bank0 = Arc::new(Bank::new_for_tests(&GenesisConfig {
         accounts: (0..42)
             .map(|_| {
                 (
-                    solana_sdk::pubkey::new_rand(),
+                    trezoa_sdk::pubkey::new_rand(),
                     Account::new(1_000_000_000, 0, &Pubkey::default()),
                 )
             })
@@ -2030,7 +2030,7 @@ fn do_test_bank_update_rewards_determinism() -> u64 {
         accounts: (0..42)
             .map(|_| {
                 (
-                    solana_sdk::pubkey::new_rand(),
+                    trezoa_sdk::pubkey::new_rand(),
                     Account::new(1_000_000_000, 0, &Pubkey::default()),
                 )
             })
@@ -2057,12 +2057,12 @@ fn do_test_bank_update_rewards_determinism() -> u64 {
         42 * 1_000_000_000 + genesis_sysvar_and_builtin_program_lamports()
     );
 
-    let vote_id = solana_sdk::pubkey::new_rand();
+    let vote_id = trezoa_sdk::pubkey::new_rand();
     let mut vote_account =
-        vote_state::create_account(&vote_id, &solana_sdk::pubkey::new_rand(), 0, 100);
-    let stake_id1 = solana_sdk::pubkey::new_rand();
+        vote_state::create_account(&vote_id, &trezoa_sdk::pubkey::new_rand(), 0, 100);
+    let stake_id1 = trezoa_sdk::pubkey::new_rand();
     let stake_account1 = crate::stakes::tests::create_stake_account(123, &vote_id, &stake_id1);
-    let stake_id2 = solana_sdk::pubkey::new_rand();
+    let stake_id2 = trezoa_sdk::pubkey::new_rand();
     let stake_account2 = crate::stakes::tests::create_stake_account(456, &vote_id, &stake_id2);
 
     // set up accounts
@@ -2117,7 +2117,7 @@ fn do_test_bank_update_rewards_determinism() -> u64 {
 
 #[test]
 fn test_bank_update_rewards_determinism() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // The same reward should be distributed given same credits
     let expected_capitalization = do_test_bank_update_rewards_determinism();
@@ -2147,7 +2147,7 @@ fn test_purge_empty_accounts() {
     // When using the write cache, flushing is destructive/cannot be undone
     //  so we have to stop at various points and restart to actively test.
     for pass in 0..3 {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(sol_to_lamports(1.));
         let amount = genesis_config.rent.minimum_balance(0);
         let (mut bank, bank_forks) =
@@ -2155,7 +2155,7 @@ fn test_purge_empty_accounts() {
 
         for _ in 0..10 {
             let blockhash = bank.last_blockhash();
-            let pubkey = solana_sdk::pubkey::new_rand();
+            let pubkey = trezoa_sdk::pubkey::new_rand();
             let tx = system_transaction::transfer(&mint_keypair, &pubkey, 0, blockhash);
             bank.process_transaction(&tx).unwrap();
             bank.freeze();
@@ -2177,7 +2177,7 @@ fn test_purge_empty_accounts() {
         bank0.process_transaction(&tx).unwrap();
 
         let bank1 = new_from_parent_with_fork_next_slot(bank0.clone(), bank_forks.as_ref());
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = trezoa_sdk::pubkey::new_rand();
         let blockhash = bank.last_blockhash();
         let tx = system_transaction::transfer(&keypair, &pubkey, amount, blockhash);
         bank1.process_transaction(&tx).unwrap();
@@ -2242,7 +2242,7 @@ fn test_purge_empty_accounts() {
 #[test]
 fn test_two_payments_to_one_party() {
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let amount = genesis_config.rent.minimum_balance(0);
     assert_eq!(bank.last_blockhash(), genesis_config.hash());
@@ -2259,8 +2259,8 @@ fn test_two_payments_to_one_party() {
 #[test]
 fn test_one_source_two_tx_one_batch() {
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(sol_to_lamports(1.));
-    let key1 = solana_sdk::pubkey::new_rand();
-    let key2 = solana_sdk::pubkey::new_rand();
+    let key1 = trezoa_sdk::pubkey::new_rand();
+    let key2 = trezoa_sdk::pubkey::new_rand();
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let amount = genesis_config.rent.minimum_balance(0);
     assert_eq!(bank.last_blockhash(), genesis_config.hash());
@@ -2289,8 +2289,8 @@ fn test_one_source_two_tx_one_batch() {
 fn test_one_tx_two_out_atomic_fail() {
     let amount = sol_to_lamports(1.);
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(amount);
-    let key1 = solana_sdk::pubkey::new_rand();
-    let key2 = solana_sdk::pubkey::new_rand();
+    let key1 = trezoa_sdk::pubkey::new_rand();
+    let key2 = trezoa_sdk::pubkey::new_rand();
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let instructions = system_instruction::transfer_many(
         &mint_keypair.pubkey(),
@@ -2310,8 +2310,8 @@ fn test_one_tx_two_out_atomic_fail() {
 #[test]
 fn test_one_tx_two_out_atomic_pass() {
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(sol_to_lamports(1.));
-    let key1 = solana_sdk::pubkey::new_rand();
-    let key2 = solana_sdk::pubkey::new_rand();
+    let key1 = trezoa_sdk::pubkey::new_rand();
+    let key2 = trezoa_sdk::pubkey::new_rand();
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let amount = genesis_config.rent.minimum_balance(0);
     let instructions = system_instruction::transfer_many(
@@ -2361,7 +2361,7 @@ fn test_detect_failed_duplicate_transactions() {
 
 #[test]
 fn test_account_not_found() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(0);
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let keypair = Keypair::new();
@@ -2382,7 +2382,7 @@ fn test_insufficient_funds() {
     let mint_amount = sol_to_lamports(1.);
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(mint_amount);
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     let amount = genesis_config.rent.minimum_balance(0);
     bank.transfer(amount, &mint_keypair, &pubkey).unwrap();
     assert_eq!(bank.transaction_count(), 1);
@@ -2410,7 +2410,7 @@ fn test_executed_transaction_count_post_bank_transaction_count_fix() {
     let mint_amount = sol_to_lamports(1.);
     let (genesis_config, mint_keypair) = create_genesis_config(mint_amount);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     let amount = genesis_config.rent.minimum_balance(0);
     bank.transfer(amount, &mint_keypair, &pubkey).unwrap();
     assert_eq!(
@@ -2450,23 +2450,23 @@ fn test_executed_transaction_count_post_bank_transaction_count_fix() {
 
 #[test]
 fn test_transfer_to_newb() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let amount = genesis_config.rent.minimum_balance(0);
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     bank.transfer(amount, &mint_keypair, &pubkey).unwrap();
     assert_eq!(bank.get_balance(&pubkey), amount);
 }
 
 #[test]
 fn test_transfer_to_sysvar() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
 
-    let normal_pubkey = solana_sdk::pubkey::new_rand();
+    let normal_pubkey = trezoa_sdk::pubkey::new_rand();
     let sysvar_pubkey = sysvar::clock::id();
     assert_eq!(bank.get_balance(&normal_pubkey), 0);
     assert_eq!(bank.get_balance(&sysvar_pubkey), 1_169_280);
@@ -2488,7 +2488,7 @@ fn test_bank_withdraw() {
     let bank = create_simple_test_bank(100);
 
     // Test no account
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     assert_eq!(
         bank.withdraw(&key, 10),
         Err(TransactionError::AccountNotFound)
@@ -2545,11 +2545,11 @@ fn test_bank_withdraw_from_nonce_account() {
 
 #[test]
 fn test_bank_tx_fee() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let arbitrary_transfer_amount = 42_000;
     let mint = arbitrary_transfer_amount * 100;
-    let leader = solana_sdk::pubkey::new_rand();
+    let leader = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         mint_keypair,
@@ -2568,7 +2568,7 @@ fn test_bank_tx_fee() {
 
     let capitalization = bank.capitalization();
 
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let tx = system_transaction::transfer(
         &mint_keypair,
         &key,
@@ -2650,12 +2650,12 @@ fn test_bank_tx_fee() {
 
 #[test]
 fn test_bank_tx_compute_unit_fee() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let arbitrary_transfer_amount = 42;
     let mint = arbitrary_transfer_amount * 10_000_000;
-    let leader = solana_sdk::pubkey::new_rand();
+    let leader = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         mint_keypair,
@@ -2760,9 +2760,9 @@ fn test_bank_tx_compute_unit_fee() {
 
 #[test]
 fn test_bank_blockhash_fee_structure() {
-    //solana_logger::setup();
+    //trezoa_logger::setup();
 
-    let leader = solana_sdk::pubkey::new_rand();
+    let leader = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         mint_keypair,
@@ -2788,7 +2788,7 @@ fn test_bank_blockhash_fee_structure() {
     let bank = new_bank_from_parent_with_bank_forks(bank_forks.as_ref(), bank, &leader, 2);
 
     // Send a transfer using cheap_blockhash
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let initial_mint_balance = bank.get_balance(&mint_keypair.pubkey());
     let tx = system_transaction::transfer(&mint_keypair, &key, 1, cheap_blockhash);
     assert_eq!(bank.process_transaction(&tx), Ok(()));
@@ -2804,7 +2804,7 @@ fn test_bank_blockhash_fee_structure() {
     );
 
     // Send a transfer using expensive_blockhash
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let initial_mint_balance = bank.get_balance(&mint_keypair.pubkey());
     let tx = system_transaction::transfer(&mint_keypair, &key, 1, expensive_blockhash);
     assert_eq!(bank.process_transaction(&tx), Ok(()));
@@ -2822,9 +2822,9 @@ fn test_bank_blockhash_fee_structure() {
 
 #[test]
 fn test_bank_blockhash_compute_unit_fee_structure() {
-    //solana_logger::setup();
+    //trezoa_logger::setup();
 
-    let leader = solana_sdk::pubkey::new_rand();
+    let leader = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         mint_keypair,
@@ -2850,7 +2850,7 @@ fn test_bank_blockhash_compute_unit_fee_structure() {
     let bank = new_bank_from_parent_with_bank_forks(bank_forks.as_ref(), bank, &leader, 2);
 
     // Send a transfer using cheap_blockhash
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let initial_mint_balance = bank.get_balance(&mint_keypair.pubkey());
     let tx = system_transaction::transfer(&mint_keypair, &key, 1, cheap_blockhash);
     assert_eq!(bank.process_transaction(&tx), Ok(()));
@@ -2866,7 +2866,7 @@ fn test_bank_blockhash_compute_unit_fee_structure() {
     );
 
     // Send a transfer using expensive_blockhash
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let initial_mint_balance = bank.get_balance(&mint_keypair.pubkey());
     let tx = system_transaction::transfer(&mint_keypair, &key, 1, expensive_blockhash);
     assert_eq!(bank.process_transaction(&tx), Ok(()));
@@ -2884,7 +2884,7 @@ fn test_bank_blockhash_compute_unit_fee_structure() {
 
 #[test]
 fn test_filter_program_errors_and_collect_fee() {
-    let leader = solana_sdk::pubkey::new_rand();
+    let leader = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         mint_keypair,
@@ -2893,7 +2893,7 @@ fn test_filter_program_errors_and_collect_fee() {
     genesis_config.fee_rate_governor = FeeRateGovernor::new(5000, 0);
     let bank = Bank::new_for_tests(&genesis_config);
 
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let tx1 = SanitizedTransaction::from_transaction_for_tests(system_transaction::transfer(
         &mint_keypair,
         &key,
@@ -2935,7 +2935,7 @@ fn test_filter_program_errors_and_collect_fee() {
 
 #[test]
 fn test_filter_program_errors_and_collect_compute_unit_fee() {
-    let leader = solana_sdk::pubkey::new_rand();
+    let leader = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         mint_keypair,
@@ -2944,7 +2944,7 @@ fn test_filter_program_errors_and_collect_compute_unit_fee() {
     genesis_config.fee_rate_governor = FeeRateGovernor::new(2, 0);
     let bank = Bank::new_for_tests(&genesis_config);
 
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
     let tx1 = SanitizedTransaction::from_transaction_for_tests(system_transaction::transfer(
         &mint_keypair,
         &key,
@@ -3027,12 +3027,12 @@ fn test_readonly_accounts() {
         genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 0);
+    } = create_genesis_config_with_leader(500, &trezoa_sdk::pubkey::new_rand(), 0);
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
 
-    let vote_pubkey0 = solana_sdk::pubkey::new_rand();
-    let vote_pubkey1 = solana_sdk::pubkey::new_rand();
-    let vote_pubkey2 = solana_sdk::pubkey::new_rand();
+    let vote_pubkey0 = trezoa_sdk::pubkey::new_rand();
+    let vote_pubkey1 = trezoa_sdk::pubkey::new_rand();
+    let vote_pubkey2 = trezoa_sdk::pubkey::new_rand();
     let authorized_voter = Keypair::new();
     let payer0 = Keypair::new();
     let payer1 = Keypair::new();
@@ -3086,7 +3086,7 @@ fn test_readonly_accounts() {
     );
     let tx1 = system_transaction::transfer(
         &authorized_voter,
-        &solana_sdk::pubkey::new_rand(),
+        &trezoa_sdk::pubkey::new_rand(),
         1,
         bank.last_blockhash(),
     );
@@ -3155,7 +3155,7 @@ fn test_readonly_relaxed_locks() {
     let key0 = Keypair::new();
     let key1 = Keypair::new();
     let key2 = Keypair::new();
-    let key3 = solana_sdk::pubkey::new_rand();
+    let key3 = trezoa_sdk::pubkey::new_rand();
 
     let message = Message {
         header: MessageHeader {
@@ -3354,7 +3354,7 @@ fn test_bank_hash_internal_state() {
     let initial_state = bank0.hash_internal_state();
     assert_eq!(bank1.hash_internal_state(), initial_state);
 
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     bank0.transfer(amount, &mint_keypair, &pubkey).unwrap();
     assert_ne!(bank0.hash_internal_state(), initial_state);
     bank1.transfer(amount, &mint_keypair, &pubkey).unwrap();
@@ -3364,7 +3364,7 @@ fn test_bank_hash_internal_state() {
     let bank2 = new_from_parent_with_fork_next_slot(bank1.clone(), bank_forks_1.as_ref());
     assert_ne!(bank0.hash_internal_state(), bank2.hash_internal_state());
 
-    let pubkey2 = solana_sdk::pubkey::new_rand();
+    let pubkey2 = trezoa_sdk::pubkey::new_rand();
     info!("transfer 2 {}", pubkey2);
     bank2.transfer(amount, &mint_keypair, &pubkey2).unwrap();
     add_root_and_flush_write_cache(&bank0);
@@ -3377,13 +3377,13 @@ fn test_bank_hash_internal_state() {
 #[test]
 fn test_bank_hash_internal_state_verify() {
     for pass in 0..3 {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (genesis_config, mint_keypair) =
             create_genesis_config_no_tx_fee_no_rent(sol_to_lamports(1.));
         let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         let amount = genesis_config.rent.minimum_balance(0);
 
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = trezoa_sdk::pubkey::new_rand();
         info!("transfer 0 {} mint: {}", pubkey, mint_keypair.pubkey());
         bank0.transfer(amount, &mint_keypair, &pubkey).unwrap();
 
@@ -3392,7 +3392,7 @@ fn test_bank_hash_internal_state_verify() {
         let bank2 = new_bank_from_parent_with_bank_forks(
             bank_forks.as_ref(),
             bank0.clone(),
-            &solana_sdk::pubkey::new_rand(),
+            &trezoa_sdk::pubkey::new_rand(),
             1,
         );
         assert_ne!(bank0_state, bank2.hash_internal_state());
@@ -3411,7 +3411,7 @@ fn test_bank_hash_internal_state_verify() {
         let bank3 = new_bank_from_parent_with_bank_forks(
             bank_forks.as_ref(),
             bank0.clone(),
-            &solana_sdk::pubkey::new_rand(),
+            &trezoa_sdk::pubkey::new_rand(),
             2,
         );
         assert_eq!(bank0_state, bank0.hash_internal_state());
@@ -3430,7 +3430,7 @@ fn test_bank_hash_internal_state_verify() {
             continue;
         }
 
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey2 = trezoa_sdk::pubkey::new_rand();
         info!("transfer 2 {}", pubkey2);
         bank2.transfer(amount, &mint_keypair, &pubkey2).unwrap();
         add_root_and_flush_write_cache(&bank2);
@@ -3451,8 +3451,8 @@ fn test_verify_hash_unfrozen() {
 
 #[test]
 fn test_verify_snapshot_bank() {
-    solana_logger::setup();
-    let pubkey = solana_sdk::pubkey::new_rand();
+    trezoa_logger::setup();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     bank.transfer(
@@ -3474,7 +3474,7 @@ fn test_verify_snapshot_bank() {
 // Test that two bank forks with the same accounts should not hash to the same value.
 #[test]
 fn test_bank_hash_internal_state_same_account_different_fork() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let amount = genesis_config.rent.minimum_balance(0);
     let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -3488,7 +3488,7 @@ fn test_bank_hash_internal_state_same_account_different_fork() {
     assert_ne!(bank1.hash_internal_state(), initial_state);
 
     info!("transfer bank1");
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     bank1.transfer(amount, &mint_keypair, &pubkey).unwrap();
     assert_ne!(bank1.hash_internal_state(), initial_state);
 
@@ -3517,8 +3517,8 @@ fn test_hash_internal_state_order() {
     let bank0 = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     let bank1 = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
     assert_eq!(bank0.hash_internal_state(), bank1.hash_internal_state());
-    let key0 = solana_sdk::pubkey::new_rand();
-    let key1 = solana_sdk::pubkey::new_rand();
+    let key0 = trezoa_sdk::pubkey::new_rand();
+    let key1 = trezoa_sdk::pubkey::new_rand();
     bank0.transfer(amount, &mint_keypair, &key0).unwrap();
     bank0.transfer(amount * 2, &mint_keypair, &key1).unwrap();
 
@@ -3530,11 +3530,11 @@ fn test_hash_internal_state_order() {
 
 #[test]
 fn test_hash_internal_state_error() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let amount = genesis_config.rent.minimum_balance(0);
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
-    let key0 = solana_sdk::pubkey::new_rand();
+    let key0 = trezoa_sdk::pubkey::new_rand();
     bank.transfer(amount, &mint_keypair, &key0).unwrap();
     let orig = bank.hash_internal_state();
 
@@ -3571,7 +3571,7 @@ fn test_bank_hash_internal_state_squash() {
 /// Verifies that last ids and accounts are correctly referenced from parent
 #[test]
 fn test_bank_squash() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(sol_to_lamports(2.));
     let key1 = Keypair::new();
     let key2 = Keypair::new();
@@ -3660,7 +3660,7 @@ fn test_bank_get_account_in_parent_after_squash() {
 
 #[test]
 fn test_bank_get_account_in_parent_after_squash2() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
@@ -3742,7 +3742,7 @@ fn test_bank_get_account_in_parent_after_squash2() {
 
 #[test]
 fn test_bank_get_account_modified_since_parent_with_fixed_root() {
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
 
     let (genesis_config, mint_keypair) = create_genesis_config(sol_to_lamports(1.));
     let amount = genesis_config.rent.minimum_balance(0);
@@ -3787,12 +3787,12 @@ fn test_bank_get_account_modified_since_parent_with_fixed_root() {
 
 #[test]
 fn test_bank_update_sysvar_account() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     // flushing the write cache is destructive, so test has to restart each time we flush and want to do 'illegal' operations once flushed
     for pass in 0..5 {
         use sysvar::clock::Clock;
 
-        let dummy_clock_id = solana_sdk::pubkey::new_rand();
+        let dummy_clock_id = trezoa_sdk::pubkey::new_rand();
         let dummy_rent_epoch = 44;
         let (mut genesis_config, _mint_keypair) = create_genesis_config(500);
 
@@ -3944,7 +3944,7 @@ fn test_bank_update_sysvar_account() {
 
 #[test]
 fn test_bank_epoch_vote_accounts() {
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let leader_lamports = 3;
     let mut genesis_config =
         create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -4047,11 +4047,11 @@ fn test_bank_epoch_vote_accounts() {
 
 #[test]
 fn test_zero_signatures() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(500);
     let mut bank = Bank::new_for_tests(&genesis_config);
     bank.fee_rate_governor.lamports_per_signature = 2;
-    let key = solana_sdk::pubkey::new_rand();
+    let key = trezoa_sdk::pubkey::new_rand();
 
     let mut transfer_instruction = system_instruction::transfer(&mint_keypair.pubkey(), &key, 0);
     transfer_instruction.accounts[0].is_signer = false;
@@ -4132,14 +4132,14 @@ fn test_bank_inherit_tx_count() {
     let bank1 = new_bank_from_parent_with_bank_forks(
         bank_forks.as_ref(),
         bank0.clone(),
-        &solana_sdk::pubkey::new_rand(),
+        &trezoa_sdk::pubkey::new_rand(),
         1,
     );
     // Bank 2
     let bank2 = new_bank_from_parent_with_bank_forks(
         bank_forks.as_ref(),
         bank0.clone(),
-        &solana_sdk::pubkey::new_rand(),
+        &trezoa_sdk::pubkey::new_rand(),
         2,
     );
 
@@ -4173,7 +4173,7 @@ fn test_bank_inherit_tx_count() {
     let bank6 = new_bank_from_parent_with_bank_forks(
         bank_forks.as_ref(),
         bank1.clone(),
-        &solana_sdk::pubkey::new_rand(),
+        &trezoa_sdk::pubkey::new_rand(),
         3,
     );
     assert_eq!(bank1.transaction_count(), 1);
@@ -4210,7 +4210,7 @@ fn test_bank_vote_accounts() {
         genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 1);
+    } = create_genesis_config_with_leader(500, &trezoa_sdk::pubkey::new_rand(), 1);
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
 
     let vote_accounts = bank.vote_accounts();
@@ -4264,7 +4264,7 @@ fn test_bank_cloned_stake_delegations() {
         ..
     } = create_genesis_config_with_leader(
         123_456_000_000_000,
-        &solana_sdk::pubkey::new_rand(),
+        &trezoa_sdk::pubkey::new_rand(),
         123_000_000_000,
     );
     genesis_config.rent = Rent::default();
@@ -4278,7 +4278,7 @@ fn test_bank_cloned_stake_delegations() {
         let rent = &bank.rent_collector().rent;
         let vote_rent_exempt_reserve = rent.minimum_balance(VoteState::size_of());
         let stake_rent_exempt_reserve = rent.minimum_balance(StakeStateV2::size_of());
-        let minimum_delegation = solana_stake_program::get_minimum_delegation(&bank.feature_set);
+        let minimum_delegation = trezoa_stake_program::get_minimum_delegation(&bank.feature_set);
         (
             vote_rent_exempt_reserve,
             stake_rent_exempt_reserve + minimum_delegation,
@@ -4367,7 +4367,7 @@ fn test_is_delta_with_no_committables() {
     // Should fail with InstructionError, but InstructionErrors are committable,
     // so is_delta should be true
     assert_eq!(
-        bank.transfer(10_001, &mint_keypair, &solana_sdk::pubkey::new_rand()),
+        bank.transfer(10_001, &mint_keypair, &trezoa_sdk::pubkey::new_rand()),
         Err(TransactionError::InstructionError(
             0,
             SystemError::ResultWithNegativeLamports.into(),
@@ -4393,12 +4393,12 @@ fn test_bank_get_program_accounts() {
     assert!(
         genesis_accounts
             .iter()
-            .any(|(pubkey, _, _)| solana_sdk::sysvar::is_sysvar_id(pubkey)),
+            .any(|(pubkey, _, _)| trezoa_sdk::sysvar::is_sysvar_id(pubkey)),
         "no sysvars found"
     );
 
     let bank0 = Arc::new(new_from_parent(parent));
-    let pubkey0 = solana_sdk::pubkey::new_rand();
+    let pubkey0 = trezoa_sdk::pubkey::new_rand();
     let program_id = Pubkey::from([2; 32]);
     let account0 = AccountSharedData::new(1, 0, &program_id);
     bank0.store_account(&pubkey0, &account0);
@@ -4428,11 +4428,11 @@ fn test_bank_get_program_accounts() {
     );
 
     let bank2 = Arc::new(new_from_parent(bank1.clone()));
-    let pubkey1 = solana_sdk::pubkey::new_rand();
+    let pubkey1 = trezoa_sdk::pubkey::new_rand();
     let account1 = AccountSharedData::new(3, 0, &program_id);
     bank2.store_account(&pubkey1, &account1);
     // Accounts with 0 lamports should be filtered out by Accounts::load_by_program()
-    let pubkey2 = solana_sdk::pubkey::new_rand();
+    let pubkey2 = trezoa_sdk::pubkey::new_rand();
     let account2 = AccountSharedData::new(0, 0, &program_id);
     bank2.store_account(&pubkey2, &account2);
 
@@ -4560,7 +4560,7 @@ fn test_get_filtered_indexed_accounts() {
 
 #[test]
 fn test_status_cache_ancestors() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let parent = create_simple_test_arc_bank(500).0;
     let bank1 = Arc::new(new_from_parent(parent));
     let mut bank = bank1;
@@ -4638,7 +4638,7 @@ fn test_add_duplicate_static_program() {
         genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 0);
+    } = create_genesis_config_with_leader(500, &trezoa_sdk::pubkey::new_rand(), 0);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
     declare_process_instruction!(MockBuiltin, 1, |_invoke_context| {
@@ -4670,15 +4670,15 @@ fn test_add_duplicate_static_program() {
 
     let slot = bank.slot().saturating_add(1);
     let mut bank = Bank::new_from_parent(bank, &Pubkey::default(), slot);
-    bank.add_mockup_builtin(solana_vote_program::id(), MockBuiltin::vm);
+    bank.add_mockup_builtin(trezoa_vote_program::id(), MockBuiltin::vm);
     let bank = bank_forks
         .write()
         .unwrap()
         .insert(bank)
         .clone_without_scheduler();
 
-    let vote_loader_account = bank.get_account(&solana_vote_program::id()).unwrap();
-    let new_vote_loader_account = bank.get_account(&solana_vote_program::id()).unwrap();
+    let vote_loader_account = bank.get_account(&trezoa_vote_program::id()).unwrap();
+    let new_vote_loader_account = bank.get_account(&trezoa_vote_program::id()).unwrap();
     // Vote loader account should not be updated since it was included in the genesis config.
     assert_eq!(vote_loader_account.data(), new_vote_loader_account.data());
     assert_eq!(
@@ -4851,7 +4851,7 @@ fn test_banks_leak() {
         const LOTSA: usize = 4_096;
 
         (0..LOTSA).for_each(|_| {
-            let pubkey = solana_sdk::pubkey::new_rand();
+            let pubkey = trezoa_sdk::pubkey::new_rand();
             genesis_config.add_account(
                 pubkey,
                 stake_state::create_lockup_stake_account(
@@ -4863,7 +4863,7 @@ fn test_banks_leak() {
             );
         });
     }
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (mut genesis_config, _) = create_genesis_config(100_000_000_000_000);
     add_lotsa_stake_accounts(&mut genesis_config);
     let (mut bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -5480,7 +5480,7 @@ fn test_nonce_transaction_with_tx_wide_caps() {
 
 #[test]
 fn test_nonce_authority() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (mut bank, _mint_keypair, custodian_keypair, nonce_keypair, bank_forks) =
         setup_nonce_with_bank(
             10_000_000,
@@ -5541,7 +5541,7 @@ fn test_nonce_authority() {
 
 #[test]
 fn test_nonce_payer() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let nonce_starting_balance = 250_000;
     let (mut bank, _mint_keypair, custodian_keypair, nonce_keypair, bank_forks) =
         setup_nonce_with_bank(
@@ -5605,7 +5605,7 @@ fn test_nonce_payer() {
 
 #[test]
 fn test_nonce_payer_tx_wide_cap() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let nonce_starting_balance =
         250_000 + FeeStructure::default().compute_fee_bins.last().unwrap().fee;
     let feature_set = FeatureSet::all_enabled();
@@ -5710,7 +5710,7 @@ fn test_nonce_fee_calculator_updates() {
             system_instruction::advance_nonce_account(&nonce_pubkey, &nonce_pubkey),
             system_instruction::transfer(
                 &custodian_pubkey,
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 100_000,
             ),
         ],
@@ -5778,7 +5778,7 @@ fn test_nonce_fee_calculator_updates_tx_wide_cap() {
             system_instruction::advance_nonce_account(&nonce_pubkey, &nonce_pubkey),
             system_instruction::transfer(
                 &custodian_pubkey,
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 100_000,
             ),
         ],
@@ -5872,8 +5872,8 @@ fn test_collect_balances() {
     let bank0 = Arc::new(new_from_parent(parent));
 
     let keypair = Keypair::new();
-    let pubkey0 = solana_sdk::pubkey::new_rand();
-    let pubkey1 = solana_sdk::pubkey::new_rand();
+    let pubkey0 = trezoa_sdk::pubkey::new_rand();
+    let pubkey1 = trezoa_sdk::pubkey::new_rand();
     let program_id = Pubkey::from([2; 32]);
     let keypair_account = AccountSharedData::new(8, 0, &program_id);
     let account0 = AccountSharedData::new(11, 0, &program_id);
@@ -5923,9 +5923,9 @@ fn test_pre_post_transaction_balances() {
 
     let keypair0 = Keypair::new();
     let keypair1 = Keypair::new();
-    let pubkey0 = solana_sdk::pubkey::new_rand();
-    let pubkey1 = solana_sdk::pubkey::new_rand();
-    let pubkey2 = solana_sdk::pubkey::new_rand();
+    let pubkey0 = trezoa_sdk::pubkey::new_rand();
+    let pubkey1 = trezoa_sdk::pubkey::new_rand();
+    let pubkey2 = trezoa_sdk::pubkey::new_rand();
     let keypair0_account = AccountSharedData::new(908_000, 0, &Pubkey::default());
     let keypair1_account = AccountSharedData::new(909_000, 0, &Pubkey::default());
     let account0 = AccountSharedData::new(911_000, 0, &Pubkey::default());
@@ -6029,8 +6029,8 @@ fn test_transaction_with_duplicate_accounts_in_instruction() {
         Ok(())
     });
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
     let dup_pubkey = from_pubkey;
     let from_account = AccountSharedData::new(sol_to_lamports(100.), 1, &mock_program_id);
     let to_account = AccountSharedData::new(0, 1, &mock_program_id);
@@ -6066,8 +6066,8 @@ fn test_transaction_with_program_ids_passed_to_programs() {
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, mock_program_id, MockBuiltin::vm)
             .0;
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
     let dup_pubkey = from_pubkey;
     let from_account = AccountSharedData::new(100, 1, &mock_program_id);
     let to_account = AccountSharedData::new(0, 1, &mock_program_id);
@@ -6094,19 +6094,19 @@ fn test_transaction_with_program_ids_passed_to_programs() {
 
 #[test]
 fn test_account_ids_after_program_ids() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(500);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
 
     let account_metas = vec![
         AccountMeta::new(from_pubkey, false),
         AccountMeta::new(to_pubkey, false),
     ];
 
-    let instruction = Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+    let instruction = Instruction::new_with_bincode(trezoa_vote_program::id(), &10, account_metas);
     let mut tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -6114,11 +6114,11 @@ fn test_account_ids_after_program_ids() {
         bank.last_blockhash(),
     );
 
-    tx.message.account_keys.push(solana_sdk::pubkey::new_rand());
+    tx.message.account_keys.push(trezoa_sdk::pubkey::new_rand());
 
     let slot = bank.slot().saturating_add(1);
     let mut bank = Bank::new_from_parent(bank, &Pubkey::default(), slot);
-    bank.add_mockup_builtin(solana_vote_program::id(), MockBuiltin::vm);
+    bank.add_mockup_builtin(trezoa_vote_program::id(), MockBuiltin::vm);
     let bank = bank_forks
         .write()
         .unwrap()
@@ -6127,7 +6127,7 @@ fn test_account_ids_after_program_ids() {
 
     let result = bank.process_transaction(&tx);
     assert_eq!(result, Ok(()));
-    let account = bank.get_account(&solana_vote_program::id()).unwrap();
+    let account = bank.get_account(&trezoa_vote_program::id()).unwrap();
     info!("account: {:?}", account);
     assert!(account.executable());
 }
@@ -6163,24 +6163,24 @@ fn test_incinerator() {
 
 #[test]
 fn test_duplicate_account_key() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(500);
     let bank = Bank::new_with_mockup_builtin_for_tests(
         &genesis_config,
-        solana_vote_program::id(),
+        trezoa_vote_program::id(),
         MockBuiltin::vm,
     )
     .0;
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
 
     let account_metas = vec![
         AccountMeta::new(from_pubkey, false),
         AccountMeta::new(to_pubkey, false),
     ];
 
-    let instruction = Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+    let instruction = Instruction::new_with_bincode(trezoa_vote_program::id(), &10, account_metas);
     let mut tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -6195,24 +6195,24 @@ fn test_duplicate_account_key() {
 
 #[test]
 fn test_process_transaction_with_too_many_account_locks() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(500);
     let bank = Bank::new_with_mockup_builtin_for_tests(
         &genesis_config,
-        solana_vote_program::id(),
+        trezoa_vote_program::id(),
         MockBuiltin::vm,
     )
     .0;
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
 
     let account_metas = vec![
         AccountMeta::new(from_pubkey, false),
         AccountMeta::new(to_pubkey, false),
     ];
 
-    let instruction = Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+    let instruction = Instruction::new_with_bincode(trezoa_vote_program::id(), &10, account_metas);
     let mut tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -6222,7 +6222,7 @@ fn test_process_transaction_with_too_many_account_locks() {
 
     let transaction_account_lock_limit = bank.get_transaction_account_lock_limit();
     while tx.message.account_keys.len() <= transaction_account_lock_limit {
-        tx.message.account_keys.push(solana_sdk::pubkey::new_rand());
+        tx.message.account_keys.push(trezoa_sdk::pubkey::new_rand());
     }
 
     let result = bank.process_transaction(&tx);
@@ -6231,21 +6231,21 @@ fn test_process_transaction_with_too_many_account_locks() {
 
 #[test]
 fn test_program_id_as_payer() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (genesis_config, mint_keypair) = create_genesis_config(500);
     let mut bank = Bank::new_for_tests(&genesis_config);
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
 
     let account_metas = vec![
         AccountMeta::new(from_pubkey, false),
         AccountMeta::new(to_pubkey, false),
     ];
 
-    bank.add_mockup_builtin(solana_vote_program::id(), MockBuiltin::vm);
+    bank.add_mockup_builtin(trezoa_vote_program::id(), MockBuiltin::vm);
 
-    let instruction = Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+    let instruction = Instruction::new_with_bincode(trezoa_vote_program::id(), &10, account_metas);
     let mut tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -6260,7 +6260,7 @@ fn test_program_id_as_payer() {
     );
     assert_eq!(tx.message.account_keys.len(), 4);
     tx.message.account_keys.clear();
-    tx.message.account_keys.push(solana_vote_program::id());
+    tx.message.account_keys.push(trezoa_vote_program::id());
     tx.message.account_keys.push(mint_keypair.pubkey());
     tx.message.account_keys.push(from_pubkey);
     tx.message.account_keys.push(to_pubkey);
@@ -6278,8 +6278,8 @@ fn test_ref_account_key_after_program_id() {
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(500);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
-    let from_pubkey = solana_sdk::pubkey::new_rand();
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let from_pubkey = trezoa_sdk::pubkey::new_rand();
+    let to_pubkey = trezoa_sdk::pubkey::new_rand();
 
     let account_metas = vec![
         AccountMeta::new(from_pubkey, false),
@@ -6288,14 +6288,14 @@ fn test_ref_account_key_after_program_id() {
 
     let slot = bank.slot().saturating_add(1);
     let mut bank = Bank::new_from_parent(bank, &Pubkey::default(), slot);
-    bank.add_mockup_builtin(solana_vote_program::id(), MockBuiltin::vm);
+    bank.add_mockup_builtin(trezoa_vote_program::id(), MockBuiltin::vm);
     let bank = bank_forks
         .write()
         .unwrap()
         .insert(bank)
         .clone_without_scheduler();
 
-    let instruction = Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+    let instruction = Instruction::new_with_bincode(trezoa_vote_program::id(), &10, account_metas);
     let mut tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -6303,7 +6303,7 @@ fn test_ref_account_key_after_program_id() {
         bank.last_blockhash(),
     );
 
-    tx.message.account_keys.push(solana_sdk::pubkey::new_rand());
+    tx.message.account_keys.push(trezoa_sdk::pubkey::new_rand());
     assert_eq!(tx.message.account_keys.len(), 5);
     tx.message.instructions[0].accounts.remove(0);
     tx.message.instructions[0].accounts.push(4);
@@ -6314,7 +6314,7 @@ fn test_ref_account_key_after_program_id() {
 
 #[test]
 fn test_fuzz_instructions() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     use rand::{thread_rng, Rng};
     let mut bank = create_simple_test_bank(1_000_000_000);
 
@@ -6322,7 +6322,7 @@ fn test_fuzz_instructions() {
     let program_keys: Vec<_> = (0..max_programs)
         .enumerate()
         .map(|i| {
-            let key = solana_sdk::pubkey::new_rand();
+            let key = trezoa_sdk::pubkey::new_rand();
             let name = format!("program{i:?}");
             bank.add_builtin(
                 key,
@@ -6337,7 +6337,7 @@ fn test_fuzz_instructions() {
     let keys: Vec<_> = (0..max_keys)
         .enumerate()
         .map(|_| {
-            let key = solana_sdk::pubkey::new_rand();
+            let key = trezoa_sdk::pubkey::new_rand();
             let balance = if thread_rng().gen_ratio(9, 10) {
                 let lamports = if thread_rng().gen_ratio(1, 5) {
                     thread_rng().gen_range(0..10)
@@ -6473,7 +6473,7 @@ fn test_fuzz_instructions() {
 
 #[test]
 fn test_bank_hash_consistency() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut genesis_config = GenesisConfig::new(
         &[(
@@ -6533,13 +6533,13 @@ fn test_same_program_id_uses_unique_executable_accounts() {
     });
 
     let (genesis_config, mint_keypair) = create_genesis_config(50000);
-    let program1_pubkey = solana_sdk::pubkey::new_rand();
+    let program1_pubkey = trezoa_sdk::pubkey::new_rand();
     let bank =
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, program1_pubkey, MockBuiltin::vm)
             .0;
 
     // Add a new program owned by the first
-    let program2_pubkey = solana_sdk::pubkey::new_rand();
+    let program2_pubkey = trezoa_sdk::pubkey::new_rand();
     let mut program2_account = AccountSharedData::new(1, 1, &program1_pubkey);
     program2_account.set_executable(true);
     bank.store_account(&program2_pubkey, &program2_account);
@@ -6590,7 +6590,7 @@ fn get_shrink_account_size() -> usize {
 
 #[test]
 fn test_clean_nonrooted() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000_000);
     let pubkey0 = Pubkey::from([0; 32]);
@@ -6667,12 +6667,12 @@ fn test_clean_nonrooted() {
 
 #[test]
 fn test_shrink_candidate_slots_cached() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000_000);
-    let pubkey0 = solana_sdk::pubkey::new_rand();
-    let pubkey1 = solana_sdk::pubkey::new_rand();
-    let pubkey2 = solana_sdk::pubkey::new_rand();
+    let pubkey0 = trezoa_sdk::pubkey::new_rand();
+    let pubkey1 = trezoa_sdk::pubkey::new_rand();
+    let pubkey2 = trezoa_sdk::pubkey::new_rand();
 
     // Set root for bank 0, with caching enabled
     let bank0 = Arc::new(Bank::new_with_config_for_tests(
@@ -6742,7 +6742,7 @@ fn test_shrink_candidate_slots_cached() {
 #[test]
 fn test_add_builtin_no_overwrite() {
     let slot = 123;
-    let program_id = solana_sdk::pubkey::new_rand();
+    let program_id = trezoa_sdk::pubkey::new_rand();
 
     let mut bank = Arc::new(Bank::new_from_parent(
         create_simple_test_arc_bank(100_000).0,
@@ -6766,7 +6766,7 @@ fn test_add_builtin_no_overwrite() {
 #[test]
 fn test_add_builtin_loader_no_overwrite() {
     let slot = 123;
-    let loader_id = solana_sdk::pubkey::new_rand();
+    let loader_id = trezoa_sdk::pubkey::new_rand();
 
     let mut bank = Arc::new(Bank::new_from_parent(
         create_simple_test_arc_bank(100_000).0,
@@ -6794,7 +6794,7 @@ fn test_add_builtin_account() {
         activate_all_features(&mut genesis_config);
 
         let slot = 123;
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = trezoa_sdk::pubkey::new_rand();
 
         let bank = Arc::new(Bank::new_from_parent(
             Arc::new(Bank::new_for_tests(&genesis_config)),
@@ -6889,7 +6889,7 @@ fn test_add_builtin_account_inherited_cap_while_replacing() {
     for pass in 0..4 {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = trezoa_sdk::pubkey::new_rand();
 
         bank.add_builtin_account("mock_program", &program_id, false);
         if pass == 0 {
@@ -6923,7 +6923,7 @@ fn test_add_builtin_account_squatted_while_not_replacing() {
     for pass in 0..3 {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = trezoa_sdk::pubkey::new_rand();
 
         // someone managed to squat at program_id!
         bank.withdraw(&mint_keypair.pubkey(), 10).unwrap();
@@ -6990,7 +6990,7 @@ fn test_add_precompiled_account() {
         activate_all_features(&mut genesis_config);
 
         let slot = 123;
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = trezoa_sdk::pubkey::new_rand();
 
         let bank = Arc::new(Bank::new_from_parent(
             Arc::new(Bank::new_for_tests(&genesis_config)),
@@ -7036,7 +7036,7 @@ fn test_add_precompiled_account_inherited_cap_while_replacing() {
     for pass in 0..4 {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = trezoa_sdk::pubkey::new_rand();
 
         bank.add_precompiled_account(&program_id);
         if pass == 0 {
@@ -7070,7 +7070,7 @@ fn test_add_precompiled_account_squatted_while_not_replacing() {
     for pass in 0..3 {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = trezoa_sdk::pubkey::new_rand();
 
         // someone managed to squat at program_id!
         bank.withdraw(&mint_keypair.pubkey(), 10).unwrap();
@@ -7116,35 +7116,35 @@ fn test_add_precompiled_account_after_frozen() {
 
 #[test]
 fn test_reconfigure_token2_native_mint() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let genesis_config =
-        create_genesis_config_with_leader(5, &solana_sdk::pubkey::new_rand(), 0).genesis_config;
+        create_genesis_config_with_leader(5, &trezoa_sdk::pubkey::new_rand(), 0).genesis_config;
     let bank = Arc::new(Bank::new_for_tests(&genesis_config));
     assert_eq!(
-        bank.get_balance(&inline_spl_token::native_mint::id()),
+        bank.get_balance(&inline_tpl_token::native_mint::id()),
         1000000000
     );
     let native_mint_account = bank
-        .get_account(&inline_spl_token::native_mint::id())
+        .get_account(&inline_tpl_token::native_mint::id())
         .unwrap();
     assert_eq!(native_mint_account.data().len(), 82);
-    assert_eq!(native_mint_account.owner(), &inline_spl_token::id());
+    assert_eq!(native_mint_account.owner(), &inline_tpl_token::id());
 }
 
 #[test]
 fn test_bank_load_program() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let (genesis_config, _) = create_genesis_config(1);
     let bank = Bank::new_for_tests(&genesis_config);
 
-    let key1 = solana_sdk::pubkey::new_rand();
+    let key1 = trezoa_sdk::pubkey::new_rand();
 
     let mut file = File::open("../programs/bpf_loader/test_elfs/out/noop_aligned.so").unwrap();
     let mut elf = Vec::new();
     file.read_to_end(&mut elf).unwrap();
-    let programdata_key = solana_sdk::pubkey::new_rand();
+    let programdata_key = trezoa_sdk::pubkey::new_rand();
     let mut program_account = AccountSharedData::new_data(
         40,
         &UpgradeableLoaderState::Program {
@@ -8056,7 +8056,7 @@ fn test_adjust_sysvar_balance_for_rent() {
 
 #[test]
 fn test_update_clock_timestamp() {
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         genesis_config,
         voting_keypair,
@@ -8155,7 +8155,7 @@ fn test_timestamp_slow() {
             + (poh_estimate_offset * max_allowable_drift / 100).as_secs()) as i64
     }
 
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         voting_keypair,
@@ -8199,7 +8199,7 @@ fn test_timestamp_fast() {
             - (poh_estimate_offset * max_allowable_drift / 100).as_secs()) as i64
     }
 
-    let leader_pubkey = solana_sdk::pubkey::new_rand();
+    let leader_pubkey = trezoa_sdk::pubkey::new_rand();
     let GenesisConfigInfo {
         mut genesis_config,
         voting_keypair,
@@ -8287,10 +8287,10 @@ fn test_store_scan_consistency<F: 'static>(
             u64,
         ) + std::marker::Send,
 {
-    solana_logger::setup();
+    trezoa_logger::setup();
     // Set up initial bank
     let mut genesis_config =
-        create_genesis_config_with_leader(10, &solana_sdk::pubkey::new_rand(), 374_999_998_287_840)
+        create_genesis_config_with_leader(10, &trezoa_sdk::pubkey::new_rand(), 374_999_998_287_840)
             .genesis_config;
     genesis_config.rent = Rent::free();
     let bank0 = Arc::new(Bank::new_with_config_for_tests(
@@ -8303,7 +8303,7 @@ fn test_store_scan_consistency<F: 'static>(
     // Set up pubkeys to write to
     let total_pubkeys = ITER_BATCH_SIZE * 10;
     let total_pubkeys_to_modify = 10;
-    let all_pubkeys: Vec<Pubkey> = std::iter::repeat_with(solana_sdk::pubkey::new_rand)
+    let all_pubkeys: Vec<Pubkey> = std::iter::repeat_with(trezoa_sdk::pubkey::new_rand)
         .take(total_pubkeys)
         .collect();
     let program_id = system_program::id();
@@ -8471,7 +8471,7 @@ fn test_store_scan_consistency_unrooted() {
                     let slot = current_minor_fork_bank.slot() + 2;
                     current_minor_fork_bank = Arc::new(Bank::new_from_parent(
                         current_minor_fork_bank,
-                        &solana_sdk::pubkey::new_rand(),
+                        &trezoa_sdk::pubkey::new_rand(),
                         slot,
                     ));
                     let account = AccountSharedData::new(lamports, 0, &program_id);
@@ -8496,7 +8496,7 @@ fn test_store_scan_consistency_unrooted() {
                 // *partial* clean of the banks < `next_major_bank`.
                 current_major_fork_bank = Arc::new(Bank::new_from_parent(
                     current_major_fork_bank,
-                    &solana_sdk::pubkey::new_rand(),
+                    &trezoa_sdk::pubkey::new_rand(),
                     current_minor_fork_bank.slot() - 1,
                 ));
                 let lamports = current_major_fork_bank.slot() + starting_lamports + 1;
@@ -8578,7 +8578,7 @@ fn test_store_scan_consistency_root() {
                 let slot = current_bank.slot() + 1;
                 current_bank = Arc::new(Bank::new_from_parent(
                     current_bank,
-                    &solana_sdk::pubkey::new_rand(),
+                    &trezoa_sdk::pubkey::new_rand(),
                     slot,
                 ));
             }
@@ -8620,7 +8620,7 @@ fn setup_banks_on_fork_to_remove(
             let slot = bank_at_fork_tip.slot() + 1;
             bank_at_fork_tip = Arc::new(Bank::new_from_parent(
                 bank_at_fork_tip,
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 slot,
             ));
             if lamports_this_round == 0 {
@@ -8816,7 +8816,7 @@ fn test_remove_unrooted_scan_interleaved_with_remove_unrooted_slots() {
 fn test_get_inflation_start_slot_devnet_testnet() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+    } = create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
     genesis_config
         .accounts
         .remove(&feature_set::pico_inflation::id())
@@ -8897,7 +8897,7 @@ fn test_get_inflation_start_slot_devnet_testnet() {
 fn test_get_inflation_start_slot_mainnet() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+    } = create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
     genesis_config
         .accounts
         .remove(&feature_set::pico_inflation::id())
@@ -8982,7 +8982,7 @@ fn test_get_inflation_start_slot_mainnet() {
 fn test_get_inflation_num_slots_with_activations() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+    } = create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
     let slots_per_epoch = 32;
     genesis_config.epoch_schedule = EpochSchedule::new(slots_per_epoch);
     genesis_config
@@ -9046,7 +9046,7 @@ fn test_get_inflation_num_slots_with_activations() {
 fn test_get_inflation_num_slots_already_activated() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+    } = create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
     let slots_per_epoch = 32;
     genesis_config.epoch_schedule = EpochSchedule::new(slots_per_epoch);
     let mut bank = Bank::new_for_tests(&genesis_config);
@@ -9066,7 +9066,7 @@ fn test_stake_vote_account_validity() {
     let thread_pool = ThreadPoolBuilder::new().num_threads(1).build().unwrap();
     // TODO: stakes cache should be hardened for the case when the account
     // owner is changed from vote/stake program to something else. see:
-    // https://github.com/solana-labs/solana/pull/24200#discussion_r849935444
+    // https://github.com/trezoa-team/trezoa/pull/24200#discussion_r849935444
     check_stake_vote_account_validity(
         false, // check owner change
         |bank: &Bank| bank._load_vote_and_stake_accounts(&thread_pool, null_tracer()),
@@ -9302,7 +9302,7 @@ fn test_tx_log_order() {
 
 #[test]
 fn test_tx_return_data() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let GenesisConfigInfo {
         genesis_config,
         mint_keypair,
@@ -9390,7 +9390,7 @@ fn test_tx_return_data() {
 #[test]
 fn test_get_largest_accounts() {
     let GenesisConfigInfo { genesis_config, .. } =
-        create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
     let bank = Bank::new_for_tests(&genesis_config);
 
     let pubkeys: Vec<_> = (0..5).map(|_| Pubkey::new_unique()).collect();
@@ -9501,7 +9501,7 @@ fn test_get_largest_accounts() {
 
 #[test]
 fn test_transfer_sysvar() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let GenesisConfigInfo {
         genesis_config,
         mint_keypair,
@@ -9511,7 +9511,7 @@ fn test_transfer_sysvar() {
         &Pubkey::new_unique(),
         bootstrap_validator_stake_lamports(),
     );
-    let program_id = solana_sdk::pubkey::new_rand();
+    let program_id = trezoa_sdk::pubkey::new_rand();
 
     let bank =
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, program_id, MockBuiltin::vm).0;
@@ -9561,13 +9561,13 @@ fn test_transfer_sysvar() {
 
 #[test]
 fn test_clean_dropped_unrooted_frozen_banks() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     do_test_clean_dropped_unrooted_banks(FreezeBank1::Yes);
 }
 
 #[test]
 fn test_clean_dropped_unrooted_unfrozen_banks() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     do_test_clean_dropped_unrooted_banks(FreezeBank1::No);
 }
 
@@ -9712,7 +9712,7 @@ fn test_rent_debits() {
 
 #[test]
 fn test_compute_budget_program_noop() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let GenesisConfigInfo {
         genesis_config,
         mint_keypair,
@@ -9722,7 +9722,7 @@ fn test_compute_budget_program_noop() {
         &Pubkey::new_unique(),
         bootstrap_validator_stake_lamports(),
     );
-    let program_id = solana_sdk::pubkey::new_rand();
+    let program_id = trezoa_sdk::pubkey::new_rand();
     let bank =
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, program_id, MockBuiltin::vm).0;
 
@@ -9757,7 +9757,7 @@ fn test_compute_budget_program_noop() {
 
 #[test]
 fn test_compute_request_instruction() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let GenesisConfigInfo {
         genesis_config,
         mint_keypair,
@@ -9767,7 +9767,7 @@ fn test_compute_request_instruction() {
         &Pubkey::new_unique(),
         bootstrap_validator_stake_lamports(),
     );
-    let program_id = solana_sdk::pubkey::new_rand();
+    let program_id = trezoa_sdk::pubkey::new_rand();
     let bank =
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, program_id, MockBuiltin::vm).0;
 
@@ -9802,7 +9802,7 @@ fn test_compute_request_instruction() {
 
 #[test]
 fn test_failed_compute_request_instruction() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let GenesisConfigInfo {
         genesis_config,
         mint_keypair,
@@ -9813,7 +9813,7 @@ fn test_failed_compute_request_instruction() {
         bootstrap_validator_stake_lamports(),
     );
 
-    let program_id = solana_sdk::pubkey::new_rand();
+    let program_id = trezoa_sdk::pubkey::new_rand();
     let bank =
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, program_id, MockBuiltin::vm).0;
 
@@ -9878,7 +9878,7 @@ fn test_failed_compute_request_instruction() {
 fn test_verify_and_hash_transaction_sig_len() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+    } = create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
 
     // activate all features
     activate_all_features(&mut genesis_config);
@@ -9935,7 +9935,7 @@ fn test_verify_and_hash_transaction_sig_len() {
 #[test]
 fn test_verify_transactions_packet_data_size() {
     let GenesisConfigInfo { genesis_config, .. } =
-        create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        create_genesis_config_with_leader(42, &trezoa_sdk::pubkey::new_rand(), 42);
     let bank = Bank::new_for_tests(&genesis_config);
 
     let recent_blockhash = Hash::new_unique();
@@ -10006,7 +10006,7 @@ fn test_call_precomiled_program() {
     };
     let message_arr = b"hello";
     let instruction =
-        solana_sdk::secp256k1_instruction::new_secp256k1_instruction(&secp_privkey, message_arr);
+        trezoa_sdk::secp256k1_instruction::new_secp256k1_instruction(&secp_privkey, message_arr);
     let tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -10034,7 +10034,7 @@ fn test_call_precomiled_program() {
     };
     let message_arr = b"hello";
     let instruction =
-        solana_sdk::ed25519_instruction::new_ed25519_instruction(&privkey, message_arr);
+        trezoa_sdk::ed25519_instruction::new_ed25519_instruction(&privkey, message_arr);
     let tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -10253,7 +10253,7 @@ fn test_calculate_fee_secp256k1() {
 #[test]
 fn test_an_empty_instruction_without_program() {
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(1);
-    let destination = solana_sdk::pubkey::new_rand();
+    let destination = trezoa_sdk::pubkey::new_rand();
     let mut ix = system_instruction::transfer(&mint_keypair.pubkey(), &destination, 0);
     ix.program_id = native_loader::id(); // Empty executable account chain
     let message = Message::new(&[ix], Some(&mint_keypair.pubkey()));
@@ -10296,7 +10296,7 @@ fn test_accounts_data_size_with_good_transaction() {
             .rent
             .minimum_balance(ACCOUNT_SIZE.try_into().unwrap()),
         ACCOUNT_SIZE,
-        &solana_sdk::system_program::id(),
+        &trezoa_sdk::system_program::id(),
     );
 
     let accounts_data_size_before = bank.load_accounts_data_size();
@@ -10335,7 +10335,7 @@ fn test_accounts_data_size_with_bad_transaction() {
         bank.last_blockhash(),
         LAMPORTS_PER_SOL,
         ACCOUNT_SIZE,
-        &solana_sdk::system_program::id(),
+        &trezoa_sdk::system_program::id(),
     );
 
     let accounts_data_size_before = bank.load_accounts_data_size();
@@ -10674,7 +10674,7 @@ fn test_rent_state_changes_sysvars() {
     } = create_genesis_config_with_leader(sol_to_lamports(100.), &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
 
-    let validator_pubkey = solana_sdk::pubkey::new_rand();
+    let validator_pubkey = trezoa_sdk::pubkey::new_rand();
     let validator_stake_lamports = sol_to_lamports(1.);
     let validator_staking_keypair = Keypair::new();
     let validator_voting_keypair = Keypair::new();
@@ -10736,8 +10736,8 @@ fn test_invalid_rent_state_changes_fee_payer() {
     } = create_genesis_config_with_leader(sol_to_lamports(100.), &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
     genesis_config.fee_rate_governor = FeeRateGovernor::new(
-        solana_sdk::fee_calculator::DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE,
-        solana_sdk::fee_calculator::DEFAULT_TARGET_SIGNATURES_PER_SLOT,
+        trezoa_sdk::fee_calculator::DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE,
+        trezoa_sdk::fee_calculator::DEFAULT_TARGET_SIGNATURES_PER_SLOT,
     );
     let rent_exempt_minimum = genesis_config.rent.minimum_balance(0);
 
@@ -10987,7 +10987,7 @@ fn test_rent_state_incinerator() {
     let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
 
     for amount in [rent_exempt_minimum - 1, rent_exempt_minimum] {
-        bank.transfer(amount, &mint_keypair, &solana_sdk::incinerator::id())
+        bank.transfer(amount, &mint_keypair, &trezoa_sdk::incinerator::id())
             .unwrap();
     }
 }
@@ -11096,7 +11096,7 @@ fn test_update_accounts_data_size() {
 
 #[test]
 fn test_skip_rewrite() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let mut account = AccountSharedData::default();
     let bank_slot = 10;
     for account_rent_epoch in 0..3 {
@@ -11230,7 +11230,7 @@ fn test_resize_and_rent() {
         &AccountSharedData::new(1_000_000_000, 0, &mock_program_id),
     );
 
-    let rent_paying_pubkey = solana_sdk::pubkey::new_rand();
+    let rent_paying_pubkey = trezoa_sdk::pubkey::new_rand();
     let mut rent_paying_account = AccountSharedData::new(
         rent_exempt_minimum_small - 1,
         account_data_size_small,
@@ -11631,7 +11631,7 @@ fn test_accounts_data_size_and_rent_collection(should_collect_rent: bool) {
         if should_collect_rent {
             genesis_config
                 .accounts
-                .remove(&solana_sdk::feature_set::disable_rent_fees_collection::id());
+                .remove(&trezoa_sdk::feature_set::disable_rent_fees_collection::id());
         }
 
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -11723,7 +11723,7 @@ fn test_accounts_data_size_from_genesis() {
             bank.last_blockhash(),
             genesis_config.rent.minimum_balance(data_size),
             data_size as u64,
-            &solana_sdk::system_program::id(),
+            &trezoa_sdk::system_program::id(),
         );
         bank.process_transaction(&transaction).unwrap();
         bank.fill_bank_with_ticks_for_tests();
@@ -11758,7 +11758,7 @@ fn test_cap_accounts_data_allocations_per_transaction() {
                 .rent
                 .minimum_balance(MAX_PERMITTED_DATA_LENGTH as usize),
             MAX_PERMITTED_DATA_LENGTH,
-            &solana_sdk::system_program::id(),
+            &trezoa_sdk::system_program::id(),
         );
         keypairs.push(keypair);
         instructions.push(instruction);
@@ -11776,7 +11776,7 @@ fn test_cap_accounts_data_allocations_per_transaction() {
         result,
         Err(TransactionError::InstructionError(
             NUM_MAX_SIZE_ALLOCATIONS_PER_TRANSACTION as u8,
-            solana_sdk::instruction::InstructionError::MaxAccountsDataAllocationsExceeded,
+            trezoa_sdk::instruction::InstructionError::MaxAccountsDataAllocationsExceeded,
         )),
     );
 }
@@ -11889,12 +11889,12 @@ fn test_stake_account_consistency_with_rent_epoch_max_feature(
     rent_epoch_max_enabled_initially: bool,
 ) {
     // this test can be removed once set_exempt_rent_epoch_max gets activated
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (mut genesis_config, _mint_keypair) = create_genesis_config(100 * LAMPORTS_PER_SOL);
     genesis_config.rent = Rent::default();
     let mut bank = Bank::new_for_tests(&genesis_config);
     let expected_initial_rent_epoch = if rent_epoch_max_enabled_initially {
-        bank.activate_feature(&solana_sdk::feature_set::set_exempt_rent_epoch_max::id());
+        bank.activate_feature(&trezoa_sdk::feature_set::set_exempt_rent_epoch_max::id());
         RENT_EXEMPT_RENT_EPOCH
     } else {
         Epoch::default()
@@ -11903,7 +11903,7 @@ fn test_stake_account_consistency_with_rent_epoch_max_feature(
     let mut pubkey_bytes_early = [0u8; 32];
     pubkey_bytes_early[31] = 2;
     let stake_id1 = Pubkey::from(pubkey_bytes_early);
-    let vote_id = solana_sdk::pubkey::new_rand();
+    let vote_id = trezoa_sdk::pubkey::new_rand();
     let stake_account1 = crate::stakes::tests::create_stake_account(12300000, &vote_id, &stake_id1);
 
     // set up accounts
@@ -11921,7 +11921,7 @@ fn test_stake_account_consistency_with_rent_epoch_max_feature(
     let slots_per_epoch = bank.epoch_schedule().get_slots_in_epoch(0);
     let mut bank = Bank::new_from_parent(Arc::new(bank), &Pubkey::default(), slot);
     if !rent_epoch_max_enabled_initially {
-        bank.activate_feature(&solana_sdk::feature_set::set_exempt_rent_epoch_max::id());
+        bank.activate_feature(&trezoa_sdk::feature_set::set_exempt_rent_epoch_max::id());
     }
     let bank = Arc::new(bank);
 
@@ -12032,7 +12032,7 @@ fn test_calculate_fee_with_request_heap_frame_flag() {
 
 #[test]
 fn test_is_in_slot_hashes_history() {
-    use solana_sdk::slot_hashes::MAX_ENTRIES;
+    use trezoa_sdk::slot_hashes::MAX_ENTRIES;
 
     let bank0 = create_simple_test_arc_bank(1).0;
     assert!(!bank0.is_in_slot_hashes_history(&0));
@@ -12049,7 +12049,7 @@ fn test_is_in_slot_hashes_history() {
 
 #[test]
 fn test_feature_activation_loaded_programs_recompilation_phase() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // Bank Setup
     let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
@@ -12162,7 +12162,7 @@ fn test_feature_activation_loaded_programs_recompilation_phase() {
 
 #[test]
 fn test_feature_activation_loaded_programs_epoch_transition() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // Bank Setup
     let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
@@ -12389,7 +12389,7 @@ fn create_reward_bank(expected_num_delegations: usize) -> (Bank, Vec<Pubkey>, Ve
 
 #[test]
 fn test_rewards_point_calculation() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let expected_num_delegations = 100;
     let (bank, _, _) = create_reward_bank(expected_num_delegations);
@@ -12415,7 +12415,7 @@ fn test_rewards_point_calculation() {
 
 #[test]
 fn test_rewards_point_calculation_empty() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // bank with no rewards to distribute
     let (genesis_config, _mint_keypair) = create_genesis_config(sol_to_lamports(1.0));
@@ -12661,7 +12661,7 @@ fn test_distribute_partitioned_epoch_rewards_bank_capital_and_sysvar_balance() {
 #[test]
 /// Test rewards computation and partitioned rewards distribution at the epoch boundary
 fn test_rewards_computation() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let expected_num_delegations = 100;
     let bank = create_reward_bank(expected_num_delegations).0;
@@ -12701,7 +12701,7 @@ fn test_rewards_computation() {
 /// Test rewards computation and partitioned rewards distribution at the epoch boundary (one reward distribution block)
 #[test]
 fn test_rewards_computation_and_partitioned_distribution_one_block() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // setup the expected number of stake delegations
     let expected_num_delegations = 100;
@@ -12788,7 +12788,7 @@ fn test_rewards_computation_and_partitioned_distribution_one_block() {
 /// Test rewards computation and partitioned rewards distribution at the epoch boundary (two reward distribution blocks)
 #[test]
 fn test_rewards_computation_and_partitioned_distribution_two_blocks() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // Set up the expected number of stake delegations 100
     let expected_num_delegations = 100;
@@ -12956,7 +12956,7 @@ fn test_epoch_rewards_sysvar() {
 /// in reward period.
 #[test]
 fn test_program_execution_restricted_for_stake_account_in_reward_period() {
-    use solana_sdk::transaction::TransactionError::ProgramExecutionTemporarilyRestricted;
+    use trezoa_sdk::transaction::TransactionError::ProgramExecutionTemporarilyRestricted;
 
     let validator_vote_keypairs = ValidatorVoteKeypairs::new_rand();
     let validator_keypairs = vec![&validator_vote_keypairs];
@@ -13209,7 +13209,7 @@ fn with_create_zero_lamport<F>(callback: F)
 where
     F: Fn(&Bank),
 {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let alice_keypair = Keypair::new();
     let bob_keypair = Keypair::new();
@@ -13378,7 +13378,7 @@ fn test_calc_vote_accounts_to_store_empty() {
 #[test]
 fn test_calc_vote_accounts_to_store_overflow() {
     let vote_account_rewards = DashMap::default();
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     let mut vote_account = AccountSharedData::default();
     vote_account.set_lamports(u64::MAX);
     vote_account_rewards.insert(
@@ -13398,9 +13398,9 @@ fn test_calc_vote_accounts_to_store_overflow() {
 #[test]
 fn test_calc_vote_accounts_to_store_three() {
     let vote_account_rewards = DashMap::default();
-    let pubkey = solana_sdk::pubkey::new_rand();
-    let pubkey2 = solana_sdk::pubkey::new_rand();
-    let pubkey3 = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
+    let pubkey2 = trezoa_sdk::pubkey::new_rand();
+    let pubkey3 = trezoa_sdk::pubkey::new_rand();
     let mut vote_account = AccountSharedData::default();
     vote_account.set_lamports(u64::MAX);
     vote_account_rewards.insert(
@@ -13448,7 +13448,7 @@ fn test_calc_vote_accounts_to_store_three() {
 
 #[test]
 fn test_calc_vote_accounts_to_store_normal() {
-    let pubkey = solana_sdk::pubkey::new_rand();
+    let pubkey = trezoa_sdk::pubkey::new_rand();
     for commission in 0..2 {
         for vote_rewards in 0..2 {
             for vote_needs_store in [false, true] {
@@ -13500,7 +13500,7 @@ impl Bank {
 /// Test get_reward_distribution_num_blocks, get_reward_calculation_num_blocks, get_reward_total_num_blocks during normal epoch gives the expected result
 #[test]
 fn test_get_reward_distribution_num_blocks_normal() {
-    solana_logger::setup();
+    trezoa_logger::setup();
     let (mut genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
     genesis_config.epoch_schedule = EpochSchedule::custom(432000, 432000, false);
 
@@ -13613,7 +13613,7 @@ fn test_get_reward_distribution_num_blocks_warmup() {
 
 #[test]
 fn test_calculate_stake_vote_rewards() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let expected_num_delegations = 1;
     let (bank, voters, stakers) = create_reward_bank(expected_num_delegations);
@@ -14198,7 +14198,7 @@ fn test_failed_simulation_compute_units() {
 
 #[test]
 fn test_deploy_last_epoch_slot() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     // Bank Setup
     let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);

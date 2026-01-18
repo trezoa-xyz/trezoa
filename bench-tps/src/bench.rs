@@ -8,9 +8,9 @@ use {
     log::*,
     rand::distributions::{Distribution, Uniform},
     rayon::prelude::*,
-    solana_client::{nonce_utils, rpc_request::MAX_MULTIPLE_ACCOUNTS},
-    solana_metrics::{self, datapoint_info},
-    solana_sdk::{
+    trezoa_client::{nonce_utils, rpc_request::MAX_MULTIPLE_ACCOUNTS},
+    trezoa_metrics::{self, datapoint_info},
+    trezoa_sdk::{
         account::Account,
         clock::{DEFAULT_MS_PER_SLOT, DEFAULT_S_PER_SLOT, MAX_PROCESSING_AGE},
         compute_budget::ComputeBudgetInstruction,
@@ -284,7 +284,7 @@ where
     let maxes = maxes.clone();
     let client = client.clone();
     Builder::new()
-        .name("solana-client-sample".to_string())
+        .name("trezoa-client-sample".to_string())
         .spawn(move || {
             sample_txs(exit_signal, &maxes, sample_period, &client);
         })
@@ -363,7 +363,7 @@ where
             let total_tx_sent_count = total_tx_sent_count.clone();
             let client = client.clone();
             Builder::new()
-                .name("solana-client-sender".to_string())
+                .name("trezoa-client-sender".to_string())
                 .spawn(move || {
                     do_tx_transfers(
                         &exit_signal,
@@ -447,7 +447,7 @@ where
         let id = id.pubkey();
         Some(
             Builder::new()
-                .name("solana-blockhash-poller".to_string())
+                .name("trezoa-blockhash-poller".to_string())
                 .spawn(move || {
                     poll_blockhash(&exit_signal, &blockhash, &client, &id);
                 })
@@ -1079,7 +1079,7 @@ pub fn fund_keypairs<T: 'static + BenchTpsClient + Send + Sync + ?Sized>(
     let rent = client.get_minimum_balance_for_rent_exemption(0)?;
     info!("Get lamports...");
 
-    // Sample the first keypair, to prevent lamport loss on repeated solana-bench-tps executions
+    // Sample the first keypair, to prevent lamport loss on repeated trezoa-bench-tps executions
     let first_key = keypairs[0].pubkey();
     let first_keypair_balance = client.get_balance(&first_key).unwrap_or(0);
 
@@ -1149,8 +1149,8 @@ pub fn fund_keypairs<T: 'static + BenchTpsClient + Send + Sync + ?Sized>(
 mod tests {
     use {
         super::*,
-        solana_runtime::{bank::Bank, bank_client::BankClient},
-        solana_sdk::{
+        trezoa_runtime::{bank::Bank, bank_client::BankClient},
+        trezoa_sdk::{
             commitment_config::CommitmentConfig,
             feature_set::FeatureSet,
             fee_calculator::FeeRateGovernor,

@@ -38,7 +38,7 @@ RUN apt-get update && \
   cmake \
   # docs
   mscgen \
-  # solana compiling
+  # trezoa compiling
   libssl-dev \
   libudev-dev \
   pkg-config \

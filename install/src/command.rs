@@ -9,9 +9,9 @@ use {
     crossbeam_channel::unbounded,
     indicatif::{ProgressBar, ProgressStyle},
     serde::{Deserialize, Serialize},
-    solana_config_program::{config_instruction, get_config_data, ConfigState},
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_sdk::{
+    trezoa_config_program::{config_instruction, get_config_data, ConfigState},
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_sdk::{
         hash::{Hash, Hasher},
         message::Message,
         pubkey::Pubkey,
@@ -198,7 +198,7 @@ fn load_release_version(version_yml: &Path) -> Result<ReleaseVersion, String> {
 /// Reads the supported TARGET triple for the given release
 fn load_release_target(release_dir: &Path) -> Result<String, String> {
     let mut version_yml = PathBuf::from(release_dir);
-    version_yml.push("solana-release");
+    version_yml.push("trezoa-release");
     version_yml.push("version.yml");
 
     let version = load_release_version(&version_yml)?;
@@ -305,7 +305,7 @@ fn check_env_path_for_bin_dir(config: &Config) {
 
     if !found {
         println!(
-            "\nPlease update your PATH environment variable to include the solana programs:\n    PATH=\"{}:$PATH\"\n",
+            "\nPlease update your PATH environment variable to include the trezoa programs:\n    PATH=\"{}:$PATH\"\n",
             config.active_release_bin_dir().to_str().unwrap()
         );
     }
@@ -540,7 +540,7 @@ pub fn init(
     explicit_release: Option<ExplicitRelease>,
 ) -> Result<(), String> {
     let config = {
-        // Write new config file only if different, so that running |agave-install init|
+        // Write new config file only if different, so that running |trezoa-install init|
         // repeatedly doesn't unnecessarily re-download
         let mut current_config = Config::load(config_file).unwrap_or_default();
         current_config.current_update_manifest = None;
@@ -572,7 +572,7 @@ pub fn init(
 
 fn github_release_download_url(release_semver: &str) -> String {
     format!(
-        "https://github.com/anza-xyz/agave/releases/download/v{}/solana-release-{}.tar.bz2",
+        "https://github.com/trezoa-xyz/trezoa/releases/download/v{}/trezoa-release-{}.tar.bz2",
         release_semver,
         crate::build_env::TARGET
     )
@@ -580,7 +580,7 @@ fn github_release_download_url(release_semver: &str) -> String {
 
 fn release_channel_download_url(release_channel: &str) -> String {
     format!(
-        "https://release.anza.xyz/{}/solana-release-{}.tar.bz2",
+        "https://release.anza.xyz/{}/trezoa-release-{}.tar.bz2",
         release_channel,
         crate::build_env::TARGET
     )
@@ -588,7 +588,7 @@ fn release_channel_download_url(release_channel: &str) -> String {
 
 fn release_channel_version_url(release_channel: &str) -> String {
     format!(
-        "https://release.anza.xyz/{}/solana-release-{}.yml",
+        "https://release.anza.xyz/{}/trezoa-release-{}.yml",
         release_channel,
         crate::build_env::TARGET
     )
@@ -870,7 +870,7 @@ fn check_for_newer_github_release(
     prerelease_allowed: bool,
 ) -> Result<Option<String>, String> {
     let client = reqwest::blocking::Client::builder()
-        .user_agent("agave-install")
+        .user_agent("trezoa-install")
         .build()
         .map_err(|err| err.to_string())?;
 
@@ -905,7 +905,7 @@ fn check_for_newer_github_release(
 
     while page == 1 || releases.len() == PER_PAGE {
         let url = reqwest::Url::parse_with_params(
-            "https://api.github.com/repos/anza-xyz/agave/releases",
+            "https://api.github.com/repos/trezoa-xyz/trezoa/releases",
             &[
                 ("per_page", &format!("{PER_PAGE}")),
                 ("page", &format!("{page}")),
@@ -1038,7 +1038,7 @@ pub fn init_or_update(config_file: &str, is_init: bool, check_only: bool) -> Res
                 let release_id = format!("{}-{}", release_channel, update_release_version.commit);
                 let release_dir = config.release_dir(&release_id);
                 let current_release_version_yml =
-                    release_dir.join("solana-release").join("version.yml");
+                    release_dir.join("trezoa-release").join("version.yml");
 
                 let download_url = release_channel_download_url(release_channel);
 
@@ -1168,7 +1168,7 @@ pub fn init_or_update(config_file: &str, is_init: bool, check_only: bool) -> Res
 
     let _ = fs::remove_dir_all(config.active_release_dir());
     symlink_dir(
-        release_dir.join("solana-release"),
+        release_dir.join("trezoa-release"),
         config.active_release_dir(),
     )
     .map_err(|err| {

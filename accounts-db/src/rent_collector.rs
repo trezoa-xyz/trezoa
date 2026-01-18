@@ -1,5 +1,5 @@
 //! calculate and collect rent from Accounts
-use solana_sdk::{
+use trezoa_sdk::{
     account::{AccountSharedData, ReadableAccount, WritableAccount},
     clock::Epoch,
     epoch_schedule::EpochSchedule,
@@ -206,7 +206,7 @@ mod tests {
     use {
         super::*,
         assert_matches::assert_matches,
-        solana_sdk::{account::Account, sysvar},
+        trezoa_sdk::{account::Account, sysvar},
     };
 
     fn default_rent_collector_clone_with_epoch(epoch: Epoch) -> RentCollector {
@@ -397,7 +397,7 @@ mod tests {
 
             // collect rent on a newly-created account
             let collected = rent_collector.collect_from_created_account(
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 &mut created_account,
                 set_exempt_rent_epoch_max,
             );
@@ -411,7 +411,7 @@ mod tests {
 
             // collect rent on a already-existing account
             let collected = rent_collector.collect_from_existing_account(
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 &mut existing_account,
                 set_exempt_rent_epoch_max,
             );
@@ -437,7 +437,7 @@ mod tests {
                 let epoch = 3;
                 let huge_lamports = 123_456_789_012;
                 let tiny_lamports = 789_012;
-                let pubkey = solana_sdk::pubkey::new_rand();
+                let pubkey = trezoa_sdk::pubkey::new_rand();
 
                 assert_eq!(account.rent_epoch(), 0);
 
@@ -482,7 +482,7 @@ mod tests {
             account.set_owner(sysvar::id());
             account.set_lamports(tiny_lamports);
 
-            let pubkey = solana_sdk::pubkey::new_rand();
+            let pubkey = trezoa_sdk::pubkey::new_rand();
 
             assert_eq!(account.rent_epoch(), 0);
 
@@ -503,7 +503,7 @@ mod tests {
     #[test]
     fn test_collect_cleans_up_account() {
         for set_exempt_rent_epoch_max in [false, true] {
-            solana_logger::setup();
+            trezoa_logger::setup();
             let account_lamports = 1; // must be *below* rent amount
             let account_data_len = 567;
             let account_rent_epoch = 11;

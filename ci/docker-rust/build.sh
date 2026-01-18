@@ -10,10 +10,10 @@ if [[ $(uname -m) = arm64 ]]; then
   platform+=(--platform linux/amd64)
 fi
 
-docker build "${platform[@]}" -t solanalabs/rust .
+docker build "${platform[@]}" -t trezoalabs/rust .
 
-read -r rustc version _ < <(docker run solanalabs/rust rustc --version)
+read -r rustc version _ < <(docker run trezoalabs/rust rustc --version)
 [[ $rustc = rustc ]]
-docker tag solanalabs/rust:latest solanalabs/rust:"$version"
-docker push solanalabs/rust:"$version"
-docker push solanalabs/rust:latest
+docker tag trezoalabs/rust:latest trezoalabs/rust:"$version"
+docker push trezoalabs/rust:"$version"
+docker push trezoalabs/rust:latest

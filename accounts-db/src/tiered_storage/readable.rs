@@ -8,7 +8,7 @@ use {
             TieredStorageResult,
         },
     },
-    solana_sdk::{account::ReadableAccount, pubkey::Pubkey, stake_history::Epoch},
+    trezoa_sdk::{account::ReadableAccount, pubkey::Pubkey, stake_history::Epoch},
     std::path::Path,
 };
 

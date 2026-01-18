@@ -1,6 +1,6 @@
 use {
     crate::rent_debits::RentDebits,
-    solana_sdk::{
+    trezoa_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         message::SanitizedMessage,
         nonce_account,
@@ -120,7 +120,7 @@ impl NonceInfo for NonceFull {
 mod tests {
     use {
         super::*,
-        solana_sdk::{
+        trezoa_sdk::{
             hash::Hash,
             instruction::Instruction,
             message::Message,

@@ -2,14 +2,14 @@ use {
     super::Bank,
     crate::accounts::account_rent_state::RentState,
     log::{debug, warn},
-    solana_accounts_db::stake_rewards::RewardInfo,
-    solana_sdk::{
+    trezoa_accounts_db::stake_rewards::RewardInfo,
+    trezoa_sdk::{
         account::{ReadableAccount, WritableAccount},
         pubkey::Pubkey,
         reward_type::RewardType,
         system_program,
     },
-    solana_vote::vote_account::VoteAccountsHashMap,
+    trezoa_vote::vote_account::VoteAccountsHashMap,
     std::{result::Result, sync::atomic::Ordering::Relaxed},
     thiserror::Error,
 };
@@ -294,7 +294,7 @@ pub mod tests {
             create_genesis_config, create_genesis_config_with_leader,
             create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs,
         },
-        solana_sdk::{
+        trezoa_sdk::{
             account::AccountSharedData, feature_set, native_token::sol_to_lamports, pubkey,
             rent::Rent, signature::Signer,
         },
@@ -609,7 +609,7 @@ pub mod tests {
 
     #[test]
     fn test_distribute_rent_to_validators_rent_paying() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         const RENT_PER_VALIDATOR: u64 = 55;
         const TOTAL_RENT: u64 = RENT_PER_VALIDATOR * 4;

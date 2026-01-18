@@ -15,9 +15,9 @@ use {
     crossbeam_channel::{Receiver, Sender, TryRecvError},
     itertools::izip,
     prio_graph::{AccessKind, PrioGraph},
-    solana_cost_model::block_cost_limits::MAX_BLOCK_UNITS,
-    solana_measure::measure_us,
-    solana_sdk::{
+    trezoa_cost_model::block_cost_limits::MAX_BLOCK_UNITS,
+    trezoa_measure::measure_us,
+    trezoa_sdk::{
         pubkey::Pubkey, saturating_add_assign, slot_history::Slot,
         transaction::SanitizedTransaction,
     },
@@ -518,7 +518,7 @@ mod tests {
         crate::banking_stage::consumer::TARGET_NUM_TRANSACTIONS_PER_BATCH,
         crossbeam_channel::{unbounded, Receiver},
         itertools::Itertools,
-        solana_sdk::{
+        trezoa_sdk::{
             compute_budget::ComputeBudgetInstruction, hash::Hash, message::Message, pubkey::Pubkey,
             signature::Keypair, signer::Signer, system_instruction, transaction::Transaction,
         },

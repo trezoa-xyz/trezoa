@@ -4,12 +4,12 @@ use {
         bank::Bank,
         genesis_utils::{self, GenesisConfigInfo, ValidatorVoteKeypairs},
     },
-    solana_sdk::{pubkey::Pubkey, signature::Signer},
+    trezoa_sdk::{pubkey::Pubkey, signature::Signer},
 };
 use {
-    solana_accounts_db::transaction_results::TransactionResults,
-    solana_sdk::transaction::SanitizedTransaction,
-    solana_vote::{vote_parser, vote_sender_types::ReplayVoteSender},
+    trezoa_accounts_db::transaction_results::TransactionResults,
+    trezoa_sdk::transaction::SanitizedTransaction,
+    trezoa_vote::{vote_parser, vote_sender_types::ReplayVoteSender},
 };
 
 #[cfg(feature = "dev-context-only-utils")]

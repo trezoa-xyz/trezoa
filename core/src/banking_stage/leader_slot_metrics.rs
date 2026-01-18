@@ -4,9 +4,9 @@ use {
         packet_deserializer::PacketReceiverStats,
         unprocessed_transaction_storage::InsertPacketBatchSummary,
     },
-    solana_accounts_db::transaction_error_metrics::*,
-    solana_poh::poh_recorder::BankStart,
-    solana_sdk::{clock::Slot, saturating_add_assign},
+    trezoa_accounts_db::transaction_error_metrics::*,
+    trezoa_poh::poh_recorder::BankStart,
+    trezoa_sdk::{clock::Slot, saturating_add_assign},
     std::time::Instant,
 };
 
@@ -884,8 +884,8 @@ impl LeaderSlotMetricsTracker {
 mod tests {
     use {
         super::*,
-        solana_runtime::{bank::Bank, genesis_utils::create_genesis_config},
-        solana_sdk::pubkey::Pubkey,
+        trezoa_runtime::{bank::Bank, genesis_utils::create_genesis_config},
+        trezoa_sdk::pubkey::Pubkey,
         std::{mem, sync::Arc},
     };
 

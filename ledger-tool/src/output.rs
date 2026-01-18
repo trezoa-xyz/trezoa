@@ -2,16 +2,16 @@ use {
     crate::ledger_utils::get_program_ids,
     chrono::{Local, TimeZone},
     serde::{Deserialize, Serialize},
-    solana_cli_output::{display::writeln_transaction, OutputFormat, QuietDisplay, VerboseDisplay},
-    solana_entry::entry::Entry,
-    solana_ledger::blockstore::Blockstore,
-    solana_sdk::{
+    trezoa_cli_output::{display::writeln_transaction, OutputFormat, QuietDisplay, VerboseDisplay},
+    trezoa_entry::entry::Entry,
+    trezoa_ledger::blockstore::Blockstore,
+    trezoa_sdk::{
         clock::{Slot, UnixTimestamp},
         hash::Hash,
         native_token::lamports_to_sol,
         pubkey::Pubkey,
     },
-    solana_transaction_status::{
+    trezoa_transaction_status::{
         EncodedConfirmedBlock, EncodedTransactionWithStatusMeta, EntrySummary, Rewards,
     },
     std::{
@@ -379,7 +379,7 @@ pub fn output_entry(
                     })
                     .map(|meta| meta.into());
 
-                solana_cli_output::display::println_transaction(
+                trezoa_cli_output::display::println_transaction(
                     &transaction,
                     tx_status_meta.as_ref(),
                     "      ",

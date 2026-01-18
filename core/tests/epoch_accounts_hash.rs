@@ -4,18 +4,18 @@
 use {
     crate::snapshot_utils::create_tmp_accounts_dir_for_tests,
     log::*,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::{AccountShrinkThreshold, CalcAccountsHashDataSource},
         accounts_hash::CalcAccountsHashConfig,
         accounts_index::AccountSecondaryIndexes,
         epoch_accounts_hash::EpochAccountsHash,
     },
-    solana_core::{
+    trezoa_core::{
         accounts_hash_verifier::AccountsHashVerifier,
         snapshot_packager_service::SnapshotPackagerService,
     },
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-    solana_runtime::{
+    trezoa_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+    trezoa_runtime::{
         accounts_background_service::{
             AbsRequestHandlers, AbsRequestSender, AccountsBackgroundService, DroppedSlotsReceiver,
             PrunedBanksRequestHandler, SnapshotRequestHandler,
@@ -29,7 +29,7 @@ use {
         snapshot_config::SnapshotConfig,
         snapshot_utils,
     },
-    solana_sdk::{
+    trezoa_sdk::{
         clock::Slot,
         epoch_schedule::EpochSchedule,
         native_token::LAMPORTS_PER_SOL,
@@ -38,7 +38,7 @@ use {
         system_transaction,
         timing::timestamp,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    trezoa_streamer::socket::SocketAddrSpace,
     std::{
         mem::ManuallyDrop,
         sync::{
@@ -256,7 +256,7 @@ impl Drop for BackgroundServices {
 #[test_case(TestEnvironment::new()                      ; "without snapshots")]
 #[test_case(TestEnvironment::new_with_snapshots(80, 40) ; "with snapshots")]
 fn test_epoch_accounts_hash_basic(test_environment: TestEnvironment) {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     const NUM_EPOCHS_TO_TEST: u64 = 2;
     const SET_ROOT_INTERVAL: Slot = 3;
@@ -365,7 +365,7 @@ fn test_epoch_accounts_hash_basic(test_environment: TestEnvironment) {
 /// in-flight or valid.
 #[test]
 fn test_snapshots_have_expected_epoch_accounts_hash() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     const NUM_EPOCHS_TO_TEST: u64 = 2;
 
@@ -487,7 +487,7 @@ fn test_snapshots_have_expected_epoch_accounts_hash() {
 /// EAH request and the second bank sends a snapshot request, both requests should be handled.
 #[test]
 fn test_background_services_request_handling_for_epoch_accounts_hash() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     const NUM_EPOCHS_TO_TEST: u64 = 2;
     const FULL_SNAPSHOT_INTERVAL: Slot = 80;
@@ -573,7 +573,7 @@ fn test_background_services_request_handling_for_epoch_accounts_hash() {
 /// that use-case.
 #[test]
 fn test_epoch_accounts_hash_and_warping() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let test_environment = TestEnvironment::new();
     let bank_forks = test_environment.bank_forks.clone();

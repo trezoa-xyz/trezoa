@@ -4,10 +4,10 @@ use {
         next_leader::upcoming_leader_tpu_vote_sockets,
     },
     crossbeam_channel::Receiver,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_measure::measure::Measure,
-    solana_poh::poh_recorder::PohRecorder,
-    solana_sdk::{
+    trezoa_gossip::cluster_info::ClusterInfo,
+    trezoa_measure::measure::Measure,
+    trezoa_poh::poh_recorder::PohRecorder,
+    trezoa_sdk::{
         clock::{Slot, FORWARD_TRANSACTIONS_TO_LEADER_AT_SLOT_OFFSET},
         transaction::Transaction,
     },

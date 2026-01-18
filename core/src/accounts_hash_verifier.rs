@@ -5,7 +5,7 @@
 
 use {
     crossbeam_channel::{Receiver, Sender},
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::CalcAccountsHashKind,
         accounts_hash::{
             AccountsHash, AccountsHashKind, CalcAccountsHashConfig, HashStats,
@@ -13,9 +13,9 @@ use {
         },
         sorted_storages::SortedStorages,
     },
-    solana_gossip::cluster_info::{ClusterInfo, MAX_ACCOUNTS_HASHES},
-    solana_measure::measure_us,
-    solana_runtime::{
+    trezoa_gossip::cluster_info::{ClusterInfo, MAX_ACCOUNTS_HASHES},
+    trezoa_measure::measure_us,
+    trezoa_runtime::{
         serde_snapshot::BankIncrementalSnapshotPersistence,
         snapshot_config::SnapshotConfig,
         snapshot_package::{
@@ -24,7 +24,7 @@ use {
         },
         snapshot_utils,
     },
-    solana_sdk::{
+    trezoa_sdk::{
         clock::{Slot, DEFAULT_MS_PER_SLOT},
         hash::Hash,
     },
@@ -359,7 +359,7 @@ impl AccountsHashVerifier {
         };
 
         if let Some(snapshot_info) = &accounts_package.snapshot_info {
-            solana_runtime::serde_snapshot::reserialize_bank_with_new_accounts_hash(
+            trezoa_runtime::serde_snapshot::reserialize_bank_with_new_accounts_hash(
                 &snapshot_info.bank_snapshot_dir,
                 accounts_package.slot,
                 &accounts_hash_for_reserialize,
@@ -608,15 +608,15 @@ mod tests {
     use {
         super::*,
         rand::seq::SliceRandom,
-        solana_gossip::contact_info::ContactInfo,
-        solana_runtime::{
+        trezoa_gossip::contact_info::ContactInfo,
+        trezoa_runtime::{
             snapshot_bank_utils::DISABLED_SNAPSHOT_ARCHIVE_INTERVAL, snapshot_package::SnapshotKind,
         },
-        solana_sdk::{
+        trezoa_sdk::{
             signature::{Keypair, Signer},
             timing::timestamp,
         },
-        solana_streamer::socket::SocketAddrSpace,
+        trezoa_streamer::socket::SocketAddrSpace,
         std::str::FromStr,
     };
 
@@ -628,7 +628,7 @@ mod tests {
 
     #[test]
     fn test_max_hashes() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let cluster_info = new_test_cluster_info();
         let cluster_info = Arc::new(cluster_info);
         let exit = AtomicBool::new(false);

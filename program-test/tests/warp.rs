@@ -6,9 +6,9 @@ use {
     bincode::deserialize,
     log::debug,
     setup::{setup_stake, setup_vote},
-    solana_banks_client::BanksClient,
-    solana_program_test::{processor, ProgramTest, ProgramTestBanksClientExt, ProgramTestError},
-    solana_sdk::{
+    trezoa_banks_client::BanksClient,
+    trezoa_program_test::{processor, ProgramTest, ProgramTestBanksClientExt, ProgramTestError},
+    trezoa_sdk::{
         account::Account,
         account_info::{next_account_info, AccountInfo},
         clock::Clock,
@@ -29,8 +29,8 @@ use {
         },
         transaction::{Transaction, TransactionError},
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::vote_state,
+    trezoa_stake_program::stake_state,
+    trezoa_vote_program::vote_state,
     std::convert::TryInto,
 };
 

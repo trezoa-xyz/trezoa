@@ -9,18 +9,18 @@ use {
     jsonrpc_server_utils::tokio,
     log::*,
     serde::{de::Deserializer, Deserialize, Serialize},
-    solana_accounts_db::accounts_index::AccountIndex,
-    solana_core::{
+    trezoa_accounts_db::accounts_index::AccountIndex,
+    trezoa_core::{
         admin_rpc_post_init::AdminRpcRequestMetadataPostInit,
         consensus::{tower_storage::TowerStorage, Tower},
         repair::repair_service,
         validator::ValidatorStartProgress,
     },
-    solana_geyser_plugin_manager::GeyserPluginManagerRequest,
-    solana_gossip::contact_info::{ContactInfo, Protocol, SOCKET_ADDR_UNSPECIFIED},
-    solana_rpc::rpc::verify_pubkey,
-    solana_rpc_client_api::{config::RpcAccountIndex, custom_error::RpcCustomError},
-    solana_sdk::{
+    trezoa_geyser_plugin_manager::GeyserPluginManagerRequest,
+    trezoa_gossip::contact_info::{ContactInfo, Protocol, SOCKET_ADDR_UNSPECIFIED},
+    trezoa_rpc::rpc::verify_pubkey,
+    trezoa_rpc_client_api::{config::RpcAccountIndex, custom_error::RpcCustomError},
+    trezoa_sdk::{
         exit::Exit,
         pubkey::Pubkey,
         signature::{read_keypair_file, Keypair, Signer},
@@ -396,7 +396,7 @@ impl AdminRpc for AdminRpcImpl {
 
     fn set_log_filter(&self, filter: String) -> Result<()> {
         debug!("set_log_filter admin rpc request received");
-        solana_logger::setup_with(&filter);
+        trezoa_logger::setup_with(&filter);
         Ok(())
     }
 
@@ -721,7 +721,7 @@ impl AdminRpcImpl {
                 }
             }
 
-            solana_metrics::set_host_id(identity_keypair.pubkey().to_string());
+            trezoa_metrics::set_host_id(identity_keypair.pubkey().to_string());
             post_init
                 .cluster_info
                 .set_keypair(Arc::new(identity_keypair));
@@ -858,23 +858,23 @@ mod tests {
     use {
         super::*,
         serde_json::Value,
-        solana_accounts_db::{accounts_index::AccountSecondaryIndexes, inline_spl_token},
-        solana_core::consensus::tower_storage::NullTowerStorage,
-        solana_gossip::cluster_info::ClusterInfo,
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_rpc::rpc::create_validator_exit,
-        solana_runtime::{
+        trezoa_accounts_db::{accounts_index::AccountSecondaryIndexes, inline_tpl_token},
+        trezoa_core::consensus::tower_storage::NullTowerStorage,
+        trezoa_gossip::cluster_info::ClusterInfo,
+        trezoa_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        trezoa_rpc::rpc::create_validator_exit,
+        trezoa_runtime::{
             bank::{Bank, BankTestConfig},
             bank_forks::BankForks,
         },
-        solana_sdk::{
+        trezoa_sdk::{
             account::{Account, AccountSharedData},
             pubkey::Pubkey,
             system_program,
         },
-        solana_streamer::socket::SocketAddrSpace,
-        spl_token_2022::{
-            solana_program::{program_option::COption, program_pack::Pack},
+        trezoa_streamer::socket::SocketAddrSpace,
+        tpl_token_2022::{
+            trezoa_program::{program_option::COption, program_pack::Pack},
             state::{Account as TokenAccount, AccountState as TokenAccountState, Mint},
         },
         std::{collections::HashSet, sync::atomic::AtomicBool},
@@ -901,7 +901,7 @@ mod tests {
             let cluster_info = Arc::new(ClusterInfo::new(
                 ContactInfo::new(
                     keypair.pubkey(),
-                    solana_sdk::timing::timestamp(), // wallclock
+                    trezoa_sdk::timing::timestamp(), // wallclock
                     0u16,                            // shred_version
                 ),
                 keypair,
@@ -933,7 +933,7 @@ mod tests {
                         RwLock<repair_service::OutstandingShredRepairs>,
                     >::default(),
                     cluster_slots: Arc::new(
-                        solana_core::cluster_slots_service::cluster_slots::ClusterSlots::default(),
+                        trezoa_core::cluster_slots_service::cluster_slots::ClusterSlots::default(),
                     ),
                 }))),
                 staked_nodes_overrides: Arc::new(RwLock::new(HashMap::new())),
@@ -1000,7 +1000,7 @@ mod tests {
             let non_existent_pubkey = Pubkey::new_unique();
             let delegate = Pubkey::new_unique();
 
-            let mut num_default_spl_token_program_accounts = 0;
+            let mut num_default_tpl_token_program_accounts = 0;
             let mut num_default_system_program_accounts = 0;
 
             if !secondary_index_enabled {
@@ -1018,7 +1018,7 @@ mod tests {
                 // Count SPL Token Program Default Accounts
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{}"]}}"#,
-                    inline_spl_token::id(),
+                    inline_tpl_token::id(),
                 );
                 let res = io.handle_request_sync(&req, meta.clone());
                 let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -1026,7 +1026,7 @@ mod tests {
                 let sizes: HashMap<RpcAccountIndex, usize> =
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert_eq!(sizes.len(), 1);
-                num_default_spl_token_program_accounts =
+                num_default_tpl_token_program_accounts =
                     *sizes.get(&RpcAccountIndex::ProgramId).unwrap();
                 // Count System Program Default Accounts
                 let req = format!(
@@ -1073,7 +1073,7 @@ mod tests {
             let token_account1 = AccountSharedData::from(Account {
                 lamports: 111,
                 data: account1_data.to_vec(),
-                owner: inline_spl_token::id(),
+                owner: inline_tpl_token::id(),
                 ..Account::default()
             });
             bank.store_account(&token_account1_pubkey, &token_account1);
@@ -1091,7 +1091,7 @@ mod tests {
             let mint_account1 = AccountSharedData::from(Account {
                 lamports: 222,
                 data: mint1_data.to_vec(),
-                owner: inline_spl_token::id(),
+                owner: inline_tpl_token::id(),
                 ..Account::default()
             });
             bank.store_account(&mint1_pubkey, &mint_account1);
@@ -1112,7 +1112,7 @@ mod tests {
             let token_account2 = AccountSharedData::from(Account {
                 lamports: 333,
                 data: account2_data.to_vec(),
-                owner: inline_spl_token::id(),
+                owner: inline_tpl_token::id(),
                 ..Account::default()
             });
             bank.store_account(&token_account2_pubkey, &token_account2);
@@ -1133,7 +1133,7 @@ mod tests {
             let token_account3 = AccountSharedData::from(Account {
                 lamports: 444,
                 data: account3_data.to_vec(),
-                owner: inline_spl_token::id(),
+                owner: inline_tpl_token::id(),
                 ..Account::default()
             });
             bank.store_account(&token_account3_pubkey, &token_account3);
@@ -1151,7 +1151,7 @@ mod tests {
             let mint_account2 = AccountSharedData::from(Account {
                 lamports: 555,
                 data: mint2_data.to_vec(),
-                owner: inline_spl_token::id(),
+                owner: inline_tpl_token::id(),
                 ..Account::default()
             });
             bank.store_account(&mint2_pubkey, &mint_account2);
@@ -1231,7 +1231,7 @@ mod tests {
                 // 5) SPL Token Program Owns 6 Accounts - 1 Default, 5 created above.
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{}"]}}"#,
-                    inline_spl_token::id(),
+                    inline_tpl_token::id(),
                 );
                 let res = io.handle_request_sync(&req, meta.clone());
                 let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -1241,7 +1241,7 @@ mod tests {
                 assert_eq!(sizes.len(), 1);
                 assert_eq!(
                     *sizes.get(&RpcAccountIndex::ProgramId).unwrap(),
-                    (num_default_spl_token_program_accounts + 5)
+                    (num_default_tpl_token_program_accounts + 5)
                 );
                 // 5) System Program Owns 4 Accounts + 2 Default, 2 created above.
                 let req = format!(

@@ -23,7 +23,7 @@ use {
     index::IndexBlockFormat,
     owners::OwnersBlockFormat,
     readable::TieredStorageReader,
-    solana_sdk::account::ReadableAccount,
+    trezoa_sdk::account::ReadableAccount,
     std::{
         borrow::Borrow,
         fs::{self, OpenOptions},
@@ -159,8 +159,8 @@ mod tests {
         crate::account_storage::meta::{StoredMeta, StoredMetaWriteVersion},
         footer::{TieredStorageFooter, TieredStorageMagicNumber},
         hot::HOT_FORMAT,
-        solana_accounts_db::rent_collector::RENT_EXEMPT_RENT_EPOCH,
-        solana_sdk::{
+        trezoa_accounts_db::rent_collector::RENT_EXEMPT_RENT_EPOCH,
+        trezoa_sdk::{
             account::{Account, AccountSharedData},
             clock::Slot,
             hash::Hash,

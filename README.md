@@ -1,13 +1,13 @@
 <p align="center">
-  <a href="https://solana.com">
-    <img alt="Solana" src="https://i.imgur.com/0vfIMHo.png" width="250" />
+  <a href="https://trezoa.com">
+    <img alt="Trezoa" src="https://i.imgur.com/0vfIMHo.png" width="250" />
   </a>
 </p>
 
-[![Solana crate](https://img.shields.io/crates/v/solana-core.svg)](https://crates.io/crates/solana-core)
-[![Solana documentation](https://docs.rs/solana-core/badge.svg)](https://docs.rs/solana-core)
-[![Build status](https://badge.buildkite.com/8cc350de251d61483db98bdfc895b9ea0ac8ffa4a32ee850ed.svg?branch=master)](https://buildkite.com/solana-labs/solana/builds?branch=master)
-[![codecov](https://codecov.io/gh/solana-labs/solana/branch/master/graph/badge.svg)](https://codecov.io/gh/solana-labs/solana)
+[![Trezoa crate](https://img.shields.io/crates/v/trezoa-core.svg)](https://crates.io/crates/trezoa-core)
+[![Trezoa documentation](https://docs.rs/trezoa-core/badge.svg)](https://docs.rs/trezoa-core)
+[![Build status](https://badge.buildkite.com/8cc350de251d61483db98bdfc895b9ea0ac8ffa4a32ee850ed.svg?branch=master)](https://buildkite.com/trezoa-team/trezoa/builds?branch=master)
+[![codecov](https://codecov.io/gh/trezoa-team/trezoa/branch/master/graph/badge.svg)](https://codecov.io/gh/trezoa-team/trezoa)
 
 # Building
 
@@ -47,8 +47,8 @@ $ sudo dnf install openssl-devel systemd-devel pkg-config zlib-devel llvm clang 
 ## **2. Download the source code.**
 
 ```bash
-$ git clone https://github.com/solana-labs/solana.git
-$ cd solana
+$ git clone https://github.com/trezoa-team/trezoa.git
+$ cd trezoa
 ```
 
 ## **3. Build.**
@@ -67,12 +67,12 @@ $ ./cargo test
 
 ### Starting a local testnet
 
-Start your own testnet locally, instructions are in the [online docs](https://docs.solanalabs.com/clusters/benchmark).
+Start your own testnet locally, instructions are in the [online docs](https://docs.trezoa.com/clusters/benchmark).
 
 ### Accessing the remote development cluster
 
 * `devnet` - stable public cluster for development accessible via
-devnet.solana.com. Runs 24/7. Learn more about the [public clusters](https://docs.solanalabs.com/clusters)
+devnet.trezoa.com. Runs 24/7. Learn more about the [public clusters](https://docs.trezoa.com/clusters)
 
 # Benchmarking
 

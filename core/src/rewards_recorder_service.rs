@@ -1,9 +1,9 @@
 use {
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
-    solana_accounts_db::stake_rewards::RewardInfo,
-    solana_ledger::blockstore::Blockstore,
-    solana_sdk::{clock::Slot, pubkey::Pubkey},
-    solana_transaction_status::Reward,
+    trezoa_accounts_db::stake_rewards::RewardInfo,
+    trezoa_ledger::blockstore::Blockstore,
+    trezoa_sdk::{clock::Slot, pubkey::Pubkey},
+    trezoa_transaction_status::Reward,
     std::{
         sync::{
             atomic::{AtomicBool, AtomicU64, Ordering},

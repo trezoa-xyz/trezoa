@@ -10,7 +10,7 @@ use {
             TieredStorageFormat, TieredStorageResult,
         },
     },
-    solana_sdk::account::ReadableAccount,
+    trezoa_sdk::account::ReadableAccount,
     std::{borrow::Borrow, path::Path},
 };
 

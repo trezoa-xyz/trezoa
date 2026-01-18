@@ -12,20 +12,20 @@
 #[cfg(feature = "sbf_rust")]
 use {
     itertools::izip,
-    solana_account_decoder::parse_bpf_loader::{
+    trezoa_account_decoder::parse_bpf_loader::{
         parse_bpf_upgradeable_loader, BpfUpgradeableLoaderAccountType,
     },
-    solana_accounts_db::transaction_results::{
+    trezoa_accounts_db::transaction_results::{
         DurableNonceFee, InnerInstruction, TransactionExecutionDetails, TransactionExecutionResult,
         TransactionResults,
     },
-    solana_ledger::token_balances::collect_token_balances,
-    solana_program_runtime::{
+    trezoa_ledger::token_balances::collect_token_balances,
+    trezoa_program_runtime::{
         compute_budget::ComputeBudget,
         compute_budget_processor::process_compute_budget_instructions, timings::ExecuteTimings,
     },
-    solana_rbpf::vm::ContextObject,
-    solana_runtime::{
+    trezoa_rbpf::vm::ContextObject,
+    trezoa_runtime::{
         bank::TransactionBalancesSet,
         loader_utils::{
             create_program, load_program_from_file, load_upgradeable_buffer,
@@ -33,10 +33,10 @@ use {
             load_upgradeable_program_wrapper, set_upgrade_authority, upgrade_program,
         },
     },
-    solana_sbf_rust_invoke::instructions::*,
-    solana_sbf_rust_realloc::instructions::*,
-    solana_sbf_rust_realloc_invoke::instructions::*,
-    solana_sdk::{
+    trezoa_sbf_rust_invoke::instructions::*,
+    trezoa_sbf_rust_realloc::instructions::*,
+    trezoa_sbf_rust_realloc_invoke::instructions::*,
+    trezoa_sdk::{
         account::{ReadableAccount, WritableAccount},
         account_utils::StateMut,
         bpf_loader_upgradeable,
@@ -52,15 +52,15 @@ use {
         sysvar::{self, clock},
         transaction::VersionedTransaction,
     },
-    solana_transaction_status::{
+    trezoa_transaction_status::{
         map_inner_instructions, ConfirmedTransactionWithStatusMeta, TransactionStatusMeta,
         TransactionWithStatusMeta, VersionedTransactionWithStatusMeta,
     },
     std::collections::HashMap,
 };
 use {
-    solana_program_runtime::invoke_context::mock_process_instruction,
-    solana_runtime::{
+    trezoa_program_runtime::invoke_context::mock_process_instruction,
+    trezoa_runtime::{
         bank::Bank,
         bank_client::BankClient,
         genesis_utils::{
@@ -68,7 +68,7 @@ use {
             create_genesis_config_with_leader_ex, GenesisConfigInfo,
         },
     },
-    solana_sdk::{
+    trezoa_sdk::{
         account::AccountSharedData,
         bpf_loader, bpf_loader_deprecated,
         client::SyncClient,
@@ -244,7 +244,7 @@ fn execute_transactions(
 #[test]
 #[cfg(any(feature = "sbf_c", feature = "sbf_rust"))]
 fn test_program_sbf_sanity() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -274,25 +274,25 @@ fn test_program_sbf_sanity() {
     #[cfg(feature = "sbf_rust")]
     {
         programs.extend_from_slice(&[
-            ("solana_sbf_rust_128bit", true),
-            ("solana_sbf_rust_alloc", true),
-            ("solana_sbf_rust_alt_bn128", true),
-            ("solana_sbf_rust_alt_bn128_compression", true),
-            ("solana_sbf_rust_curve25519", true),
-            ("solana_sbf_rust_custom_heap", true),
-            ("solana_sbf_rust_dep_crate", true),
-            ("solana_sbf_rust_external_spend", false),
-            ("solana_sbf_rust_iter", true),
-            ("solana_sbf_rust_many_args", true),
-            ("solana_sbf_rust_membuiltins", true),
-            ("solana_sbf_rust_noop", true),
-            ("solana_sbf_rust_panic", false),
-            ("solana_sbf_rust_param_passing", true),
-            ("solana_sbf_rust_poseidon", true),
-            ("solana_sbf_rust_rand", true),
-            ("solana_sbf_rust_sanity", true),
-            ("solana_sbf_rust_secp256k1_recover", true),
-            ("solana_sbf_rust_sha", true),
+            ("trezoa_sbf_rust_128bit", true),
+            ("trezoa_sbf_rust_alloc", true),
+            ("trezoa_sbf_rust_alt_bn128", true),
+            ("trezoa_sbf_rust_alt_bn128_compression", true),
+            ("trezoa_sbf_rust_curve25519", true),
+            ("trezoa_sbf_rust_custom_heap", true),
+            ("trezoa_sbf_rust_dep_crate", true),
+            ("trezoa_sbf_rust_external_spend", false),
+            ("trezoa_sbf_rust_iter", true),
+            ("trezoa_sbf_rust_many_args", true),
+            ("trezoa_sbf_rust_membuiltins", true),
+            ("trezoa_sbf_rust_noop", true),
+            ("trezoa_sbf_rust_panic", false),
+            ("trezoa_sbf_rust_param_passing", true),
+            ("trezoa_sbf_rust_poseidon", true),
+            ("trezoa_sbf_rust_rand", true),
+            ("trezoa_sbf_rust_sanity", true),
+            ("trezoa_sbf_rust_secp256k1_recover", true),
+            ("trezoa_sbf_rust_sha", true),
         ]);
     }
 
@@ -335,7 +335,7 @@ fn test_program_sbf_sanity() {
 #[test]
 #[cfg(any(feature = "sbf_c", feature = "sbf_rust"))]
 fn test_program_sbf_loader_deprecated() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -344,7 +344,7 @@ fn test_program_sbf_loader_deprecated() {
     }
     #[cfg(feature = "sbf_rust")]
     {
-        programs.extend_from_slice(&[("solana_sbf_rust_deprecated_loader")]);
+        programs.extend_from_slice(&[("trezoa_sbf_rust_deprecated_loader")]);
     }
 
     for program in programs.iter() {
@@ -357,7 +357,7 @@ fn test_program_sbf_loader_deprecated() {
         } = create_genesis_config(50);
         genesis_config
             .accounts
-            .remove(&solana_sdk::feature_set::disable_deploy_of_alloc_free_syscall::id())
+            .remove(&trezoa_sdk::feature_set::disable_deploy_of_alloc_free_syscall::id())
             .unwrap();
         let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         let program_id = create_program(&bank, &bpf_loader_deprecated::id(), program);
@@ -379,7 +379,7 @@ fn test_program_sbf_loader_deprecated() {
     expected = "called `Result::unwrap()` on an `Err` value: TransactionError(InstructionError(1, InvalidAccountData))"
 )]
 fn test_sol_alloc_free_no_longer_deployable_with_upgradeable_loader() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -391,9 +391,9 @@ fn test_sol_alloc_free_no_longer_deployable_with_upgradeable_loader() {
     let mut bank_client = BankClient::new_shared(bank.clone());
     let authority_keypair = Keypair::new();
 
-    // Populate loader account with `solana_sbf_rust_deprecated_loader` elf, which
+    // Populate loader account with `trezoa_sbf_rust_deprecated_loader` elf, which
     // depends on `sol_alloc_free_` syscall. This can be verified with
-    // $ elfdump solana_sbf_rust_deprecated_loader.so
+    // $ elfdump trezoa_sbf_rust_deprecated_loader.so
     // : 0000000000001ab8  000000070000000a R_BPF_64_32            0000000000000000 sol_alloc_free_
     // In the symbol table, there is `sol_alloc_free_`.
     // In fact, `sol_alloc_free_` is called from sbf allocator, which is originated from
@@ -409,14 +409,14 @@ fn test_sol_alloc_free_no_longer_deployable_with_upgradeable_loader() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_deprecated_loader",
+        "trezoa_sbf_rust_deprecated_loader",
     );
 }
 
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_duplicate_accounts() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -425,7 +425,7 @@ fn test_program_sbf_duplicate_accounts() {
     }
     #[cfg(feature = "sbf_rust")]
     {
-        programs.extend_from_slice(&[("solana_sbf_rust_dup_accounts")]);
+        programs.extend_from_slice(&[("trezoa_sbf_rust_dup_accounts")]);
     }
 
     for program in programs.iter() {
@@ -523,7 +523,7 @@ fn test_program_sbf_duplicate_accounts() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_error_handling() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -532,7 +532,7 @@ fn test_program_sbf_error_handling() {
     }
     #[cfg(feature = "sbf_rust")]
     {
-        programs.extend_from_slice(&[("solana_sbf_rust_error_handling")]);
+        programs.extend_from_slice(&[("trezoa_sbf_rust_error_handling")]);
     }
 
     for program in programs.iter() {
@@ -635,7 +635,7 @@ fn test_program_sbf_error_handling() {
 #[test]
 #[cfg(any(feature = "sbf_c", feature = "sbf_rust"))]
 fn test_return_data_and_log_data_syscall() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -644,7 +644,7 @@ fn test_return_data_and_log_data_syscall() {
     }
     #[cfg(feature = "sbf_rust")]
     {
-        programs.extend_from_slice(&[("solana_sbf_rust_log_data")]);
+        programs.extend_from_slice(&[("trezoa_sbf_rust_log_data")]);
     }
 
     for program in programs.iter() {
@@ -693,7 +693,7 @@ fn test_return_data_and_log_data_syscall() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_invoke_sanity() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     #[allow(dead_code)]
     #[derive(Debug)]
@@ -710,9 +710,9 @@ fn test_program_sbf_invoke_sanity() {
     {
         programs.push((
             Languages::Rust,
-            "solana_sbf_rust_invoke",
-            "solana_sbf_rust_invoked",
-            "solana_sbf_rust_noop",
+            "trezoa_sbf_rust_invoke",
+            "trezoa_sbf_rust_invoked",
+            "trezoa_sbf_rust_noop",
         ));
     }
     for program in programs.iter() {
@@ -782,7 +782,7 @@ fn test_program_sbf_invoke_sanity() {
             AccountMeta::new_readonly(derived_key3, false),
             AccountMeta::new_readonly(system_program::id(), false),
             AccountMeta::new(from_keypair.pubkey(), true),
-            AccountMeta::new_readonly(solana_sdk::ed25519_program::id(), false),
+            AccountMeta::new_readonly(trezoa_sdk::ed25519_program::id(), false),
             AccountMeta::new_readonly(invoke_program_id, false),
         ];
 
@@ -1141,7 +1141,7 @@ fn test_program_sbf_program_id_spoofing() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_spoof1",
+        "trezoa_sbf_rust_spoof1",
     );
 
     let (bank, malicious_system_pubkey) = load_upgradeable_program_and_advance_slot(
@@ -1149,7 +1149,7 @@ fn test_program_sbf_program_id_spoofing() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_spoof1_system",
+        "trezoa_sbf_rust_spoof1_system",
     );
 
     let from_pubkey = Pubkey::new_unique();
@@ -1195,7 +1195,7 @@ fn test_program_sbf_caller_has_access_to_cpi_program() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_caller_access",
+        "trezoa_sbf_rust_caller_access",
     );
 
     let (_bank, caller2_pubkey) = load_upgradeable_program_and_advance_slot(
@@ -1203,7 +1203,7 @@ fn test_program_sbf_caller_has_access_to_cpi_program() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_caller_access",
+        "trezoa_sbf_rust_caller_access",
     );
 
     let account_metas = vec![
@@ -1221,7 +1221,7 @@ fn test_program_sbf_caller_has_access_to_cpi_program() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_ro_modify() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1238,7 +1238,7 @@ fn test_program_sbf_ro_modify() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_ro_modify",
+        "trezoa_sbf_rust_ro_modify",
     );
 
     let test_keypair = Keypair::new();
@@ -1278,7 +1278,7 @@ fn test_program_sbf_ro_modify() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_call_depth() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1295,7 +1295,7 @@ fn test_program_sbf_call_depth() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_call_depth",
+        "trezoa_sbf_rust_call_depth",
     );
 
     let instruction = Instruction::new_with_bincode(
@@ -1315,7 +1315,7 @@ fn test_program_sbf_call_depth() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_compute_budget() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1332,7 +1332,7 @@ fn test_program_sbf_compute_budget() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
     let message = Message::new(
         &[
@@ -1350,7 +1350,7 @@ fn test_program_sbf_compute_budget() {
 
 #[test]
 fn assert_instruction_count() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -1374,20 +1374,20 @@ fn assert_instruction_count() {
     #[cfg(feature = "sbf_rust")]
     {
         programs.extend_from_slice(&[
-            ("solana_sbf_rust_128bit", 1218),
-            ("solana_sbf_rust_alloc", 5077),
-            ("solana_sbf_rust_custom_heap", 398),
-            ("solana_sbf_rust_dep_crate", 2),
-            ("solana_sbf_rust_iter", 1514),
-            ("solana_sbf_rust_many_args", 1289),
-            ("solana_sbf_rust_mem", 2067),
-            ("solana_sbf_rust_membuiltins", 1539),
-            ("solana_sbf_rust_noop", 275),
-            ("solana_sbf_rust_param_passing", 146),
-            ("solana_sbf_rust_rand", 378),
-            ("solana_sbf_rust_sanity", 51953),
-            ("solana_sbf_rust_secp256k1_recover", 91185),
-            ("solana_sbf_rust_sha", 24059),
+            ("trezoa_sbf_rust_128bit", 1218),
+            ("trezoa_sbf_rust_alloc", 5077),
+            ("trezoa_sbf_rust_custom_heap", 398),
+            ("trezoa_sbf_rust_dep_crate", 2),
+            ("trezoa_sbf_rust_iter", 1514),
+            ("trezoa_sbf_rust_many_args", 1289),
+            ("trezoa_sbf_rust_mem", 2067),
+            ("trezoa_sbf_rust_membuiltins", 1539),
+            ("trezoa_sbf_rust_noop", 275),
+            ("trezoa_sbf_rust_param_passing", 146),
+            ("trezoa_sbf_rust_rand", 378),
+            ("trezoa_sbf_rust_sanity", 51953),
+            ("trezoa_sbf_rust_secp256k1_recover", 91185),
+            ("trezoa_sbf_rust_sha", 24059),
         ]);
     }
 
@@ -1421,10 +1421,10 @@ fn assert_instruction_count() {
             transaction_accounts,
             instruction_accounts,
             Ok(()),
-            solana_bpf_loader_program::Entrypoint::vm,
+            trezoa_bpf_loader_program::Entrypoint::vm,
             |invoke_context| {
                 *prev_compute_meter.borrow_mut() = invoke_context.get_remaining();
-                solana_bpf_loader_program::test_utils::load_all_invoked_programs(invoke_context);
+                trezoa_bpf_loader_program::test_utils::load_all_invoked_programs(invoke_context);
             },
             |invoke_context| {
                 let consumption = prev_compute_meter
@@ -1446,7 +1446,7 @@ fn assert_instruction_count() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_instruction_introspection() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1463,7 +1463,7 @@ fn test_program_sbf_instruction_introspection() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_instruction_introspection",
+        "trezoa_sbf_rust_instruction_introspection",
     );
 
     // Passing transaction
@@ -1506,7 +1506,7 @@ fn test_program_sbf_instruction_introspection() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_upgrade() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1527,7 +1527,7 @@ fn test_program_sbf_upgrade() {
         &buffer_keypair,
         &program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_upgradeable",
+        "trezoa_sbf_rust_upgradeable",
     );
     bank_client
         .advance_slot(1, bank_forks.as_ref(), &Pubkey::default())
@@ -1551,7 +1551,7 @@ fn test_program_sbf_upgrade() {
         &buffer_keypair,
         &program_id,
         &authority_keypair,
-        "solana_sbf_rust_upgraded",
+        "trezoa_sbf_rust_upgraded",
     );
     bank_client.set_sysvar_for_tests(&clock::Clock {
         slot: 2,
@@ -1587,7 +1587,7 @@ fn test_program_sbf_upgrade() {
         &buffer_keypair,
         &program_id,
         &new_authority_keypair,
-        "solana_sbf_rust_upgradeable",
+        "trezoa_sbf_rust_upgradeable",
     );
 
     bank_client
@@ -1645,7 +1645,7 @@ fn test_program_sbf_invoke_stable_genesis_and_bank() {
     // assert that the resulting bank hash matches with the expected value.
     // The assert check is commented out by default. Please refer to the last few lines
     // of the test to enable the assertion.
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1684,7 +1684,7 @@ fn test_program_sbf_invoke_stable_genesis_and_bank() {
         &buffer_keypair,
         &program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
 
     // Deploy indirect invocation program
@@ -1697,7 +1697,7 @@ fn test_program_sbf_invoke_stable_genesis_and_bank() {
         &buffer_keypair,
         &indirect_program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     let invoke_instruction =
@@ -1720,7 +1720,7 @@ fn test_program_sbf_invoke_stable_genesis_and_bank() {
         &mint_keypair,
         &buffer_keypair,
         &authority_keypair,
-        "solana_sbf_rust_panic",
+        "trezoa_sbf_rust_panic",
     );
     let redeployment_instruction = bpf_loader_upgradeable::upgrade(
         &program_id,
@@ -1819,7 +1819,7 @@ fn test_program_sbf_invoke_stable_genesis_and_bank() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_invoke_in_same_tx_as_deployment() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1843,7 +1843,7 @@ fn test_program_sbf_invoke_in_same_tx_as_deployment() {
         &buffer_keypair,
         &indirect_program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     let invoke_instruction =
@@ -1863,7 +1863,7 @@ fn test_program_sbf_invoke_in_same_tx_as_deployment() {
         &mint_keypair,
         &buffer_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
     let deployment_instructions = bpf_loader_upgradeable::deploy_with_max_program_len(
         &mint_keypair.pubkey(),
@@ -1916,7 +1916,7 @@ fn test_program_sbf_invoke_in_same_tx_as_deployment() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_invoke_in_same_tx_as_redeployment() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -1937,7 +1937,7 @@ fn test_program_sbf_invoke_in_same_tx_as_redeployment() {
         &buffer_keypair,
         &program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
 
     // Deploy indirect invocation program
@@ -1948,7 +1948,7 @@ fn test_program_sbf_invoke_in_same_tx_as_redeployment() {
         &buffer_keypair,
         &indirect_program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     // Deploy panic program
@@ -1959,7 +1959,7 @@ fn test_program_sbf_invoke_in_same_tx_as_redeployment() {
         &buffer_keypair,
         &panic_program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_panic",
+        "trezoa_sbf_rust_panic",
     );
 
     let invoke_instruction =
@@ -1989,7 +1989,7 @@ fn test_program_sbf_invoke_in_same_tx_as_redeployment() {
         &mint_keypair,
         &buffer_keypair,
         &authority_keypair,
-        "solana_sbf_rust_panic",
+        "trezoa_sbf_rust_panic",
     );
     let redeployment_instruction = bpf_loader_upgradeable::upgrade(
         &program_id,
@@ -2026,7 +2026,7 @@ fn test_program_sbf_invoke_in_same_tx_as_redeployment() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_invoke_in_same_tx_as_undeployment() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2047,7 +2047,7 @@ fn test_program_sbf_invoke_in_same_tx_as_undeployment() {
         &buffer_keypair,
         &program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
 
     // Deploy indirect invocation program
@@ -2058,7 +2058,7 @@ fn test_program_sbf_invoke_in_same_tx_as_undeployment() {
         &buffer_keypair,
         &indirect_program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     let invoke_instruction =
@@ -2121,7 +2121,7 @@ fn test_program_sbf_invoke_in_same_tx_as_undeployment() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_invoke_upgradeable_via_cpi() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2138,7 +2138,7 @@ fn test_program_sbf_invoke_upgradeable_via_cpi() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     // Deploy upgradeable program
@@ -2146,7 +2146,7 @@ fn test_program_sbf_invoke_upgradeable_via_cpi() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_upgradeable",
+        "trezoa_sbf_rust_upgradeable",
     );
     bank_client.set_sysvar_for_tests(&clock::Clock {
         slot: 2,
@@ -2182,7 +2182,7 @@ fn test_program_sbf_invoke_upgradeable_via_cpi() {
         &buffer_keypair,
         &program_id,
         &authority_keypair,
-        "solana_sbf_rust_upgraded",
+        "trezoa_sbf_rust_upgraded",
     );
     bank_client.set_sysvar_for_tests(&clock::Clock {
         slot: 3,
@@ -2218,7 +2218,7 @@ fn test_program_sbf_invoke_upgradeable_via_cpi() {
         &buffer_keypair,
         &program_id,
         &new_authority_keypair,
-        "solana_sbf_rust_upgradeable",
+        "trezoa_sbf_rust_upgradeable",
     );
 
     bank_client
@@ -2237,7 +2237,7 @@ fn test_program_sbf_invoke_upgradeable_via_cpi() {
 #[test]
 #[cfg(any(feature = "sbf_c", feature = "sbf_rust"))]
 fn test_program_sbf_disguised_as_sbf_loader() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let mut programs = Vec::new();
     #[cfg(feature = "sbf_c")]
@@ -2246,7 +2246,7 @@ fn test_program_sbf_disguised_as_sbf_loader() {
     }
     #[cfg(feature = "sbf_rust")]
     {
-        programs.extend_from_slice(&[("solana_sbf_rust_noop")]);
+        programs.extend_from_slice(&[("trezoa_sbf_rust_noop")]);
     }
 
     for program in programs.iter() {
@@ -2257,7 +2257,7 @@ fn test_program_sbf_disguised_as_sbf_loader() {
         } = create_genesis_config(50);
         let mut bank = Bank::new_for_tests(&genesis_config);
         bank.deactivate_feature(
-            &solana_sdk::feature_set::remove_bpf_loader_incorrect_program_id::id(),
+            &trezoa_sdk::feature_set::remove_bpf_loader_incorrect_program_id::id(),
         );
         let (bank, bank_forks) = bank.wrap_with_bank_forks_for_tests();
         let mut bank_client = BankClient::new_shared(bank);
@@ -2284,7 +2284,7 @@ fn test_program_sbf_disguised_as_sbf_loader() {
 #[test]
 #[cfg(feature = "sbf_c")]
 fn test_program_reads_from_program_account() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2313,7 +2313,7 @@ fn test_program_reads_from_program_account() {
 #[test]
 #[cfg(feature = "sbf_c")]
 fn test_program_sbf_c_dup() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2349,7 +2349,7 @@ fn test_program_sbf_c_dup() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_upgrade_via_cpi() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2366,7 +2366,7 @@ fn test_program_sbf_upgrade_via_cpi() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     // Deploy upgradeable program
@@ -2380,7 +2380,7 @@ fn test_program_sbf_upgrade_via_cpi() {
         &buffer_keypair,
         &program_keypair,
         &authority_keypair,
-        "solana_sbf_rust_upgradeable",
+        "trezoa_sbf_rust_upgradeable",
     );
     bank_client
         .advance_slot(1, bank_forks.as_ref(), &Pubkey::default())
@@ -2421,7 +2421,7 @@ fn test_program_sbf_upgrade_via_cpi() {
         &mint_keypair,
         &buffer_keypair,
         &authority_keypair,
-        "solana_sbf_rust_upgraded",
+        "trezoa_sbf_rust_upgraded",
     );
 
     // Upgrade program via CPI
@@ -2463,7 +2463,7 @@ fn test_program_sbf_upgrade_via_cpi() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_set_upgrade_authority_via_cpi() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2480,7 +2480,7 @@ fn test_program_sbf_set_upgrade_authority_via_cpi() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     // Deploy upgradeable program
@@ -2488,7 +2488,7 @@ fn test_program_sbf_set_upgrade_authority_via_cpi() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_upgradeable",
+        "trezoa_sbf_rust_upgradeable",
     );
 
     bank_client
@@ -2552,7 +2552,7 @@ fn test_program_upgradeable_locks() {
         buffer_keypair: &Keypair,
         program_keypair: &Keypair,
     ) -> (Arc<Bank>, Transaction, Transaction) {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -2568,7 +2568,7 @@ fn test_program_upgradeable_locks() {
             buffer_keypair,
             program_keypair,
             payer_keypair,
-            "solana_sbf_rust_panic",
+            "trezoa_sbf_rust_panic",
         );
 
         // Load the buffer account
@@ -2577,7 +2577,7 @@ fn test_program_upgradeable_locks() {
             &mint_keypair,
             buffer_keypair,
             &payer_keypair,
-            "solana_sbf_rust_noop",
+            "trezoa_sbf_rust_noop",
         );
 
         let bank = bank_client
@@ -2674,7 +2674,7 @@ fn test_program_upgradeable_locks() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_ro_account_modify() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -2691,7 +2691,7 @@ fn test_program_sbf_ro_account_modify() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_ro_account_modify",
+        "trezoa_sbf_rust_ro_account_modify",
     );
 
     let argument_keypair = Keypair::new();
@@ -2736,7 +2736,7 @@ fn test_program_sbf_ro_account_modify() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_realloc() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     const START_BALANCE: u64 = 100_000_000_000;
 
@@ -2765,7 +2765,7 @@ fn test_program_sbf_realloc() {
             bank_forks.as_ref(),
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_realloc",
+            "trezoa_sbf_rust_realloc",
         );
 
         let mut bump = 0;
@@ -2976,7 +2976,7 @@ fn test_program_sbf_realloc() {
             )
             .unwrap();
         let account = bank.get_account(&pubkey).unwrap();
-        assert_eq!(&solana_sdk::system_program::id(), account.owner());
+        assert_eq!(&trezoa_sdk::system_program::id(), account.owner());
         let data = bank_client.get_account_data(&pubkey).unwrap().unwrap();
         assert_eq!(MAX_PERMITTED_DATA_INCREASE, data.len());
 
@@ -3006,7 +3006,7 @@ fn test_program_sbf_realloc() {
                             &[REALLOC_AND_ASSIGN_TO_SELF_VIA_SYSTEM_PROGRAM],
                             vec![
                                 AccountMeta::new(pubkey, true),
-                                AccountMeta::new(solana_sdk::system_program::id(), false),
+                                AccountMeta::new(trezoa_sdk::system_program::id(), false),
                             ],
                         )],
                         Some(&mint_pubkey),
@@ -3027,7 +3027,7 @@ fn test_program_sbf_realloc() {
                         &[ASSIGN_TO_SELF_VIA_SYSTEM_PROGRAM_AND_REALLOC],
                         vec![
                             AccountMeta::new(pubkey, true),
-                            AccountMeta::new(solana_sdk::system_program::id(), false),
+                            AccountMeta::new(trezoa_sdk::system_program::id(), false),
                         ],
                     )],
                     Some(&mint_pubkey),
@@ -3072,7 +3072,7 @@ fn test_program_sbf_realloc() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_realloc_invoke() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     const START_BALANCE: u64 = 100_000_000_000;
 
@@ -3094,7 +3094,7 @@ fn test_program_sbf_realloc_invoke() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_realloc",
+        "trezoa_sbf_rust_realloc",
     );
 
     let (bank, realloc_invoke_program_id) = load_upgradeable_program_and_advance_slot(
@@ -3102,7 +3102,7 @@ fn test_program_sbf_realloc_invoke() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_realloc_invoke",
+        "trezoa_sbf_rust_realloc_invoke",
     );
 
     let mut bump = 0;
@@ -3229,7 +3229,7 @@ fn test_program_sbf_realloc_invoke() {
         )
         .unwrap();
     let account = bank.get_account(&pubkey).unwrap();
-    assert_eq!(&solana_sdk::system_program::id(), account.owner());
+    assert_eq!(&trezoa_sdk::system_program::id(), account.owner());
     let data = bank_client.get_account_data(&pubkey).unwrap().unwrap();
     assert_eq!(MAX_PERMITTED_DATA_INCREASE, data.len());
 
@@ -3260,7 +3260,7 @@ fn test_program_sbf_realloc_invoke() {
                         vec![
                             AccountMeta::new(pubkey, true),
                             AccountMeta::new_readonly(realloc_program_id, false),
-                            AccountMeta::new_readonly(solana_sdk::system_program::id(), false),
+                            AccountMeta::new_readonly(trezoa_sdk::system_program::id(), false),
                         ],
                     )],
                     Some(&mint_pubkey),
@@ -3282,7 +3282,7 @@ fn test_program_sbf_realloc_invoke() {
                     vec![
                         AccountMeta::new(pubkey, true),
                         AccountMeta::new_readonly(realloc_program_id, false),
-                        AccountMeta::new_readonly(solana_sdk::system_program::id(), false),
+                        AccountMeta::new_readonly(trezoa_sdk::system_program::id(), false),
                     ],
                 )],
                 Some(&mint_pubkey),
@@ -3354,7 +3354,7 @@ fn test_program_sbf_realloc_invoke() {
                     vec![
                         AccountMeta::new(mint_pubkey, true),
                         AccountMeta::new(new_pubkey, true),
-                        AccountMeta::new(solana_sdk::system_program::id(), false),
+                        AccountMeta::new(trezoa_sdk::system_program::id(), false),
                         AccountMeta::new_readonly(realloc_invoke_program_id, false),
                     ],
                 )],
@@ -3596,7 +3596,7 @@ fn test_program_sbf_realloc_invoke() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_processed_inner_instruction() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -3612,26 +3612,26 @@ fn test_program_sbf_processed_inner_instruction() {
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_sibling_instructions",
+        "trezoa_sbf_rust_sibling_instructions",
     );
     let sibling_inner_program_id = load_upgradeable_program_wrapper(
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_sibling_inner_instructions",
+        "trezoa_sbf_rust_sibling_inner_instructions",
     );
     let noop_program_id = load_upgradeable_program_wrapper(
         &bank_client,
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
     let (_, invoke_and_return_program_id) = load_upgradeable_program_and_advance_slot(
         &mut bank_client,
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke_and_return",
+        "trezoa_sbf_rust_invoke_and_return",
     );
 
     let instruction2 = Instruction::new_with_bytes(
@@ -3672,7 +3672,7 @@ fn test_program_sbf_processed_inner_instruction() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_fees() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let congestion_multiplier = 1;
 
@@ -3696,7 +3696,7 @@ fn test_program_fees() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_noop",
+        "trezoa_sbf_rust_noop",
     );
 
     let pre_balance = bank_client.get_balance(&mint_keypair.pubkey()).unwrap();
@@ -3765,7 +3765,7 @@ fn test_get_minimum_delegation() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_get_minimum_delegation",
+        "trezoa_sbf_rust_get_minimum_delegation",
     );
 
     let account_metas = vec![AccountMeta::new_readonly(stake::program::id(), false)];
@@ -3777,7 +3777,7 @@ fn test_get_minimum_delegation() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_program_sbf_inner_instruction_alignment_checks() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -3785,11 +3785,11 @@ fn test_program_sbf_inner_instruction_alignment_checks() {
         ..
     } = create_genesis_config(50);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
-    let noop = create_program(&bank, &bpf_loader_deprecated::id(), "solana_sbf_rust_noop");
+    let noop = create_program(&bank, &bpf_loader_deprecated::id(), "trezoa_sbf_rust_noop");
     let inner_instruction_alignment_check = create_program(
         &bank,
         &bpf_loader_deprecated::id(),
-        "solana_sbf_rust_inner_instruction_alignment_check",
+        "trezoa_sbf_rust_inner_instruction_alignment_check",
     );
 
     // invoke unaligned program, which will call aligned program twice,
@@ -3815,7 +3815,7 @@ fn test_program_sbf_inner_instruction_alignment_checks() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_cpi_account_ownership_writability() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     for direct_mapping in [false, true] {
         let GenesisConfigInfo {
@@ -3839,14 +3839,14 @@ fn test_cpi_account_ownership_writability() {
             &bank_client,
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_invoke",
+            "trezoa_sbf_rust_invoke",
         );
 
         let invoked_program_id = load_upgradeable_program_wrapper(
             &bank_client,
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_invoked",
+            "trezoa_sbf_rust_invoked",
         );
 
         let (bank, realloc_program_id) = load_upgradeable_program_and_advance_slot(
@@ -3854,7 +3854,7 @@ fn test_cpi_account_ownership_writability() {
             bank_forks.as_ref(),
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_realloc",
+            "trezoa_sbf_rust_realloc",
         );
 
         let account_keypair = Keypair::new();
@@ -4000,7 +4000,7 @@ fn test_cpi_account_ownership_writability() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_cpi_account_data_updates() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     for direct_mapping in [false, true] {
         let GenesisConfigInfo {
@@ -4023,7 +4023,7 @@ fn test_cpi_account_data_updates() {
             &bank_client,
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_invoke",
+            "trezoa_sbf_rust_invoke",
         );
 
         let (bank, realloc_program_id) = load_upgradeable_program_and_advance_slot(
@@ -4031,7 +4031,7 @@ fn test_cpi_account_data_updates() {
             bank_forks.as_ref(),
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_realloc",
+            "trezoa_sbf_rust_realloc",
         );
 
         let account_keypair = Keypair::new();
@@ -4150,7 +4150,7 @@ fn test_cpi_account_data_updates() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_cpi_deprecated_loader_realloc() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     for direct_mapping in [false, true] {
         let GenesisConfigInfo {
@@ -4171,7 +4171,7 @@ fn test_cpi_deprecated_loader_realloc() {
         let deprecated_program_id = create_program(
             &bank,
             &bpf_loader_deprecated::id(),
-            "solana_sbf_rust_deprecated_loader",
+            "trezoa_sbf_rust_deprecated_loader",
         );
 
         let mut bank_client = BankClient::new_shared(bank);
@@ -4182,7 +4182,7 @@ fn test_cpi_deprecated_loader_realloc() {
             bank_forks.as_ref(),
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_invoke",
+            "trezoa_sbf_rust_invoke",
         );
 
         let account_keypair = Keypair::new();
@@ -4265,9 +4265,9 @@ fn test_cpi_deprecated_loader_realloc() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_cpi_change_account_data_memory_allocation() {
-    use solana_program_runtime::{declare_process_instruction, loaded_programs::LoadedProgram};
+    use trezoa_program_runtime::{declare_process_instruction, loaded_programs::LoadedProgram};
 
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -4326,7 +4326,7 @@ fn test_cpi_change_account_data_memory_allocation() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke",
+        "trezoa_sbf_rust_invoke",
     );
 
     let account_keypair = Keypair::new();
@@ -4353,7 +4353,7 @@ fn test_cpi_change_account_data_memory_allocation() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_cpi_invalid_account_info_pointers() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -4374,7 +4374,7 @@ fn test_cpi_invalid_account_info_pointers() {
         bank_forks.as_ref(),
         &mint_keypair,
         &authority_keypair,
-        "solana_sbf_rust_invoke",
+        "trezoa_sbf_rust_invoke",
     );
 
     let account_keypair = Keypair::new();
@@ -4416,7 +4416,7 @@ fn test_cpi_invalid_account_info_pointers() {
 #[test]
 #[cfg(feature = "sbf_rust")]
 fn test_deny_executable_write() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -4441,7 +4441,7 @@ fn test_deny_executable_write() {
             bank_forks.as_ref(),
             &mint_keypair,
             &authority_keypair,
-            "solana_sbf_rust_invoke",
+            "trezoa_sbf_rust_invoke",
         );
 
         let account_keypair = Keypair::new();

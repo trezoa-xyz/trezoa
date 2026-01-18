@@ -3,15 +3,15 @@ use {
         block_metadata_notifier_interface::BlockMetadataNotifier,
         geyser_plugin_manager::GeyserPluginManager,
     },
-    agave_geyser_plugin_interface::geyser_plugin_interface::{
+    trezoa_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaBlockInfoV3, ReplicaBlockInfoVersions,
     },
     log::*,
-    solana_accounts_db::stake_rewards::RewardInfo,
-    solana_measure::measure::Measure,
-    solana_metrics::*,
-    solana_sdk::{clock::UnixTimestamp, pubkey::Pubkey},
-    solana_transaction_status::{Reward, Rewards},
+    trezoa_accounts_db::stake_rewards::RewardInfo,
+    trezoa_measure::measure::Measure,
+    trezoa_metrics::*,
+    trezoa_sdk::{clock::UnixTimestamp, pubkey::Pubkey},
+    trezoa_transaction_status::{Reward, Rewards},
     std::sync::{Arc, RwLock},
 };
 

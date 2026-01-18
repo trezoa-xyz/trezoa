@@ -1,8 +1,8 @@
 //! Fee structures.
 
 use crate::native_token::sol_to_lamports;
-#[cfg(not(target_os = "solana"))]
-use solana_program::message::SanitizedMessage;
+#[cfg(not(target_os = "trezoa"))]
+use trezoa_program::message::SanitizedMessage;
 
 /// A fee and its associated compute unit limit
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
@@ -76,7 +76,7 @@ impl FeeStructure {
     }
 
     /// Calculate fee for `SanitizedMessage`
-    #[cfg(not(target_os = "solana"))]
+    #[cfg(not(target_os = "trezoa"))]
     pub fn calculate_fee(
         &self,
         message: &SanitizedMessage,
@@ -139,7 +139,7 @@ impl Default for FeeStructure {
 }
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl ::solana_frozen_abi::abi_example::AbiExample for FeeStructure {
+impl ::trezoa_frozen_abi::abi_example::AbiExample for FeeStructure {
     fn example() -> Self {
         FeeStructure::default()
     }

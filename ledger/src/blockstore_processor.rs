@@ -17,7 +17,7 @@ use {
     log::*,
     rayon::{prelude::*, ThreadPool},
     scopeguard::defer,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts_db::{AccountShrinkThreshold, AccountsDbConfig},
         accounts_index::AccountSecondaryIndexes,
         accounts_update_notifier_interface::AccountsUpdateNotifier,
@@ -27,15 +27,15 @@ use {
             TransactionExecutionDetails, TransactionExecutionResult, TransactionResults,
         },
     },
-    solana_cost_model::cost_model::CostModel,
-    solana_entry::entry::{
+    trezoa_cost_model::cost_model::CostModel,
+    trezoa_entry::entry::{
         self, create_ticks, Entry, EntrySlice, EntryType, EntryVerificationStatus, VerifyRecyclers,
     },
-    solana_measure::{measure, measure::Measure},
-    solana_metrics::datapoint_error,
-    solana_program_runtime::timings::{ExecuteTimingType, ExecuteTimings, ThreadExecuteTimings},
-    solana_rayon_threadlimit::{get_max_thread_count, get_thread_count},
-    solana_runtime::{
+    trezoa_measure::{measure, measure::Measure},
+    trezoa_metrics::datapoint_error,
+    trezoa_program_runtime::timings::{ExecuteTimingType, ExecuteTimings, ThreadExecuteTimings},
+    trezoa_rayon_threadlimit::{get_max_thread_count, get_thread_count},
+    trezoa_runtime::{
         accounts_background_service::{AbsRequestSender, SnapshotRequestKind},
         bank::{Bank, TransactionBalancesSet},
         bank_forks::BankForks,
@@ -46,7 +46,7 @@ use {
         runtime_config::RuntimeConfig,
         transaction_batch::TransactionBatch,
     },
-    solana_sdk::{
+    trezoa_sdk::{
         clock::{Slot, MAX_PROCESSING_AGE},
         feature_set,
         genesis_config::GenesisConfig,
@@ -60,8 +60,8 @@ use {
             VersionedTransaction,
         },
     },
-    solana_transaction_status::token_balances::TransactionTokenBalancesSet,
-    solana_vote::{vote_account::VoteAccountsHashMap, vote_sender_types::ReplayVoteSender},
+    trezoa_transaction_status::token_balances::TransactionTokenBalancesSet,
+    trezoa_vote::{vote_account::VoteAccountsHashMap, vote_sender_types::ReplayVoteSender},
     std::{
         borrow::Cow,
         collections::{HashMap, HashSet},
@@ -87,7 +87,7 @@ struct ReplayEntry {
 }
 
 // get_max_thread_count to match number of threads in the old code.
-// see: https://github.com/solana-labs/solana/pull/24853
+// see: https://github.com/trezoa-team/trezoa/pull/24853
 lazy_static! {
     static ref PAR_THREAD_POOL: ThreadPool = rayon::ThreadPoolBuilder::new()
         .num_threads(get_max_thread_count())
@@ -1946,9 +1946,9 @@ pub mod tests {
         },
         assert_matches::assert_matches,
         rand::{thread_rng, Rng},
-        solana_entry::entry::{create_ticks, next_entry, next_entry_mut},
-        solana_program_runtime::declare_process_instruction,
-        solana_runtime::{
+        trezoa_entry::entry::{create_ticks, next_entry, next_entry_mut},
+        trezoa_program_runtime::declare_process_instruction,
+        trezoa_runtime::{
             genesis_utils::{
                 self, create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs,
             },
@@ -1956,7 +1956,7 @@ pub mod tests {
                 MockInstalledScheduler, MockUninstalledScheduler, SchedulingContext,
             },
         },
-        solana_sdk::{
+        trezoa_sdk::{
             account::{AccountSharedData, WritableAccount},
             epoch_schedule::EpochSchedule,
             hash::Hash,
@@ -1968,8 +1968,8 @@ pub mod tests {
             system_transaction,
             transaction::{Transaction, TransactionError},
         },
-        solana_vote::vote_account::VoteAccount,
-        solana_vote_program::{
+        trezoa_vote::vote_account::VoteAccount,
+        trezoa_vote_program::{
             self,
             vote_state::{VoteState, VoteStateVersions, MAX_LOCKOUT_HISTORY},
             vote_transaction,
@@ -2034,7 +2034,7 @@ pub mod tests {
 
     // Intentionally make slot 1 faulty and ensure that processing sees it as dead
     fn do_test_process_blockstore_with_missing_hashes(blockstore_access_type: AccessType) {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let hashes_per_tick = 2;
         let GenesisConfigInfo {
@@ -2090,7 +2090,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_invalid_slot_tick_count() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2152,7 +2152,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_slot_with_trailing_entry() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             mint_keypair,
@@ -2203,7 +2203,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_incomplete_slot() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2290,7 +2290,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_two_forks_and_squash() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2370,7 +2370,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_two_forks() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2461,7 +2461,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_dead_slot() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2508,7 +2508,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_dead_child() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2568,7 +2568,7 @@ pub mod tests {
 
     #[test]
     fn test_root_with_all_dead_children() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2601,7 +2601,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_epoch_boundary_root() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2693,7 +2693,7 @@ pub mod tests {
 
     #[test]
     fn test_process_empty_entry_is_registered() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -2723,8 +2723,8 @@ pub mod tests {
 
     #[test]
     fn test_process_ledger_simple() {
-        solana_logger::setup();
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        trezoa_logger::setup();
+        let leader_pubkey = trezoa_sdk::pubkey::new_rand();
         let mint = 100;
         let hashes_per_tick = 10;
         let GenesisConfigInfo {
@@ -3039,7 +3039,7 @@ pub mod tests {
 
     #[test]
     fn test_transaction_result_does_not_affect_bankhash() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -3110,7 +3110,7 @@ pub mod tests {
             Ok(())
         });
 
-        let mock_program_id = solana_sdk::pubkey::new_rand();
+        let mock_program_id = trezoa_sdk::pubkey::new_rand();
 
         let bank = Bank::new_with_mockup_builtin_for_tests(
             &genesis_config,
@@ -3190,7 +3190,7 @@ pub mod tests {
 
     #[test]
     fn test_process_entries_2nd_entry_collision_with_self_and_error() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -3376,7 +3376,7 @@ pub mod tests {
                     bank.last_blockhash(),
                     1,
                     0,
-                    &solana_sdk::pubkey::new_rand(),
+                    &trezoa_sdk::pubkey::new_rand(),
                 ));
 
                 next_entry_mut(&mut hash, 0, transactions)
@@ -3534,7 +3534,7 @@ pub mod tests {
             ..
         } = create_genesis_config(11_000);
         let bank = Bank::new_with_bank_forks_for_tests(&genesis_config).0;
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = trezoa_sdk::pubkey::new_rand();
         bank.transfer(1_000, &mint_keypair, &pubkey).unwrap();
         assert_eq!(bank.transaction_count(), 1);
         assert_eq!(bank.get_balance(&pubkey), 1_000);
@@ -3707,7 +3707,7 @@ pub mod tests {
         .unwrap();
         bank_forks.write().unwrap().set_root(
             1,
-            &solana_runtime::accounts_background_service::AbsRequestSender::default(),
+            &trezoa_runtime::accounts_background_service::AbsRequestSender::default(),
             None,
         );
 
@@ -3751,7 +3751,7 @@ pub mod tests {
     fn test_process_entries_stress() {
         // this test throws lots of rayon threads at process_entries()
         //  finds bugs in very low-layer stuff
-        solana_logger::setup();
+        trezoa_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -3799,7 +3799,7 @@ pub mod tests {
                             bank.last_blockhash(),
                             100,
                             100,
-                            &solana_sdk::pubkey::new_rand(),
+                            &trezoa_sdk::pubkey::new_rand(),
                         ));
                         transactions
                     })
@@ -3936,14 +3936,14 @@ pub mod tests {
         // Create array of two transactions which throw different errors
         let account_not_found_tx = system_transaction::transfer(
             &keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &trezoa_sdk::pubkey::new_rand(),
             42,
             bank.last_blockhash(),
         );
         let account_not_found_sig = account_not_found_tx.signatures[0];
         let invalid_blockhash_tx = system_transaction::transfer(
             &mint_keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &trezoa_sdk::pubkey::new_rand(),
             42,
             Hash::default(),
         );
@@ -3991,7 +3991,7 @@ pub mod tests {
             .unwrap()
             .insert(Bank::new_from_parent(
                 bank0.clone(),
-                &solana_sdk::pubkey::new_rand(),
+                &trezoa_sdk::pubkey::new_rand(),
                 1,
             ))
             .clone_without_scheduler();
@@ -4092,7 +4092,7 @@ pub mod tests {
         blockstore_root: Option<Slot>,
         blockstore_access_type: AccessType,
     ) {
-        solana_logger::setup();
+        trezoa_logger::setup();
         /*
             Build fork structure:
                  slot 0
@@ -4292,11 +4292,11 @@ pub mod tests {
                     let mut vote_state = VoteState::default();
                     vote_state.root_slot = Some(root);
                     let mut vote_account =
-                        AccountSharedData::new(1, VoteState::size_of(), &solana_vote_program::id());
+                        AccountSharedData::new(1, VoteState::size_of(), &trezoa_vote_program::id());
                     let versioned = VoteStateVersions::new_current(vote_state);
                     VoteState::serialize(&versioned, vote_account.data_as_mut_slice()).unwrap();
                     (
-                        solana_sdk::pubkey::new_rand(),
+                        trezoa_sdk::pubkey::new_rand(),
                         (stake, VoteAccount::try_from(vote_account).unwrap()),
                     )
                 })
@@ -4358,11 +4358,11 @@ pub mod tests {
         mint_keypair: &Keypair,
         genesis_hash: &Hash,
     ) -> Vec<SanitizedTransaction> {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = trezoa_sdk::pubkey::new_rand();
         let keypair2 = Keypair::new();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey2 = trezoa_sdk::pubkey::new_rand();
         let keypair3 = Keypair::new();
-        let pubkey3 = solana_sdk::pubkey::new_rand();
+        let pubkey3 = trezoa_sdk::pubkey::new_rand();
 
         vec![
             SanitizedTransaction::from_transaction_for_tests(system_transaction::transfer(
@@ -4502,7 +4502,7 @@ pub mod tests {
 
     #[test]
     fn test_rebatch_transactions() {
-        let dummy_leader_pubkey = solana_sdk::pubkey::new_rand();
+        let dummy_leader_pubkey = trezoa_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -4540,8 +4540,8 @@ pub mod tests {
 
     #[test]
     fn test_schedule_batches_for_execution() {
-        solana_logger::setup();
-        let dummy_leader_pubkey = solana_sdk::pubkey::new_rand();
+        trezoa_logger::setup();
+        let dummy_leader_pubkey = trezoa_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,

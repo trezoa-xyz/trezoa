@@ -2,7 +2,7 @@ mod encryption;
 mod with_fee;
 mod without_fee;
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 use {
     crate::encryption::{
         elgamal::ElGamalCiphertext,
@@ -10,7 +10,7 @@ use {
     },
     curve25519_dalek::scalar::Scalar,
 };
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 pub use {
     encryption::{FeeEncryption, TransferAmountCiphertext},
     with_fee::TransferWithFeePubkeys,
@@ -21,7 +21,7 @@ pub use {
     without_fee::{TransferData, TransferProofContext},
 };
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 #[derive(Debug, Copy, Clone)]
 pub enum Role {
     Source,
@@ -33,7 +33,7 @@ pub enum Role {
 /// Takes in a 64-bit number `amount` and a bit length `bit_length`. It returns:
 ///  - the `bit_length` low bits of `amount` interpreted as u64
 ///  - the (64 - `bit_length`) high bits of `amount` interpreted as u64
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 pub fn split_u64(amount: u64, bit_length: usize) -> (u64, u64) {
     if bit_length == 64 {
         (amount, 0)
@@ -44,7 +44,7 @@ pub fn split_u64(amount: u64, bit_length: usize) -> (u64, u64) {
     }
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 pub fn combine_lo_hi_u64(amount_lo: u64, amount_hi: u64, bit_length: usize) -> u64 {
     if bit_length == 64 {
         amount_lo
@@ -53,7 +53,7 @@ pub fn combine_lo_hi_u64(amount_lo: u64, amount_hi: u64, bit_length: usize) -> u
     }
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 fn combine_lo_hi_ciphertexts(
     ciphertext_lo: &ElGamalCiphertext,
     ciphertext_hi: &ElGamalCiphertext,
@@ -63,7 +63,7 @@ fn combine_lo_hi_ciphertexts(
     ciphertext_lo + &(ciphertext_hi * &Scalar::from(two_power))
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 pub fn combine_lo_hi_commitments(
     comm_lo: &PedersenCommitment,
     comm_hi: &PedersenCommitment,
@@ -73,7 +73,7 @@ pub fn combine_lo_hi_commitments(
     comm_lo + comm_hi * &Scalar::from(two_power)
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 pub fn combine_lo_hi_openings(
     opening_lo: &PedersenOpening,
     opening_hi: &PedersenOpening,

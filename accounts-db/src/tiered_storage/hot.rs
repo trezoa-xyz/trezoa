@@ -20,7 +20,7 @@ use {
     bytemuck::{Pod, Zeroable},
     memmap2::{Mmap, MmapOptions},
     modular_bitfield::prelude::*,
-    solana_sdk::{pubkey::Pubkey, stake_history::Epoch},
+    trezoa_sdk::{pubkey::Pubkey, stake_history::Epoch},
     std::{fs::OpenOptions, option::Option, path::Path},
 };
 
@@ -475,7 +475,7 @@ pub mod tests {
         assert_matches::assert_matches,
         memoffset::offset_of,
         rand::{seq::SliceRandom, Rng},
-        solana_sdk::{account::ReadableAccount, hash::Hash, pubkey::Pubkey, stake_history::Epoch},
+        trezoa_sdk::{account::ReadableAccount, hash::Hash, pubkey::Pubkey, stake_history::Epoch},
         tempfile::TempDir,
     };
 

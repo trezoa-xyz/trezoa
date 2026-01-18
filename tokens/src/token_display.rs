@@ -1,6 +1,6 @@
 use {
-    solana_account_decoder::parse_token::real_number_string_trimmed,
-    solana_sdk::native_token::lamports_to_sol,
+    trezoa_account_decoder::parse_token::real_number_string_trimmed,
+    trezoa_sdk::native_token::lamports_to_sol,
     std::{
         fmt::{Debug, Display, Formatter, Result},
         ops::Add,
@@ -43,7 +43,7 @@ impl Token {
         }
     }
 
-    pub fn spl_token(amount: u64, decimals: u8) -> Self {
+    pub fn tpl_token(amount: u64, decimals: u8) -> Self {
         Self {
             amount,
             decimals,

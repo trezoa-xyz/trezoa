@@ -6,12 +6,12 @@ use {
         *,
     },
     crate::cluster_nodes::ClusterNodesCache,
-    solana_entry::entry::Entry,
-    solana_ledger::{
+    trezoa_entry::entry::Entry,
+    trezoa_ledger::{
         blockstore,
         shred::{shred_code, ProcessShredsStats, ReedSolomonCache, Shred, ShredFlags, Shredder},
     },
-    solana_sdk::{
+    trezoa_sdk::{
         genesis_config::ClusterType,
         hash::Hash,
         signature::Keypair,
@@ -230,7 +230,7 @@ impl StandardBroadcastRun {
             }
             // If blockstore already has shreds for this slot,
             // it should not recreate the slot:
-            // https://github.com/solana-labs/solana/blob/92a0b310c/ledger/src/leader_schedule_cache.rs##L139-L148
+            // https://github.com/trezoa-team/trezoa/blob/92a0b310c/ledger/src/leader_schedule_cache.rs##L139-L148
             if blockstore
                 .meta(bank.slot())
                 .unwrap()
@@ -288,11 +288,11 @@ impl StandardBroadcastRun {
         // that the leader started this block. This must be done before the
         // blocks are sent out over the wire, so that the slots we have already
         // sent a shred for are skipped (even if the node reboots):
-        // https://github.com/solana-labs/solana/blob/92a0b310c/ledger/src/leader_schedule_cache.rs#L139-L148
+        // https://github.com/trezoa-team/trezoa/blob/92a0b310c/ledger/src/leader_schedule_cache.rs#L139-L148
         // preventing the node from broadcasting duplicate blocks:
-        // https://github.com/solana-labs/solana/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L132-L142
+        // https://github.com/trezoa-team/trezoa/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L132-L142
         // By contrast Self::insert skips the 1st data shred with index zero:
-        // https://github.com/solana-labs/solana/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L367-L373
+        // https://github.com/trezoa-team/trezoa/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L367-L373
         if let Some(shred) = data_shreds.first() {
             if shred.index() == 0 {
                 blockstore
@@ -368,7 +368,7 @@ impl StandardBroadcastRun {
         let insert_shreds_start = Instant::now();
         let mut shreds = Arc::try_unwrap(shreds).unwrap_or_else(|shreds| (*shreds).clone());
         // The first data shred is inserted synchronously.
-        // https://github.com/solana-labs/solana/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L268-L283
+        // https://github.com/trezoa-team/trezoa/blob/92a0b310c/turbine/src/broadcast_stage/standard_broadcast_run.rs#L268-L283
         if let Some(shred) = shreds.first() {
             if shred.is_data() && shred.index() == 0 {
                 shreds.swap_remove(0);
@@ -515,19 +515,19 @@ mod test {
     use {
         super::*,
         rand::Rng,
-        solana_entry::entry::create_ticks,
-        solana_gossip::cluster_info::{ClusterInfo, Node},
-        solana_ledger::{
+        trezoa_entry::entry::create_ticks,
+        trezoa_gossip::cluster_info::{ClusterInfo, Node},
+        trezoa_ledger::{
             blockstore::Blockstore, genesis_utils::create_genesis_config, get_tmp_ledger_path,
             shred::max_ticks_per_n_shreds,
         },
-        solana_runtime::bank::Bank,
-        solana_sdk::{
+        trezoa_runtime::bank::Bank,
+        trezoa_sdk::{
             genesis_config::GenesisConfig,
             hash::Hash,
             signature::{Keypair, Signer},
         },
-        solana_streamer::socket::SocketAddrSpace,
+        trezoa_streamer::socket::SocketAddrSpace,
         std::{ops::Deref, sync::Arc, time::Duration},
     };
 
@@ -831,12 +831,12 @@ mod test {
 
     #[test]
     fn entries_to_shreds_max() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let keypair = Keypair::new();
         let mut bs = StandardBroadcastRun::new(0);
         bs.slot = 1;
         bs.parent = 0;
-        let entries = create_ticks(10_000, 1, solana_sdk::hash::Hash::default());
+        let entries = create_ticks(10_000, 1, trezoa_sdk::hash::Hash::default());
 
         let mut stats = ProcessShredsStats::default();
 

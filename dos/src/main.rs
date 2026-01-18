@@ -18,24 +18,24 @@
 //! 1. Without blockhash or payer:
 //! 1.1 With invalid signatures
 //! ```bash
-//! solana-dos $COMMON --num-signatures 8
+//! trezoa-dos $COMMON --num-signatures 8
 //! ```
 //! 1.2 With valid signatures
 //! ```bash
-//! solana-dos $COMMON --valid-signatures --num-signatures 8
+//! trezoa-dos $COMMON --valid-signatures --num-signatures 8
 //! ```
 //! 2. With blockhash and payer:
 //! 2.1 Single-instruction transaction
 //! ```bash
-//! solana-dos $COMMON --valid-blockhash --transaction-type transfer --num-instructions 1
+//! trezoa-dos $COMMON --valid-blockhash --transaction-type transfer --num-instructions 1
 //! ```
 //! 2.2 Multi-instruction transaction
 //! ```bash
-//! solana-dos $COMMON --valid-blockhash --transaction-type transfer --num-instructions 8
+//! trezoa-dos $COMMON --valid-blockhash --transaction-type transfer --num-instructions 8
 //! ```
 //! 2.3 Account-creation transaction
 //! ```bash
-//! solana-dos $COMMON --valid-blockhash --transaction-type account-creation
+//! trezoa-dos $COMMON --valid-blockhash --transaction-type account-creation
 //! ```
 //!
 #![allow(clippy::arithmetic_side_effects)]
@@ -45,18 +45,18 @@ use {
     itertools::Itertools,
     log::*,
     rand::{thread_rng, Rng},
-    solana_bench_tps::{bench::generate_and_fund_keypairs, bench_tps_client::BenchTpsClient},
-    solana_client::{connection_cache::ConnectionCache, tpu_connection::TpuConnection},
-    solana_core::repair::serve_repair::{RepairProtocol, RepairRequestHeader, ServeRepair},
-    solana_dos::cli::*,
-    solana_gossip::{
+    trezoa_bench_tps::{bench::generate_and_fund_keypairs, bench_tps_client::BenchTpsClient},
+    trezoa_client::{connection_cache::ConnectionCache, tpu_connection::TpuConnection},
+    trezoa_core::repair::serve_repair::{RepairProtocol, RepairRequestHeader, ServeRepair},
+    trezoa_dos::cli::*,
+    trezoa_gossip::{
         contact_info::Protocol,
         gossip_service::{discover, get_multi_client},
         legacy_contact_info::LegacyContactInfo as ContactInfo,
     },
-    solana_measure::measure::Measure,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_sdk::{
+    trezoa_measure::measure::Measure,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_sdk::{
         hash::Hash,
         instruction::CompiledInstruction,
         message::Message,
@@ -68,8 +68,8 @@ use {
         timing::timestamp,
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_tpu_client::tpu_client::DEFAULT_TPU_CONNECTION_POOL_SIZE,
+    trezoa_streamer::socket::SocketAddrSpace,
+    trezoa_tpu_client::tpu_client::DEFAULT_TPU_CONNECTION_POOL_SIZE,
     std::{
         net::{SocketAddr, UdpSocket},
         process::exit,
@@ -431,7 +431,7 @@ fn get_target(
     let mut target = None;
     if nodes.is_empty() {
         // skip-gossip case
-        target = Some((solana_sdk::pubkey::new_rand(), entrypoint_addr));
+        target = Some((trezoa_sdk::pubkey::new_rand(), entrypoint_addr));
     } else {
         info!("************ NODE ***********");
         for node in nodes {
@@ -756,7 +756,7 @@ fn run_dos<T: 'static + BenchTpsClient + Send + Sync>(
 }
 
 fn main() {
-    solana_logger::setup_with_default_filter();
+    trezoa_logger::setup_with_default_filter();
     let cmd_params = build_cli_parameters();
 
     let (nodes, client) = if !cmd_params.skip_gossip {
@@ -817,17 +817,17 @@ fn main() {
 pub mod test {
     use {
         super::*,
-        solana_client::thin_client::ThinClient,
-        solana_core::validator::ValidatorConfig,
-        solana_faucet::faucet::run_local_faucet,
-        solana_gossip::contact_info::LegacyContactInfo,
-        solana_local_cluster::{
+        trezoa_client::thin_client::ThinClient,
+        trezoa_core::validator::ValidatorConfig,
+        trezoa_faucet::faucet::run_local_faucet,
+        trezoa_gossip::contact_info::LegacyContactInfo,
+        trezoa_local_cluster::{
             cluster::Cluster,
             local_cluster::{ClusterConfig, LocalCluster},
             validator_configs::make_identical_validator_configs,
         },
-        solana_rpc::rpc::JsonRpcConfig,
-        solana_sdk::timing::timestamp,
+        trezoa_rpc::rpc::JsonRpcConfig,
+        trezoa_sdk::timing::timestamp,
     };
 
     const TEST_SEND_BATCH_SIZE: usize = 1;
@@ -841,7 +841,7 @@ pub mod test {
     #[test]
     fn test_dos() {
         let nodes = [ContactInfo::new_localhost(
-            &solana_sdk::pubkey::new_rand(),
+            &trezoa_sdk::pubkey::new_rand(),
             timestamp(),
         )];
         let entrypoint_addr = nodes[0].gossip().unwrap();
@@ -924,7 +924,7 @@ pub mod test {
 
     #[test]
     fn test_dos_random() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let num_nodes = 1;
         let cluster =
             LocalCluster::new_with_equal_stakes(num_nodes, 100, 3, SocketAddrSpace::Unspecified);
@@ -961,7 +961,7 @@ pub mod test {
 
     #[test]
     fn test_dos_without_blockhash() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let num_nodes = 1;
         let cluster =
             LocalCluster::new_with_equal_stakes(num_nodes, 100, 3, SocketAddrSpace::Unspecified);
@@ -1067,7 +1067,7 @@ pub mod test {
     }
 
     fn run_dos_with_blockhash_and_payer(tpu_use_quic: bool) {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         // 1. Create faucet thread
         let faucet_keypair = Keypair::new();

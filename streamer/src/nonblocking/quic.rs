@@ -19,8 +19,8 @@ use {
     quinn_proto::VarIntBoundsExceeded,
     rand::{thread_rng, Rng},
     smallvec::SmallVec,
-    solana_perf::packet::{PacketBatch, PACKETS_PER_BATCH},
-    solana_sdk::{
+    trezoa_perf::packet::{PacketBatch, PACKETS_PER_BATCH},
+    trezoa_sdk::{
         packet::{Meta, PACKET_DATA_SIZE},
         pubkey::Pubkey,
         quic::{
@@ -60,7 +60,7 @@ use {
 const WAIT_FOR_STREAM_TIMEOUT: Duration = Duration::from_millis(100);
 pub const DEFAULT_WAIT_FOR_CHUNK_TIMEOUT: Duration = Duration::from_secs(10);
 
-pub const ALPN_TPU_PROTOCOL_ID: &[u8] = b"solana-tpu";
+pub const ALPN_TPU_PROTOCOL_ID: &[u8] = b"trezoa-tpu";
 
 const CONNECTION_CLOSE_CODE_DROPPED_ENTRY: u32 = 1;
 const CONNECTION_CLOSE_REASON_DROPPED_ENTRY: &[u8] = b"dropped";
@@ -1232,7 +1232,7 @@ pub mod test {
         async_channel::unbounded as async_unbounded,
         crossbeam_channel::{unbounded, Receiver},
         quinn::{ClientConfig, IdleTimeout, TransportConfig},
-        solana_sdk::{
+        trezoa_sdk::{
             net::DEFAULT_TPU_COALESCE,
             quic::{QUIC_KEEP_ALIVE, QUIC_MAX_TIMEOUT},
             signature::Keypair,
@@ -1507,7 +1507,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_timeout() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (t, exit, receiver, server_address, _stats) = setup_quic_server(None, 1);
         check_timeout(receiver, server_address).await;
         exit.store(true, Ordering::Relaxed);
@@ -1516,7 +1516,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_packet_batcher() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (pkt_batch_sender, pkt_batch_receiver) = unbounded();
         let (ptk_sender, pkt_receiver) = async_unbounded();
         let exit = Arc::new(AtomicBool::new(false));
@@ -1564,7 +1564,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_stream_timeout() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (t, exit, _receiver, server_address, stats) = setup_quic_server(None, 1);
 
         let conn1 = make_client_endpoint(&server_address, None).await;
@@ -1594,7 +1594,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_block_multiple_connections() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (t, exit, _receiver, server_address, _stats) = setup_quic_server(None, 1);
         check_block_multiple_connections(server_address).await;
         exit.store(true, Ordering::Relaxed);
@@ -1603,7 +1603,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_multiple_connections_on_single_client_endpoint() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (t, exit, _receiver, server_address, stats) = setup_quic_server(None, 2);
 
         let client_socket = UdpSocket::bind("127.0.0.1:0").unwrap();
@@ -1662,7 +1662,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_multiple_writes() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (t, exit, receiver, server_address, _stats) = setup_quic_server(None, 1);
         check_multiple_writes(receiver, server_address, None).await;
         exit.store(true, Ordering::Relaxed);
@@ -1671,7 +1671,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_staked_connection_removal() {
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let client_keypair = Keypair::new();
         let stakes = HashMap::from([(client_keypair.pubkey(), 100_000)]);
@@ -1697,7 +1697,7 @@ pub mod test {
     #[tokio::test]
     async fn test_quic_server_zero_staked_connection_removal() {
         // In this test, the client has a pubkey, but is not in stake table.
-        solana_logger::setup();
+        trezoa_logger::setup();
 
         let client_keypair = Keypair::new();
         let stakes = HashMap::from([(client_keypair.pubkey(), 0)]);
@@ -1722,7 +1722,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_unstaked_connection_removal() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let (t, exit, receiver, server_address, stats) = setup_quic_server(None, 1);
         check_multiple_writes(receiver, server_address, None).await;
         exit.store(true, Ordering::Relaxed);
@@ -1740,7 +1740,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_unstaked_node_connect_failure() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let s = UdpSocket::bind("127.0.0.1:0").unwrap();
         let exit = Arc::new(AtomicBool::new(false));
         let (sender, _) = unbounded();
@@ -1777,7 +1777,7 @@ pub mod test {
 
     #[tokio::test]
     async fn test_quic_server_multiple_streams() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let s = UdpSocket::bind("127.0.0.1:0").unwrap();
         let exit = Arc::new(AtomicBool::new(false));
         let (sender, receiver) = unbounded();
@@ -1821,7 +1821,7 @@ pub mod test {
     #[test]
     fn test_prune_table_with_ip() {
         use std::net::Ipv4Addr;
-        solana_logger::setup();
+        trezoa_logger::setup();
         let mut table = ConnectionTable::new();
         let mut num_entries = 5;
         let max_connections_per_peer = 10;
@@ -1870,7 +1870,7 @@ pub mod test {
 
     #[test]
     fn test_prune_table_with_unique_pubkeys() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let mut table = ConnectionTable::new();
 
         // We should be able to add more entries than max_connections_per_peer, since each entry is
@@ -1905,7 +1905,7 @@ pub mod test {
 
     #[test]
     fn test_prune_table_with_non_unique_pubkeys() {
-        solana_logger::setup();
+        trezoa_logger::setup();
         let mut table = ConnectionTable::new();
 
         let max_connections_per_peer = 10;
@@ -1965,7 +1965,7 @@ pub mod test {
     #[test]
     fn test_prune_table_random() {
         use std::net::Ipv4Addr;
-        solana_logger::setup();
+        trezoa_logger::setup();
         let mut table = ConnectionTable::new();
         let num_entries = 5;
         let max_connections_per_peer = 10;
@@ -2002,7 +2002,7 @@ pub mod test {
     #[test]
     fn test_remove_connections() {
         use std::net::Ipv4Addr;
-        solana_logger::setup();
+        trezoa_logger::setup();
         let mut table = ConnectionTable::new();
         let num_ips = 5;
         let max_connections_per_peer = 10;

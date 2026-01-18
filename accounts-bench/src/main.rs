@@ -5,7 +5,7 @@ extern crate log;
 use {
     clap::{crate_description, crate_name, value_t, App, Arg},
     rayon::prelude::*,
-    solana_accounts_db::{
+    trezoa_accounts_db::{
         accounts::Accounts,
         accounts_db::{
             test_utils::{create_test_accounts, update_accounts_bench},
@@ -16,19 +16,19 @@ use {
         ancestors::Ancestors,
         rent_collector::RentCollector,
     },
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    trezoa_measure::measure::Measure,
+    trezoa_sdk::{
         genesis_config::ClusterType, pubkey::Pubkey, sysvar::epoch_schedule::EpochSchedule,
     },
     std::{env, fs, path::PathBuf, sync::Arc},
 };
 
 fn main() {
-    solana_logger::setup();
+    trezoa_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(trezoa_version::version!())
         .arg(
             Arg::with_name("num_slots")
                 .long("num_slots")
@@ -133,7 +133,7 @@ fn main() {
             let results_store = accounts.accounts_db.update_accounts_hash_with_verify(
                 CalcAccountsHashDataSource::Storages,
                 false,
-                solana_sdk::clock::Slot::default(),
+                trezoa_sdk::clock::Slot::default(),
                 &ancestors,
                 None,
                 &EpochSchedule::default(),

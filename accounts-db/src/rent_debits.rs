@@ -1,6 +1,6 @@
 use {
     crate::stake_rewards::RewardInfo,
-    solana_sdk::{pubkey::Pubkey, reward_type::RewardType},
+    trezoa_sdk::{pubkey::Pubkey, reward_type::RewardType},
     std::collections::HashMap,
 };
 

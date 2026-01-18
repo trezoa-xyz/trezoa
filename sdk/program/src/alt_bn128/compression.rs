@@ -65,7 +65,7 @@ impl From<AltBn128CompressionError> for u64 {
     }
 }
 
-#[cfg(not(target_os = "solana"))]
+#[cfg(not(target_os = "trezoa"))]
 mod target_arch {
 
     use {
@@ -188,7 +188,7 @@ mod target_arch {
     }
 }
 
-#[cfg(target_os = "solana")]
+#[cfg(target_os = "trezoa")]
 mod target_arch {
     use {
         super::*,

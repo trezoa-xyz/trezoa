@@ -31,9 +31,9 @@ SOLANA_RELEASE=$CHANNEL_OR_TAG
 SOLANA_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
 SOLANA_DOWNLOAD_ROOT=https://release.anza.xyz
 EOF
-cat install/agave-install-init.sh >>release.anza.xyz-install
+cat install/trezoa-install-init.sh >>release.anza.xyz-install
 
 echo --- GCS: "install"
-upload-gcs-artifact "/solana/release.anza.xyz-install" "gs://anza-release/$CHANNEL_OR_TAG/install"
+upload-gcs-artifact "/trezoa/release.anza.xyz-install" "gs://anza-release/$CHANNEL_OR_TAG/install"
 echo Published to:
 ci/format-url.sh https://release.anza.xyz/"$CHANNEL_OR_TAG"/install

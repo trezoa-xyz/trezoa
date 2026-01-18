@@ -10,10 +10,10 @@ use {
             resolve_command, AuthorizeArgs, Command, MoveArgs, NewArgs, RebaseArgs, SetLockupArgs,
         },
     },
-    solana_cli_config::Config,
-    solana_rpc_client::rpc_client::RpcClient,
-    solana_rpc_client_api::client_error::Error as ClientError,
-    solana_sdk::{
+    trezoa_cli_config::Config,
+    trezoa_rpc_client::rpc_client::RpcClient,
+    trezoa_rpc_client_api::client_error::Error as ClientError,
+    trezoa_sdk::{
         message::Message,
         native_token::lamports_to_sol,
         pubkey::Pubkey,
@@ -22,7 +22,7 @@ use {
         stake::{instruction::LockupArgs, state::Lockup},
         transaction::Transaction,
     },
-    solana_stake_program::stake_state,
+    trezoa_stake_program::stake_state,
     std::{env, error::Error},
 };
 
