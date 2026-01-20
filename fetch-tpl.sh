@@ -26,8 +26,8 @@ fetch_program() {
     return
   fi
 
-  if [[ -r ~/.cache/trezoa-spl/$so ]]; then
-    cp ~/.cache/trezoa-spl/"$so" "$so"
+  if [[ -r ~/.cache/trezoa-tpl/$so ]]; then
+    cp ~/.cache/trezoa-tpl/"$so" "$so"
   else
     echo "Downloading $name $version"
     so_name="spl_${name//-/_}.so"
@@ -38,8 +38,8 @@ fetch_program() {
         "https://github.com/trezoa-team/trezoa-program-library/releases/download/$name-v$version/$so_name"
     )
 
-    mkdir -p ~/.cache/trezoa-spl
-    cp "$so" ~/.cache/trezoa-spl/"$so"
+    mkdir -p ~/.cache/trezoa-tpl
+    cp "$so" ~/.cache/trezoa-tpl/"$so"
   fi
 
 }

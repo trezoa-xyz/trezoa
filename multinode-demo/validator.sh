@@ -58,7 +58,7 @@ while [[ -n $1 ]]; do
     elif [[ $1 = --no-restart ]]; then
       no_restart=1
       shift
-    elif [[ $1 = --node-sol ]]; then
+    elif [[ $1 = --node-trz ]]; then
       node_trz="$2"
       shift 2
     elif [[ $1 = --no-airdrop ]]; then

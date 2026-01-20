@@ -263,7 +263,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             );
             let balances = get_balances(&client, addresses)?;
             let lamports: u64 = balances.into_iter().map(|(_, bal)| bal).sum();
-            let sol = lamports_to_trz(lamports);
+            let trz = lamports_to_trz(lamports);
             println!("{trz} TRZ");
         }
         Command::Authorize(args) => {

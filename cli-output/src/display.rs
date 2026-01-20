@@ -53,8 +53,8 @@ pub fn build_balance_message_with_config(
     let value = if config.use_lamports_unit {
         lamports.to_string()
     } else {
-        let sol = lamports_to_trz(lamports);
-        let sol_str = format!("{sol:.9}");
+        let trz = lamports_to_trz(lamports);
+        let trz_str = format!("{trz:.9}");
         if config.trim_trailing_zeros {
             sol_str
                 .trim_end_matches('0')

@@ -109,7 +109,7 @@ command_step() {
     timeout_in_minutes: $3
     artifact_paths: "log-*.txt"
     agents:
-      queue: "sol-private"
+      queue: "trz-private"
 EOF
 }
 
@@ -138,7 +138,7 @@ all_test_steps() {
   wait_step
 
   # Full test suite
-  .buildkite/scripts/build-stable.sh sol-private >> "$output_file"
+  .buildkite/scripts/build-stable.sh trz-private >> "$output_file"
 
   # Docs tests
   if affects \
@@ -173,7 +173,7 @@ all_test_steps() {
     timeout_in_minutes: 35
     artifact_paths: "sbf-dumps.tar.bz2"
     agents:
-      queue: "sol-private"
+      queue: "trz-private"
 EOF
   else
     annotate --style info \
@@ -196,7 +196,7 @@ EOF
              ^ci/downstream-projects \
              .buildkite/scripts/build-downstream-projects.sh \
       ; then
-    .buildkite/scripts/build-downstream-projects.sh sol-private >> "$output_file"
+    .buildkite/scripts/build-downstream-projects.sh trz-private >> "$output_file"
   else
     annotate --style info \
       "downstream-projects skipped as no relevant files were modified"
@@ -223,7 +223,7 @@ EOF
              ^ci/test-coverage.sh \
              ^ci/test-bench.sh \
       ; then
-    .buildkite/scripts/build-bench.sh sol-private >> "$output_file"
+    .buildkite/scripts/build-bench.sh trz-private >> "$output_file"
   else
     annotate --style info --context test-bench \
       "Bench skipped as no .rs files were modified"

@@ -301,7 +301,7 @@ fn main() {
         None
     };
 
-    let faucet_lamports = trz_to_lamports(value_of(&matches, "faucet_sol").unwrap());
+    let faucet_lamports = trz_to_lamports(value_of(&matches, "faucet_trz").unwrap());
     let faucet_keypair_file = ledger_path.join("faucet-keypair.json");
     if !faucet_keypair_file.exists() {
         write_keypair_file(&Keypair::new(), faucet_keypair_file.to_str().unwrap()).unwrap_or_else(
@@ -361,7 +361,7 @@ fn main() {
             ("mint_address", "--mint"),
             ("ticks_per_slot", "--ticks-per-slot"),
             ("slots_per_epoch", "--slots-per-epoch"),
-            ("faucet_sol", "--faucet-sol"),
+            ("faucet_trz", "--faucet-trz"),
             ("deactivate_feature", "--deactivate-feature"),
         ] {
             if matches.is_present(name) {

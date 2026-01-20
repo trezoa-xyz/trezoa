@@ -41,7 +41,7 @@ args=(
                         "$TREZOA_CONFIG_DIR"/bootstrap-validator/stake-account.json
 )
 
-"$TREZOA_ROOT"/fetch-spl.sh
+"$TREZOA_ROOT"/fetch-tpl.sh
 if [[ -r tpl-genesis-args.sh ]]; then
   SPL_GENESIS_ARGS=$(cat "$TREZOA_ROOT"/tpl-genesis-args.sh)
   #shellcheck disable=SC2207

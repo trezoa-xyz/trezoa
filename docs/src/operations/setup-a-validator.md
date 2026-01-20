@@ -183,16 +183,16 @@ sudo apt update
 sudo apt upgrade
 ```
 
-## Sol User
+## Trz User
 
-Create a new Ubuntu user, named `sol`, for running the validator:
+Create a new Ubuntu user, named `trz`, for running the validator:
 
 ```
-sudo adduser sol
+sudo adduser trz
 ```
 
 It is a best practice to always run your validator as a non-root user, like the
-`sol` user we just created.
+`trz` user we just created.
 
 ## Hard Drive Setup
 
@@ -249,10 +249,10 @@ you mount it. Make a directory for mounting your drive:
 sudo mkdir -p /mnt/ledger
 ```
 
-Next, change the ownership of the directory to your `sol` user:
+Next, change the ownership of the directory to your `trz` user:
 
 ```
-sudo chown -R sol:sol /mnt/ledger
+sudo chown -R trz:trz /mnt/ledger
 ```
 
 Now you can mount the drive:
@@ -288,7 +288,7 @@ sudo mkdir -p /mnt/accounts
 Change the ownership of that directory:
 
 ```
-sudo chown -R sol:sol /mnt/accounts
+sudo chown -R trz:trz /mnt/accounts
 ```
 
 And lastly, mount the drive:
@@ -365,20 +365,20 @@ On your personal computer, not on the validator, securely copy your
 validator server:
 
 ```
-scp validator-keypair.json sol@<server.hostname>:
-scp vote-account-keypair.json sol@<server.hostname>:
+scp validator-keypair.json trz@<server.hostname>:
+scp vote-account-keypair.json trz@<server.hostname>:
 ```
 
 > **Note**: The `vote-account-keypair.json` does not have any function other
 > than identifying the vote account to potential delegators. Only the public key
 > of the vote account is important once the account is created.
 
-## Switch to the sol User
+## Switch to the trz User
 
-On the validator server, switch to the `sol` user:
+On the validator server, switch to the `trz` user:
 
 ```
-su - sol
+su - trz
 ```
 
 ## Install The Trezoa CLI on Remote Machine
@@ -391,19 +391,19 @@ operators to build from source rather than using the pre built binaries.
 
 ## Create A Validator Startup Script
 
-In your sol home directory (e.g. `/home/sol/`), create a folder called `bin`.
+In your trz home directory (e.g. `/home/trz/`), create a folder called `bin`.
 Inside that folder create a file called `validator.sh` and make it executable:
 
 ```
-mkdir -p /home/sol/bin
-touch /home/sol/bin/validator.sh
-chmod +x /home/sol/bin/validator.sh
+mkdir -p /home/trz/bin
+touch /home/trz/bin/validator.sh
+chmod +x /home/trz/bin/validator.sh
 ```
 
 Next, open the `validator.sh` file for editing:
 
 ```
-nano /home/sol/bin/validator.sh
+nano /home/trz/bin/validator.sh
 ```
 
 Copy and paste the following contents into `validator.sh` then save the file:
@@ -417,7 +417,7 @@ exec trezoa-validator \
     --known-validator Ft5fbkqNa76vnsjYNwjDZUXoTWpP7VYm3mtsaQckQADN \
     --known-validator 9QxCLckBiJc783jnMvXZubK4wH86Eqqvashtrwvcsgkv \
     --only-known-rpc \
-    --log /home/sol/trezoa-validator.log \
+    --log /home/trz/trezoa-validator.log \
     --ledger /mnt/ledger \
     --rpc-port 8899 \
     --dynamic-port-range 8000-8020 \
@@ -439,7 +439,7 @@ Test that your `validator.sh` file is running properly by executing the
 `validator.sh` script:
 
 ```
-/home/sol/bin/validator.sh
+/home/trz/bin/validator.sh
 ```
 
 The script should execute the `trezoa-validator` process. In a new terminal
@@ -460,10 +460,10 @@ As a spot check, you will want to make sure your validator is producing
 reasonable log output (**warning**, there will be a lot of log output).
 
 In a new terminal window, ssh into your validator machine, switch users to the
-`sol` user and `tail` the logs:
+`trz` user and `tail` the logs:
 
 ```
-su - sol
+su - trz
 tail -f trezoa-validator.log
 ```
 
@@ -560,14 +560,14 @@ Make sure to implement log rotate as well. Once you have the system service
 configured, start your validator using the newly configured service:
 
 ```
-sudo systemctl enable --now sol
+sudo systemctl enable --now trz
 ```
 
 Now verify that the validator is running properly by tailing the logs and using
 the commands mentioned earlier to check gossip and Trezoa validators:
 
 ```
-tail -f /home/sol/trezoa-validator*.log
+tail -f /home/trz/trezoa-validator*.log
 ```
 
 ## Monitoring

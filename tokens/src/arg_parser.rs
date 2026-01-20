@@ -159,7 +159,7 @@ where
                 .arg(
                     Arg::with_name("unlocked_sol")
                         .default_value("1.0")
-                        .long("unlocked-sol")
+                        .long("unlocked-trz")
                         .takes_value(true)
                         .value_name("SOL_AMOUNT")
                         .help("Amount of TRZ to put in system account to pay for fees"),
@@ -239,7 +239,7 @@ where
                 .arg(
                     Arg::with_name("unlocked_sol")
                         .default_value("1.0")
-                        .long("unlocked-sol")
+                        .long("unlocked-trz")
                         .takes_value(true)
                         .value_name("SOL_AMOUNT")
                         .help("Amount of TRZ to put in system account to pay for fees"),

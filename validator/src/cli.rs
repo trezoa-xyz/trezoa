@@ -2492,11 +2492,11 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .help("Keep this amount of shreds in root slots."),
         )
         .arg(
-            Arg::with_name("faucet_sol")
-                .long("faucet-sol")
+            Arg::with_name("faucet_trz")
+                .long("faucet-trz")
                 .takes_value(true)
                 .value_name("TRZ")
-                .default_value(default_args.faucet_sol.as_str())
+                .default_value(default_args.faucet_trz.as_str())
                 .help(
                     "Give the faucet address this much TRZ in genesis. \
                      If the ledger already exists then this parameter is silently ignored",
@@ -2514,7 +2514,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
         )
         .arg(
             Arg::with_name("faucet_per_time_sol_cap")
-                .long("faucet-per-time-sol-cap")
+                .long("faucet-per-time-trz-cap")
                 .takes_value(true)
                 .value_name("TRZ")
                 .min_values(0)
@@ -2525,7 +2525,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
         )
         .arg(
             Arg::with_name("faucet_per_request_sol_cap")
-                .long("faucet-per-request-sol-cap")
+                .long("faucet-per-request-trz-cap")
                 .takes_value(true)
                 .value_name("TRZ")
                 .min_values(0)
@@ -2583,7 +2583,7 @@ pub struct DefaultTestArgs {
     pub rpc_port: String,
     pub faucet_port: String,
     pub limit_ledger_size: String,
-    pub faucet_sol: String,
+    pub faucet_trz: String,
     pub faucet_time_slice_secs: String,
 }
 
@@ -2597,7 +2597,7 @@ impl DefaultTestArgs {
              * 40MB-150MB range when running `trezoa-test-validator`
              */
             limit_ledger_size: 10_000.to_string(),
-            faucet_sol: (1_000_000.).to_string(),
+            faucet_trz: (1_000_000.).to_string(),
             faucet_time_slice_secs: (faucet::TIME_SLICE).to_string(),
         }
     }

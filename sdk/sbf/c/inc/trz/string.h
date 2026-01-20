@@ -3,8 +3,8 @@
  * @brief Trezoa string and memory system calls and utilities
  */
 
-#include <sol/constants.h>
-#include <sol/types.h>
+#include <trz/constants.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {

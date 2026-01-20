@@ -3,9 +3,9 @@
  * @brief Trezoa logging utilities
  */
 
-#include <sol/types.h>
-#include <sol/string.h>
-#include <sol/entrypoint.h>
+#include <trz/types.h>
+#include <trz/string.h>
+#include <trz/entrypoint.h>
 
 #ifdef __cplusplus
 extern "C" {

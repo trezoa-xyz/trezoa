@@ -3,7 +3,7 @@
  * @brief Trezoa keccak system call
 **/
 
-#include <sol/types.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {

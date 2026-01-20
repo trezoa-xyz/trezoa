@@ -24,10 +24,10 @@ rm -rf usr/
   scripts/cargo-install-all.sh sdk/docker-trezoa/usr
 
 cp -f ../../scripts/run.sh usr/bin/trezoa-run.sh
-cp -f ../../fetch-spl.sh usr/bin/
+cp -f ../../fetch-tpl.sh usr/bin/
 (
   cd usr/bin
-  ./fetch-spl.sh
+  ./fetch-tpl.sh
 )
 
 docker build -t trezoaxyz/trezoa:"$CHANNEL_OR_TAG" .

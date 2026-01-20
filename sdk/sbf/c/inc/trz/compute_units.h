@@ -3,9 +3,9 @@
  * @brief Trezoa logging utilities
  */
 
-#include <sol/types.h>
-#include <sol/string.h>
-#include <sol/entrypoint.h>
+#include <trz/types.h>
+#include <trz/string.h>
+#include <trz/entrypoint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +14,7 @@ extern "C" {
 /**
  * Prints a string to stdout
  */
-/* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE sdk/sbf/c/inc/sol/inc/compute_units.inc AND RUN `cargo run --bin gen-headers` */
+/* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE sdk/sbf/c/inc/trz/inc/compute_units.inc AND RUN `cargo run --bin gen-headers` */
 #ifndef SOL_SBFV2
 uint64_t sol_remaining_compute_units();
 #else

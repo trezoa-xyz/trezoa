@@ -1116,8 +1116,8 @@ pub fn fund_keypairs<T: 'static + BenchTpsClient + Send + Sync + ?Sized>(
         if funding_key_balance < total + rent {
             error!(
                 "funder has {}, needed {}",
-                Sol(funding_key_balance),
-                Sol(total)
+                Trz(funding_key_balance),
+                Trz(total)
             );
             let latest_blockhash = get_latest_blockhash(client.as_ref());
             if client

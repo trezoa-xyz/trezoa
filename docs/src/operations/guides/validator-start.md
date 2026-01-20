@@ -342,7 +342,7 @@ These items may include (but are not limited to):
 Running the validator as a systemd unit is one easy way to manage running in the
 background.
 
-Assuming you have a user called `sol` on your machine, create the file `/etc/systemd/system/sol.service` with
+Assuming you have a user called `trz` on your machine, create the file `/etc/systemd/system/trz.service` with
 the following:
 
 ```
@@ -355,29 +355,29 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User=sol
+User=trz
 LimitNOFILE=1000000
 LogRateLimitIntervalSec=0
-Environment="PATH=/bin:/usr/bin:/home/sol/.local/share/trezoa/install/active_release/bin"
-ExecStart=/home/sol/bin/validator.sh
+Environment="PATH=/bin:/usr/bin:/home/trz/.local/share/trezoa/install/active_release/bin"
+ExecStart=/home/trz/bin/validator.sh
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Now create `/home/sol/bin/validator.sh` to include the desired
+Now create `/home/trz/bin/validator.sh` to include the desired
 `trezoa-validator` command-line. Ensure that the 'exec' command is used to
 start the validator process (i.e. "exec trezoa-validator ..."). This is
 important because without it, logrotate will end up killing the validator
 every time the logs are rotated.
 
-Ensure that running `/home/sol/bin/validator.sh` manually starts
-the validator as expected. Don't forget to mark it executable with `chmod +x /home/sol/bin/validator.sh`
+Ensure that running `/home/trz/bin/validator.sh` manually starts
+the validator as expected. Don't forget to mark it executable with `chmod +x /home/trz/bin/validator.sh`
 
 Start the service with:
 
 ```bash
-sudo systemctl enable --now sol
+sudo systemctl enable --now trz
 ```
 
 ### Logging
@@ -408,23 +408,23 @@ instead of the validator's, which will kill them both.
 #### Using logrotate
 
 An example setup for the `logrotate`, which assumes that the validator is
-running as a systemd service called `sol.service` and writes a log file at
-/home/sol/trezoa-validator.log:
+running as a systemd service called `trz.service` and writes a log file at
+/home/trz/trezoa-validator.log:
 
 ```bash
 # Setup log rotation
 
-cat > logrotate.sol <<EOF
-/home/sol/trezoa-validator.log {
+cat > logrotate.trz <<EOF
+/home/trz/trezoa-validator.log {
   rotate 7
   daily
   missingok
   postrotate
-    systemctl kill -s USR1 sol.service
+    systemctl kill -s USR1 trz.service
   endscript
 }
 EOF
-sudo cp logrotate.sol /etc/logrotate.d/sol
+sudo cp logrotate.trz /etc/logrotate.d/trz
 systemctl restart logrotate.service
 ```
 
@@ -449,8 +449,8 @@ partition.
 Example configuration:
 
 1. `sudo mkdir /mnt/trezoa-accounts`
-2. Add a 300GB tmpfs partition by adding a new line containing `tmpfs /mnt/trezoa-accounts tmpfs rw,size=300G,user=sol 0 0` to `/etc/fstab`
-   (assuming your validator is running under the user "sol"). **CAREFUL: If you
+2. Add a 300GB tmpfs partition by adding a new line containing `tmpfs /mnt/trezoa-accounts tmpfs rw,size=300G,user=trz 0 0` to `/etc/fstab`
+   (assuming your validator is running under the user "trz"). **CAREFUL: If you
    incorrectly edit /etc/fstab your machine may no longer boot**
 3. Create at least 250GB of swap space
 

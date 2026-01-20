@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-spl() {
+tpl() {
   (
     # Mind the order!
     PROGRAMS=(
@@ -19,11 +19,11 @@ spl() {
       single-pool/program
     )
     set -x
-    rm -rf spl
-    git clone https://github.com/trezoa-team/trezoa-program-library.git spl
+    rm -rf tpl
+    git clone https://github.com/trezoa-team/trezoa-program-library.git tpl
     # copy toolchain file to use trezoa's rust version
-    cp "$TREZOA_DIR"/rust-toolchain.toml spl/
-    cd spl || exit 1
+    cp "$TREZOA_DIR"/rust-toolchain.toml tpl/
+    cd tpl || exit 1
 
     project_used_trezoa_version=$(sed -nE 's/trezoa-sdk = \"[>=<~]*(.*)\"/\1/p' <"token/program/Cargo.toml")
     echo "used trezoa version: $project_used_trezoa_version"

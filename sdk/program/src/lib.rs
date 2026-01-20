@@ -31,9 +31,9 @@
 //! [sysvar]: crate::sysvar
 //!
 //! Idiomatic examples of `trezoa-program` usage can be found in
-//! [the Trezoa Program Library][spl].
+//! [the Trezoa Program Library][tpl].
 //!
-//! [spl]: https://github.com/trezoa-team/trezoa-program-library
+//! [tpl]: https://github.com/trezoa-team/trezoa-program-library
 //!
 //! # Defining a trezoa program
 //!
@@ -243,7 +243,7 @@
 //!   [`Instruction::new_with_bincode`]: instruction::Instruction::new_with_bincode
 //!
 //! - __[`Pack`]__, a Trezoa-specific serialization API that is used by many
-//!   older programs in the [Trezoa Program Library][spl] to define their
+//!   older programs in the [Trezoa Program Library][tpl] to define their
 //!   account format. It is difficult to implement and does not define a
 //!   language-independent serialization format. It is not generally recommended
 //!   for new code.

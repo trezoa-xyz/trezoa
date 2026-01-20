@@ -547,7 +547,7 @@ impl StakeSubCommands for App<'_, '_> {
                 .arg(compute_unit_price_arg())
                 .arg(
                     Arg::with_name("rent_exempt_reserve_sol")
-                        .long("rent-exempt-reserve-sol")
+                        .long("rent-exempt-reserve-trz")
                         .value_name("AMOUNT")
                         .takes_value(true)
                         .validator(is_amount)
@@ -1983,8 +1983,8 @@ pub fn process_split_stake(
     let rent_exempt_reserve = if !sign_only {
         let stake_minimum_delegation = rpc_client.get_stake_minimum_delegation()?;
         if lamports < stake_minimum_delegation {
-            let lamports = Sol(lamports);
-            let stake_minimum_delegation = Sol(stake_minimum_delegation);
+            let lamports = Trz(lamports);
+            let stake_minimum_delegation = Trz(stake_minimum_delegation);
             return Err(CliError::BadParameter(format!(
                 "need at least {stake_minimum_delegation} for minimum stake delegation, \
                  provided: {lamports}"

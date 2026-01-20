@@ -71,7 +71,7 @@ fi
 if [[ -e "$ledgerDir"/genesis.bin || -e "$ledgerDir"/genesis.tar.bz2 ]]; then
   echo "Use existing genesis"
 else
-  ./fetch-spl.sh
+  ./fetch-tpl.sh
   if [[ -r tpl-genesis-args.sh ]]; then
     SPL_GENESIS_ARGS=$(cat tpl-genesis-args.sh)
   fi

@@ -3,7 +3,7 @@
  * @brief Trezoa assert and panic utilities
  */
 
-#include <sol/types.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +16,7 @@ extern "C" {
  * Prints the line number where the panic occurred and then causes
  * the SBF VM to immediately halt execution. No accounts' data are updated
  */
-/* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE sdk/sbf/c/inc/sol/inc/assert.inc AND RUN `cargo run --bin gen-headers` */
+/* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE sdk/sbf/c/inc/trz/inc/assert.inc AND RUN `cargo run --bin gen-headers` */
 #ifndef SOL_SBFV2
 void sol_panic_(const char *, uint64_t, uint64_t, uint64_t);
 #else

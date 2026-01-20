@@ -39,7 +39,7 @@ approximately 1.0 TRZ per day.
 ### Economics of running a consensus validator
 
 As an operator, it is important to understand how a consensus validator spends
-and earns sol through the protocol.
+and earns trz through the protocol.
 
 All validators who vote (consensus validators) must pay vote transaction fees
 for blocks that they agree with. The cost of voting can be up to 1.1 TRZ per

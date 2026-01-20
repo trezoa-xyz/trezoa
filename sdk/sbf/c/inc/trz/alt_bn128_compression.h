@@ -3,7 +3,7 @@
  * @brief Trezoa bn128 elliptic curve compression and decompression
 **/
 
-#include <sol/types.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,7 +58,7 @@ extern "C" {
  * @param result 64 byte array to hold the result. ...
  * @return 0 if executed successfully
  */
-/* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE sdk/sbf/c/inc/sol/inc/alt_bn128_compression.inc AND RUN `cargo run --bin gen-headers` */
+/* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE sdk/sbf/c/inc/trz/inc/alt_bn128_compression.inc AND RUN `cargo run --bin gen-headers` */
 #ifndef SOL_SBFV2
 uint64_t sol_alt_bn128_compression(
         const uint64_t op,

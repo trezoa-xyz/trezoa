@@ -53,5 +53,5 @@ jobs:
 
       - shell: bash
         run: |
-          source .github/scripts/downstream-project-spl-install-deps.sh
+          source .github/scripts/downstream-project-tpl-install-deps.sh
           ./scripts/build-downstream-trezoaanchor-projects.sh ${{ matrix.version }}

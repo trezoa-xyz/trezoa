@@ -11,14 +11,14 @@ jobs:
     # eat up all the minutes GitHub allocation to free accounts.
     if: >
       github.event_name != 'schedule'
-      || github.repository == 'solana-labs/solana'
+      || github.repository == 'trezoa-team/trezoa'
 
     strategy:
       fail-fast: false
       matrix:
         branch:
           - master
-    uses: ./.github/workflows/downstream-project-spl.yml
+    uses: ./.github/workflows/downstream-project-tpl.yml
     with:
       branch: ${{ matrix.branch }}
 

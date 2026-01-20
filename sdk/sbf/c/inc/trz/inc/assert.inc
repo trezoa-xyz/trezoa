@@ -3,7 +3,7 @@
  * @brief Trezoa assert and panic utilities
  */
 
-#include <sol/types.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {

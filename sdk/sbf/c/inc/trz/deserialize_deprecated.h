@@ -4,9 +4,9 @@
  * a program with `SBFLoader1111111111111111111111111111111111`
  */
 
- #include <sol/types.h>
- #include <sol/pubkey.h>
- #include <sol/entrypoint.h>
+ #include <trz/types.h>
+ #include <trz/pubkey.h>
+ #include <trz/entrypoint.h>
 
 #ifdef __cplusplus
 extern "C" {

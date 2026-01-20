@@ -3,7 +3,7 @@
  * @brief Trezoa bn128 elliptic curve compression and decompression
 **/
 
-#include <sol/types.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -3,7 +3,7 @@
  * @brief Trezoa Last Restart Slot system call
  */
 
-#include <sol/types.h>
+#include <trz/types.h>
 
 #ifdef __cplusplus
 extern "C" {

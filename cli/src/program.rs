@@ -2610,7 +2610,7 @@ fn complete_partial_program_init(
         {
             return Err(format!(
                 "Buffer account has a balance: {:?}; it may already be in use",
-                Sol(account.lamports)
+                Trz(account.lamports)
             )
             .into());
         }

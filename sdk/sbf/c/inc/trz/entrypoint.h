@@ -3,9 +3,9 @@
  * @brief Trezoa program entrypoint
  */
 
-#include <sol/constants.h>
-#include <sol/types.h>
-#include <sol/pubkey.h>
+#include <trz/constants.h>
+#include <trz/types.h>
+#include <trz/pubkey.h>
 
 #ifdef __cplusplus
 extern "C" {

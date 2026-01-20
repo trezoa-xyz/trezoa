@@ -17,8 +17,8 @@ on:
       - "cargo-test-bpf"
       - "cargo-build-sbf"
       - "cargo-test-sbf"
-      - "ci/downstream-projects/run-spl.sh"
-      - ".github/workflows/downstream-project-spl.yml"
+      - "ci/downstream-projects/run-tpl.sh"
+      - ".github/workflows/downstream-project-tpl.yml"
   workflow_call:
     inputs:
       branch:
@@ -52,8 +52,8 @@ jobs:
 
       - shell: bash
         run: |
-          source .github/scripts/downstream-project-spl-common.sh
-          source .github/scripts/downstream-project-spl-install-deps.sh
+          source .github/scripts/downstream-project-tpl-common.sh
+          source .github/scripts/downstream-project-tpl-install-deps.sh
           if [ -n "$SKIP_SPL_DOWNSTREAM_PROJECT_TEST" ]; then
             exit 0
           fi
@@ -104,8 +104,8 @@ jobs:
 
       - shell: bash
         run: |
-          source .github/scripts/downstream-project-spl-common.sh
-          source .github/scripts/downstream-project-spl-install-deps.sh
+          source .github/scripts/downstream-project-tpl-common.sh
+          source .github/scripts/downstream-project-tpl-install-deps.sh
           if [ -n "$SKIP_SPL_DOWNSTREAM_PROJECT_TEST" ]; then
             exit 0
           fi
@@ -158,7 +158,7 @@ jobs:
 
       - shell: bash
         run: |
-          source .github/scripts/downstream-project-spl-common.sh
+          source .github/scripts/downstream-project-tpl-common.sh
           if [ -n "$SKIP_SPL_DOWNSTREAM_PROJECT_TEST" ]; then
             exit 0
           fi

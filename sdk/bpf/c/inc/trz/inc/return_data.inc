@@ -3,8 +3,8 @@
  * @brief Trezoa return data system calls
 **/
 
-#include <sol/types.h>
-#include <sol/pubkey.h>
+#include <trz/types.h>
+#include <trz/pubkey.h>
 
 #ifdef __cplusplus
 extern "C"

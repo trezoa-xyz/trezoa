@@ -17,7 +17,7 @@ jobs:
     # Forks do not need to run this, especially on cron schedule.
     if: >
       github.event_name != 'schedule'
-      || github.repository == 'solana-labs/solana'
+      || github.repository == 'trezoa-team/trezoa'
 
     runs-on: ubuntu-latest
     steps:

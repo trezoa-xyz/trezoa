@@ -16,7 +16,7 @@ use {
     trezoa_rpc_client_api::{client_error, response::RpcVoteAccountStatus},
     trezoa_sdk::{
         hash::Hash,
-        native_token::{trz_to_lamports, Sol},
+        native_token::{trz_to_lamports, Trz},
         pubkey::Pubkey,
     },
     std::{
@@ -289,9 +289,9 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                 info!(
                     "Current stake: {:.2}% | Total stake: {}, current stake: {}, delinquent: {}",
                     current_stake_percent,
-                    Sol(total_stake),
-                    Sol(total_current_stake),
-                    Sol(total_delinquent_stake)
+                    Trz(total_stake),
+                    Trz(total_current_stake),
+                    Trz(total_delinquent_stake)
                 );
 
                 if transaction_count > last_transaction_count {
@@ -347,7 +347,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                         if *balance < config.minimum_validator_identity_balance {
                             failures.push((
                                 "balance",
-                                format!("{} has {}", formatted_validator_identity, Sol(*balance)),
+                                format!("{} has {}", formatted_validator_identity, Trz(*balance)),
                             ));
                         }
                     }

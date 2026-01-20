@@ -26,9 +26,9 @@ update_trezoaanchor_dependencies() {
   while IFS='' read -r line; do tomls+=("$line"); done < <(find "$project_root" -name Cargo.toml)
 
   sed -i -e "s#\(trezoaanchor-lang = \"\)[^\"]*\(\"\)#\1=$trezoaanchor_ver\2#g" "${tomls[@]}" || return $?
-  sed -i -e "s#\(trezoaanchor-spl = \"\)[^\"]*\(\"\)#\1=$trezoaanchor_ver\2#g" "${tomls[@]}" || return $?
+  sed -i -e "s#\(trezoaanchor-tpl = \"\)[^\"]*\(\"\)#\1=$trezoaanchor_ver\2#g" "${tomls[@]}" || return $?
   sed -i -e "s#\(trezoaanchor-lang = { version = \"\)[^\"]*\(\"\)#\1=$trezoaanchor_ver\2#g" "${tomls[@]}" || return $?
-  sed -i -e "s#\(trezoaanchor-spl = { version = \"\)[^\"]*\(\"\)#\1=$trezoaanchor_ver\2#g" "${tomls[@]}" || return $?
+  sed -i -e "s#\(trezoaanchor-tpl = { version = \"\)[^\"]*\(\"\)#\1=$trezoaanchor_ver\2#g" "${tomls[@]}" || return $?
 }
 
 patch_crates_io_trezoaanchor() {
@@ -36,7 +36,7 @@ patch_crates_io_trezoaanchor() {
   declare trezoaanchor_dir="$2"
   cat >> "$Cargo_toml" <<EOF
 trezoaanchor-lang = { path = "$trezoaanchor_dir/lang" }
-trezoaanchor-spl = { path = "$trezoaanchor_dir/spl" }
+trezoaanchor-tpl = { path = "$trezoaanchor_dir/tpl" }
 EOF
 }
 
@@ -59,7 +59,7 @@ trezoaanchor() {
   patch_crates_io_trezoa Cargo.toml "$trezoa_dir"
 
   $cargo test
-  (cd spl && $cargo_build_sbf --features dex metadata stake)
+  (cd tpl && $cargo_build_sbf --features dex metadata stake)
   (cd client && $cargo test --all-features)
 
   trezoaanchor_dir=$PWD
