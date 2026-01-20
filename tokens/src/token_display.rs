@@ -7,12 +7,12 @@ use {
     },
 };
 
-const SOL_SYMBOL: &str = "◎";
+const TRZ_SYMBOL: &str = "◎";
 
 #[derive(PartialEq, Eq)]
 pub enum TokenType {
-    Sol,
-    SplToken,
+    Trz,
+    TplToken,
 }
 
 pub struct Token {
@@ -24,22 +24,22 @@ pub struct Token {
 impl Token {
     fn write_with_symbol(&self, f: &mut Formatter) -> Result {
         match &self.token_type {
-            TokenType::Sol => {
+            TokenType::Trz => {
                 let amount = lamports_to_trz(self.amount);
-                write!(f, "{SOL_SYMBOL}{amount}")
+                write!(f, "{TRZ_SYMBOL}{amount}")
             }
-            TokenType::SplToken => {
+            TokenType::TplToken => {
                 let amount = real_number_string_trimmed(self.amount, self.decimals);
                 write!(f, "{amount} tokens")
             }
         }
     }
 
-    pub fn sol(amount: u64) -> Self {
+    pub fn trz(amount: u64) -> Self {
         Self {
             amount,
             decimals: 9,
-            token_type: TokenType::Sol,
+            token_type: TokenType::Trz,
         }
     }
 
@@ -47,7 +47,7 @@ impl Token {
         Self {
             amount,
             decimals,
-            token_type: TokenType::SplToken,
+            token_type: TokenType::TplToken,
         }
     }
 }

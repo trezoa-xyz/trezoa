@@ -624,7 +624,7 @@ pub fn process_allocations(
     let starting_total_tokens = if let Some(tpl_token_args) = &args.tpl_token_args {
         Token::tpl_token(starting_total_tokens, tpl_token_args.decimals)
     } else {
-        Token::sol(starting_total_tokens)
+        Token::trz(starting_total_tokens)
     };
     println!(
         "{} {}",
@@ -655,8 +655,8 @@ pub fn process_allocations(
             )
         } else {
             (
-                Token::sol(distributed_tokens),
-                Token::sol(undistributed_tokens),
+                Token::trz(distributed_tokens),
+                Token::trz(undistributed_tokens),
             )
         };
     println!("{} {}", style("Distributed:").bold(), distributed_tokens,);
