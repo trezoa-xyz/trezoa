@@ -9,11 +9,11 @@ There are a number of initiatives that may help operators get started or grow th
 
 ## Trezoa Foundation Delegation Program
 
-The Trezoa Foundation helps facilitate the growth of the consensus validator network by running a SOL delegation program. The program is open to new applicants. You can find out more information [here](https://trezoa.org/delegation-program)
+The Trezoa Foundation helps facilitate the growth of the consensus validator network by running a TRZ delegation program. The program is open to new applicants. You can find out more information [here](https://trezoa.org/delegation-program)
 
 ## Tour De Sun 22
 
-Delegation program participants who operate a performant testnet node, may also join Tour De Sun 22 (TdS22).  The program gives locked SOL incentive payments to operators for running approved hardware on Testnet. For more information, see [TdS22](https://trezoa.org/tds22).
+Delegation program participants who operate a performant testnet node, may also join Tour De Sun 22 (TdS22).  The program gives locked TRZ incentive payments to operators for running approved hardware on Testnet. For more information, see [TdS22](https://trezoa.org/tds22).
 
 ## Trezoa Foundation Server Program
 

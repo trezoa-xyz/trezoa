@@ -1,10 +1,10 @@
-/// Partial SPL Token declarations inlined to avoid an external dependency on the tpl-token crate
+/// Partial TPL Token declarations inlined to avoid an external dependency on the tpl-token crate
 use trezoa_sdk::pubkey::{Pubkey, PUBKEY_BYTES};
 
-trezoa_sdk::declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+trezoa_sdk::declare_id!("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic");
 
 pub mod program_v3_4_0 {
-    trezoa_sdk::declare_id!("NToK4t5AQzxPNpUA84DkxgfXaVDbDQQjpHKCqsbY46B");
+    trezoa_sdk::declare_id!("2ksAQKZgYVt6KBb9QDAkxUxorR3md4GJCknxZmGWCiLF");
 }
 
 /*
@@ -19,21 +19,21 @@ pub mod program_v3_4_0 {
         close_authority: COption<Pubkey>,
     }
 */
-pub const SPL_TOKEN_ACCOUNT_MINT_OFFSET: usize = 0;
-pub const SPL_TOKEN_ACCOUNT_OWNER_OFFSET: usize = 32;
-const SPL_TOKEN_ACCOUNT_LENGTH: usize = 165;
+pub const TPL_TOKEN_ACCOUNT_MINT_OFFSET: usize = 0;
+pub const TPL_TOKEN_ACCOUNT_OWNER_OFFSET: usize = 32;
+const TPL_TOKEN_ACCOUNT_LENGTH: usize = 165;
 
 pub trait GenericTokenAccount {
     fn valid_account_data(account_data: &[u8]) -> bool;
 
     // Call after account length has already been verified
     fn unpack_account_owner_unchecked(account_data: &[u8]) -> &Pubkey {
-        Self::unpack_pubkey_unchecked(account_data, SPL_TOKEN_ACCOUNT_OWNER_OFFSET)
+        Self::unpack_pubkey_unchecked(account_data, TPL_TOKEN_ACCOUNT_OWNER_OFFSET)
     }
 
     // Call after account length has already been verified
     fn unpack_account_mint_unchecked(account_data: &[u8]) -> &Pubkey {
-        Self::unpack_pubkey_unchecked(account_data, SPL_TOKEN_ACCOUNT_MINT_OFFSET)
+        Self::unpack_pubkey_unchecked(account_data, TPL_TOKEN_ACCOUNT_MINT_OFFSET)
     }
 
     // Call after account length has already been verified
@@ -61,18 +61,18 @@ pub trait GenericTokenAccount {
 pub struct Account;
 impl Account {
     pub fn get_packed_len() -> usize {
-        SPL_TOKEN_ACCOUNT_LENGTH
+        TPL_TOKEN_ACCOUNT_LENGTH
     }
 }
 
 impl GenericTokenAccount for Account {
     fn valid_account_data(account_data: &[u8]) -> bool {
-        account_data.len() == SPL_TOKEN_ACCOUNT_LENGTH
+        account_data.len() == TPL_TOKEN_ACCOUNT_LENGTH
     }
 }
 
 pub mod native_mint {
-    trezoa_sdk::declare_id!("So11111111111111111111111111111111111111112");
+    trezoa_sdk::declare_id!("tr11111111111111111111111111111111111111112");
 
     /*
         Mint {

@@ -3,7 +3,7 @@ use {
         stakes::{create_and_add_stakes, StakerInfo},
         unlocks::UnlockInfo,
     },
-    trezoa_sdk::{genesis_config::GenesisConfig, native_token::LAMPORTS_PER_SOL},
+    trezoa_sdk::{genesis_config::GenesisConfig, native_token::LAMPORTS_PER_TRZ},
 };
 
 // 9 month schedule is 100% after 9 months
@@ -12,7 +12,7 @@ const UNLOCKS_ALL_AT_9_MONTHS: UnlockInfo = UnlockInfo {
     cliff_years: 0.75,
     unlocks: 0,
     unlock_years: 0.0,
-    custodian: "Mc5XB47H3DKJHym5RLa9mPzWv5snERsF3KNv5AauXK8",
+    custodian: "A2LZoYq94bySye8Qa4TnZspvJQnrgQd7NiPuMEieYBkD",
 };
 
 // 9 month schedule is 50% after 9 months, then monthly for 2 years
@@ -21,7 +21,7 @@ const UNLOCKS_HALF_AT_9_MONTHS: UnlockInfo = UnlockInfo {
     cliff_years: 0.75,
     unlocks: 24,
     unlock_years: 2.0,
-    custodian: "Mc5XB47H3DKJHym5RLa9mPzWv5snERsF3KNv5AauXK8",
+    custodian: "8r6iJbRw7ULWcjes2gF6VZQQaXjhawNrb6Kd5x6eo1TH",
 };
 
 // no lockups
@@ -30,189 +30,189 @@ const UNLOCKS_ALL_DAY_ZERO: UnlockInfo = UnlockInfo {
     cliff_years: 0.0,
     unlocks: 0,
     unlock_years: 0.0,
-    custodian: "Mc5XB47H3DKJHym5RLa9mPzWv5snERsF3KNv5AauXK8",
+    custodian: "EAqG8MyX3ajBFifbHMkahRzk7oP7hVdUKSfzoa3gdMN5",
 };
 
 pub const CREATOR_STAKER_INFOS: &[StakerInfo] = &[
     StakerInfo {
         name: "impossible pizza",
-        staker: "uE3TVEffRp69mrgknYr71M18GDqL7GxCNGYYRjb3oUt",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("59SLqk4ete5QttM1WmjfMA7uNJnJVFLQqXJSy9rvuj7c"),
+        staker: "7F59bWU1psj6XbDpE85W8A6RPdJsuUYwA2xGMzhQMCB2",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("38khRBgnnMoYhLaFdooECQHpQqkKv3pFAAacaKTjHGoy"),
     },
     StakerInfo {
         name: "nutritious examination",
-        staker: "9noVEZreMmgQvE8iyKmxy7CGTJ2enELyuJ1qxFtXrfJB",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("ERnx3Csgu3LjrGGrCeCUZzuHguRu6XabT1kufSB1NDWi"),
+        staker: "24T1S3mNsQ6Y9XG1vZMXhVKh6X65c7AunG5EwPWi6o8Q",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("5F3LmeAZZhDWCrchKkzv8bhwUBttD3nSbcYdhpxhuJjr"),
     },
     StakerInfo {
         name: "tidy impression",
-        staker: "BU7LA4kYvicfPCp22EM2Tth3eaeWAXYo6yCgWXQFJ42z",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("5eKcGy7ZCPJdQSQGVnfmT7kGz6MKPMKaNaMEYJbmwhuT"),
+        staker: "4yBgKuKH2ibkKatvQWxaAV96wUJXPCJL4ZzZj8wjPjAB",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("GHM2gv6rCERk78eQmixUncTJ4yqPE412nZfC6sNPRREW"),
     },
     StakerInfo {
         name: "dramatic treatment",
-        staker: "BrNFrFeuev8TosKhRe2kvVZTYrcUuYaqCfptWutxs17B",
-        lamports: 1_205_602 * LAMPORTS_PER_SOL,
-        withdrawer: Some("2pKqwFKfKj2nGrknPNDSP8vXGYrgAjd28fT6yLew8sT3"),
+        staker: "BBjtzqCbRJ7qqxrSQHW9AnSLvQbTnPefGDTU3uZr3AM7",
+        lamports: 1_205_602 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("fPD2Nk2AFtZ1BvLVo1Mg4yC3Ris7ToJcap2EkMXpetH"),
     },
     StakerInfo {
         name: "angry noise",
-        staker: "34HCVh8Yx4jNkaeLUQEKibFKUZDPQMjWzkXy8qUfdhS4",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("Hw3sP6PreBtFCnwXbNvUypMhty62GXibjfiZ1zHBXFk6"),
+        staker: "F7CtAUNi5R3pNXEgZk25A8BHTz27gQG3ZccM33DxgsEs",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("26NoTKv54273yFWA7Q6hMv2B6fv3iZgCGsroqmQzS5Be"),
     },
     StakerInfo {
         name: "hard cousin",
-        staker: "AyZb3xrZE8wnS6gYBdsJg5v8CjyrX2ZGXU2zMakCFyYd",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("9j3WzBSZRHrD2DbzFTUVVi81QX6boVvUTpGWcSiMwD5W"),
+        staker: "GSoY3Ms13UPPHicT44n1y8t5dbdBdPbbRh2aLhk9wn73",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("3XAyC9DuEykZ6vZLXkhFyjknXp33yyX2QBtm7573LxSg"),
     },
     StakerInfo {
         name: "lopsided skill",
-        staker: "7SbpY8LmZUb5XRqDbyoreUrSVVV9c39wkpEz81kEAXu5",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("EJyZGbQ1PmpcWxfqGME6SUNHfurh1zggDqCT7rV9xLzL"),
+        staker: "8NgCT5mJBEiutKDaAm5ms2jMNz26dj4E5Tvm1AvYM2vU",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("6wBMd3VbpPskFP1TzrzJTU2eVU4kTp4ocqBcLt3uRs4W"),
     },
     StakerInfo {
         name: "red snake",
-        staker: "C9CfFpmLDsQsz6wt7MrrZquNB5oS4QkpJkmDAiboVEZZ",
-        lamports: 3_655_292 * LAMPORTS_PER_SOL,
-        withdrawer: Some("JBGnGdLyo7V2z9hz51mnnbyDp9sBACtw5WYH9YRG8n7e"),
+        staker: "EH175WiZnmBe7GKN1npsnrmqxD8qFNx6hQnwnVD11ThM",
+        lamports: 3_655_292 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("7TzwCQTq1inw6S2DQ6xDCJrZ442HxdPTf4CXGxn1L8CU"),
     },
     StakerInfo {
         name: "jolly year",
-        staker: "5WbxKiW7bghkr8JN6ZAv2TQt4PfJFvtuqNaN8gyQ5UzU",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("43XAfG3AFiF1ockdh7xp91fpFyZkbWSZq9ZFBCGUVV41"),
+        staker: "7AfKfd2rpZ561KR4pD4EkBF3QcstSUu3MNonVQiEievo",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("6qYY4vxwp1Ej8ticg9eTsMKnuqiLT7q6E8kQdmuU4nxe"),
     },
     StakerInfo {
         name: "typical initiative",
-        staker: "Gc8XnHU6Nnriwt9RbEwi7PTosx4YanLyXak9GTbB8VaH",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("7s2GVwFo8VSrCwX9Tztt42ueiEaUtJ6zCEHU8XGvuf5E"),
+        staker: "3DPJ6p6BsCAf3bMaGYzRuXa816gjNWu8dvxM5YMfHzxS",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("6LYevd7MgbwXBoUzWCh25aKtNxf6m98YR2BNUCyCqitR"),
     },
     StakerInfo {
         name: "deserted window",
-        staker: "AMmYEynkd78uNTZDFFrMw6NKjWTgqW7M8EFjvajk23VR",
-        lamports: 3_655_292 * LAMPORTS_PER_SOL,
-        withdrawer: Some("23PJYLS1WFLqhXnXq2Hobc17DbvZaoinoTZYLyGRT8E2"),
+        staker: "Gsx74r6RdfxsPCm1HEaRxNatVfqsyai8ZYmfYW1zR6PD",
+        lamports: 3_655_292 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("CJw8Ebz6ByeMTYVFw4UJB7qTcwPkaN9XHo5hvmwHUF6p"),
     },
     StakerInfo {
         name: "eight nation",
-        staker: "4qWoqt71p7h6siSDS6osu4oVWpw8R7E6uYYiY7Z6oJbH",
-        lamports: 103_519 * LAMPORTS_PER_SOL,
-        withdrawer: Some("6bFjx3egMjVsGKFb445564a4bwgibwbUB2tVFsJcdPv7"),
+        staker: "FExuDdpEVLpAFQWp8Z7yeReL8TQt5DuNwNrp7H8XJNi5",
+        lamports: 103_519 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("3Psq4iswtTCCyhYX98fG23EKWPuCxu9QUxvzKzwVbQcF"),
     },
     StakerInfo {
         name: "earsplitting meaning",
-        staker: "GYitoBY53E9awc56NWHJ2kxMwj4do5GSmvTRowjGaRDw",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("jXMEkVQQpoqebVMGN7DfpvdRLwJDEkoVNrwPVphNm7i"),
+        staker: "6RNqXmqgQMcSqD2sB8ZarcdcdaZ9hhBRbceTktw2gM8V",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("CLXFZ3SNqjULmRNP3VTGp4EeMwXEJ4MrG6oQt8ck4Ldb"),
     },
     StakerInfo {
         name: "alike cheese",
-        staker: "Drg9uSvSEfjtn15jqmmrEQnA4pvU1ToYSGSa1Dv9C6Fk",
-        lamports: 3_880_295 * LAMPORTS_PER_SOL,
-        withdrawer: Some("BxmwgfnyAqZnqRCJGdsEea35pcc92GFTcyGeSj4RNfJJ"),
+        staker: "3M7CWtXbk7LvmULPqPCTr6JmmQTh7zgasCGp9jKgPNVv",
+        lamports: 3_880_295 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("HopfNzj4Bf1dk3CU7WtFVBjH9HsBFdHaHDi9XhFDKYWs"),
     },
     StakerInfo {
         name: "noisy honey",
-        staker: "95HsPFFvwbWpk42MKzenauSoULNzk8Tg6fc6EiJhLsUZ",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("Aj3K933zdRQhYEJi2Yjz8hJWXN3Z3hrKJQtPtE8VmUnq"),
+        staker: "7DqZ2AyXt6yrQqn9tUKAJ13ZdfdZo8UdCYgcSXPTBLgg",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("DwCD8wGe2LbeTm4BUgqYXDyL91YTartFkyWuGM4HkZ9c"),
     },
 ];
 
 pub const SERVICE_STAKER_INFOS: &[StakerInfo] = &[
     StakerInfo {
         name: "wretched texture",
-        staker: "B1hegzthtfNQxyEPzkESySxRjMidNqaxrzbQ28GaEwn8",
-        lamports: 225_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("HWzeqw1Yk5uiLgT2uGUim5ocFJNCwYUFbeCtDVpx9yUb"),
+        staker: "AS9b6EqgsajcdhiL1cS5Ldfvedp9tErWcuRMfJFzVA1M",
+        lamports: 225_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("9xqxE22nUd3FkLyuakBJtGmzLpypaJLonMNitQiajeto"),
     },
     StakerInfo {
         name: "unbecoming silver",
-        staker: "4AcoZa1P8fF5XK21RJsiuMRZPEScbbWNc75oakRFHiBz",
-        lamports: 28_800 * LAMPORTS_PER_SOL,
+        staker: "561yxJPbDzFKkzt3AmzqL4iU3ZhLR8dnSLcZzQWiMqG2",
+        lamports: 28_800 * LAMPORTS_PER_TRZ,
         withdrawer: None,
     },
     StakerInfo {
         name: "inexpensive uncle",
-        staker: "AkJ7yssRqS3X4UWLUsPTxbP6LfVgdPYBWH4Jgk5EETgZ",
-        lamports: 300_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("6mudxxoe5VyXXNXsJ3NSGSTGESfG2t86PBCQGbouHpXX"),
+        staker: "ArGN44MVfziY8h3GqQicPw85ccDXCZktHhuWb7tmmL6j",
+        lamports: 300_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("8H52tcndoUghPSn9Z5m7mHa85B2p9zcyeeNhTVPJCeZ5"),
     },
     StakerInfo {
         name: "hellish money",
-        staker: "4DVkqvRP8y26JvzNwsnQEQuC7HASwpGs58GsAT9XJMVg",
-        lamports: 200_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("ASJpWZAxY96kbciLqzb7sg45gsH32yPzGcxjn7HPcARn"),
+        staker: "3jQ68JD9k6XM76xRXFSv7RTqkJGjf3N9CaWxyrtPK6Z1",
+        lamports: 200_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("Dd1X4xs1nZht5tEiFax54V4Vbbu4o7h799rXzbjwhKdT"),
     },
     StakerInfo {
         name: "full grape",
-        staker: "B2EWnwgmNd3KMpD71yZMijhML1jd4TYp96zJdhMiWZ7b",
-        lamports: 450_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("9oaCkokBBhgBsgyg4sL7fMJyQseaJb1TbADZeoPdpWdc"),
+        staker: "8h9zXSHphvvT6mLHg5iPzFHbh3E7wxsT44na6kC91VBj",
+        lamports: 450_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("ARxd8PEUymjaCSsyVTvjuP8ZQmWB6b6SHGbTeXb7Hqwm"),
     },
     StakerInfo {
         name: "nice ghost",
-        staker: "HtQS1CH3nsUHmnLpenj5W6KHzFWTf3mzCn1mTqK7LkB7",
-        lamports: 650_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("4YnNnycEZXCkuVs2hDthdNxMD4E8wc7ZPgyAK7Lm1uZc"),
+        staker: "D1jj6HDL1w8jKdUdaqQSKqe5pjxsBtuu94yr2jmA7Xad",
+        lamports: 650_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("H5S5RwvBFTowAKR2H5rYG25WETTVyzGTBjXpLybQR4Gu"),
     },
 ];
 
 pub const FOUNDATION_STAKER_INFOS: &[StakerInfo] = &[
     StakerInfo {
         name: "lyrical supermarket",
-        staker: "4xh7vtQCTim3vgpQ1dQQWjtKrBSkbtL3s15FimXVJAAP",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("C7WS9ic7KN9XNcLsNoMvzTvbzURM3rFGDEQN7qJMWNLn"),
+        staker: "Eegb9Xfdw3osvpyp6C4A27FbY4Xo5mf5nKD6zTKBoLLg",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("EFZVCh98yKruYSfkPQtFNQ9bYc7ZFaZgKWto7FPMppr2"),
     },
     StakerInfo {
         name: "frequent description",
-        staker: "95Nf8XfoecteSXU9nbcvzkrFQdu6FqPaH3EvhwLaC83t",
-        lamports: 57_500_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("FdGYQdiRky8NZzN9wZtczTBcWLYYRXrJ3LMDhqDPn5rM"),
+        staker: "6hbKpUbU3cVbEnwaYBbEmbW3KH2QZ5zHjHaVCoJhGFzp",
+        lamports: 57_500_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("4Ue2iEebfc2EVMi2HZXeDdBJxUkrUSxzfC5e12aC7v9M"),
     },
 ];
 
 pub const GRANTS_STAKER_INFOS: &[StakerInfo] = &[
     StakerInfo {
         name: "rightful agreement",
-        staker: "8w5cgUQfXAZZWyVgenPHpQ1uABXUVLnymqXbuZPx7yqt",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("EDwSQShtUWQtmFfN9SpUUd6hgonL7tRdxngAsNKv9Pe6"),
+        staker: "GJfsR6LkmFGxc5f9SsDFE14wi1BuzyiMUZAnjJ9GcX7e",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("31Te9tjzCDDoDmRD6szmEPXGQJr18Wm57fYZSQzT4NTL"),
     },
     StakerInfo {
         name: "tasty location",
-        staker: "9eyXtP43dCp59oyvWG2R7WQCeJ2bA6TWoLzXg1KTDfQQ",
-        lamports: 15_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("9BgvWHerNACjnx6ZpK51k2LEsnwBP3gFwWDzhKkHKH1m"),
+        staker: "86CJ5wrtNajMU5HDfWVcZQEDcqw7DrH6dP79dXwbnn9Y",
+        lamports: 15_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("Gb7pXxtHGNcvvfyTnTKbFNd3RhPbTrBnd62xJjPwU3qi"),
     },
 ];
 
 pub const COMMUNITY_STAKER_INFOS: &[StakerInfo] = &[
     StakerInfo {
         name: "shrill charity",
-        staker: "Eo1iDtrZZiAkQFA8u431hedChaSUnPbU8MWg849MFvEZ",
-        lamports: 5_000_000 * LAMPORTS_PER_SOL,
-        withdrawer: Some("8CUUMKYNGxdgYio5CLHRHyzMEhhVRMcqefgE6dLqnVRK"),
+        staker: "98AGRGmcsvDYRoqEENe1fc2igXjtcus4hBNJXsLsK6Zt",
+        lamports: 5_000_000 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("4D7zQ58Pk3WBpCdA4SWWyMiMMNPvgLLfXxm2t3X4Mdas"),
     },
     StakerInfo {
         name: "legal gate",
-        staker: "7KCzZCbZz6V1U1YXUpBNaqQzQCg2DKo8JsNhKASKtYxe",
-        lamports: 30_301_032 * LAMPORTS_PER_SOL,
-        withdrawer: Some("92viKFftk1dJjqJwreFqT2qHXxjSUuEE9VyHvTdY1mpY"),
+        staker: "Be8okakasrZrRmXd28YBoYHWi3gQNmrcZqTB7Xk6BkuM",
+        lamports: 30_301_032 * LAMPORTS_PER_TRZ,
+        withdrawer: Some("2PbY21k2woySs3Zco6dhuTwuHdQ32uhVByaXLEsBpgJ8"),
     },
     StakerInfo {
         name: "cluttered complaint",
-        staker: "2J8mJU6tWg78DdQVEqMfpN3rMeNbcRT9qGL3yLbmSXYL",
-        lamports: 153_333_633 * LAMPORTS_PER_SOL + 41 * LAMPORTS_PER_SOL / 100,
-        withdrawer: Some("7kgfDmgbEfypBujqn4tyApjf8H7ZWuaL3F6Ah9vQHzgR"),
+        staker: "9vbMHXWF8vJbeeTgUseRFZqMYdv5RTzMhvVwGUCiL1bt",
+        lamports: 153_333_633 * LAMPORTS_PER_TRZ + 41 * LAMPORTS_PER_TRZ / 100,
+        withdrawer: Some("8t4okDfqncS28AJFAXPeyHA1Jpcm65cMkBMnCYxoLTnt"),
     },
 ];
 
@@ -250,14 +250,14 @@ pub fn add_genesis_accounts(genesis_config: &mut GenesisConfig, mut issued_lampo
             &UNLOCKS_ALL_DAY_ZERO,
         );
 
-    // "one thanks" (community pool) gets 500_000_000SOL (total) - above distributions
+    // "one thanks" (community pool) gets 500_000_000TRZ (total) - above distributions
     create_and_add_stakes(
         genesis_config,
         &StakerInfo {
             name: "one thanks",
-            staker: "7vEAL3nS9CWmy1q6njUUyHE7Cf5RmyQpND6CsoHjzPiR",
-            lamports: (500_000_000 * LAMPORTS_PER_SOL).saturating_sub(issued_lamports),
-            withdrawer: Some("3FFaheyqtyAXZSYxDzsr5CVKvJuvZD1WE1VEsBtDbRqB"),
+            staker: "7axYbQqAowikFvoQQ2LXxmaB6CAgnPuK9aHDskZDsPf1",
+            lamports: (500_000_000 * LAMPORTS_PER_TRZ).saturating_sub(issued_lamports),
+            withdrawer: Some("rKsPRs4FzPDyEfDoGqxCH5cKewjmSEYfSBFDjvfipvc"),
         },
         &UNLOCKS_ALL_DAY_ZERO,
         None,
@@ -280,6 +280,6 @@ mod tests {
             .map(|account| account.lamports)
             .sum::<u64>();
 
-        assert_eq!(500_000_000 * LAMPORTS_PER_SOL, lamports);
+        assert_eq!(500_000_000 * LAMPORTS_PER_TRZ, lamports);
     }
 }

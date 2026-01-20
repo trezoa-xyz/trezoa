@@ -6,7 +6,7 @@ use {
     console::style,
     trezoa_account_decoder::parse_token::{real_number_string, real_number_string_trimmed},
     trezoa_rpc_client::rpc_client::RpcClient,
-    trezoa_sdk::{instruction::Instruction, message::Message, native_token::lamports_to_sol},
+    trezoa_sdk::{instruction::Instruction, message::Message, native_token::lamports_to_trz},
     spl_associated_token_account::{
         get_associated_token_address, instruction::create_associated_token_account,
     },
@@ -94,7 +94,7 @@ pub(crate) fn check_tpl_token_balances(
     if fee_payer_balance < fees + account_creation_amount {
         return Err(Error::InsufficientFunds(
             vec![FundingSource::FeePayer].into(),
-            lamports_to_sol(fees + account_creation_amount).to_string(),
+            lamports_to_trz(fees + account_creation_amount).to_string(),
         ));
     }
     let source_token_account = client

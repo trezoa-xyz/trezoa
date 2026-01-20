@@ -6,22 +6,22 @@ use trezoa_sdk::{
 };
 
 mod tpl_token {
-    trezoa_sdk::declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+    trezoa_sdk::declare_id!("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic");
 }
 mod tpl_token_2022 {
-    trezoa_sdk::declare_id!("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+    trezoa_sdk::declare_id!("7LwqBGzqGyNW2v1iNwxKR4kbVSYvGMC5xr3MxbkrCEKV");
 }
-mod spl_memo_1_0 {
-    trezoa_sdk::declare_id!("Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo");
+mod tpl_memo_1_0 {
+    trezoa_sdk::declare_id!("BZxt6MALayWeCg4vBc1sHcPBzPdBVh4bW8iiKmF3WsnY");
 }
-mod spl_memo_3_0 {
-    trezoa_sdk::declare_id!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+mod tpl_memo_3_0 {
+    trezoa_sdk::declare_id!("D8zHQNRRPcG248YRx7WfubRUFrTMdYhyEJw4uPRV9o8L");
 }
-mod spl_associated_token_account {
-    trezoa_sdk::declare_id!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+mod tpl_associated_token_account {
+    trezoa_sdk::declare_id!("9hayjcGAfxbKr2q5UenHABNrUnn7RSXKQRSj2jMbBwmT");
 }
 
-static SPL_PROGRAMS: &[(Pubkey, Pubkey, &[u8])] = &[
+static TPL_PROGRAMS: &[(Pubkey, Pubkey, &[u8])] = &[
     (
         tpl_token::ID,
         trezoa_sdk::bpf_loader::ID,
@@ -33,24 +33,24 @@ static SPL_PROGRAMS: &[(Pubkey, Pubkey, &[u8])] = &[
         include_bytes!("programs/tpl_token_2022-1.0.0.so"),
     ),
     (
-        spl_memo_1_0::ID,
+        tpl_memo_1_0::ID,
         trezoa_sdk::bpf_loader::ID,
-        include_bytes!("programs/spl_memo-1.0.0.so"),
+        include_bytes!("programs/tpl_memo-1.0.0.so"),
     ),
     (
-        spl_memo_3_0::ID,
+        tpl_memo_3_0::ID,
         trezoa_sdk::bpf_loader::ID,
-        include_bytes!("programs/spl_memo-3.0.0.so"),
+        include_bytes!("programs/tpl_memo-3.0.0.so"),
     ),
     (
-        spl_associated_token_account::ID,
+        tpl_associated_token_account::ID,
         trezoa_sdk::bpf_loader::ID,
-        include_bytes!("programs/spl_associated_token_account-1.1.1.so"),
+        include_bytes!("programs/tpl_associated_token_account-1.1.1.so"),
     ),
 ];
 
-pub fn spl_programs(rent: &Rent) -> Vec<(Pubkey, AccountSharedData)> {
-    SPL_PROGRAMS
+pub fn tpl_programs(rent: &Rent) -> Vec<(Pubkey, AccountSharedData)> {
+    TPL_PROGRAMS
         .iter()
         .flat_map(|(program_id, loader_id, elf)| {
             let mut accounts = vec![];

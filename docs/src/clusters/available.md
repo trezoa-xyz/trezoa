@@ -30,7 +30,7 @@ Explorers:
 - Metrics environment variable for Devnet:
 
 ```bash
-export SOLANA_METRICS_CONFIG="host=https://metrics.trezoa.com:8086,db=devnet,u=scratch_writer,p=topsecret"
+export TRZANA_METRICS_CONFIG="host=https://metrics.trezoa.com:8086,db=devnet,u=scratch_writer,p=topsecret"
 ```
 
 - RPC URL for Devnet: `https://api.devnet.trezoa.com`
@@ -82,7 +82,7 @@ are operated by Trezoa Team
 - Metrics environment variable for Testnet:
 
 ```bash
-export SOLANA_METRICS_CONFIG="host=https://metrics.trezoa.com:8086,db=tds,u=testnet_write,p=c4fa841aa918bf8274e3e2a44d77568d9861b3ea"
+export TRZANA_METRICS_CONFIG="host=https://metrics.trezoa.com:8086,db=tds,u=testnet_write,p=c4fa841aa918bf8274e3e2a44d77568d9861b3ea"
 ```
 
 - RPC URL for Testnet: `https://api.testnet.trezoa.com`
@@ -129,12 +129,12 @@ The identities of the
 
 A permissionless, persistent cluster for Trezoa users, builders, validators and token holders.
 
-- Tokens that are issued on Mainnet Beta are **real** SOL
+- Tokens that are issued on Mainnet Beta are **real** TRZ
 - Gossip entrypoint for Mainnet Beta: `entrypoint.mainnet-beta.trezoa.com:8001`
 - Metrics environment variable for Mainnet Beta:
 
 ```bash
-export SOLANA_METRICS_CONFIG="host=https://metrics.trezoa.com:8086,db=mainnet-beta,u=mainnet-beta_write,p=password"
+export TRZANA_METRICS_CONFIG="host=https://metrics.trezoa.com:8086,db=mainnet-beta,u=mainnet-beta_write,p=password"
 ```
 
 - RPC URL for Mainnet Beta: `https://api.mainnet-beta.trezoa.com`

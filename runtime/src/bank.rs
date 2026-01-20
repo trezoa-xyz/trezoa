@@ -154,7 +154,7 @@ use {
         loader_v4::{self, LoaderV4State, LoaderV4Status},
         message::{AccountKeys, SanitizedMessage},
         native_loader,
-        native_token::LAMPORTS_PER_SOL,
+        native_token::LAMPORTS_PER_TRZ,
         nonce::{self, state::DurableNonce, NONCED_TX_MARKER_IX_INDEX},
         nonce_account,
         packet::PACKET_DATA_SIZE,
@@ -2592,7 +2592,7 @@ impl Bank {
             let num_stake_delegations = stakes.stake_delegations().len();
             let min_stake_delegation =
                 trezoa_stake_program::get_minimum_delegation(&self.feature_set)
-                    .max(LAMPORTS_PER_SOL);
+                    .max(LAMPORTS_PER_TRZ);
 
             let (stake_delegations, filter_timer) = measure!(stakes
                 .stake_delegations()

@@ -9,7 +9,7 @@ use {
     trezoa_cli_output::{CliAddressLookupTable, CliAddressLookupTableCreated, OutputFormat},
     trezoa_faucet::faucet::run_local_faucet,
     trezoa_sdk::{
-        native_token::LAMPORTS_PER_SOL,
+        native_token::LAMPORTS_PER_TRZ,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
     },
@@ -35,7 +35,7 @@ fn test_cli_create_extend_and_freeze_address_lookup_table() {
     // Airdrop SOL for transaction fees
     config.command = CliCommand::Airdrop {
         pubkey: None,
-        lamports: 10 * LAMPORTS_PER_SOL,
+        lamports: 10 * LAMPORTS_PER_TRZ,
     };
     process_command(&config).unwrap();
 
@@ -150,7 +150,7 @@ fn test_cli_create_and_deactivate_address_lookup_table() {
     // Airdrop SOL for transaction fees
     config.command = CliCommand::Airdrop {
         pubkey: None,
-        lamports: 10 * LAMPORTS_PER_SOL,
+        lamports: 10 * LAMPORTS_PER_TRZ,
     };
     process_command(&config).unwrap();
 

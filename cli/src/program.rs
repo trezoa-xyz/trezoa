@@ -59,7 +59,7 @@ use {
         instruction::{Instruction, InstructionError},
         loader_instruction,
         message::Message,
-        native_token::Sol,
+        native_token::Trz,
         packet::PACKET_DATA_SIZE,
         pubkey::Pubkey,
         signature::{keypair_from_seed, read_keypair_file, Keypair, Signature, Signer},

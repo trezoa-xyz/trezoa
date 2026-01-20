@@ -1037,7 +1037,7 @@ pub mod test {
             validator_configs::make_identical_validator_configs,
         },
         trezoa_measure::measure::Measure,
-        trezoa_sdk::{native_token::sol_to_lamports, poh_config::PohConfig},
+        trezoa_sdk::{native_token::trz_to_lamports, poh_config::PohConfig},
         trezoa_test_validator::TestValidator,
         tpl_token::{
             trezoa_program::program_pack::Pack,
@@ -1124,7 +1124,7 @@ pub mod test {
         let signature = rpc_client
             .request_airdrop_with_blockhash(
                 &funder.pubkey(),
-                sol_to_lamports(1.0),
+                trz_to_lamports(1.0),
                 &latest_blockhash,
             )
             .unwrap();

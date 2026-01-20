@@ -9,7 +9,7 @@ use {
         clock::UnixTimestamp,
         commitment_config::CommitmentConfig,
         genesis_config::ClusterType,
-        native_token::sol_to_lamports,
+        native_token::trz_to_lamports,
         pubkey::{Pubkey, MAX_SEED_LEN},
         signature::{read_keypair_file, Keypair, Signer},
     },
@@ -64,7 +64,7 @@ pub fn unix_timestamp_from_rfc3339_datetime(
     note = "please use `Amount::parse_decimal` and `Amount::sol_to_lamport` instead"
 )]
 pub fn lamports_of_sol(matches: &ArgMatches, name: &str) -> Option<u64> {
-    value_of(matches, name).map(sol_to_lamports)
+    value_of(matches, name).map(trz_to_lamports)
 }
 
 pub fn cluster_type_of(matches: &ArgMatches, name: &str) -> Option<ClusterType> {
@@ -486,7 +486,7 @@ mod tests {
     }
 
     #[test]
-    fn test_sol_to_lamports() {
+    fn test_trz_to_lamports() {
         let command = Command::new("test").arg(
             Arg::new("amount")
                 .long("amount")

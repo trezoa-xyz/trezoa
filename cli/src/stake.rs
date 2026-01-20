@@ -45,7 +45,7 @@ use {
         epoch_schedule::EpochSchedule,
         feature_set,
         message::Message,
-        native_token::Sol,
+        native_token::Trz,
         pubkey::Pubkey,
         stake::{
             self,

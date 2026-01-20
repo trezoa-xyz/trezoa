@@ -121,7 +121,7 @@ fn test_bench_tps_test_validator(config: Config) {
             ..Rent::default()
         })
         .faucet_addr(Some(faucet_addr))
-        .add_program("spl_instruction_padding", spl_instruction_padding::ID)
+        .add_program("tpl_instruction_padding", spl_instruction_padding::ID)
         .start_with_mint_address(mint_pubkey, SocketAddrSpace::Unspecified)
         .expect("validator start failed");
 

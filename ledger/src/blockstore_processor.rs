@@ -1961,7 +1961,7 @@ pub mod tests {
             epoch_schedule::EpochSchedule,
             hash::Hash,
             instruction::{Instruction, InstructionError},
-            native_token::LAMPORTS_PER_SOL,
+            native_token::LAMPORTS_PER_TRZ,
             pubkey::Pubkey,
             signature::{Keypair, Signer},
             system_instruction::SystemError,
@@ -4392,7 +4392,7 @@ pub mod tests {
             genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config(100 * LAMPORTS_PER_SOL);
+        } = create_genesis_config(100 * LAMPORTS_PER_TRZ);
         let genesis_hash = genesis_config.hash();
         let bank = BankWithScheduler::new_without_scheduler(
             Bank::new_with_bank_forks_for_tests(&genesis_config).0,
@@ -4404,9 +4404,9 @@ pub mod tests {
         let keypair2 = Keypair::new();
         let keypair3 = Keypair::new();
         let keypair4 = Keypair::new();
-        bank.transfer(LAMPORTS_PER_SOL, &mint_keypair, &keypair1.pubkey())
+        bank.transfer(LAMPORTS_PER_TRZ, &mint_keypair, &keypair1.pubkey())
             .unwrap();
-        bank.transfer(LAMPORTS_PER_SOL, &mint_keypair, &keypair2.pubkey())
+        bank.transfer(LAMPORTS_PER_TRZ, &mint_keypair, &keypair2.pubkey())
             .unwrap();
 
         let (transaction_status_sender, transaction_status_receiver) =

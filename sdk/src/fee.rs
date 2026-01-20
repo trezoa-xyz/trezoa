@@ -1,6 +1,6 @@
 //! Fee structures.
 
-use crate::native_token::sol_to_lamports;
+use crate::native_token::trz_to_lamports;
 #[cfg(not(target_os = "trezoa"))]
 use trezoa_program::message::SanitizedMessage;
 
@@ -43,12 +43,12 @@ impl FeeStructure {
             .iter()
             .map(|(limit, sol)| FeeBin {
                 limit: *limit,
-                fee: sol_to_lamports(*sol),
+                fee: trz_to_lamports(*sol),
             })
             .collect::<Vec<_>>();
         FeeStructure {
-            lamports_per_signature: sol_to_lamports(sol_per_signature),
-            lamports_per_write_lock: sol_to_lamports(sol_per_write_lock),
+            lamports_per_signature: trz_to_lamports(sol_per_signature),
+            lamports_per_write_lock: trz_to_lamports(sol_per_write_lock),
             compute_fee_bins,
         }
     }

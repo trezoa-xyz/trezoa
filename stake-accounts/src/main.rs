@@ -15,7 +15,7 @@ use {
     trezoa_rpc_client_api::client_error::Error as ClientError,
     trezoa_sdk::{
         message::Message,
-        native_token::lamports_to_sol,
+        native_token::lamports_to_trz,
         pubkey::Pubkey,
         signature::{unique_signers, Signature, Signer},
         signers::Signers,
@@ -263,7 +263,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             );
             let balances = get_balances(&client, addresses)?;
             let lamports: u64 = balances.into_iter().map(|(_, bal)| bal).sum();
-            let sol = lamports_to_sol(lamports);
+            let sol = lamports_to_trz(lamports);
             println!("{sol} SOL");
         }
         Command::Authorize(args) => {

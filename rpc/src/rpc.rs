@@ -16,7 +16,7 @@ use {
     trezoa_accounts_db::{
         accounts::AccountAddressFilter,
         accounts_index::{AccountIndex, AccountSecondaryIndexes, IndexKey, ScanConfig},
-        inline_tpl_token::{SPL_TOKEN_ACCOUNT_MINT_OFFSET, SPL_TOKEN_ACCOUNT_OWNER_OFFSET},
+        inline_tpl_token::{TPL_TOKEN_ACCOUNT_MINT_OFFSET, TPL_TOKEN_ACCOUNT_OWNER_OFFSET},
         inline_tpl_token_2022::{self, ACCOUNTTYPE_ACCOUNT},
     },
     trezoa_client::connection_cache::{ConnectionCache, Protocol},
@@ -2065,7 +2065,7 @@ impl JsonRpcRequestProcessor {
         filters.push(RpcFilterType::TokenAccountState);
         // Filter on Owner address
         filters.push(RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-            SPL_TOKEN_ACCOUNT_OWNER_OFFSET,
+            TPL_TOKEN_ACCOUNT_OWNER_OFFSET,
             owner_key.to_bytes().into(),
         )));
 
@@ -2116,7 +2116,7 @@ impl JsonRpcRequestProcessor {
         filters.push(RpcFilterType::TokenAccountState);
         // Filter on Mint address
         filters.push(RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-            SPL_TOKEN_ACCOUNT_MINT_OFFSET,
+            TPL_TOKEN_ACCOUNT_MINT_OFFSET,
             mint_key.to_bytes().into(),
         )));
         if self
@@ -2368,7 +2368,7 @@ fn get_tpl_token_owner_filter(program_id: &Pubkey, filters: &[RpcFilterType]) ->
                 offset,
                 bytes: MemcmpEncodedBytes::Bytes(bytes),
                 ..
-            }) if *offset == SPL_TOKEN_ACCOUNT_OWNER_OFFSET => {
+            }) if *offset == TPL_TOKEN_ACCOUNT_OWNER_OFFSET => {
                 if bytes.len() == PUBKEY_BYTES {
                     owner_key = Pubkey::try_from(&bytes[..]).ok();
                 } else {
@@ -2426,7 +2426,7 @@ fn get_tpl_token_mint_filter(program_id: &Pubkey, filters: &[RpcFilterType]) -> 
                 offset,
                 bytes: MemcmpEncodedBytes::Bytes(bytes),
                 ..
-            }) if *offset == SPL_TOKEN_ACCOUNT_MINT_OFFSET => {
+            }) if *offset == TPL_TOKEN_ACCOUNT_MINT_OFFSET => {
                 if bytes.len() == PUBKEY_BYTES {
                     mint = Pubkey::try_from(&bytes[..]).ok();
                 } else {
@@ -8589,7 +8589,7 @@ pub mod tests {
         let owner = Pubkey::new_unique();
         assert_eq!(
             get_tpl_token_owner_filter(
-                &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+                &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
                     RpcFilterType::DataSize(165)
@@ -8602,7 +8602,7 @@ pub mod tests {
         // Filtering on token-2022 account type
         assert_eq!(
             get_tpl_token_owner_filter(
-                &Pubkey::from_str("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb").unwrap(),
+                &Pubkey::from_str("7LwqBGzqGyNW2v1iNwxKR4kbVSYvGMC5xr3MxbkrCEKV").unwrap(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8615,7 +8615,7 @@ pub mod tests {
         // Filtering on token account state
         assert_eq!(
             get_tpl_token_owner_filter(
-                &Pubkey::from_str("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb").unwrap(),
+                &Pubkey::from_str("7LwqBGzqGyNW2v1iNwxKR4kbVSYvGMC5xr3MxbkrCEKV").unwrap(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
                     RpcFilterType::TokenAccountState,
@@ -8627,7 +8627,7 @@ pub mod tests {
 
         // Can't filter on account type for token-v3
         assert!(get_tpl_token_owner_filter(
-            &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+            &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8637,7 +8637,7 @@ pub mod tests {
 
         // Filtering on mint instead of owner
         assert!(get_tpl_token_owner_filter(
-            &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+            &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, owner.to_bytes().to_vec())),
                 RpcFilterType::DataSize(165)
@@ -8670,7 +8670,7 @@ pub mod tests {
         let mint = Pubkey::new_unique();
         assert_eq!(
             get_tpl_token_mint_filter(
-                &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+                &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                     RpcFilterType::DataSize(165)
@@ -8683,7 +8683,7 @@ pub mod tests {
         // Filtering on token-2022 account type
         assert_eq!(
             get_tpl_token_mint_filter(
-                &Pubkey::from_str("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb").unwrap(),
+                &Pubkey::from_str("7LwqBGzqGyNW2v1iNwxKR4kbVSYvGMC5xr3MxbkrCEKV").unwrap(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8696,7 +8696,7 @@ pub mod tests {
         // Filtering on token account state
         assert_eq!(
             get_tpl_token_mint_filter(
-                &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+                &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                     RpcFilterType::TokenAccountState,
@@ -8708,7 +8708,7 @@ pub mod tests {
 
         // Can't filter on account type for token-v3
         assert!(get_tpl_token_mint_filter(
-            &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+            &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8718,7 +8718,7 @@ pub mod tests {
 
         // Filtering on owner instead of mint
         assert!(get_tpl_token_mint_filter(
-            &Pubkey::from_str("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").unwrap(),
+            &Pubkey::from_str("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic").unwrap(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, mint.to_bytes().to_vec())),
                 RpcFilterType::DataSize(165)

@@ -17,7 +17,7 @@ use {
     },
 };
 
-const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = trezoa_sdk::native_token::LAMPORTS_PER_SOL;
+const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = trezoa_sdk::native_token::LAMPORTS_PER_TRZ;
 
 #[derive(Eq, PartialEq, Debug)]
 pub enum ExternalClientType {

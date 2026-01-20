@@ -557,7 +557,7 @@ rev = "6105d7a5591aefa646a95d12b5e8d3f55a9214ef"
 #
 [patch.crates-io.curve25519-dalek]
 git = "https://github.com/trezoa-xyz/curve25519-dalek.git"
-rev = "0382b672560493840f453f2a0e24c4a129abd3a4"
+rev = "5b7082bbc8e0b2106ab0d956064f61fa0f393cdc"
 
 # Trezoa RPC nodes experience stalls when running with `tokio` containing this
 # commit:
@@ -575,4 +575,4 @@ rev = "0382b672560493840f453f2a0e24c4a129abd3a4"
 #
 [patch.crates-io.tokio]
 git = "https://github.com/trezoa-xyz/trezoa-tokio.git"
-rev = "7cf47705faacf7bf0e43e4131a5377b3291fce21"
+rev = "2400769b54fd31186b07bfbec277e846e8d64c16"

@@ -32,7 +32,7 @@ use {
     trezoa_rpc_client_nonce_utils::blockhash_query::BlockhashQuery,
     trezoa_sdk::{
         account::Account, commitment_config::CommitmentConfig, feature, message::Message,
-        native_token::lamports_to_sol, pubkey::Pubkey, system_instruction::SystemError,
+        native_token::lamports_to_trz, pubkey::Pubkey, system_instruction::SystemError,
         transaction::Transaction,
     },
     trezoa_vote_program::{
@@ -1354,7 +1354,7 @@ pub fn process_withdraw_from_vote_account(
                 return Err(CliError::BadParameter(format!(
                     "Withdraw amount too large. The vote account balance must be at least {} SOL \
                      to remain rent exempt",
-                    lamports_to_sol(minimum_balance)
+                    lamports_to_trz(minimum_balance)
                 ))
                 .into());
             }

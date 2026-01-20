@@ -662,7 +662,7 @@ fn build_trezoa_package(
         );
         env::remove_var("RUSTC")
     }
-    let cargo_target = "CARGO_TARGET_SBF_SOLANA_SOLANA_RUSTFLAGS";
+    let cargo_target = "CARGO_TARGET_SBF_TREZOA_TREZOA_RUSTFLAGS";
     let rustflags = env::var("RUSTFLAGS").ok().unwrap_or_default();
     if env::var("RUSTFLAGS").is_ok() {
         warn!(

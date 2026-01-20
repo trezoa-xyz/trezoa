@@ -5228,7 +5228,7 @@ pub(crate) mod tests {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config(trezoa_sdk::native_token::sol_to_lamports(1000.0));
+        } = create_genesis_config(trezoa_sdk::native_token::trz_to_lamports(1000.0));
         genesis_config.rent.lamports_per_byte_year = 50;
         genesis_config.rent.exemption_threshold = 2.0;
         let (ledger_path, _) = create_new_tmp_ledger!(&genesis_config);

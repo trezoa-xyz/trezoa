@@ -8,7 +8,7 @@ use {
     trezoa_rpc_client::rpc_client::RpcClient,
     trezoa_rpc_client_api::{client_error, request, response::RpcContactInfo},
     trezoa_sdk::{
-        clock::Slot, commitment_config::CommitmentConfig, exit::Exit, native_token::Sol,
+        clock::Slot, commitment_config::CommitmentConfig, exit::Exit, native_token::Trz,
         pubkey::Pubkey,
     },
     std::{

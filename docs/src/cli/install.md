@@ -20,25 +20,25 @@ on your preferred workflow:
 - Open your favorite Terminal application
 
 - Install the Trezoa release
-  [LATEST_SOLANA_RELEASE_VERSION](https://github.com/trezoa-team/trezoa/releases/tag/LATEST_SOLANA_RELEASE_VERSION)
+  [LATEST_TREZOA_RELEASE_VERSION](https://github.com/trezoa-team/trezoa/releases/tag/LATEST_TREZOA_RELEASE_VERSION)
   on your machine by running:
 
 ```bash
-sh -c "$(curl -sSfL https://release.trezoa.com/LATEST_SOLANA_RELEASE_VERSION/install)"
+sh -c "$(curl -sSfL https://release.trezoa.com/LATEST_TREZOA_RELEASE_VERSION/install)"
 ```
 
-- You can replace `LATEST_SOLANA_RELEASE_VERSION` with the release tag matching
+- You can replace `LATEST_TREZOA_RELEASE_VERSION` with the release tag matching
   the software version of your desired release, or use one of the three symbolic
   channel names: `stable`, `beta`, or `edge`.
 
 - The following output indicates a successful update:
 
 ```text
-downloading LATEST_SOLANA_RELEASE_VERSION installer
+downloading LATEST_TREZOA_RELEASE_VERSION installer
 Configuration: /home/trezoa/.config/trezoa/install/config.yml
 Active release directory: /home/trezoa/.local/share/trezoa/install/active_release
-* Release version: LATEST_SOLANA_RELEASE_VERSION
-* Release URL: https://github.com/trezoa-team/trezoa/releases/download/LATEST_SOLANA_RELEASE_VERSION/trezoa-release-x86_64-unknown-linux-gnu.tar.bz2
+* Release version: LATEST_TREZOA_RELEASE_VERSION
+* Release URL: https://github.com/trezoa-team/trezoa/releases/download/LATEST_TREZOA_RELEASE_VERSION/trezoa-release-x86_64-unknown-linux-gnu.tar.bz2
 Update successful
 ```
 
@@ -74,7 +74,7 @@ trezoa --version
   installer into a temporary directory:
 
 ```bash
-cmd /c "curl https://release.trezoa.com/LATEST_SOLANA_RELEASE_VERSION/trezoa-install-init-x86_64-pc-windows-msvc.exe --output C:\trezoa-install-tmp\trezoa-install-init.exe --create-dirs"
+cmd /c "curl https://release.trezoa.com/LATEST_TREZOA_RELEASE_VERSION/trezoa-install-init-x86_64-pc-windows-msvc.exe --output C:\trezoa-install-tmp\trezoa-install-init.exe --create-dirs"
 ```
 
 - Copy and paste the following command, then press Enter to install the latest
@@ -82,7 +82,7 @@ cmd /c "curl https://release.trezoa.com/LATEST_SOLANA_RELEASE_VERSION/trezoa-ins
   to allow the program to run.
 
 ```bash
-C:\trezoa-install-tmp\trezoa-install-init.exe LATEST_SOLANA_RELEASE_VERSION
+C:\trezoa-install-tmp\trezoa-install-init.exe LATEST_TREZOA_RELEASE_VERSION
 ```
 
 - When the installer is finished, press Enter.

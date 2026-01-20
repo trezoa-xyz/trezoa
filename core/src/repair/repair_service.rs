@@ -712,7 +712,7 @@ impl RepairService {
                     Some((
                         *pubkey,
                         peer_repair_addr,
-                        (*stake / trezoa_sdk::native_token::LAMPORTS_PER_SOL) as u32,
+                        (*stake / trezoa_sdk::native_token::LAMPORTS_PER_TRZ) as u32,
                     ))
                 } else {
                     None

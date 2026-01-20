@@ -6,7 +6,7 @@ use {
         feature_set::FeatureSet,
         fee_calculator::FeeRateGovernor,
         genesis_config::{ClusterType, GenesisConfig},
-        native_token::sol_to_lamports,
+        native_token::trz_to_lamports,
         pubkey::Pubkey,
         rent::Rent,
         signature::{Keypair, Signer},
@@ -258,7 +258,7 @@ pub fn create_genesis_config_with_leader_ex(
     let native_mint_account = trezoa_sdk::account::AccountSharedData::from(Account {
         owner: inline_tpl_token::id(),
         data: inline_tpl_token::native_mint::ACCOUNT_DATA.to_vec(),
-        lamports: sol_to_lamports(1.),
+        lamports: trz_to_lamports(1.),
         executable: false,
         rent_epoch: 1,
     });
