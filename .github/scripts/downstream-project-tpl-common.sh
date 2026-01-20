@@ -23,5 +23,5 @@ if semverGT "$project_used_trezoa_version" "$TREZOA_VER"; then
 fi
 
 ./patch.crates-io.sh "$TREZOA_DIR"
-# anza migration stopgap. can be removed when agave is fully recommended for public usage.
-sed -i 's/trezoa-geyser-plugin-interface/agave-geyser-plugin-interface/g' ./Cargo.toml
+# trezoa migration stopgap. can be removed when trezoa is fully recommended for public usage.
+sed -i 's/trezoa-geyser-plugin-interface/trezoa-geyser-plugin-interface/g' ./Cargo.toml

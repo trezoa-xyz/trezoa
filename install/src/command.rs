@@ -580,7 +580,7 @@ fn github_release_download_url(release_semver: &str) -> String {
 
 fn release_channel_download_url(release_channel: &str) -> String {
     format!(
-        "https://release.anza.xyz/{}/trezoa-release-{}.tar.bz2",
+        "https://release.trezoa.xyz/{}/trezoa-release-{}.tar.bz2",
         release_channel,
         crate::build_env::TARGET
     )
@@ -588,7 +588,7 @@ fn release_channel_download_url(release_channel: &str) -> String {
 
 fn release_channel_version_url(release_channel: &str) -> String {
     format!(
-        "https://release.anza.xyz/{}/trezoa-release-{}.yml",
+        "https://release.trezoa.xyz/{}/trezoa-release-{}.yml",
         release_channel,
         crate::build_env::TARGET
     )

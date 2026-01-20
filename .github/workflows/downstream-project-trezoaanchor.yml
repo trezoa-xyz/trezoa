@@ -1,4 +1,4 @@
-name: Downstream Project - Anchor
+name: Downstream Project - TrezoaAnchor
 
 on:
   push:
@@ -17,7 +17,7 @@ on:
       - "cargo-test-bpf"
       - "cargo-build-sbf"
       - "cargo-test-sbf"
-      - ".github/workflows/downstream-project-anchor.yml"
+      - ".github/workflows/downstream-project-trezoaanchor.yml"
   workflow_call:
     inputs:
       branch:
@@ -54,4 +54,4 @@ jobs:
       - shell: bash
         run: |
           source .github/scripts/downstream-project-spl-install-deps.sh
-          ./scripts/build-downstream-anchor-projects.sh ${{ matrix.version }}
+          ./scripts/build-downstream-trezoaanchor-projects.sh ${{ matrix.version }}

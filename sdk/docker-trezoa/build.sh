@@ -30,7 +30,7 @@ cp -f ../../fetch-spl.sh usr/bin/
   ./fetch-spl.sh
 )
 
-docker build -t anzaxyz/trezoa:"$CHANNEL_OR_TAG" .
+docker build -t trezoaxyz/trezoa:"$CHANNEL_OR_TAG" .
 
 maybeEcho=
 if [[ -z $CI ]]; then
@@ -44,4 +44,4 @@ else
     fi
   )
 fi
-$maybeEcho docker push anzaxyz/trezoa:"$CHANNEL_OR_TAG"
+$maybeEcho docker push trezoaxyz/trezoa:"$CHANNEL_OR_TAG"

@@ -26,14 +26,14 @@ fi
 # upload install script
 source ci/upload-ci-artifact.sh
 
-cat >release.anza.xyz-install <<EOF
+cat >release.trezoa.xyz-install <<EOF
 TREZOA_RELEASE=$CHANNEL_OR_TAG
 TREZOA_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
-TREZOA_DOWNLOAD_ROOT=https://release.anza.xyz
+TREZOA_DOWNLOAD_ROOT=https://release.trezoa.xyz
 EOF
-cat install/trezoa-install-init.sh >>release.anza.xyz-install
+cat install/trezoa-install-init.sh >>release.trezoa.xyz-install
 
 echo --- GCS: "install"
-upload-gcs-artifact "/trezoa/release.anza.xyz-install" "gs://anza-release/$CHANNEL_OR_TAG/install"
+upload-gcs-artifact "/trezoa/release.trezoa.xyz-install" "gs://trezoa-release/$CHANNEL_OR_TAG/install"
 echo Published to:
-ci/format-url.sh https://release.anza.xyz/"$CHANNEL_OR_TAG"/install
+ci/format-url.sh https://release.trezoa.xyz/"$CHANNEL_OR_TAG"/install

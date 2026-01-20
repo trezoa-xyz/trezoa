@@ -57,7 +57,7 @@ esac
 
 case $TAG in
 edge|beta)
-  DOWNLOAD_URL=https://release.anza.xyz/"$TAG"/trezoa-release-$TARGET.tar.bz2
+  DOWNLOAD_URL=https://release.trezoa.xyz/"$TAG"/trezoa-release-$TARGET.tar.bz2
   ;;
 *)
   DOWNLOAD_URL=https://github.com/trezoa-xyz/trezoa/releases/download/"$TAG"/trezoa-release-$TARGET.tar.bz2
