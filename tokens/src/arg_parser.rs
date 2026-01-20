@@ -50,7 +50,7 @@ where
         )
         .subcommand(
             SubCommand::with_name("distribute-tokens")
-                .about("Distribute SOL")
+                .about("Distribute TRZ")
                 .arg(
                     Arg::with_name("db_path")
                         .long("db-path")
@@ -77,7 +77,7 @@ where
                         .takes_value(true)
                         .value_name("AMOUNT")
                         .validator(is_amount)
-                        .help("The amount to send to each recipient, in SOL"),
+                        .help("The amount to send to each recipient, in TRZ"),
                 )
                 .arg(
                     Arg::with_name("dry_run")
@@ -162,7 +162,7 @@ where
                         .long("unlocked-sol")
                         .takes_value(true)
                         .value_name("SOL_AMOUNT")
-                        .help("Amount of SOL to put in system account to pay for fees"),
+                        .help("Amount of TRZ to put in system account to pay for fees"),
                 )
                 .arg(
                     Arg::with_name("lockup_authority")
@@ -242,7 +242,7 @@ where
                         .long("unlocked-sol")
                         .takes_value(true)
                         .value_name("SOL_AMOUNT")
-                        .help("Amount of SOL to put in system account to pay for fees"),
+                        .help("Amount of TRZ to put in system account to pay for fees"),
                 )
                 .arg(
                     Arg::with_name("stake_authority")
@@ -282,7 +282,7 @@ where
         )
         .subcommand(
             SubCommand::with_name("distribute-tpl-tokens")
-                .about("Distribute SPL tokens")
+                .about("Distribute TPL tokens")
                 .arg(
                     Arg::with_name("db_path")
                         .long("db-path")
@@ -314,7 +314,7 @@ where
                         .takes_value(true)
                         .value_name("AMOUNT")
                         .validator(is_amount)
-                        .help("The amount of SPL tokens to send to each recipient"),
+                        .help("The amount of TPL tokens to send to each recipient"),
                 )
                 .arg(
                     Arg::with_name("output_path")
@@ -331,7 +331,7 @@ where
                         .takes_value(true)
                         .value_name("TOKEN_ACCOUNT_ADDRESS")
                         .validator(is_valid_pubkey)
-                        .help("SPL token account to send from"),
+                        .help("TPL token account to send from"),
                 )
                 .arg(
                     Arg::with_name("token_owner")
@@ -340,7 +340,7 @@ where
                         .takes_value(true)
                         .value_name("TOKEN_ACCOUNT_OWNER_KEYPAIR")
                         .validator(is_valid_signer)
-                        .help("SPL token account owner"),
+                        .help("TPL token account owner"),
                 )
                 .arg(
                     Arg::with_name("fee_payer")
@@ -366,7 +366,7 @@ where
         )
         .subcommand(
             SubCommand::with_name("tpl-token-balances")
-                .about("Balance of SPL token associated accounts")
+                .about("Balance of TPL token associated accounts")
                 .arg(
                     Arg::with_name("input_csv")
                         .long("input-csv")
@@ -382,7 +382,7 @@ where
                         .takes_value(true)
                         .value_name("MINT_ADDRESS")
                         .validator(is_valid_pubkey)
-                        .help("SPL token mint of distribution"),
+                        .help("TPL token mint of distribution"),
                 ),
         )
         .subcommand(

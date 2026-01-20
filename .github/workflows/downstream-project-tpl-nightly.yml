@@ -1,4 +1,4 @@
-name: Downstream Project - SPL (Nightly)
+name: Downstream Project - TPL (Nightly)
 
 on:
   schedule:

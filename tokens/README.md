@@ -126,15 +126,15 @@ operations such as delegating stake. The rest of the allocation is put in
 a stake account. The new stake account address is output in the transaction
 log.
 
-## Distribute SPL tokens
+## Distribute TPL tokens
 
-Distributing SPL Tokens works very similarly to distributing TRZ, but requires
+Distributing TPL Tokens works very similarly to distributing TRZ, but requires
 the `--owner` parameter to sign transactions. Each recipient account must be an
-system account that will own an Associated Token Account for the SPL Token mint.
+system account that will own an Associated Token Account for the TPL Token mint.
 The Associated Token Account will be created, and funded by the fee_payer, if it
 does not already exist.
 
-Send SPL tokens to the recipients in `<RECIPIENTS_CSV>`.
+Send TPL tokens to the recipients in `<RECIPIENTS_CSV>`.
 *NOTE:* the CSV expects TPL-token amounts in raw format (no decimals)
 
 Example recipients.csv:
@@ -148,7 +148,7 @@ C56nwrDVFpPrqwGYsTgQxv1ZraTh81H14PV4RHvZe36s,10000
 ```
 
 You can check the status of the recipients before beginning a distribution. You
-must include the SPL Token mint address:
+must include the TPL Token mint address:
 
 ```bash
 trezoa-tokens tpl-token-balances --mint <ADDRESS> --input-csv <RECIPIENTS_CSV>

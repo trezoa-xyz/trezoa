@@ -16,12 +16,12 @@ use {
     std::str::FromStr,
 };
 
-// Returns all known SPL Token program ids
+// Returns all known TPL Token program ids
 pub fn tpl_token_ids() -> Vec<Pubkey> {
     vec![tpl_token::id(), tpl_token_2022::id()]
 }
 
-// Check if the provided program id as a known SPL Token program id
+// Check if the provided program id as a known TPL Token program id
 pub fn is_known_tpl_token_id(program_id: &Pubkey) -> bool {
     *program_id == tpl_token::id() || *program_id == tpl_token_2022::id()
 }

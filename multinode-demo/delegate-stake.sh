@@ -8,7 +8,7 @@ here=$(dirname "$0")
 # shellcheck source=multinode-demo/common.sh
 source "$here"/common.sh
 
-stake_sol=10   # default number of SOL to assign as stake (10 SOL)
+stake_trz=10   # default number of TRZ to assign as stake (10 TRZ)
 url=http://127.0.0.1:8899   # default RPC url
 
 usage() {
@@ -18,7 +18,7 @@ usage() {
   fi
   cat <<EOF
 
-usage: $0 [OPTIONS] <SOL to stake ($stake_sol)>
+usage: $0 [OPTIONS] <TRZ to stake ($stake_trz)>
 
 Add stake to a validator
 
@@ -85,10 +85,10 @@ if [[ ${#positional_args[@]} -gt 1 ]]; then
   usage "$@"
 fi
 if [[ -n ${positional_args[0]} ]]; then
-  stake_sol=${positional_args[0]}
+  stake_trz=${positional_args[0]}
 fi
 
-VALIDATOR_KEYS_DIR=$SOLANA_CONFIG_DIR/validator$label
+VALIDATOR_KEYS_DIR=$TREZOA_CONFIG_DIR/validator$label
 vote_account="${vote_account:-$VALIDATOR_KEYS_DIR/vote-account.json}"
 stake_account="${stake_account:-$VALIDATOR_KEYS_DIR/stake-account.json}"
 
@@ -103,8 +103,8 @@ if ((airdrops_enabled)); then
     exit 1
   fi
   $trezoa_cli \
-    "${common_args[@]}" --keypair "$SOLANA_CONFIG_DIR/faucet.json" \
-    transfer --allow-unfunded-recipient "$keypair" "$stake_sol"
+    "${common_args[@]}" --keypair "$TREZOA_CONFIG_DIR/faucet.json" \
+    transfer --allow-unfunded-recipient "$keypair" "$stake_trz"
 fi
 
 if [[ -n $keypair ]]; then
@@ -121,7 +121,7 @@ set -x
 $trezoa_cli "${common_args[@]}" \
   vote-account "$vote_account"
 $trezoa_cli "${common_args[@]}" \
-  create-stake-account "$stake_account" "$stake_sol"
+  create-stake-account "$stake_account" "$stake_trz"
 $trezoa_cli "${common_args[@]}" \
   delegate-stake $maybe_force "$stake_account" "$vote_account"
 $trezoa_cli "${common_args[@]}" stakes "$stake_account"

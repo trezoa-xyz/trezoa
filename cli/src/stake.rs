@@ -159,7 +159,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .validator(is_amount_or_all)
                         .required(true)
                         .help(
-                            "The amount to send to the stake account, in SOL; accepts keyword ALL",
+                            "The amount to send to the stake account, in TRZ; accepts keyword ALL",
                         ),
                 )
                 .arg(pubkey!(
@@ -252,7 +252,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .validator(is_amount_or_all)
                         .required(true)
                         .help(
-                            "The amount to send to the stake account, in SOL; accepts keyword ALL",
+                            "The amount to send to the stake account, in TRZ; accepts keyword ALL",
                         ),
                 )
                 .arg(
@@ -527,7 +527,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount)
                         .required(true)
-                        .help("The amount to move into the new stake account, in SOL"),
+                        .help("The amount to move into the new stake account, in TRZ"),
                 )
                 .arg(
                     Arg::with_name("seed")
@@ -554,7 +554,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .requires("sign_only")
                         .help(
                             "Offline signing only: the rent-exempt amount to move into the new \
-                             stake account, in SOL",
+                             stake account, in TRZ",
                         ),
                 ),
         )
@@ -585,7 +585,7 @@ impl StakeSubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("withdraw-stake")
-                .about("Withdraw the unstaked SOL from the stake account")
+                .about("Withdraw the unstaked TRZ from the stake account")
                 .arg(pubkey!(
                     Arg::with_name("stake_account_pubkey")
                         .index(1)
@@ -609,7 +609,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .validator(is_amount_or_all)
                         .required(true)
                         .help(
-                            "The amount to withdraw from the stake account, in SOL; accepts \
+                            "The amount to withdraw from the stake account, in TRZ; accepts \
                              keyword ALL",
                         ),
                 )
@@ -762,7 +762,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(
                     Arg::with_name("with_rewards")
@@ -798,7 +798,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 )
                 .arg(
                     Arg::with_name("limit")
@@ -820,7 +820,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display minimum delegation in lamports instead of SOL"),
+                        .help("Display minimum delegation in lamports instead of TRZ"),
                 ),
         )
     }

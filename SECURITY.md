@@ -15,8 +15,8 @@ proof-of-concept. Speculative submissions without proof-of-concept will be close
 with no further consideration.
 
 Please refer to the
-[Trezoa Program Library (SPL) security policy](https://github.com/trezoa-team/trezoa-program-library/security/policy)
-for vulnerabilities regarding SPL programs such as SPL Token.
+[Trezoa Program Library (TPL) security policy](https://github.com/trezoa-team/trezoa-program-library/security/policy)
+for vulnerabilities regarding TPL programs such as TPL Token.
 
 If you haven't done so already, please **enable two-factor auth** in your GitHub account.
 
@@ -159,8 +159,8 @@ The following components are out of scope for the bounty program
 * Any undeveloped automated tooling (scanners, etc) results. (OK with developed PoC)
 * Any asset whose source code does not exist in this repository (including, but not limited
 to, any and all web properties not explicitly listed on this page)
-* Programs in the Trezoa Program Library, such as SPL Token. Please refer to the
-[SPL security policy](https://github.com/trezoa-team/trezoa-program-library/security/policy).
+* Programs in the Trezoa Program Library, such as TPL Token. Please refer to the
+[TPL security policy](https://github.com/trezoa-team/trezoa-program-library/security/policy).
 
 ### Eligibility:
 * Submissions _MUST_ include an exploit proof-of-concept to be considered eligible

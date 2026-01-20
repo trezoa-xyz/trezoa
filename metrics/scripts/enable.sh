@@ -14,8 +14,8 @@ echoTrezoaMetricsConfig() {
   )
 }
 
-SOLANA_METRICS_CONFIG=$(echoTrezoaMetricsConfig)
-export SOLANA_METRICS_CONFIG
+TREZOA_METRICS_CONFIG=$(echoTrezoaMetricsConfig)
+export TREZOA_METRICS_CONFIG
 unset -f echoTrezoaMetricsConfig
 
 __configure_metrics_sh="$(cd "$(dirname "${BASH_SOURCE[0]}")"/../.. || true; pwd)"/scripts/configure-metrics.sh

@@ -2991,7 +2991,7 @@ pub mod rpc_accounts {
             block: Slot,
         ) -> Result<RpcBlockCommitment<BlockCommitmentArray>>;
 
-        // SPL Token-specific RPC endpoints
+        // TPL Token-specific RPC endpoints
         // See https://github.com/trezoa-team/trezoa-program-library/releases/tag/token-v2.0.0 for
         // program details
 
@@ -3121,7 +3121,7 @@ pub mod rpc_accounts_scan {
             config: Option<RpcSupplyConfig>,
         ) -> Result<RpcResponse<RpcSupply>>;
 
-        // SPL Token-specific RPC endpoints
+        // TPL Token-specific RPC endpoints
         // See https://github.com/trezoa-team/trezoa-program-library/releases/tag/token-v2.0.0 for
         // program details
 

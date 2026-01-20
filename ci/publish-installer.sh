@@ -27,9 +27,9 @@ fi
 source ci/upload-ci-artifact.sh
 
 cat >release.anza.xyz-install <<EOF
-SOLANA_RELEASE=$CHANNEL_OR_TAG
-SOLANA_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
-SOLANA_DOWNLOAD_ROOT=https://release.anza.xyz
+TREZOA_RELEASE=$CHANNEL_OR_TAG
+TREZOA_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
+TREZOA_DOWNLOAD_ROOT=https://release.anza.xyz
 EOF
 cat install/trezoa-install-init.sh >>release.anza.xyz-install
 

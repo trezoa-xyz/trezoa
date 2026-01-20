@@ -828,7 +828,7 @@ impl ProgramTest {
             Arc::default(),
         );
 
-        // Add commonly-used SPL programs as a convenience to the user
+        // Add commonly-used TPL programs as a convenience to the user
         for (program_id, account) in programs::spl_programs(&Rent::default()).iter() {
             bank.store_account(program_id, account);
         }
@@ -909,7 +909,7 @@ impl ProgramTest {
     /// Start the test client
     ///
     /// Returns a `BanksClient` interface into the test environment as well as a payer `Keypair`
-    /// with SOL for sending transactions
+    /// with TRZ for sending transactions
     pub async fn start_with_context(mut self) -> ProgramTestContext {
         let (bank_forks, block_commitment_cache, last_blockhash, gci) = self.setup_bank();
         let target_tick_duration = gci.genesis_config.poh_config.target_tick_duration;

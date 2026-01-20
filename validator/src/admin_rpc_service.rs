@@ -1015,7 +1015,7 @@ mod tests {
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert!(sizes.is_empty());
             } else {
-                // Count SPL Token Program Default Accounts
+                // Count TPL Token Program Default Accounts
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{}"]}}"#,
                     inline_tpl_token::id(),
@@ -1164,11 +1164,11 @@ mod tests {
             //                /                             \
             //             wallet1                   ---wallet2---
             //               /                      /             \
-            //              /-(SPL::owns)          /-(SPL::owns)   \-(SPL::owns)
+            //              /-(TPL::owns)          /-(TPL::owns)   \-(TPL::owns)
             //             /                      /                 \
             //      token_account1         token_account2       token_account3
             //            \                     /                   /
-            //             \-(SPL::mint)       /-(SPL::mint)       /-(SPL::mint)
+            //             \-(TPL::mint)       /-(TPL::mint)       /-(TPL::mint)
             //              \                 /                   /
             //               --mint_account1--               mint_account2
 
@@ -1184,7 +1184,7 @@ mod tests {
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert!(sizes.is_empty());
                 // --------------- Test Queries ---------------
-                // 1) Wallet1 - Owns 1 SPL Token
+                // 1) Wallet1 - Owns 1 TPL Token
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{wallet1_pubkey}"]}}"#,
                 );
@@ -1195,7 +1195,7 @@ mod tests {
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert_eq!(sizes.len(), 1);
                 assert_eq!(*sizes.get(&RpcAccountIndex::SplTokenOwner).unwrap(), 1);
-                // 2) Wallet2 - Owns 2 SPL Tokens
+                // 2) Wallet2 - Owns 2 TPL Tokens
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{wallet2_pubkey}"]}}"#,
                 );
@@ -1206,7 +1206,7 @@ mod tests {
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert_eq!(sizes.len(), 1);
                 assert_eq!(*sizes.get(&RpcAccountIndex::SplTokenOwner).unwrap(), 2);
-                // 3) Mint1 - Is in 2 SPL Accounts
+                // 3) Mint1 - Is in 2 TPL Accounts
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{mint1_pubkey}"]}}"#,
                 );
@@ -1217,7 +1217,7 @@ mod tests {
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert_eq!(sizes.len(), 1);
                 assert_eq!(*sizes.get(&RpcAccountIndex::SplTokenMint).unwrap(), 2);
-                // 4) Mint2 - Is in 1 SPL Account
+                // 4) Mint2 - Is in 1 TPL Account
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{mint2_pubkey}"]}}"#,
                 );
@@ -1228,7 +1228,7 @@ mod tests {
                     serde_json::from_value(result["result"].clone()).unwrap();
                 assert_eq!(sizes.len(), 1);
                 assert_eq!(*sizes.get(&RpcAccountIndex::SplTokenMint).unwrap(), 1);
-                // 5) SPL Token Program Owns 6 Accounts - 1 Default, 5 created above.
+                // 5) TPL Token Program Owns 6 Accounts - 1 Default, 5 created above.
                 let req = format!(
                     r#"{{"jsonrpc":"2.0","id":1,"method":"getSecondaryIndexKeySize","params":["{}"]}}"#,
                     inline_tpl_token::id(),

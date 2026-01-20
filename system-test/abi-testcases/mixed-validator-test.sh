@@ -6,7 +6,7 @@
 
 set -e
 cd "$(dirname "$0")"
-SOLANA_ROOT="$(cd ../..; pwd)"
+TREZOA_ROOT="$(cd ../..; pwd)"
 
 logDir="$PWD"/logs
 ledgerDir="$PWD"/config
@@ -30,7 +30,7 @@ trezoaInstallGlobalOpts=(
 bootstrapInstall() {
   declare v=$1
   if [[ ! -h $trezoaInstallDataDir/active_release ]]; then
-    sh "$SOLANA_ROOT"/install/trezoa-install-init.sh "$v" "${trezoaInstallGlobalOpts[@]}"
+    sh "$TREZOA_ROOT"/install/trezoa-install-init.sh "$v" "${trezoaInstallGlobalOpts[@]}"
   fi
   export PATH="$trezoaInstallDataDir/active_release/bin/:$PATH"
 }
@@ -46,8 +46,8 @@ ORIGINAL_PATH=$PATH
 trezoaInstallUse() {
   declare version=$1
   echo "--- Now using trezoa $version"
-  SOLANA_BIN="$trezoaInstallDataDir/releases/$version/trezoa-release/bin"
-  export PATH="$SOLANA_BIN:$ORIGINAL_PATH"
+  TREZOA_BIN="$trezoaInstallDataDir/releases/$version/trezoa-release/bin"
+  export PATH="$TREZOA_BIN:$ORIGINAL_PATH"
 }
 
 killSession() {
@@ -89,7 +89,7 @@ for v in "${otherVersions[@]}"; do
   echo "--- Looking for bootstrap validator on gossip"
   (
     set -x
-    "$SOLANA_BIN"/trezoa-gossip spy \
+    "$TREZOA_BIN"/trezoa-gossip spy \
       --entrypoint 127.0.0.1:8001 \
       --num-nodes-exactly 1 \
       --timeout 30
@@ -113,13 +113,13 @@ for v in "${otherVersions[@]}"; do
   (
     set -x
     tmux new-window -t abi -n "$v" " \
-      $SOLANA_BIN/trezoa-validator \
+      $TREZOA_BIN/trezoa-validator \
       --ledger $ledger \
       --no-snapshot-fetch \
       --entrypoint 127.0.0.1:8001 \
       -o - 2>&1 | tee $logDir/$v.log \
     "
-    "$SOLANA_BIN"/trezoa-gossip spy \
+    "$TREZOA_BIN"/trezoa-gossip spy \
       --entrypoint 127.0.0.1:8001 \
       --num-nodes-exactly $nodeCount \
       --timeout 30

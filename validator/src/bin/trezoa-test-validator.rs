@@ -371,7 +371,7 @@ fn main() {
     } else if random_mint {
         println_name_value(
             "\nNotice!",
-            "No wallet available. `trezoa airdrop` localnet SOL after creating one\n",
+            "No wallet available. `trezoa airdrop` localnet TRZ after creating one\n",
         );
     }
 

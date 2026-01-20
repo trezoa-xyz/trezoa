@@ -6,15 +6,15 @@ openbook_dex() {
     rm -rf openbook-dex
     git clone https://github.com/openbook-dex/program.git openbook-dex
     # copy toolchain file to use trezoa's rust version
-    cp "$SOLANA_DIR"/rust-toolchain.toml openbook-dex/
+    cp "$TREZOA_DIR"/rust-toolchain.toml openbook-dex/
     cd openbook-dex || exit 1
 
-    update_trezoa_dependencies . "$SOLANA_VER"
-    patch_crates_io_trezoa Cargo.toml "$SOLANA_DIR"
+    update_trezoa_dependencies . "$TREZOA_VER"
+    patch_crates_io_trezoa Cargo.toml "$TREZOA_DIR"
     cat >> Cargo.toml <<EOF
 anchor-lang = { git = "https://github.com/coral-xyz/anchor.git", branch = "master" }
 EOF
-    patch_crates_io_trezoa dex/Cargo.toml "$SOLANA_DIR"
+    patch_crates_io_trezoa dex/Cargo.toml "$TREZOA_DIR"
     cat >> dex/Cargo.toml <<EOF
 anchor-lang = { git = "https://github.com/coral-xyz/anchor.git", branch = "master" }
 [workspace]

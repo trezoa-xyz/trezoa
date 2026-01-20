@@ -15,8 +15,8 @@
 
 { # this ensures the entire script is downloaded #
 
-if [ -z "$SOLANA_DOWNLOAD_ROOT" ]; then
-    SOLANA_DOWNLOAD_ROOT="https://github.com/trezoa-xyz/trezoa/releases/download/"
+if [ -z "$TREZOA_DOWNLOAD_ROOT" ]; then
+    TREZOA_DOWNLOAD_ROOT="https://github.com/trezoa-xyz/trezoa/releases/download/"
 fi
 GH_LATEST_RELEASE="https://api.github.com/repos/trezoa-xyz/trezoa/releases/latest"
 
@@ -84,10 +84,10 @@ main() {
     temp_dir="$(mktemp -d 2>/dev/null || ensure mktemp -d -t trezoa-install-init)"
     ensure mkdir -p "$temp_dir"
 
-    # Check for SOLANA_RELEASE environment variable override.  Otherwise fetch
+    # Check for TREZOA_RELEASE environment variable override.  Otherwise fetch
     # the latest release tag from github
-    if [ -n "$SOLANA_RELEASE" ]; then
-      release="$SOLANA_RELEASE"
+    if [ -n "$TREZOA_RELEASE" ]; then
+      release="$TREZOA_RELEASE"
     else
       release_file="$temp_dir/release"
       printf 'looking for latest release\n' 1>&2
@@ -101,7 +101,7 @@ main() {
       fi
     fi
 
-    download_url="$SOLANA_DOWNLOAD_ROOT/$release/trezoa-install-init-$TARGET"
+    download_url="$TREZOA_DOWNLOAD_ROOT/$release/trezoa-install-init-$TARGET"
     trezoa_install_init="$temp_dir/trezoa-install-init"
 
     printf 'downloading %s installer\n' "$release" 1>&2
@@ -117,7 +117,7 @@ main() {
 
     if [ -z "$1" ]; then
       #shellcheck disable=SC2086
-      ignore "$trezoa_install_init" $SOLANA_INSTALL_INIT_ARGS
+      ignore "$trezoa_install_init" $TREZOA_INSTALL_INIT_ARGS
     else
       ignore "$trezoa_install_init" "$@"
     fi

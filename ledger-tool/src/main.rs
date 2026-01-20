@@ -110,7 +110,7 @@ fn output_account(
     encoding: UiAccountEncoding,
 ) {
     println!("{pubkey}:");
-    println!("  balance: {} SOL", lamports_to_trz(account.lamports()));
+    println!("  balance: {} TRZ", lamports_to_trz(account.lamports()));
     println!("  owner: '{}'", account.owner());
     println!("  executable: {}", account.executable());
     if let Some(slot) = modified_slot {
@@ -310,7 +310,7 @@ fn graph_forks(bank_forks: &BankForks, config: &GraphConfig) -> String {
                         slot_stake_and_vote_count.get(&bank.slot())
                     {
                         format!(
-                            "\nvotes: {}, stake: {:.1} SOL ({:.1}%)",
+                            "\nvotes: {}, stake: {:.1} TRZ ({:.1}%)",
                             votes,
                             lamports_to_trz(*stake),
                             *stake as f64 / *total_stake as f64 * 100.,
@@ -407,7 +407,7 @@ fn graph_forks(bank_forks: &BankForks, config: &GraphConfig) -> String {
                     )
                 };
             dot.push(format!(
-                r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} SOL\nroot slot: {}\n{}"];"#,
+                r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} TRZ\nroot slot: {}\n{}"];"#,
                 node_pubkey,
                 node_pubkey,
                 lamports_to_trz(*stake),
@@ -430,7 +430,7 @@ fn graph_forks(bank_forks: &BankForks, config: &GraphConfig) -> String {
     // Annotate the final "..." node with absent vote and stake information
     if absent_votes > 0 {
         dot.push(format!(
-            r#"    "..."[label="...\nvotes: {}, stake: {:.1} SOL {:.1}%"];"#,
+            r#"    "..."[label="...\nvotes: {}, stake: {:.1} TRZ {:.1}%"];"#,
             absent_votes,
             lamports_to_trz(absent_stake),
             absent_stake as f64 / lowest_total_stake as f64 * 100.,

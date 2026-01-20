@@ -22,17 +22,17 @@ spl() {
     rm -rf spl
     git clone https://github.com/trezoa-team/trezoa-program-library.git spl
     # copy toolchain file to use trezoa's rust version
-    cp "$SOLANA_DIR"/rust-toolchain.toml spl/
+    cp "$TREZOA_DIR"/rust-toolchain.toml spl/
     cd spl || exit 1
 
     project_used_trezoa_version=$(sed -nE 's/trezoa-sdk = \"[>=<~]*(.*)\"/\1/p' <"token/program/Cargo.toml")
     echo "used trezoa version: $project_used_trezoa_version"
-    if semverGT "$project_used_trezoa_version" "$SOLANA_VER"; then
+    if semverGT "$project_used_trezoa_version" "$TREZOA_VER"; then
       echo "skip"
       return
     fi
 
-    ./patch.crates-io.sh "$SOLANA_DIR"
+    ./patch.crates-io.sh "$TREZOA_DIR"
 
     for program in "${PROGRAMS[@]}"; do
       $CARGO_TEST_SBF --manifest-path "$program"/Cargo.toml

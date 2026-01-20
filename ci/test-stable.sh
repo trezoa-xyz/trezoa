@@ -128,7 +128,7 @@ test-stable-perf)
     export TEST_PERF_LIBS_CUDA=1
 
     # Force CUDA in ci/localnet-sanity.sh
-    export SOLANA_CUDA=1
+    export TREZOA_CUDA=1
   fi
 
   _ cargo build --bins ${V:+--verbose}

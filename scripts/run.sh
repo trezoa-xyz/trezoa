@@ -42,7 +42,7 @@ export RUST_BACKTRACE=1
 dataDir=$PWD/config/"$(basename "$0" .sh)"
 ledgerDir=$PWD/config/ledger
 
-SOLANA_RUN_SH_CLUSTER_TYPE=${SOLANA_RUN_SH_CLUSTER_TYPE:-development}
+TREZOA_RUN_SH_CLUSTER_TYPE=${TREZOA_RUN_SH_CLUSTER_TYPE:-development}
 
 set -x
 if ! trezoa address; then
@@ -85,9 +85,9 @@ else
       "$validator_vote_account" \
       "$validator_stake_account" \
     --ledger "$ledgerDir" \
-    --cluster-type "$SOLANA_RUN_SH_CLUSTER_TYPE" \
+    --cluster-type "$TREZOA_RUN_SH_CLUSTER_TYPE" \
     $SPL_GENESIS_ARGS \
-    $SOLANA_RUN_SH_GENESIS_ARGS
+    $TREZOA_RUN_SH_GENESIS_ARGS
 fi
 
 abort() {
@@ -117,7 +117,7 @@ args=(
   --no-os-network-limits-test
 )
 # shellcheck disable=SC2086
-trezoa-validator "${args[@]}" $SOLANA_RUN_SH_VALIDATOR_ARGS &
+trezoa-validator "${args[@]}" $TREZOA_RUN_SH_VALIDATOR_ARGS &
 validator=$!
 
 wait "$validator"

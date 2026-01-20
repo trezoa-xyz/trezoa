@@ -1,4 +1,4 @@
-/// Partial SPL Token declarations inlined to avoid an external dependency on the tpl-token-2022 crate
+/// Partial TPL Token declarations inlined to avoid an external dependency on the tpl-token-2022 crate
 use crate::inline_tpl_token::{self, GenericTokenAccount};
 
 trezoa_sdk::declare_id!("7LwqBGzqGyNW2v1iNwxKR4kbVSYvGMC5xr3MxbkrCEKV");

@@ -2,7 +2,7 @@
 
 set -e
 cd "$(dirname "$0")"
-SOLANA_ROOT="$(cd ../..; pwd)"
+TREZOA_ROOT="$(cd ../..; pwd)"
 
 logDir="$PWD"/logs
 rm -rf "$logDir"
@@ -19,7 +19,7 @@ trezoaInstallGlobalOpts=(
 bootstrapInstall() {
   declare v=$1
   if [[ ! -h $trezoaInstallDataDir/active_release ]]; then
-    sh "$SOLANA_ROOT"/install/trezoa-install-init.sh "$v" "${trezoaInstallGlobalOpts[@]}"
+    sh "$TREZOA_ROOT"/install/trezoa-install-init.sh "$v" "${trezoaInstallGlobalOpts[@]}"
   fi
   export PATH="$trezoaInstallDataDir/active_release/bin/:$PATH"
 }

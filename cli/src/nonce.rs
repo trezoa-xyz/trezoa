@@ -86,7 +86,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .required(true)
                         .validator(is_amount_or_all)
                         .help(
-                            "The amount to load the nonce account with, in SOL; accepts keyword \
+                            "The amount to load the nonce account with, in TRZ; accepts keyword \
                              ALL",
                         ),
                 )
@@ -150,12 +150,12 @@ impl NonceSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of TRZ"),
                 ),
         )
         .subcommand(
             SubCommand::with_name("withdraw-from-nonce-account")
-                .about("Withdraw SOL from the nonce account")
+                .about("Withdraw TRZ from the nonce account")
                 .arg(pubkey!(
                     Arg::with_name("nonce_account_pubkey")
                         .index(1)
@@ -168,7 +168,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .index(2)
                         .value_name("RECIPIENT_ADDRESS")
                         .required(true),
-                    "Recipient of withdrawn SOL."
+                    "Recipient of withdrawn TRZ."
                 ))
                 .arg(
                     Arg::with_name("amount")
@@ -177,7 +177,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .required(true)
                         .validator(is_amount)
-                        .help("The amount to withdraw from the nonce account, in SOL"),
+                        .help("The amount to withdraw from the nonce account, in TRZ"),
                 )
                 .arg(nonce_authority_arg())
                 .arg(memo_arg())

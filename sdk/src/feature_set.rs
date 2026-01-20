@@ -397,7 +397,7 @@ pub mod require_static_program_ids_in_transaction {
     trezoa_sdk::declare_id!("8FdwgyHFEjhAdjWfV2vfqk7wA1g9X3fQpKH7SBpEv3kC");
 }
 
-pub mod stake_raise_minimum_delegation_to_1_sol {
+pub mod stake_raise_minimum_delegation_to_1_trz {
     // This is a feature-proposal *feature id*.  The feature keypair address is `GQXzC7YiSNkje6FFUk6sc2p53XRvKoaZ9VMktYzUMnpL`.
     trezoa_sdk::declare_id!("9onWzzvCzNC2jfhxxeqRgs5q7nFAAKpCUvkj6T6GJK9i");
 }
@@ -859,7 +859,7 @@ lazy_static! {
         (update_syscall_base_costs::id(), "update syscall base costs"),
         (stake_deactivate_delinquent_instruction::id(), "enable the deactivate delinquent stake instruction #23932"),
         (vote_withdraw_authority_may_change_authorized_voter::id(), "vote account withdraw authority may change the authorized voter #22521"),
-        (spl_associated_token_account_v1_0_4::id(), "SPL Associated Token Account Program release version 1.0.4, tied to token 3.3.0 #22648"),
+        (spl_associated_token_account_v1_0_4::id(), "TPL Associated Token Account Program release version 1.0.4, tied to token 3.3.0 #22648"),
         (reject_vote_account_close_unless_zero_credit_epoch::id(), "fail vote account withdraw to 0 unless account earned 0 credits in last completed epoch"),
         (add_get_processed_sibling_instruction_syscall::id(), "add add_get_processed_sibling_instruction_syscall"),
         (bank_transaction_count_fix::id(), "fixes Bank::transaction_count to include all committed transactions, not just successful ones"),
@@ -880,12 +880,12 @@ lazy_static! {
         (fix_recent_blockhashes::id(), "stop adding hashes for skipped slots to recent blockhashes"),
         (update_rewards_from_cached_accounts::id(), "update rewards from cached accounts"),
         (enable_partitioned_epoch_reward::id(), "enable partitioned rewards at epoch boundary #32166"),
-        (tpl_token_v3_4_0::id(), "SPL Token Program version 3.4.0 release #24740"),
-        (spl_associated_token_account_v1_1_0::id(), "SPL Associated Token Account Program version 1.1.0 release #24741"),
+        (tpl_token_v3_4_0::id(), "TPL Token Program version 3.4.0 release #24740"),
+        (spl_associated_token_account_v1_1_0::id(), "TPL Associated Token Account Program version 1.1.0 release #24741"),
         (default_units_per_instruction::id(), "Default max tx-wide compute units calculated per instruction"),
         (stake_allow_zero_undelegated_amount::id(), "Allow zero-lamport undelegated amount for initialized stakes #24670"),
         (require_static_program_ids_in_transaction::id(), "require static program ids in versioned transactions"),
-        (stake_raise_minimum_delegation_to_1_sol::id(), "Raise minimum stake delegation to 1.0 SOL #24357"),
+        (stake_raise_minimum_delegation_to_1_trz::id(), "Raise minimum stake delegation to 1.0 TRZ #24357"),
         (stake_minimum_delegation_for_rewards::id(), "stakes must be at least the minimum delegation to earn rewards"),
         (add_set_compute_unit_price_ix::id(), "add compute budget ix for setting a compute unit price"),
         (disable_deploy_of_alloc_free_syscall::id(), "disable new deployments of deprecated sol_alloc_free_ syscall"),

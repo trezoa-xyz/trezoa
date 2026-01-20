@@ -17,8 +17,8 @@ if [[ $OSTYPE == darwin* ]]; then
   fi
 fi
 
-SOLANA_ROOT="$("${readlink_cmd}" -f "${here}/..")"
-cargo="${SOLANA_ROOT}/cargo"
+TREZOA_ROOT="$("${readlink_cmd}" -f "${here}/..")"
+cargo="${TREZOA_ROOT}/cargo"
 
 set -e
 
@@ -151,7 +151,7 @@ mkdir -p "$installDir/bin"
   # Exclude `tpl-token` binary for net.sh builds
   if [[ -z "$validatorOnly" ]]; then
     # shellcheck source=scripts/tpl-token-cli-version.sh
-    source "$SOLANA_ROOT"/scripts/tpl-token-cli-version.sh
+    source "$TREZOA_ROOT"/scripts/tpl-token-cli-version.sh
 
     # the patch-related configs are needed for rust 1.69+ on Windows; see Cargo.toml
     # shellcheck disable=SC2086 # Don't want to double quote $rust_version

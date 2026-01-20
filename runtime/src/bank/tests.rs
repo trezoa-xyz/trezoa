@@ -9408,7 +9408,7 @@ fn test_get_largest_accounts() {
         ])
         .collect();
 
-    // Initialize accounts; all have larger SOL balances than current Bank built-ins
+    // Initialize accounts; all have larger TRZ balances than current Bank built-ins
     let account0 = AccountSharedData::new(pubkeys_balances[0].1, 0, &Pubkey::default());
     bank.store_account(&pubkeys_balances[0].0, &account0);
     let account1 = AccountSharedData::new(pubkeys_balances[1].1, 0, &Pubkey::default());
