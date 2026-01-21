@@ -300,7 +300,7 @@ fn parse_new_args(matches: &ArgMatches<'_>) -> NewArgs<String, String> {
         funding_keypair: value_t_or_exit!(matches, "funding_keypair", String),
         lamports: matches
             .value_of("amount")
-            .and_then(sol_str_to_lamports)
+            .and_then(trz_str_to_lamports)
             .unwrap(),
         base_keypair: value_t_or_exit!(matches, "base_keypair", String),
         stake_authority: value_t_or_exit!(matches, "stake_authority", String),

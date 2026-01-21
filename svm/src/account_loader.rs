@@ -665,7 +665,7 @@ mod tests {
             v0::{LoadedAddresses, LoadedMessage},
             LegacyMessage, Message, MessageHeader, SanitizedMessage,
         },
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_nonce::{self as nonce, versions::Versions as NonceVersions},
         trezoa_program_runtime::execution_budget::{
             DEFAULT_INSTRUCTION_COMPUTE_UNIT_LIMIT, MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES,
@@ -1869,7 +1869,7 @@ mod tests {
             .insert(recipient, (AccountSharedData::default(), 1));
         let mut account_loader = (&bank).into();
 
-        let tx = transfer(&mint_keypair, &recipient, LAMPORTS_PER_SOL, last_block_hash);
+        let tx = transfer(&mint_keypair, &recipient, LAMPORTS_PER_TRZ, last_block_hash);
         let num_accounts = tx.message().account_keys.len();
         let sanitized_tx = SanitizedTransaction::from_transaction_for_tests(tx);
         let mut error_metrics = TransactionErrorMetrics::default();
@@ -2314,7 +2314,7 @@ mod tests {
         for _ in 0..8 {
             let fee_payer = Pubkey::new_unique();
             let account = AccountSharedData::create_from_existing_shared_data(
-                LAMPORTS_PER_SOL,
+                LAMPORTS_PER_TRZ,
                 Arc::new(vec![0; rng.gen_range(0, 32)]),
                 system_program::id(),
                 rng.r#gen(),

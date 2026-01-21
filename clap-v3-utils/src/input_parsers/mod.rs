@@ -81,7 +81,7 @@ pub fn unix_timestamp_from_rfc3339_datetime(
 )]
 #[allow(deprecated)]
 pub fn lamports_of_sol(matches: &ArgMatches, name: &str) -> Option<u64> {
-    matches.value_of(name).and_then(sol_str_to_lamports)
+    matches.value_of(name).and_then(trz_str_to_lamports)
 }
 
 #[deprecated(
@@ -187,8 +187,8 @@ impl Amount {
     }
 
     pub fn sol_to_lamport(&self) -> Amount {
-        const NATIVE_SOL_DECIMALS: u8 = 9;
-        self.to_raw_amount(NATIVE_SOL_DECIMALS)
+        const NATIVE_TRZ_DECIMALS: u8 = 9;
+        self.to_raw_amount(NATIVE_TRZ_DECIMALS)
     }
 }
 
@@ -559,7 +559,7 @@ mod tests {
                 matches
                     .get_one::<Amount>("amount")
                     .unwrap()
-                    .sol_to_lamport(),
+                    .trz_to_lamport(),
                 Amount::Raw(expected_lamport),
             );
         }

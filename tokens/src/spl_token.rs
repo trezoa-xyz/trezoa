@@ -10,7 +10,7 @@ use {
     trezoa_message::Message,
     trezoa_program_pack::Pack,
     trezoa_rpc_client::rpc_client::RpcClient,
-    spl_associated_token_account_interface::{
+    trz_associated_token_account_interface::{
         address::get_associated_token_address, instruction::create_associated_token_account,
     },
     tpl_token_interface::state::{Account as SplTokenAccount, Mint},

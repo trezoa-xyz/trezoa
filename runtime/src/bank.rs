@@ -5447,7 +5447,7 @@ impl Bank {
 
         if new_feature_activations.contains(&feature_set::replace_tpl_token_with_p_token::id()) {
             if let Err(e) = self.upgrade_loader_v2_program_with_loader_v3_program(
-                &feature_set::replace_tpl_token_with_p_token::SPL_TOKEN_PROGRAM_ID,
+                &feature_set::replace_tpl_token_with_p_token::TPL_TOKEN_PROGRAM_ID,
                 &feature_set::replace_tpl_token_with_p_token::PTOKEN_PROGRAM_BUFFER,
                 "replace_tpl_token_with_p_token",
             ) {

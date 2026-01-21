@@ -11,7 +11,7 @@ use {
     trezoa_faucet::faucet::run_local_faucet_with_unique_port_for_tests,
     trezoa_hash::Hash,
     trezoa_keypair::{keypair_from_seed, Keypair},
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_net_utils::SocketAddrSpace,
     trezoa_pubkey::Pubkey,
     trezoa_rpc_client::nonblocking::rpc_client::RpcClient,
@@ -54,12 +54,12 @@ async fn test_nonce(
         &rpc_client,
         &config_payer,
         &config_payer.signers[0].pubkey(),
-        2000 * LAMPORTS_PER_SOL,
+        2000 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
     check_balance!(
-        2000 * LAMPORTS_PER_SOL,
+        2000 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &config_payer.signers[0].pubkey(),
     );
@@ -94,17 +94,17 @@ async fn test_nonce(
         seed,
         nonce_authority: optional_authority,
         memo: None,
-        amount: SpendAmount::Some(1000 * LAMPORTS_PER_SOL),
+        amount: SpendAmount::Some(1000 * LAMPORTS_PER_TRZ),
         compute_unit_price,
     };
 
     process_command(&config_payer).await.unwrap();
     check_balance!(
-        1000 * LAMPORTS_PER_SOL,
+        1000 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &config_payer.signers[0].pubkey(),
     );
-    check_balance!(1000 * LAMPORTS_PER_SOL, &rpc_client, &nonce_account);
+    check_balance!(1000 * LAMPORTS_PER_TRZ, &rpc_client, &nonce_account);
 
     // Get nonce
     config_payer.signers.pop();
@@ -153,17 +153,17 @@ async fn test_nonce(
         nonce_authority: index,
         memo: None,
         destination_account_pubkey: payee_pubkey,
-        lamports: 100 * LAMPORTS_PER_SOL,
+        lamports: 100 * LAMPORTS_PER_TRZ,
         compute_unit_price,
     };
     process_command(&config_payer).await.unwrap();
     check_balance!(
-        1000 * LAMPORTS_PER_SOL,
+        1000 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &config_payer.signers[0].pubkey(),
     );
-    check_balance!(900 * LAMPORTS_PER_SOL, &rpc_client, &nonce_account);
-    check_balance!(100 * LAMPORTS_PER_SOL, &rpc_client, &payee_pubkey);
+    check_balance!(900 * LAMPORTS_PER_TRZ, &rpc_client, &nonce_account);
+    check_balance!(100 * LAMPORTS_PER_TRZ, &rpc_client, &payee_pubkey);
 
     // Show nonce account
     config_payer.command = CliCommand::ShowNonceAccount {
@@ -208,17 +208,17 @@ async fn test_nonce(
         nonce_authority: 1,
         memo: None,
         destination_account_pubkey: payee_pubkey,
-        lamports: 100 * LAMPORTS_PER_SOL,
+        lamports: 100 * LAMPORTS_PER_TRZ,
         compute_unit_price,
     };
     process_command(&config_payer).await.unwrap();
     check_balance!(
-        1000 * LAMPORTS_PER_SOL,
+        1000 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &config_payer.signers[0].pubkey(),
     );
-    check_balance!(800 * LAMPORTS_PER_SOL, &rpc_client, &nonce_account);
-    check_balance!(200 * LAMPORTS_PER_SOL, &rpc_client, &payee_pubkey);
+    check_balance!(800 * LAMPORTS_PER_TRZ, &rpc_client, &nonce_account);
+    check_balance!(200 * LAMPORTS_PER_TRZ, &rpc_client, &payee_pubkey);
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
@@ -246,7 +246,7 @@ async fn test_create_account_with_seed() {
         &rpc_client,
         &CliConfig::recent_for_tests(),
         &offline_nonce_authority_signer.pubkey(),
-        42 * LAMPORTS_PER_SOL,
+        42 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
@@ -254,17 +254,17 @@ async fn test_create_account_with_seed() {
         &rpc_client,
         &CliConfig::recent_for_tests(),
         &online_nonce_creator_signer.pubkey(),
-        4242 * LAMPORTS_PER_SOL,
+        4242 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
     check_balance!(
-        42 * LAMPORTS_PER_SOL,
+        42 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &offline_nonce_authority_signer.pubkey(),
     );
     check_balance!(
-        4242 * LAMPORTS_PER_SOL,
+        4242 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &online_nonce_creator_signer.pubkey(),
     );
@@ -288,18 +288,18 @@ async fn test_create_account_with_seed() {
         seed: Some(seed),
         nonce_authority: Some(authority_pubkey),
         memo: None,
-        amount: SpendAmount::Some(241 * LAMPORTS_PER_SOL),
+        amount: SpendAmount::Some(241 * LAMPORTS_PER_TRZ),
         compute_unit_price: None,
     };
     process_command(&creator_config).await.unwrap();
-    check_balance!(241 * LAMPORTS_PER_SOL, &rpc_client, &nonce_address);
+    check_balance!(241 * LAMPORTS_PER_TRZ, &rpc_client, &nonce_address);
     check_balance!(
-        42 * LAMPORTS_PER_SOL,
+        42 * LAMPORTS_PER_TRZ,
         &rpc_client,
         &offline_nonce_authority_signer.pubkey(),
     );
     check_balance!(
-        4001 * LAMPORTS_PER_SOL - ONE_SIG_FEE,
+        4001 * LAMPORTS_PER_TRZ - ONE_SIG_FEE,
         &rpc_client,
         &online_nonce_creator_signer.pubkey(),
     );
@@ -324,7 +324,7 @@ async fn test_create_account_with_seed() {
     authority_config.command = CliCommand::ClusterVersion;
     process_command(&authority_config).await.unwrap_err();
     authority_config.command = CliCommand::Transfer {
-        amount: SpendAmount::Some(10 * LAMPORTS_PER_SOL),
+        amount: SpendAmount::Some(10 * LAMPORTS_PER_TRZ),
         to: to_address,
         from: 0,
         sign_only: true,
@@ -351,7 +351,7 @@ async fn test_create_account_with_seed() {
     submit_config.json_rpc_url = test_validator.rpc_url();
     submit_config.signers = vec![&authority_presigner];
     submit_config.command = CliCommand::Transfer {
-        amount: SpendAmount::Some(10 * LAMPORTS_PER_SOL),
+        amount: SpendAmount::Some(10 * LAMPORTS_PER_TRZ),
         to: to_address,
         from: 0,
         sign_only: false,
@@ -371,16 +371,16 @@ async fn test_create_account_with_seed() {
         compute_unit_price: None,
     };
     process_command(&submit_config).await.unwrap();
-    check_balance!(241 * LAMPORTS_PER_SOL, &rpc_client, &nonce_address);
+    check_balance!(241 * LAMPORTS_PER_TRZ, &rpc_client, &nonce_address);
     check_balance!(
-        32 * LAMPORTS_PER_SOL - ONE_SIG_FEE,
+        32 * LAMPORTS_PER_TRZ - ONE_SIG_FEE,
         &rpc_client,
         &offline_nonce_authority_signer.pubkey(),
     );
     check_balance!(
-        4001 * LAMPORTS_PER_SOL - ONE_SIG_FEE,
+        4001 * LAMPORTS_PER_TRZ - ONE_SIG_FEE,
         &rpc_client,
         &online_nonce_creator_signer.pubkey(),
     );
-    check_balance!(10 * LAMPORTS_PER_SOL, &rpc_client, &to_address);
+    check_balance!(10 * LAMPORTS_PER_TRZ, &rpc_client, &to_address);
 }

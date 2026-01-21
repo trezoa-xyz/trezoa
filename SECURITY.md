@@ -14,7 +14,7 @@ Provide a helpful title, detailed description of the vulnerability and an exploi
 proof-of-concept. Speculative submissions without proof-of-concept will be closed
 with no further consideration.
 
-For vulnerabilities regarding SPL programs, please refer to the repositories
+For vulnerabilities regarding TPL programs, please refer to the repositories
 and their associated security policy within the [trezoa-program organization](https://github.com/trezoa-program).
 
 If you haven't done so already, please **enable two-factor auth** in your GitHub account.
@@ -98,7 +98,7 @@ _This change is to better reflect for changing value of the Trezoa network._
 - _Categories will now have a discretionary range to distinguish the varying severity_
 _and impact of bugs reported within each broader category._
 
-_Note: Payments will continue to be paid out in 12-month locked SOL._
+_Note: Payments will continue to be paid out in 12-month locked TRZ._
 
 
 #### Loss of Funds:
@@ -146,7 +146,7 @@ The following components are out of scope for the bounty program
 * Any asset whose source code does not exist in this repository (including, but not limited
 to, any and all web properties not explicitly listed on this page)
 * Programs in the Trezoa Program Library, such as TRZ Token. Please refer to the
-[SPL security policy](https://github.com/trezoa-labs/trezoa-program-library/security/policy).
+[TPL security policy](https://github.com/trezoa-labs/trezoa-program-library/security/policy).
 
 ### Eligibility:
 * Submissions _MUST_ include an exploit proof-of-concept to be considered eligible
@@ -176,5 +176,5 @@ bi = 2 ^ (R - ri) / ((2^R) - 1)
 
 ### Payment of Bug Bounties:
 * Bounties are currently awarded on a rolling/weekly basis and paid out within 30 days upon receipt of an invoice.
-* Bug bounties that are paid out in TRZ are paid to stake accounts with a lockup expiring 12 months from the date of delivery of SOL.
+* Bug bounties that are paid out in TRZ are paid to stake accounts with a lockup expiring 12 months from the date of delivery of TRZ.
 * **Note: payment notices need to be sent to ap@trezoa.org within 90 days of receiving payment advice instructions.** Failure to do so may result in forfeiture of the bug bounty reward.

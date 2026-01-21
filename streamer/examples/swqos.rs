@@ -37,7 +37,7 @@ fn parse_duration(arg: &str) -> Result<std::time::Duration, std::num::ParseFloat
     let seconds = arg.parse()?;
     Ok(std::time::Duration::from_secs_f64(seconds))
 }
-const LAMPORTS_PER_SOL: u64 = 1000000000;
+const LAMPORTS_PER_TRZ: u64 = 1000000000;
 
 pub fn load_staked_nodes_overrides(path: &String) -> anyhow::Result<HashMap<Pubkey, u64>> {
     debug!("Loading staked nodes overrides configuration from {path}");
@@ -58,7 +58,7 @@ pub fn load_staked_nodes_overrides(path: &String) -> anyhow::Result<HashMap<Pubk
                 .parse()
                 .map_err(|_| anyhow::anyhow!("invalid number at line {line_num}"))?;
 
-            map.insert(pubkey, value.saturating_mul(LAMPORTS_PER_SOL));
+            map.insert(pubkey, value.saturating_mul(LAMPORTS_PER_TRZ));
         }
         Ok(map)
     } else {

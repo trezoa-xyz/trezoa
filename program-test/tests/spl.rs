@@ -1,7 +1,7 @@
 use {
     trezoa_instruction::{AccountMeta, Instruction},
     trezoa_keypair::Keypair,
-    trezoa_program_binaries::spl_programs,
+    trezoa_program_binaries::trz_programs,
     trezoa_program_test::ProgramTest,
     trezoa_pubkey::Pubkey,
     trezoa_sdk_ids::{bpf_loader, bpf_loader_upgradeable},
@@ -15,11 +15,11 @@ use {
 async fn programs_present() {
     let (banks_client, _, _) = ProgramTest::default().start().await;
     let rent = banks_client.get_rent().await.unwrap();
-    let token_2022_id = spl_generic_token::token_2022::id();
+    let token_2022_id = trz_generic_token::token_2022::id();
     let (token_2022_programdata_id, _) =
         Pubkey::find_program_address(&[token_2022_id.as_ref()], &bpf_loader_upgradeable::id());
 
-    for (program_id, _) in spl_programs(&rent) {
+    for (program_id, _) in trz_programs(&rent) {
         let program_account = banks_client.get_account(program_id).await.unwrap().unwrap();
         if program_id == token_2022_id || program_id == token_2022_programdata_id {
             assert_eq!(program_account.owner, bpf_loader_upgradeable::id());
@@ -33,7 +33,7 @@ async fn programs_present() {
 async fn token_2022() {
     let (banks_client, payer, recent_blockhash) = ProgramTest::default().start().await;
 
-    let token_2022_id = spl_generic_token::token_2022::id();
+    let token_2022_id = trz_generic_token::token_2022::id();
     let mint = Keypair::new();
     let rent = banks_client.get_rent().await.unwrap();
     let space = 82;

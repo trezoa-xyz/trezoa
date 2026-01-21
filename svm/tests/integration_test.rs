@@ -19,7 +19,7 @@ use {
         get_program_data_address, instruction as loaderv3_instruction,
         state::UpgradeableLoaderState,
     },
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_nonce::{self as nonce, state::DurableNonce},
     trezoa_program_entrypoint::MAX_PERMITTED_DATA_INCREASE,
     trezoa_program_runtime::execution_budget::{
@@ -747,7 +747,7 @@ fn program_medley(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         let fee_payer = fee_payer_keypair.pubkey();
 
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
         let instruction = Instruction::new_with_bytes(program_id, &[], vec![]);
@@ -782,15 +782,15 @@ fn program_medley(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         let transfer_amount = 10;
 
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
         let mut sender_data = AccountSharedData::default();
-        sender_data.set_lamports(LAMPORTS_PER_SOL);
+        sender_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(sender, &sender_data);
 
         let mut recipient_data = AccountSharedData::default();
-        recipient_data.set_lamports(LAMPORTS_PER_SOL);
+        recipient_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(recipient, &recipient_data);
 
         let instruction = Instruction::new_with_bytes(
@@ -825,7 +825,7 @@ fn program_medley(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         let fee_payer = fee_payer_keypair.pubkey();
 
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
         let instruction = Instruction::new_with_bytes(program_id, &[], vec![]);
@@ -860,7 +860,7 @@ fn program_medley(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         let transfer_amount = base_amount + 50;
 
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         fee_payer_data.set_rent_epoch(u64::MAX);
         test_entry.add_initial_account(fee_payer, &fee_payer_data);
         if drop_on_failure {
@@ -940,7 +940,7 @@ fn simple_transfer(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         drop_on_failure,
         ..Default::default()
     };
-    let transfer_amount = LAMPORTS_PER_SOL;
+    let transfer_amount = LAMPORTS_PER_TRZ;
     let drop_on_failure_status = |status: ExecutionStatus| match (drop_on_failure, status) {
         (true, ExecutionStatus::Succeeded) => ExecutionStatus::Succeeded,
         (true, _) => ExecutionStatus::Discarded,
@@ -956,7 +956,7 @@ fn simple_transfer(drop_on_failure: bool) -> Vec<SvmTestEntry> {
         let mut source_data = AccountSharedData::default();
         let mut destination_data = AccountSharedData::default();
 
-        source_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        source_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(source, &source_data);
 
         test_entry.push_transaction(system_transaction::transfer(
@@ -1097,7 +1097,7 @@ fn simple_nonce(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
 
         if !fake_fee_payer && !fee_paying_nonce {
             let mut fee_payer_data = AccountSharedData::default();
-            fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+            fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
             fee_payer_data.set_rent_epoch(u64::MAX);
             test_entry.add_initial_account(fee_payer, &fee_payer_data);
         } else if rent_paying_nonce {
@@ -1105,7 +1105,7 @@ fn simple_nonce(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
             nonce_balance += LAMPORTS_PER_SIGNATURE;
             nonce_balance -= 1;
         } else if fee_paying_nonce {
-            nonce_balance += LAMPORTS_PER_SOL;
+            nonce_balance += LAMPORTS_PER_TRZ;
         }
 
         let nonce_initial_hash = DurableNonce::from_blockhash(&Hash::new_unique());
@@ -1263,7 +1263,7 @@ fn simple_nonce(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
 
 fn simd83_intrabatch_account_reuse() -> Vec<SvmTestEntry> {
     let mut test_entries = vec![];
-    let transfer_amount = LAMPORTS_PER_SOL;
+    let transfer_amount = LAMPORTS_PER_TRZ;
     let wallet_rent = Rent::default().minimum_balance(0);
 
     // batch 0: two successful transfers from the same source
@@ -1279,7 +1279,7 @@ fn simd83_intrabatch_account_reuse() -> Vec<SvmTestEntry> {
         let destination1_data = AccountSharedData::default();
         let destination2_data = AccountSharedData::default();
 
-        source_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        source_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(source, &source_data);
 
         for (destination, mut destination_data) in [
@@ -1366,7 +1366,7 @@ fn simd83_intrabatch_account_reuse() -> Vec<SvmTestEntry> {
         let mut parent_data = AccountSharedData::default();
         let mut child_data = AccountSharedData::default();
 
-        grandparent_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        grandparent_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(grandparent, &grandparent_data);
 
         test_entry.push_transaction(system_transaction::transfer(
@@ -1423,7 +1423,7 @@ fn simd83_intrabatch_account_reuse() -> Vec<SvmTestEntry> {
         feepayer_data.set_lamports(1 + LAMPORTS_PER_SIGNATURE + wallet_rent);
         test_entry.add_initial_account(feepayer, &feepayer_data);
 
-        separate_source_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        separate_source_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(separate_source, &separate_source_data);
 
         test_entry.push_transaction_with_status(
@@ -1467,7 +1467,7 @@ fn simd83_intrabatch_account_reuse() -> Vec<SvmTestEntry> {
         let mut source_data = AccountSharedData::default();
         let mut destination_data = AccountSharedData::default();
 
-        source_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        source_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(source, &source_data);
 
         let mut load_program_fail_instruction =
@@ -1525,7 +1525,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
     let initial_nonce_data =
         nonce::state::Data::new(fee_payer, initial_durable, LAMPORTS_PER_SIGNATURE);
     let mut initial_nonce_account = AccountSharedData::new_data(
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         &nonce::versions::Versions::new(nonce::state::State::Initialized(
             initial_nonce_data.clone(),
         )),
@@ -1546,7 +1546,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
         &nonce_pubkey,
         &fee_payer,
         &fee_payer,
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
     );
 
     let successful_noop_instruction = Instruction::new_with_bytes(program_id, &[], vec![]);
@@ -1569,7 +1569,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
 
     if !fee_paying_nonce {
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         common_test_entry.add_initial_account(fee_payer, &fee_payer_data);
     }
 
@@ -1732,7 +1732,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
             ExecutionStatus::Discarded,
         );
 
-        test_entry.increase_expected_lamports(&fee_payer, LAMPORTS_PER_SOL);
+        test_entry.increase_expected_lamports(&fee_payer, LAMPORTS_PER_TRZ);
 
         test_entry.drop_expected_account(nonce_pubkey);
 
@@ -1756,7 +1756,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
         let middle_transaction = system_transaction::transfer(
             &fee_payer_keypair,
             &nonce_pubkey,
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             Hash::default(),
         );
 
@@ -1771,7 +1771,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
         test_entry.decrease_expected_lamports(&fee_payer, LAMPORTS_PER_SIGNATURE);
 
         let mut new_nonce_state = AccountSharedData::default();
-        new_nonce_state.set_lamports(LAMPORTS_PER_SOL);
+        new_nonce_state.set_lamports(LAMPORTS_PER_TRZ);
 
         test_entry.update_expected_account_data(nonce_pubkey, &new_nonce_state);
 
@@ -1796,7 +1796,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
             &fee_payer_keypair,
             &non_fee_nonce_keypair,
             Hash::default(),
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             nonce_size as u64,
             &system_program::id(),
         );
@@ -1812,7 +1812,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
         test_entry.decrease_expected_lamports(&fee_payer, LAMPORTS_PER_SIGNATURE * 2);
 
         let new_nonce_state = AccountSharedData::create_from_existing_shared_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             Arc::new(vec![0; nonce_size]),
             system_program::id(),
             false,
@@ -1842,7 +1842,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
             &fee_payer,
             &nonce_pubkey,
             &fee_payer,
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
         );
 
         let middle_transaction = Transaction::new_signed_with_payer(
@@ -1927,7 +1927,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
         let final_nonce_data =
             nonce::state::Data::new(new_authority, initial_durable, LAMPORTS_PER_SIGNATURE);
         let final_nonce_account = AccountSharedData::new_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             &nonce::versions::Versions::new(nonce::state::State::Initialized(final_nonce_data)),
             &system_program::id(),
         )
@@ -1976,7 +1976,7 @@ fn simd83_nonce_reuse(fee_paying_nonce: bool) -> Vec<SvmTestEntry> {
         let final_nonce_data =
             nonce::state::Data::new(new_authority, advanced_durable, LAMPORTS_PER_SIGNATURE);
         let final_nonce_account = AccountSharedData::new_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             &nonce::versions::Versions::new(nonce::state::State::Initialized(final_nonce_data)),
             &system_program::id(),
         )
@@ -2063,7 +2063,7 @@ fn simd83_account_deallocate() -> Vec<SvmTestEntry> {
         let fee_payer = fee_payer_keypair.pubkey();
 
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
         let target = Pubkey::new_unique();
@@ -2151,7 +2151,7 @@ fn simd83_fee_payer_deallocate() -> Vec<SvmTestEntry> {
         let stable_fee_payer = stable_fee_payer_keypair.pubkey();
 
         let mut stable_fee_payer_data = AccountSharedData::default();
-        stable_fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        stable_fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(stable_fee_payer, &stable_fee_payer_data);
 
         // transaction which drains a fee-payer
@@ -2216,7 +2216,7 @@ fn simd83_fee_payer_deallocate() -> Vec<SvmTestEntry> {
         let stable_fee_payer = stable_fee_payer_keypair.pubkey();
 
         let mut stable_fee_payer_data = AccountSharedData::default();
-        stable_fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+        stable_fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
         test_entry.add_initial_account(stable_fee_payer, &stable_fee_payer_data);
 
         let nonce_pubkey = Pubkey::new_unique();
@@ -2224,7 +2224,7 @@ fn simd83_fee_payer_deallocate() -> Vec<SvmTestEntry> {
         let initial_nonce_data =
             nonce::state::Data::new(dealloc_fee_payer, initial_durable, LAMPORTS_PER_SIGNATURE);
         let mut initial_nonce_account = AccountSharedData::new_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             &nonce::versions::Versions::new(nonce::state::State::Initialized(
                 initial_nonce_data.clone(),
             )),
@@ -2304,12 +2304,12 @@ fn simd83_account_reallocate() -> Vec<SvmTestEntry> {
     let fee_payer = fee_payer_keypair.pubkey();
 
     let mut fee_payer_data = AccountSharedData::default();
-    fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+    fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
     common_test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
     let mk_target = |size| {
         AccountSharedData::create_from_existing_shared_data(
-            LAMPORTS_PER_SOL * 10,
+            LAMPORTS_PER_TRZ * 10,
             Arc::new(vec![0; size]),
             program_id,
             false,
@@ -2394,7 +2394,7 @@ fn all_or_nothing(abort: AbortReason) -> Vec<SvmTestEntry> {
         drop_on_failure: matches!(abort, AbortReason::DropOnFailure),
         ..Default::default()
     };
-    let transfer_amount = LAMPORTS_PER_SOL;
+    let transfer_amount = LAMPORTS_PER_TRZ;
 
     // 0: a transfer that succeeds
     {
@@ -2405,7 +2405,7 @@ fn all_or_nothing(abort: AbortReason) -> Vec<SvmTestEntry> {
         let mut source_data = AccountSharedData::default();
         let mut destination_data = AccountSharedData::default();
 
-        source_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        source_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(source, &source_data);
 
         let status = match abort {
@@ -2481,13 +2481,13 @@ fn drop_on_failure_batch(statuses: &[bool]) -> Vec<SvmTestEntry> {
         drop_on_failure: true,
         ..Default::default()
     };
-    let transfer_amount = LAMPORTS_PER_SOL;
+    let transfer_amount = LAMPORTS_PER_TRZ;
 
     // Shared source account to fund all transfers.
     let source_keypair = Keypair::new();
     let source = source_keypair.pubkey();
     let mut source_data = AccountSharedData::default();
-    source_data.set_lamports(LAMPORTS_PER_SOL * 100);
+    source_data.set_lamports(LAMPORTS_PER_TRZ * 100);
     test_entry.add_initial_account(source, &source_data);
 
     // Shared destination account to receive all transfers.
@@ -2588,7 +2588,7 @@ fn program_cache_create_account() {
         let fee_payer = fee_payer_keypair.pubkey();
 
         let mut fee_payer_data = AccountSharedData::default();
-        fee_payer_data.set_lamports(LAMPORTS_PER_SOL * 10);
+        fee_payer_data.set_lamports(LAMPORTS_PER_TRZ * 10);
         test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
         let new_account_keypair = Keypair::new();
@@ -2599,7 +2599,7 @@ fn program_cache_create_account() {
             &fee_payer_keypair,
             &new_account_keypair,
             Hash::default(),
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             0,
             loader_id,
         );
@@ -2607,7 +2607,7 @@ fn program_cache_create_account() {
         test_entry.push_transaction(create_transaction);
 
         test_entry
-            .decrease_expected_lamports(&fee_payer, LAMPORTS_PER_SOL + LAMPORTS_PER_SIGNATURE * 2);
+            .decrease_expected_lamports(&fee_payer, LAMPORTS_PER_TRZ + LAMPORTS_PER_SIGNATURE * 2);
 
         // attempt to invoke the new account
         let invoke_transaction = Transaction::new_signed_with_payer(
@@ -2658,7 +2658,7 @@ fn program_cache_loaderv3_update_tombstone(upgrade_program: bool, invoke_changed
     let fee_payer = fee_payer_keypair.pubkey();
 
     let mut fee_payer_data = AccountSharedData::default();
-    fee_payer_data.set_lamports(LAMPORTS_PER_SOL);
+    fee_payer_data.set_lamports(LAMPORTS_PER_TRZ);
     test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
     test_entry
@@ -2677,7 +2677,7 @@ fn program_cache_loaderv3_update_tombstone(upgrade_program: bool, invoke_changed
         data.append(&mut program_bytecode);
 
         let buffer_account = AccountSharedData::create_from_existing_shared_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             Arc::new(data),
             bpf_loader_upgradeable::id(),
             true,
@@ -2763,7 +2763,7 @@ fn program_cache_loaderv3_buffer_swap(invoke_changed_program: bool) {
     let fee_payer = fee_payer_keypair.pubkey();
 
     let mut fee_payer_data = AccountSharedData::default();
-    fee_payer_data.set_lamports(LAMPORTS_PER_SOL * 10);
+    fee_payer_data.set_lamports(LAMPORTS_PER_TRZ * 10);
     test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
     // this account will start as a buffer and then become a program
@@ -2785,7 +2785,7 @@ fn program_cache_loaderv3_buffer_swap(invoke_changed_program: bool) {
     buffer_data.append(&mut program_bytecode);
 
     let buffer_account = AccountSharedData::create_from_existing_shared_data(
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         Arc::new(buffer_data.clone()),
         bpf_loader_upgradeable::id(),
         true,
@@ -2800,7 +2800,7 @@ fn program_cache_loaderv3_buffer_swap(invoke_changed_program: bool) {
     })
     .unwrap();
     let program_account = AccountSharedData::create_from_existing_shared_data(
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         Arc::new(program_data),
         bpf_loader_upgradeable::id(),
         true,
@@ -2820,7 +2820,7 @@ fn program_cache_loaderv3_buffer_swap(invoke_changed_program: bool) {
         &target,
         &deploy,
         &fee_payer,
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         buffer_data.len(),
     )
     .unwrap();
@@ -2895,7 +2895,7 @@ fn program_cache_stats() {
     let fee_payer = fee_payer_keypair.pubkey();
 
     let mut fee_payer_data = AccountSharedData::default();
-    fee_payer_data.set_lamports(LAMPORTS_PER_SOL * 100);
+    fee_payer_data.set_lamports(LAMPORTS_PER_TRZ * 100);
     test_entry.add_initial_account(fee_payer, &fee_payer_data);
 
     test_entry
@@ -2915,7 +2915,7 @@ fn program_cache_stats() {
         data.append(&mut program_bytecode);
 
         let buffer_account = AccountSharedData::create_from_existing_shared_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             Arc::new(data),
             bpf_loader_upgradeable::id(),
             true,
@@ -2936,9 +2936,9 @@ fn program_cache_stats() {
 
     let succesful_noop_instruction = Instruction::new_with_bytes(noop_program, &[], vec![]);
     let succesful_transfer_instruction =
-        system_instruction::transfer(&fee_payer, &Pubkey::new_unique(), LAMPORTS_PER_SOL);
+        system_instruction::transfer(&fee_payer, &Pubkey::new_unique(), LAMPORTS_PER_TRZ);
     let failing_transfer_instruction =
-        system_instruction::transfer(&fee_payer, &Pubkey::new_unique(), LAMPORTS_PER_SOL * 1000);
+        system_instruction::transfer(&fee_payer, &Pubkey::new_unique(), LAMPORTS_PER_TRZ * 1000);
     let fee_only_noop_instruction = Instruction::new_with_bytes(missing_program, &[], vec![]);
 
     let mut noop_tx_usage = 0;
@@ -2996,7 +2996,7 @@ fn program_cache_stats() {
     test_entry.decrease_expected_lamports(
         &fee_payer,
         LAMPORTS_PER_SIGNATURE * test_entry.transaction_batch.len() as u64
-            + LAMPORTS_PER_SOL * successful_transfers,
+            + LAMPORTS_PER_TRZ * successful_transfers,
     );
 
     // nor does discard
@@ -3187,7 +3187,7 @@ fn svm_inspect_nonce_load_failure(fee_paying_nonce: bool) {
     let initial_nonce_data =
         nonce::state::Data::new(fee_payer, initial_durable, LAMPORTS_PER_SIGNATURE);
     let mut initial_nonce_account = AccountSharedData::new_data(
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         &nonce::versions::Versions::new(nonce::state::State::Initialized(
             initial_nonce_data.clone(),
         )),
@@ -3211,7 +3211,7 @@ fn svm_inspect_nonce_load_failure(fee_paying_nonce: bool) {
     test_entry.add_initial_account(nonce_pubkey, &initial_nonce_account);
 
     let mut separate_fee_payer_account = AccountSharedData::default();
-    separate_fee_payer_account.set_lamports(LAMPORTS_PER_SOL);
+    separate_fee_payer_account.set_lamports(LAMPORTS_PER_TRZ);
     let separate_fee_payer_account = separate_fee_payer_account;
 
     // we always inspect the nonce at least once
@@ -3468,14 +3468,14 @@ mod balance_collector {
         super::*,
         rand0_7::prelude::*,
         trezoa_program_pack::Pack,
-        spl_generic_token::token_2022,
+        trz_generic_token::token_2022,
         tpl_token_interface::state::{
             Account as TokenAccount, AccountState as TokenAccountState, Mint,
         },
         test_case::test_case,
     };
 
-    const STARTING_BALANCE: u64 = LAMPORTS_PER_SOL * 100;
+    const STARTING_BALANCE: u64 = LAMPORTS_PER_TRZ * 100;
 
     // a helper for constructing a transfer instruction, agnostic over system/token
     // it also pulls double duty as a record of what the *result* of a transfer should be
@@ -3569,7 +3569,7 @@ mod balance_collector {
         .pack_into_slice(&mut mint_buf);
 
         let mint_state = AccountSharedData::create_from_existing_shared_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             Arc::new(mint_buf),
             tpl_token_interface::id(),
             false,
@@ -3588,7 +3588,7 @@ mod balance_collector {
         token_account_for_tests().pack_into_slice(&mut token_buf);
 
         let token_state = AccountSharedData::create_from_existing_shared_data(
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
             Arc::new(token_buf),
             tpl_token_interface::id(),
             false,
@@ -3720,7 +3720,7 @@ mod balance_collector {
                 token_account.amount = *user_balances.get(&alice).unwrap();
                 token_account.pack_into_slice(&mut token_buf);
                 let final_token_state = AccountSharedData::create_from_existing_shared_data(
-                    LAMPORTS_PER_SOL,
+                    LAMPORTS_PER_TRZ,
                     Arc::new(token_buf.clone()),
                     tpl_token_interface::id(),
                     false,
@@ -3731,7 +3731,7 @@ mod balance_collector {
                 token_account.amount = *user_balances.get(&bob).unwrap();
                 token_account.pack_into_slice(&mut token_buf);
                 let final_token_state = AccountSharedData::create_from_existing_shared_data(
-                    LAMPORTS_PER_SOL,
+                    LAMPORTS_PER_TRZ,
                     Arc::new(token_buf.clone()),
                     tpl_token_interface::id(),
                     false,
@@ -3742,7 +3742,7 @@ mod balance_collector {
                 token_account.amount = *user_balances.get(&charlie).unwrap();
                 token_account.pack_into_slice(&mut token_buf);
                 let final_token_state = AccountSharedData::create_from_existing_shared_data(
-                    LAMPORTS_PER_SOL,
+                    LAMPORTS_PER_TRZ,
                     Arc::new(token_buf.clone()),
                     tpl_token_interface::id(),
                     false,

@@ -399,7 +399,7 @@ mod tests {
         trezoa_fee_calculator::FeeRateGovernor,
         trezoa_genesis_config::{self, GenesisConfig},
         trezoa_keypair::Keypair,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_pubkey::{self as pubkey, Pubkey},
         trezoa_signer::Signer as _,
         std::{cmp, iter, str::FromStr as _, sync::Arc},
@@ -418,7 +418,7 @@ mod tests {
 
     /// Creates a genesis config with `features` enabled
     fn genesis_config_with(features: Features) -> (GenesisConfig, Keypair) {
-        let mint_lamports = 123_456_789 * LAMPORTS_PER_SOL;
+        let mint_lamports = 123_456_789 * LAMPORTS_PER_TRZ;
         match features {
             Features::None => trezoa_genesis_config::create_genesis_config(mint_lamports),
             Features::All => {
@@ -447,13 +447,13 @@ mod tests {
         let keypair5 = Keypair::new();
 
         let (mut genesis_config, mint_keypair) =
-            trezoa_genesis_config::create_genesis_config(123_456_789 * LAMPORTS_PER_SOL);
+            trezoa_genesis_config::create_genesis_config(123_456_789 * LAMPORTS_PER_TRZ);
         genesis_config.fee_rate_governor = FeeRateGovernor::new(0, 0);
         let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
         let amount = cmp::max(
             bank.get_minimum_balance_for_rent_exemption(0),
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
         );
 
         // send lamports to accounts 1, 2, and 5 so they are alive,
@@ -608,7 +608,7 @@ mod tests {
         assert_eq!(bank.slot(), 0);
 
         // process a transaction that modifies a primordial account
-        bank.transfer(LAMPORTS_PER_SOL, &mint_keypair, &Pubkey::new_unique())
+        bank.transfer(LAMPORTS_PER_TRZ, &mint_keypair, &Pubkey::new_unique())
             .unwrap();
 
         // manually freeze the bank to trigger update_accounts_lt_hash() to run
@@ -740,7 +740,7 @@ mod tests {
 
         let amount = cmp::max(
             bank.get_minimum_balance_for_rent_exemption(0),
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
         );
 
         // create some banks with some modified accounts so that there are stored accounts
@@ -791,7 +791,7 @@ mod tests {
 
         let amount = cmp::max(
             bank.get_minimum_balance_for_rent_exemption(0),
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
         );
 
         // Write to this pubkey multiple times, so there are guaranteed duplicates in the storages.
@@ -943,7 +943,7 @@ mod tests {
 
         let amount = cmp::max(
             bank.get_minimum_balance_for_rent_exemption(0),
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
         );
 
         // create some banks with some modified accounts so that there are stored accounts

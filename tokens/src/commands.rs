@@ -38,7 +38,7 @@ use {
     trezoa_system_interface::instruction as system_instruction,
     trezoa_transaction::Transaction,
     trezoa_transaction_status::TransactionStatus,
-    spl_associated_token_account_interface::address::get_associated_token_address,
+    trz_associated_token_account_interface::address::get_associated_token_address,
     std::{
         cmp::{self},
         io,
@@ -628,7 +628,7 @@ pub fn process_allocations(
     let starting_total_tokens = if let Some(tpl_token_args) = &args.tpl_token_args {
         Token::tpl_token(starting_total_tokens, tpl_token_args.decimals)
     } else {
-        Token::sol(starting_total_tokens)
+        Token::trz(starting_total_tokens)
     };
     println!(
         "{} {}",
@@ -659,8 +659,8 @@ pub fn process_allocations(
             )
         } else {
             (
-                Token::sol(distributed_tokens),
-                Token::sol(undistributed_tokens),
+                Token::trz(distributed_tokens),
+                Token::trz(undistributed_tokens),
             )
         };
     println!("{} {}", style("Distributed:").bold(), distributed_tokens,);
@@ -1310,7 +1310,7 @@ mod tests {
         super::*,
         trezoa_instruction::AccountMeta,
         trezoa_keypair::{read_keypair_file, write_keypair_file},
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_net_utils::SocketAddrSpace,
         trezoa_signer::Signer,
         trezoa_stake_interface::instruction::StakeInstruction,
@@ -1875,7 +1875,7 @@ mod tests {
         let fees = client
             .get_fee_for_message(&one_signer_message(&client))
             .unwrap();
-        let fees_in_sol = fees as f64 / LAMPORTS_PER_SOL as f64;
+        let fees_in_sol = fees as f64 / LAMPORTS_PER_TRZ as f64;
 
         let allocation_amount = 1000.0;
 
@@ -1957,7 +1957,7 @@ mod tests {
         let fees = client
             .get_fee_for_message(&one_signer_message(&client))
             .unwrap();
-        let fees_in_sol = fees as f64 / LAMPORTS_PER_SOL as f64;
+        let fees_in_sol = fees as f64 / LAMPORTS_PER_TRZ as f64;
 
         let sender_keypair_file = tmp_file_path("keypair_file", &alice.pubkey());
         write_keypair_file(&alice, &sender_keypair_file).unwrap();
@@ -2079,7 +2079,7 @@ mod tests {
         let fees = client
             .get_fee_for_message(&one_signer_message(&client))
             .unwrap();
-        let fees_in_sol = fees as f64 / LAMPORTS_PER_SOL as f64;
+        let fees_in_sol = fees as f64 / LAMPORTS_PER_TRZ as f64;
 
         let sender_keypair_file = tmp_file_path("keypair_file", &alice.pubkey());
         write_keypair_file(&alice, &sender_keypair_file).unwrap();
@@ -2195,7 +2195,7 @@ mod tests {
         let fees = client
             .get_fee_for_message(&one_signer_message(&client))
             .unwrap();
-        let fees_in_sol = fees as f64 / LAMPORTS_PER_SOL as f64;
+        let fees_in_sol = fees as f64 / LAMPORTS_PER_TRZ as f64;
 
         let sender_keypair_file = tmp_file_path("keypair_file", &alice.pubkey());
         write_keypair_file(&alice, &sender_keypair_file).unwrap();

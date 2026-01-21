@@ -439,7 +439,7 @@ pub mod vote_withdraw_authority_may_change_authorized_voter {
     trezoa_pubkey::declare_id!("AVZS3ZsN4gi6Rkx2QUibYuSJG3S6QHib7xCYhG6vGJxU");
 }
 
-pub mod spl_associated_token_account_v1_0_4 {
+pub mod trz_associated_token_account_v1_0_4 {
     trezoa_pubkey::declare_id!("FaTa4SpiaSNH44PGC4z8bnGVTkSRYaWvrBs3KTu8XQQq");
 }
 
@@ -527,7 +527,7 @@ pub mod tpl_token_v3_4_0 {
     trezoa_pubkey::declare_id!("Ftok4njE8b7tDffYkC5bAbCaQv5sL6jispYrprzatUwN");
 }
 
-pub mod spl_associated_token_account_v1_1_0 {
+pub mod trz_associated_token_account_v1_1_0 {
     trezoa_pubkey::declare_id!("FaTa17gVKoqbh38HcfiQonPsAaQViyDCCSg71AubYZw8");
 }
 
@@ -1205,7 +1205,7 @@ pub mod replace_tpl_token_with_p_token {
 
     trezoa_pubkey::declare_id!("ptokSWRqZz5u2xdqMdstkMKpFurauUpVen7TZXgDpkQ");
 
-    pub const SPL_TOKEN_PROGRAM_ID: Pubkey =
+    pub const TPL_TOKEN_PROGRAM_ID: Pubkey =
         Pubkey::from_str_const("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 
     pub const PTOKEN_PROGRAM_BUFFER: Pubkey =
@@ -1434,8 +1434,8 @@ pub static FEATURE_NAMES: LazyLock<AHashMap<Pubkey, &'static str>> = LazyLock::n
             "vote account withdraw authority may change the authorized voter #22521",
         ),
         (
-            spl_associated_token_account_v1_0_4::id(),
-            "SPL Associated Token Account Program release version 1.0.4, tied to token 3.3.0 \
+            trz_associated_token_account_v1_0_4::id(),
+            "TPL Associated Token Account Program release version 1.0.4, tied to token 3.3.0 \
              #22648",
         ),
         (
@@ -1515,8 +1515,8 @@ pub static FEATURE_NAMES: LazyLock<AHashMap<Pubkey, &'static str>> = LazyLock::n
             "TRZ Token Program version 3.4.0 release #24740",
         ),
         (
-            spl_associated_token_account_v1_1_0::id(),
-            "SPL Associated Token Account Program version 1.1.0 release #24741",
+            trz_associated_token_account_v1_1_0::id(),
+            "TPL Associated Token Account Program version 1.1.0 release #24741",
         ),
         (
             default_units_per_instruction::id(),

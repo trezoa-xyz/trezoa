@@ -121,21 +121,21 @@ trezoa-tokens distribute-stake --stake-account-address <ACCOUNT_ADDRESS> \
 ```
 
 Currently, this will subtract 1 TRZ from each allocation and store it in the
-recipient address. That SOL can be used to pay transaction fees on staking
+recipient address. That TRZ can be used to pay transaction fees on staking
 operations such as delegating stake. The rest of the allocation is put in
 a stake account. The new stake account address is output in the transaction
 log.
 
 ## Distribute TRZ tokens
 
-Distributing TRZ Tokens works very similarly to distributing SOL, but requires
+Distributing TRZ Tokens works very similarly to distributing TRZ, but requires
 the `--owner` parameter to sign transactions. Each recipient account must be an
 system account that will own an Associated Token Account for the TRZ Token mint.
 The Associated Token Account will be created, and funded by the fee_payer, if it
 does not already exist.
 
 Send TRZ tokens to the recipients in `<RECIPIENTS_CSV>`.
-*NOTE:* the CSV expects SPL-token amounts in raw format (no decimals)
+*NOTE:* the CSV expects TPL-token amounts in raw format (no decimals)
 
 Example recipients.csv:
 
@@ -188,7 +188,7 @@ C56nwrDVFpPrqwGYsTgQxv1ZraTh81H14PV4RHvZe36s                    10.000
 
 ### Calculate what tokens should be sent
 
-As with SOL, you can List the differences between a list of expected
+As with TRZ, you can List the differences between a list of expected
 distributions and the record of what transactions have already been sent using
 the `--dry-run` parameter, or `trezoa-tokens balances`.
 

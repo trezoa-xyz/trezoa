@@ -36,7 +36,7 @@ use {
         blockstore_options::{AccessType, BlockstoreOptions},
         leader_schedule::{FixedSchedule, IdentityKeyedLeaderSchedule, LeaderSchedule},
     },
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_net_utils::SocketAddrSpace,
     trezoa_pubkey::Pubkey,
     trezoa_rpc_client::rpc_client::RpcClient,
@@ -61,7 +61,7 @@ use {
 pub const RUST_LOG_FILTER: &str =
     "error,trezoa_core::replay_stage=warn,trezoa_local_cluster=info,local_cluster=info";
 
-pub const DEFAULT_NODE_STAKE: u64 = 10 * LAMPORTS_PER_SOL;
+pub const DEFAULT_NODE_STAKE: u64 = 10 * LAMPORTS_PER_TRZ;
 
 pub fn last_vote_in_tower(tower_path: &Path, node_pubkey: &Pubkey) -> Option<(Slot, Hash)> {
     restore_tower(tower_path, node_pubkey).map(|tower| tower.last_voted_slot_hash().unwrap())

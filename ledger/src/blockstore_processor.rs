@@ -2331,7 +2331,7 @@ pub mod tests {
         trezoa_hash::Hash,
         trezoa_instruction::{error::InstructionError, Instruction},
         trezoa_keypair::Keypair,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_program_runtime::declare_process_instruction,
         trezoa_pubkey::Pubkey,
         trezoa_runtime::{
@@ -4902,7 +4902,7 @@ pub mod tests {
             genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config(100 * LAMPORTS_PER_SOL);
+        } = create_genesis_config(100 * LAMPORTS_PER_TRZ);
         let genesis_hash = genesis_config.hash();
         let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         let bank = BankWithScheduler::new_without_scheduler(bank);
@@ -4914,9 +4914,9 @@ pub mod tests {
         let keypair2 = Keypair::new();
         let keypair3 = Keypair::new();
         let keypair4 = Keypair::new();
-        bank.transfer(LAMPORTS_PER_SOL, &mint_keypair, &keypair1.pubkey())
+        bank.transfer(LAMPORTS_PER_TRZ, &mint_keypair, &keypair1.pubkey())
             .unwrap();
-        bank.transfer(LAMPORTS_PER_SOL, &mint_keypair, &keypair2.pubkey())
+        bank.transfer(LAMPORTS_PER_TRZ, &mint_keypair, &keypair2.pubkey())
             .unwrap();
 
         let (transaction_status_sender, transaction_status_receiver) =

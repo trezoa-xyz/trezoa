@@ -39,7 +39,7 @@ use {
         Instruction,
     },
     trezoa_keypair::Keypair,
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_poh_config::PohConfig,
     trezoa_program_binaries as programs,
     trezoa_program_entrypoint::{deserialize, SUCCESS},
@@ -809,7 +809,7 @@ impl ProgramTest {
         };
         let bootstrap_validator_pubkey = Pubkey::new_unique();
         let bootstrap_validator_stake_lamports =
-            rent.minimum_balance(VoteStateV4::size_of()) + 1_000_000 * LAMPORTS_PER_SOL;
+            rent.minimum_balance(VoteStateV4::size_of()) + 1_000_000 * LAMPORTS_PER_TRZ;
 
         let mint_keypair = Keypair::new();
         let voting_keypair = Keypair::new();
@@ -828,7 +828,7 @@ impl ProgramTest {
         }
 
         let mut genesis_config = create_genesis_config_with_leader_ex(
-            1_000_000 * LAMPORTS_PER_SOL,
+            1_000_000 * LAMPORTS_PER_TRZ,
             &mint_keypair.pubkey(),
             &bootstrap_validator_pubkey,
             &voting_keypair.pubkey(),
@@ -875,8 +875,8 @@ impl ProgramTest {
             None,
         );
 
-        // Add commonly-used SPL programs as a convenience to the user
-        for (program_id, account) in programs::spl_programs(&rent).iter() {
+        // Add commonly-used TPL programs as a convenience to the user
+        for (program_id, account) in programs::trz_programs(&rent).iter() {
             bank.store_account(program_id, account);
         }
 

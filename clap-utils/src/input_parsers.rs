@@ -10,7 +10,7 @@ use {
     trezoa_cluster_type::ClusterType,
     trezoa_commitment_config::CommitmentConfig,
     trezoa_keypair::{read_keypair_file, Keypair},
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_pubkey::Pubkey,
     trezoa_remote_wallet::remote_wallet::RemoteWalletManager,
     trezoa_signature::Signature,
@@ -208,11 +208,11 @@ pub fn lamports_of_sol(matches: &ArgMatches<'_>, name: &str) -> Option<u64> {
         if value == "." {
             None
         } else {
-            let (sol, lamports) = value.split_once('.').unwrap_or((value, ""));
-            let trz = if sol.is_empty() {
+            let (trz, lamports) = value.split_once('.').unwrap_or((value, ""));
+            let trz = if trz.is_empty() {
                 0
             } else {
-                sol.parse::<u64>().ok()?
+                trz.parse::<u64>().ok()?
             };
             let lamports = if lamports.is_empty() {
                 0
@@ -220,8 +220,8 @@ pub fn lamports_of_sol(matches: &ArgMatches<'_>, name: &str) -> Option<u64> {
                 format!("{lamports:0<9}")[..9].parse().ok()?
             };
             Some(
-                LAMPORTS_PER_SOL
-                    .saturating_mul(sol)
+                LAMPORTS_PER_TRZ
+                    .saturating_mul(trz)
                     .saturating_add(lamports),
             )
         }
@@ -408,7 +408,7 @@ mod tests {
     fn test_lamports_of_sol_origin() {
         use trezoa_native_token::sol_str_to_lamports;
         pub fn lamports_of_sol(matches: &ArgMatches<'_>, name: &str) -> Option<u64> {
-            matches.value_of(name).and_then(sol_str_to_lamports)
+            matches.value_of(name).and_then(trz_str_to_lamports)
         }
 
         let matches = app().get_matches_from(vec!["test", "--single", "50"]);

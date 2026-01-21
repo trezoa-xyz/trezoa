@@ -1,7 +1,7 @@
 use {
     trezoa_account::{state_traits::StateMut, AccountSharedData, ReadableAccount},
     trezoa_clock::Epoch,
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_pubkey::Pubkey,
     trezoa_rent::Rent,
     trezoa_stake_interface::{
@@ -19,8 +19,8 @@ use {
 #[inline(always)]
 pub fn get_minimum_delegation(is_stake_raise_minimum_delegation_to_1_sol_active: bool) -> u64 {
     if is_stake_raise_minimum_delegation_to_1_sol_active {
-        const MINIMUM_DELEGATION_SOL: u64 = 1;
-        MINIMUM_DELEGATION_SOL * LAMPORTS_PER_SOL
+        const MINIMUM_DELEGATION_TRZ: u64 = 1;
+        MINIMUM_DELEGATION_TRZ * LAMPORTS_PER_TRZ
     } else {
         1
     }

@@ -43,7 +43,7 @@ usage: $0 [+<cargo version>] [options] <install directory>
     --no-build-platform-tools   Do not build trezoa-platform-tools.
     --no-build-validator-bins   Do not build validator binaries.
     --no-perf-libs              Do not fetch and install perf-libs. (Note: Not using this flag may require internet at build time)
-    --no-tpl-token              Do not fetch and install SPL-Token. (Note: Not using this flag requires internet at build time)
+    --no-tpl-token              Do not fetch and install TRZ-Token. (Note: Not using this flag requires internet at build time)
     --help                      Show this help information and exit.
 EOF
   exit $exitcode

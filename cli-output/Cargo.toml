@@ -49,7 +49,7 @@ trezoa-transaction-error = { workspace = true }
 trezoa-transaction-status = { workspace = true }
 trezoa-transaction-status-client-types = { workspace = true }
 trezoa-vote-program = { workspace = true }
-spl-memo-interface = { workspace = true }
+trz-memo-interface = { workspace = true }
 
 [dev-dependencies]
 ed25519-dalek = { workspace = true }

@@ -12,5 +12,5 @@ source "$here"/func-openbook-dex.sh
 #shellcheck source=ci/downstream-projects/common.sh
 source "$here"/common.sh
 
-_ spl
+_ tpl
 _ openbook_dex

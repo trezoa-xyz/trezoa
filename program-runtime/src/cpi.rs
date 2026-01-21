@@ -1232,7 +1232,7 @@ fn update_caller_account_region(
 
     if address_space_reserved_for_account > 0 {
         // We can trust vm_data_addr to point to the correct region because we
-        // enforce that in CallerAccount::from_(sol_)account_info.
+        // enforce that in CallerAccount::from_(trz_)account_info.
         let (region_index, region) = memory_mapping
             .find_region(caller_account.vm_data_addr)
             .ok_or_else(|| Box::new(InstructionError::MissingAccount))?;

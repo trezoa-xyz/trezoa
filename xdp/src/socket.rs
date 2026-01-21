@@ -58,7 +58,7 @@ impl<U: Umem> Socket<U> {
 
             if setsockopt(
                 fd.as_raw_fd(),
-                libc::SOL_XDP,
+                libc::TRZ_XDP,
                 libc::XDP_UMEM_REG,
                 &reg as *const _ as *const libc::c_void,
                 mem::size_of::<xdp_umem_reg>() as libc::socklen_t,

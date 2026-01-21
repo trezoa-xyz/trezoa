@@ -1417,7 +1417,7 @@ fn process_instruction<'a>(
             // compare from zero until the beginning of a function frame.
             unsafe {
                 const ZEROED_BYTES_LENGTH: usize = (MAX_CALL_DEPTH - 2) * STACK_FRAME_SIZE;
-                assert_eq!(sol_memcmp(stack, &ZEROS, ZEROED_BYTES_LENGTH), 0);
+                assert_eq!(trz_memcmp(stack, &ZEROS, ZEROED_BYTES_LENGTH), 0);
                 stack[..ZEROED_BYTES_LENGTH].fill(42);
             }
 

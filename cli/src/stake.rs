@@ -477,7 +477,7 @@ impl StakeSubCommands for App<'_, '_> {
                 .arg(
                     Arg::with_name("split_stake_account")
                         .index(2)
-                        .value_name("SPLIT_STAKE_ACCOUNT")
+                        .value_name("TPLIT_STAKE_ACCOUNT")
                         .takes_value(true)
                         .required(true)
                         .validator(is_valid_signer)
@@ -499,7 +499,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .help(
                             "Seed for address generation; if specified, the resulting account \
-                             will be at a derived address of SPLIT_STAKE_ACCOUNT",
+                             will be at a derived address of TPLIT_STAKE_ACCOUNT",
                         ),
                 )
                 .arg(stake_authority_arg())
@@ -510,7 +510,7 @@ impl StakeSubCommands for App<'_, '_> {
                 .arg(compute_unit_price_arg())
                 .arg(
                     Arg::with_name("rent_exempt_reserve_sol")
-                        .long("rent-exempt-reserve-sol")
+                        .long("rent-exempt-reserve-trz")
                         .value_name("AMOUNT")
                         .takes_value(true)
                         .validator(is_amount)

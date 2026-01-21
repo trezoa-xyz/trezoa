@@ -190,16 +190,16 @@ sudo apt update
 sudo apt upgrade
 ```
 
-## Sol User
+## TRZ User
 
-Create a new Ubuntu user, named `sol`, for running the validator:
+Create a new Ubuntu user, named `trz`, for running the validator:
 
 ```
-sudo adduser sol
+sudo adduser trz
 ```
 
 It is a best practice to always run your validator as a non-root user, like the
-`sol` user we just created.
+`trz` user we just created.
 
 ## Hard Drive Setup
 
@@ -256,10 +256,10 @@ you mount it. Make a directory for mounting your drive:
 sudo mkdir -p /mnt/ledger
 ```
 
-Next, change the ownership of the directory to your `sol` user:
+Next, change the ownership of the directory to your `trz` user:
 
 ```
-sudo chown -R sol:sol /mnt/ledger
+sudo chown -R trz:trz /mnt/ledger
 ```
 
 Now you can mount the drive:
@@ -295,7 +295,7 @@ sudo mkdir -p /mnt/accounts
 Change the ownership of that directory:
 
 ```
-sudo chown -R sol:sol /mnt/accounts
+sudo chown -R trz:trz /mnt/accounts
 ```
 
 And lastly, mount the drive:
@@ -374,31 +374,31 @@ On your personal computer, not on the validator, securely copy your
 validator server:
 
 ```
-scp validator-keypair.json sol@<server.hostname>:
-scp vote-account-keypair.json sol@<server.hostname>:
+scp validator-keypair.json trz@<server.hostname>:
+scp vote-account-keypair.json trz@<server.hostname>:
 ```
 
 > **Note**: The `vote-account-keypair.json` does not have any function other
 > than identifying the vote account to potential delegators. Only the public key
 > of the vote account is important once the account is created.
 
-## Switch to the sol User
+## Switch to the trz User
 
-On the validator server, switch to the `sol` user:
+On the validator server, switch to the `trz` user:
 
 ```
-su - sol
+su - trz
 ```
 
 ## Install trezoa-validator on Remote Machine
 
 Your remote machine will need `trezoa-validator` installed to run the Trezoa-team validator
-software. For simplicity, install the application with user `sol`. Refer again to
+software. For simplicity, install the application with user `trz`. Refer again to
 [build from source](../cli/install.md#build-from-source).
 
 ## Create A Validator Startup Script
 
-In your sol home directory (e.g. `/home/trz/`), create a folder called `bin`.
+In your trz home directory (e.g. `/home/trz/`), create a folder called `bin`.
 Inside that folder create a file called `validator.sh` and make it executable:
 
 ```
@@ -471,10 +471,10 @@ As a spot check, you will want to make sure your validator is producing
 reasonable log output (**warning**, there will be a lot of log output).
 
 In a new terminal window, ssh into your validator machine, switch users to the
-`sol` user and `tail` the logs:
+`trz` user and `tail` the logs:
 
 ```
-su - sol
+su - trz
 tail -f trezoa-validator.log
 ```
 
@@ -573,7 +573,7 @@ Make sure to implement log rotate as well. Once you have the system service
 configured, start your validator using the newly configured service:
 
 ```
-sudo systemctl enable --now sol
+sudo systemctl enable --now trz
 ```
 
 Now verify that the validator is running properly by tailing the logs and using

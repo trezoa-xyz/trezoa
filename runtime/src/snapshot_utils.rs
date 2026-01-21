@@ -64,7 +64,7 @@ pub mod snapshot_storage_rebuilder;
 /// If it exceeds this limit, remove the file which will force restore from archives
 /// Limit is set assuming 24 bytes per entry, 5% of 10 billion accounts
 /// = 500 million entries * 24 bytes = 12 GB
-pub const MAX_OBSOLETE_ACCOUNTS_FILE_SIZE: u64 = 1024 * 1024 * 1024 * 12; // 12 GB
+pub const MAX_OBTRZETE_ACCOUNTS_FILE_SIZE: u64 = 1024 * 1024 * 1024 * 12; // 12 GB
 pub const MAX_SNAPSHOT_DATA_FILE_SIZE: u64 = 32 * 1024 * 1024 * 1024; // 32 GiB
 const MAX_SNAPSHOT_VERSION_FILE_SIZE: u64 = 8; // byte
 
@@ -690,7 +690,7 @@ pub fn write_obsolete_accounts_to_snapshot(
     serialize_obsolete_accounts(
         bank_snapshot_dir,
         &obsolete_accounts,
-        MAX_OBSOLETE_ACCOUNTS_FILE_SIZE,
+        MAX_OBTRZETE_ACCOUNTS_FILE_SIZE,
     )
 }
 
@@ -701,7 +701,7 @@ fn serialize_obsolete_accounts(
 ) -> Result<u64> {
     let obsolete_accounts_path = bank_snapshot_dir
         .as_ref()
-        .join(snapshot_paths::SNAPSHOT_OBSOLETE_ACCOUNTS_FILENAME);
+        .join(snapshot_paths::SNAPSHOT_OBTRZETE_ACCOUNTS_FILENAME);
     let mut file_stream = large_file_buf_writer(&obsolete_accounts_path)?;
 
     serde_snapshot::serialize_into(&mut file_stream, obsolete_accounts_map)?;
@@ -726,7 +726,7 @@ fn deserialize_obsolete_accounts(
 ) -> Result<SerdeObsoleteAccountsMap> {
     let obsolete_accounts_path = bank_snapshot_dir
         .as_ref()
-        .join(snapshot_paths::SNAPSHOT_OBSOLETE_ACCOUNTS_FILENAME);
+        .join(snapshot_paths::SNAPSHOT_OBTRZETE_ACCOUNTS_FILENAME);
     let obsolete_accounts_file = fs::File::open(&obsolete_accounts_path)?;
     // If the file is too large return error
     let obsolete_accounts_file_metadata = fs::metadata(&obsolete_accounts_path)?;
@@ -1386,7 +1386,7 @@ pub(crate) fn rebuild_storages_from_snapshot_dir(
         .fastboot_version
         .as_ref()
         .is_some_and(|fastboot_version| fastboot_version.major >= 2)
-        .then(|| deserialize_obsolete_accounts(bank_snapshot_dir, MAX_OBSOLETE_ACCOUNTS_FILE_SIZE))
+        .then(|| deserialize_obsolete_accounts(bank_snapshot_dir, MAX_OBTRZETE_ACCOUNTS_FILE_SIZE))
         .transpose()
         .map_err(|err| {
             IoError::other(format!(
@@ -2644,7 +2644,7 @@ mod tests {
 
         // Deserialize
         let deserialized_accounts =
-            deserialize_obsolete_accounts(bank_snapshot_dir, MAX_OBSOLETE_ACCOUNTS_FILE_SIZE)
+            deserialize_obsolete_accounts(bank_snapshot_dir, MAX_OBTRZETE_ACCOUNTS_FILE_SIZE)
                 .unwrap();
 
         // Verify

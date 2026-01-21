@@ -266,7 +266,7 @@ mod tests {
     use {
         self::points::null_tracer,
         super::*,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_pubkey::Pubkey,
         trezoa_stake_interface::state::Delegation,
         trezoa_vote_program::vote_state::{handler::VoteStateHandle, VoteStateV4},
@@ -704,7 +704,7 @@ mod tests {
         // bootstrap means fully-vested stake at epoch 0 with
         //  10_000_000 TRZ is a big but not unreasaonable stake
         let stake = new_stake(
-            10_000_000 * LAMPORTS_PER_SOL,
+            10_000_000 * LAMPORTS_PER_TRZ,
             &Pubkey::default(),
             &vote_state,
             u64::MAX,

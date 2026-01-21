@@ -329,7 +329,7 @@ pub mod worker_message_types {
 
     /// Response to pack for a transaction that attempted execution.
     /// This response will only be sent if the original message flags
-    /// requested execution i.e. not [`super::pack_message_flags::RESOLVE`].
+    /// requested execution i.e. not [`super::pack_message_flags::RETRZVE`].
     #[cfg_attr(
         feature = "dev-context-only-utils",
         derive(Debug, Clone, Copy, PartialEq, Eq)

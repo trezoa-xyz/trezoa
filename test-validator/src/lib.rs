@@ -44,7 +44,7 @@ use {
     },
     trezoa_loader_v3_interface::state::UpgradeableLoaderState,
     trezoa_message::Message,
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_net_utils::{
         find_available_ports_in_range, multihomed_sockets::BindIpAddrs, PortRange, SocketAddrSpace,
     },
@@ -929,9 +929,9 @@ impl TestValidator {
         let validator_identity = Keypair::new();
         let validator_vote_account = Keypair::new();
         let validator_stake_account = Keypair::new();
-        let validator_identity_lamports = 500 * LAMPORTS_PER_SOL;
-        let validator_stake_lamports = 1_000_000 * LAMPORTS_PER_SOL;
-        let mint_lamports = 500_000_000 * LAMPORTS_PER_SOL;
+        let validator_identity_lamports = 500 * LAMPORTS_PER_TRZ;
+        let validator_stake_lamports = 1_000_000 * LAMPORTS_PER_TRZ;
+        let mint_lamports = 500_000_000 * LAMPORTS_PER_TRZ;
 
         // Only activate features which are not explicitly deactivated.
         let mut feature_set = FeatureSet::all_enabled();
@@ -947,7 +947,7 @@ impl TestValidator {
         }
 
         let mut accounts = config.accounts.clone();
-        for (address, account) in trezoa_program_binaries::spl_programs(&config.rent) {
+        for (address, account) in trezoa_program_binaries::trz_programs(&config.rent) {
             accounts.entry(address).or_insert(account);
         }
         for (address, account) in

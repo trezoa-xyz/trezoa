@@ -159,9 +159,9 @@ where
                 .arg(
                     Arg::with_name("unlocked_sol")
                         .default_value("1.0")
-                        .long("unlocked-sol")
+                        .long("unlocked-trz")
                         .takes_value(true)
-                        .value_name("SOL_AMOUNT")
+                        .value_name("TRZ_AMOUNT")
                         .help("Amount of TRZ to put in system account to pay for fees"),
                 )
                 .arg(
@@ -239,9 +239,9 @@ where
                 .arg(
                     Arg::with_name("unlocked_sol")
                         .default_value("1.0")
-                        .long("unlocked-sol")
+                        .long("unlocked-trz")
                         .takes_value(true)
-                        .value_name("SOL_AMOUNT")
+                        .value_name("TRZ_AMOUNT")
                         .help("Amount of TRZ to put in system account to pay for fees"),
                 )
                 .arg(
@@ -331,7 +331,7 @@ where
                         .takes_value(true)
                         .value_name("TOKEN_ACCOUNT_ADDRESS")
                         .validator(is_valid_pubkey)
-                        .help("SPL token account to send from"),
+                        .help("TPL token account to send from"),
                 )
                 .arg(
                     Arg::with_name("token_owner")
@@ -340,7 +340,7 @@ where
                         .takes_value(true)
                         .value_name("TOKEN_ACCOUNT_OWNER_KEYPAIR")
                         .validator(is_valid_signer)
-                        .help("SPL token account owner"),
+                        .help("TPL token account owner"),
                 )
                 .arg(
                     Arg::with_name("fee_payer")
@@ -366,7 +366,7 @@ where
         )
         .subcommand(
             SubCommand::with_name("tpl-token-balances")
-                .about("Balance of SPL token associated accounts")
+                .about("Balance of TPL token associated accounts")
                 .arg(
                     Arg::with_name("input_csv")
                         .long("input-csv")
@@ -382,7 +382,7 @@ where
                         .takes_value(true)
                         .value_name("MINT_ADDRESS")
                         .validator(is_valid_pubkey)
-                        .help("SPL token mint of distribution"),
+                        .help("TPL token mint of distribution"),
                 ),
         )
         .subcommand(
@@ -441,7 +441,7 @@ fn parse_distribute_tokens_args(
         tpl_token_args: None,
         transfer_amount: matches
             .value_of("transfer_amount")
-            .and_then(sol_str_to_lamports),
+            .and_then(trz_str_to_lamports),
     })
 }
 
@@ -482,7 +482,7 @@ fn parse_create_stake_args(
     let stake_args = StakeArgs {
         unlocked_sol: matches
             .value_of("unlocked_sol")
-            .and_then(sol_str_to_lamports)
+            .and_then(trz_str_to_lamports)
             .unwrap(),
         lockup_authority,
         sender_stake_args: None,
@@ -569,7 +569,7 @@ fn parse_distribute_stake_args(
     let stake_args = StakeArgs {
         unlocked_sol: matches
             .value_of("unlocked_sol")
-            .and_then(sol_str_to_lamports)
+            .and_then(trz_str_to_lamports)
             .unwrap(),
         lockup_authority: lockup_authority_address,
         sender_stake_args: Some(sender_stake_args),

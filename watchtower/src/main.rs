@@ -210,7 +210,7 @@ fn get_config() -> Config {
     let unhealthy_threshold = value_t_or_exit!(matches, "unhealthy_threshold", usize);
     let minimum_validator_identity_balance = matches
         .value_of("minimum_validator_identity_balance")
-        .and_then(sol_str_to_lamports)
+        .and_then(trz_str_to_lamports)
         .unwrap();
     let json_rpc_urls = values_t!(matches, "json_rpc_urls", String).unwrap_or_else(|_| {
         vec![value_t!(matches, "json_rpc_url", String).unwrap_or_else(|_| config.json_rpc_url)]

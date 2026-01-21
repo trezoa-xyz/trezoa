@@ -72,7 +72,7 @@ use {
     trezoa_message::{
         compiled_instruction::CompiledInstruction, Message, MessageHeader, SanitizedMessage,
     },
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_nonce::{self as nonce, state::DurableNonce},
     trezoa_packet::PACKET_DATA_SIZE,
     trezoa_poh_config::PohConfig,
@@ -122,7 +122,7 @@ use {
             VoteStateV4, VoteStateVersions, MAX_LOCKOUT_HISTORY,
         },
     },
-    spl_generic_token::token,
+    trz_generic_token::token,
     std::{
         collections::{BTreeMap, HashMap, HashSet},
         convert::TryInto,
@@ -558,11 +558,11 @@ fn test_store_account_and_update_capitalization_unchanged() {
 /// Ensure that store_account_and_update_capitalization() correctly updates accounts_data_size
 #[test]
 fn test_store_account_and_update_capitalization_accounts_data_size() {
-    let (genesis_config, _mint_keypair) = create_genesis_config(100 * LAMPORTS_PER_SOL);
+    let (genesis_config, _mint_keypair) = create_genesis_config(100 * LAMPORTS_PER_TRZ);
     let bank = Bank::new_for_tests(&genesis_config);
 
     let data_size = 123;
-    let mut account = AccountSharedData::new(LAMPORTS_PER_SOL, data_size, &system_program::id());
+    let mut account = AccountSharedData::new(LAMPORTS_PER_TRZ, data_size, &system_program::id());
     let address = Pubkey::new_unique();
 
     // test 1: store a new account
@@ -1001,7 +1001,7 @@ fn test_purge_empty_accounts() {
     //  so we have to stop at various points and restart to actively test.
     for pass in 0..3 {
         trezoa_logger::setup();
-        let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
         let amount = genesis_config.rent.minimum_balance(0);
         let (mut bank, bank_forks) =
             Bank::new_for_tests(&genesis_config).wrap_with_bank_forks_for_tests();
@@ -1093,7 +1093,7 @@ fn test_purge_empty_accounts() {
 
 #[test]
 fn test_two_payments_to_one_party() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let pubkey = trezoa_pubkey::new_rand();
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
@@ -1110,7 +1110,7 @@ fn test_two_payments_to_one_party() {
 
 #[test]
 fn test_one_source_two_tx_one_batch() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let key1 = trezoa_pubkey::new_rand();
     let key2 = trezoa_pubkey::new_rand();
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -1127,7 +1127,7 @@ fn test_one_source_two_tx_one_batch() {
     assert_eq!(res[1], Err(TransactionError::AccountInUse));
     assert_eq!(
         bank.get_balance(&mint_keypair.pubkey()),
-        LAMPORTS_PER_SOL - amount
+        LAMPORTS_PER_TRZ - amount
     );
     assert_eq!(bank.get_balance(&key1), amount);
     assert_eq!(bank.get_balance(&key2), 0);
@@ -1139,7 +1139,7 @@ fn test_one_source_two_tx_one_batch() {
 
 #[test]
 fn test_one_tx_two_out_atomic_fail() {
-    let amount = LAMPORTS_PER_SOL;
+    let amount = LAMPORTS_PER_TRZ;
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(amount);
     let key1 = trezoa_pubkey::new_rand();
     let key2 = trezoa_pubkey::new_rand();
@@ -1161,7 +1161,7 @@ fn test_one_tx_two_out_atomic_fail() {
 
 #[test]
 fn test_one_tx_two_out_atomic_pass() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let key1 = trezoa_pubkey::new_rand();
     let key2 = trezoa_pubkey::new_rand();
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -1175,7 +1175,7 @@ fn test_one_tx_two_out_atomic_pass() {
     bank.process_transaction(&tx).unwrap();
     assert_eq!(
         bank.get_balance(&mint_keypair.pubkey()),
-        LAMPORTS_PER_SOL - (2 * amount)
+        LAMPORTS_PER_TRZ - (2 * amount)
     );
     assert_eq!(bank.get_balance(&key1), amount);
     assert_eq!(bank.get_balance(&key2), amount);
@@ -1184,7 +1184,7 @@ fn test_one_tx_two_out_atomic_pass() {
 // This test demonstrates that fees are paid even when a program fails.
 #[test]
 fn test_detect_failed_duplicate_transactions() {
-    let (mut genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (mut genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     genesis_config.fee_rate_governor = FeeRateGovernor::new(5_000, 0);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
@@ -1194,7 +1194,7 @@ fn test_detect_failed_duplicate_transactions() {
     let tx = system_transaction::transfer(
         &mint_keypair,
         &dest.pubkey(),
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         genesis_config.hash(),
     );
     let signature = tx.signatures[0];
@@ -1214,7 +1214,7 @@ fn test_detect_failed_duplicate_transactions() {
     // This should be the original balance minus the transaction fee.
     assert_eq!(
         bank.get_balance(&mint_keypair.pubkey()),
-        LAMPORTS_PER_SOL - 5_000
+        LAMPORTS_PER_TRZ - 5_000
     );
 }
 
@@ -1238,7 +1238,7 @@ fn test_account_not_found() {
 
 #[test]
 fn test_insufficient_funds() {
-    let mint_amount = LAMPORTS_PER_SOL;
+    let mint_amount = LAMPORTS_PER_TRZ;
     let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(mint_amount);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let pubkey = trezoa_pubkey::new_rand();
@@ -1266,7 +1266,7 @@ fn test_insufficient_funds() {
 
 #[test]
 fn test_executed_transaction_count_post_bank_transaction_count_fix() {
-    let mint_amount = LAMPORTS_PER_SOL;
+    let mint_amount = LAMPORTS_PER_TRZ;
     let (genesis_config, mint_keypair) = create_genesis_config(mint_amount);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let pubkey = trezoa_pubkey::new_rand();
@@ -1310,7 +1310,7 @@ fn test_executed_transaction_count_post_bank_transaction_count_fix() {
 #[test]
 fn test_transfer_to_newb() {
     trezoa_logger::setup();
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
     let pubkey = trezoa_pubkey::new_rand();
@@ -1321,7 +1321,7 @@ fn test_transfer_to_newb() {
 #[test]
 fn test_transfer_to_sysvar() {
     trezoa_logger::setup();
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
 
@@ -1746,19 +1746,19 @@ fn test_bank_blockhash_compute_unit_fee_structure() {
 #[test]
 fn test_debits_before_credits() {
     let (genesis_config, mint_keypair) =
-        create_genesis_config_no_tx_fee_no_rent(2 * LAMPORTS_PER_SOL);
+        create_genesis_config_no_tx_fee_no_rent(2 * LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let keypair = Keypair::new();
     let tx0 = system_transaction::transfer(
         &keypair,
         &mint_keypair.pubkey(),
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         genesis_config.hash(),
     );
     let tx1 = system_transaction::transfer(
         &mint_keypair,
         &keypair.pubkey(),
-        2 * LAMPORTS_PER_SOL,
+        2 * LAMPORTS_PER_TRZ,
         genesis_config.hash(),
     );
     let txs = [tx0, tx1];
@@ -1881,7 +1881,7 @@ fn test_readonly_accounts(relax_intrabatch_account_locks: bool) {
 
 #[test]
 fn test_interleaving_locks() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let alice = Keypair::new();
     let bob = Keypair::new();
@@ -1930,7 +1930,7 @@ fn test_interleaving_locks() {
 fn test_load_and_execute_commit_transactions_fees_only() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_SOL);
+    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_TRZ);
     genesis_config.rent = Rent::default();
     genesis_config.fee_rate_governor = FeeRateGovernor::new(5000, 0);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -2008,7 +2008,7 @@ fn test_load_and_execute_commit_transactions_fees_only() {
 fn test_load_and_execute_commit_transactions_failure() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_SOL);
+    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_TRZ);
     genesis_config.rent = Rent::default();
     genesis_config.fee_rate_governor = FeeRateGovernor::new(5000, 0);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -2083,7 +2083,7 @@ fn test_load_and_execute_commit_transactions_failure() {
 fn test_load_and_execute_commit_transactions_success() {
     let GenesisConfigInfo {
         mut genesis_config, ..
-    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_SOL);
+    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_TRZ);
     genesis_config.rent = Rent::default();
     genesis_config.fee_rate_governor = FeeRateGovernor::new(5000, 0);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -2234,7 +2234,7 @@ fn test_bank_invalid_account_index() {
 
 #[test]
 fn test_bank_pay_to_self() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let key1 = Keypair::new();
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
@@ -2275,7 +2275,7 @@ fn test_bank_parents() {
 /// Verifies that transactions are dropped if they have already been processed
 #[test]
 fn test_tx_already_processed() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
     let key1 = Keypair::new();
@@ -2309,7 +2309,7 @@ fn test_tx_already_processed() {
 /// Verifies that last ids and status cache are correctly referenced from parent
 #[test]
 fn test_bank_parent_already_processed() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let key1 = Keypair::new();
     let (parent, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
@@ -2327,7 +2327,7 @@ fn test_bank_parent_already_processed() {
 /// Verifies that last ids and accounts are correctly referenced from parent
 #[test]
 fn test_bank_parent_account_spend() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let key1 = Keypair::new();
     let key2 = Keypair::new();
     let (parent, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -2344,7 +2344,7 @@ fn test_bank_parent_account_spend() {
 
 #[test]
 fn test_bank_hash_internal_state() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee_no_rent(LAMPORTS_PER_TRZ);
     let (bank0, _bank_forks0) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let (bank1, bank_forks1) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
@@ -2378,7 +2378,7 @@ fn test_bank_hash_internal_state() {
 fn test_bank_hash_internal_state_verify() {
     for pass in 0..4 {
         let (genesis_config, mint_keypair) =
-            create_genesis_config_no_tx_fee_no_rent(LAMPORTS_PER_SOL);
+            create_genesis_config_no_tx_fee_no_rent(LAMPORTS_PER_TRZ);
         let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
         let amount = genesis_config.rent.minimum_balance(0);
@@ -2464,7 +2464,7 @@ fn test_verify_hash_unfrozen() {
 fn test_verify_snapshot_bank() {
     trezoa_logger::setup();
     let pubkey = trezoa_pubkey::new_rand();
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     bank.transfer(
         genesis_config.rent.minimum_balance(0),
@@ -2485,7 +2485,7 @@ fn test_verify_snapshot_bank() {
 #[test]
 fn test_bank_hash_same_transactions_different_fork() {
     trezoa_logger::setup();
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     bank0.freeze();
 
@@ -2530,7 +2530,7 @@ fn test_hash_internal_state_genesis() {
 // of hash_internal_state
 #[test]
 fn test_hash_internal_state_order() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let amount = genesis_config.rent.minimum_balance(0);
     let (bank0, _bank_forks0) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let (bank1, _bank_forks1) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -2549,7 +2549,7 @@ fn test_hash_internal_state_order() {
 #[test]
 fn test_hash_internal_state_error() {
     trezoa_logger::setup();
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let amount = genesis_config.rent.minimum_balance(0);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let key0 = trezoa_pubkey::new_rand();
@@ -2558,7 +2558,7 @@ fn test_hash_internal_state_error() {
 
     // Transfer will error but still take a fee
     assert!(bank
-        .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key0)
+        .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key0)
         .is_err());
     assert_ne!(orig, bank.hash_internal_state());
 
@@ -2590,7 +2590,7 @@ fn test_bank_hash_internal_state_squash() {
 #[test]
 fn test_bank_squash() {
     trezoa_logger::setup();
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(2 * LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(2 * LAMPORTS_PER_TRZ);
     let key1 = Keypair::new();
     let key2 = Keypair::new();
     let (parent, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
@@ -2661,7 +2661,7 @@ fn test_bank_squash() {
 
 #[test]
 fn test_bank_get_account_in_parent_after_squash() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (parent, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
 
@@ -2679,7 +2679,7 @@ fn test_bank_get_account_in_parent_after_squash() {
 #[test]
 fn test_bank_get_account_in_parent_after_squash2() {
     trezoa_logger::setup();
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
 
@@ -2762,7 +2762,7 @@ fn test_bank_get_account_in_parent_after_squash2() {
 fn test_bank_get_account_modified_since_parent_with_fixed_root() {
     let pubkey = trezoa_pubkey::new_rand();
 
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let amount = genesis_config.rent.minimum_balance(0);
     let (bank1, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     bank1.transfer(amount, &mint_keypair, &pubkey).unwrap();
@@ -3098,7 +3098,7 @@ fn test_bank_get_slots_in_epoch() {
 
 #[test]
 fn test_is_delta_true() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let key1 = Keypair::new();
     let tx_transfer_mint_to_1 = system_transaction::transfer(
@@ -3122,7 +3122,7 @@ fn test_is_delta_true() {
 
 #[test]
 fn test_is_empty() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank0, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let key1 = Keypair::new();
 
@@ -3142,7 +3142,7 @@ fn test_is_empty() {
 
 #[test]
 fn test_bank_inherit_tx_count() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
     // Bank 1
@@ -3359,7 +3359,7 @@ fn test_bank_cloned_stake_delegations() {
 
 #[test]
 fn test_is_delta_with_no_committables() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     bank.is_delta.store(false, Relaxed);
 
@@ -3383,7 +3383,7 @@ fn test_is_delta_with_no_committables() {
     // so is_delta should be true
     assert_eq!(
         bank.transfer(
-            LAMPORTS_PER_SOL + 1,
+            LAMPORTS_PER_TRZ + 1,
             &mint_keypair,
             &trezoa_pubkey::new_rand()
         ),
@@ -4902,7 +4902,7 @@ fn test_transaction_with_duplicate_accounts_in_instruction() {
     let from_pubkey = trezoa_pubkey::new_rand();
     let to_pubkey = trezoa_pubkey::new_rand();
     let dup_pubkey = from_pubkey;
-    let from_account = AccountSharedData::new(100 * LAMPORTS_PER_SOL, 1, &mock_program_id);
+    let from_account = AccountSharedData::new(100 * LAMPORTS_PER_TRZ, 1, &mock_program_id);
     let to_account = AccountSharedData::new(0, 1, &mock_program_id);
     bank.store_account(&from_pubkey, &from_account);
     bank.store_account(&to_pubkey, &to_account);
@@ -4913,7 +4913,7 @@ fn test_transaction_with_duplicate_accounts_in_instruction() {
         AccountMeta::new(dup_pubkey, false),
     ];
     let instruction =
-        Instruction::new_with_bincode(mock_program_id, &(10 * LAMPORTS_PER_SOL), account_metas);
+        Instruction::new_with_bincode(mock_program_id, &(10 * LAMPORTS_PER_TRZ), account_metas);
     let tx = Transaction::new_signed_with_payer(
         &[instruction],
         Some(&mint_keypair.pubkey()),
@@ -4923,8 +4923,8 @@ fn test_transaction_with_duplicate_accounts_in_instruction() {
 
     let result = bank.process_transaction(&tx);
     assert_eq!(result, Ok(()));
-    assert_eq!(bank.get_balance(&from_pubkey), 80 * LAMPORTS_PER_SOL);
-    assert_eq!(bank.get_balance(&to_pubkey), 20 * LAMPORTS_PER_SOL);
+    assert_eq!(bank.get_balance(&from_pubkey), 80 * LAMPORTS_PER_TRZ);
+    assert_eq!(bank.get_balance(&to_pubkey), 20 * LAMPORTS_PER_TRZ);
 }
 
 #[test]
@@ -6208,7 +6208,7 @@ fn test_bpf_loader_upgradeable_deploy_with_max_len() {
     }
 
     // Test successful deploy
-    let payer_base_balance = LAMPORTS_PER_SOL;
+    let payer_base_balance = LAMPORTS_PER_TRZ;
     let deploy_fees = {
         let fee_calculator = genesis_config.fee_rate_governor.create_fee_calculator();
         3 * fee_calculator.lamports_per_signature
@@ -7315,7 +7315,7 @@ fn test_timestamp_fast() {
 
 #[test]
 fn test_program_is_native_loader() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let bank = Bank::new_for_tests(&genesis_config);
     let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
 
@@ -8203,7 +8203,7 @@ fn test_epoch_schedule_from_genesis_config() {
     } = create_genesis_config_with_vote_accounts(
         1_000_000_000,
         &validator_keypairs,
-        vec![LAMPORTS_PER_SOL; 2],
+        vec![LAMPORTS_PER_TRZ; 2],
     );
 
     genesis_config.epoch_schedule = EpochSchedule::custom(8192, 100, true);
@@ -8234,7 +8234,7 @@ where
     let GenesisConfigInfo { genesis_config, .. } = create_genesis_config_with_vote_accounts(
         1_000_000_000,
         &validator_keypairs,
-        vec![LAMPORTS_PER_SOL; 2],
+        vec![LAMPORTS_PER_TRZ; 2],
     );
     let bank = Arc::new(Bank::new_from_genesis(
         &genesis_config,
@@ -8546,11 +8546,11 @@ fn test_get_largest_accounts() {
         .iter()
         .cloned()
         .zip(vec![
-            2 * LAMPORTS_PER_SOL,
-            3 * LAMPORTS_PER_SOL,
-            3 * LAMPORTS_PER_SOL,
-            4 * LAMPORTS_PER_SOL,
-            5 * LAMPORTS_PER_SOL,
+            2 * LAMPORTS_PER_TRZ,
+            3 * LAMPORTS_PER_TRZ,
+            3 * LAMPORTS_PER_TRZ,
+            4 * LAMPORTS_PER_TRZ,
+            5 * LAMPORTS_PER_TRZ,
         ])
         .collect();
 
@@ -8580,17 +8580,17 @@ fn test_get_largest_accounts() {
     assert_eq!(
         bank.get_largest_accounts(1, &pubkeys_hashset, AccountAddressFilter::Include, false)
             .unwrap(),
-        vec![(pubkeys[4], 5 * LAMPORTS_PER_SOL)]
+        vec![(pubkeys[4], 5 * LAMPORTS_PER_TRZ)]
     );
     assert_eq!(
         bank.get_largest_accounts(1, &exclude_hashset, AccountAddressFilter::Exclude, false)
             .unwrap(),
-        vec![(pubkeys[4], 5 * LAMPORTS_PER_SOL)]
+        vec![(pubkeys[4], 5 * LAMPORTS_PER_TRZ)]
     );
     assert_eq!(
         bank.get_largest_accounts(1, &exclude4, AccountAddressFilter::Exclude, false)
             .unwrap(),
-        vec![(pubkeys[3], 4 * LAMPORTS_PER_SOL)]
+        vec![(pubkeys[3], 4 * LAMPORTS_PER_TRZ)]
     );
 
     // Return all added accounts
@@ -8751,7 +8751,7 @@ fn do_test_clean_dropped_unrooted_banks(freeze_bank1: FreezeBank1) {
     //! 4. A key with zero lamports is in both an unrooted _and_ rooted bank (key5)
     //!     - In this case, key5's ref-count should be decremented correctly
 
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let amount = genesis_config.rent.minimum_balance(0);
 
@@ -9523,7 +9523,7 @@ fn test_transaction_log_collector_get_logs_for_address() {
 #[test]
 fn test_accounts_data_size_with_good_transaction() {
     const ACCOUNT_SIZE: u64 = MAX_PERMITTED_DATA_LENGTH;
-    let (genesis_config, mint_keypair) = create_genesis_config(1_000 * LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(1_000 * LAMPORTS_PER_TRZ);
     let bank = Bank::new_for_tests(&genesis_config);
     let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
     let transaction = system_transaction::create_account(
@@ -9564,14 +9564,14 @@ fn test_accounts_data_size_with_good_transaction() {
 #[test]
 fn test_accounts_data_size_with_bad_transaction() {
     const ACCOUNT_SIZE: u64 = MAX_PERMITTED_DATA_LENGTH;
-    let (genesis_config, _mint_keypair) = create_genesis_config(1_000 * LAMPORTS_PER_SOL);
+    let (genesis_config, _mint_keypair) = create_genesis_config(1_000 * LAMPORTS_PER_TRZ);
     let bank = Bank::new_for_tests(&genesis_config);
     let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
     let transaction = system_transaction::create_account(
         &Keypair::new(),
         &Keypair::new(),
         bank.last_blockhash(),
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_TRZ,
         ACCOUNT_SIZE,
         &trezoa_system_interface::program::id(),
     );
@@ -9654,7 +9654,7 @@ fn test_invalid_rent_state_changes_existing_accounts() {
         mut genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_SOL, &Pubkey::new_unique(), 42);
+    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_TRZ, &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
 
     let mock_program_id = Pubkey::new_unique();
@@ -9718,7 +9718,7 @@ fn test_invalid_rent_state_changes_new_accounts() {
         mut genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_SOL, &Pubkey::new_unique(), 42);
+    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_TRZ, &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
 
     let mock_program_id = Pubkey::new_unique();
@@ -9772,7 +9772,7 @@ fn test_drained_created_account() {
         mut genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_SOL, &Pubkey::new_unique(), 42);
+    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_TRZ, &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
     activate_all_features(&mut genesis_config);
 
@@ -9862,11 +9862,11 @@ fn test_rent_state_changes_sysvars() {
         mut genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_SOL, &Pubkey::new_unique(), 42);
+    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_TRZ, &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
 
     let validator_pubkey = Pubkey::new_unique();
-    let validator_stake_lamports = LAMPORTS_PER_SOL;
+    let validator_stake_lamports = LAMPORTS_PER_TRZ;
     let validator_vote_account_pubkey = Pubkey::new_unique();
     let validator_voting_keypair = Keypair::new();
 
@@ -9916,7 +9916,7 @@ fn test_invalid_rent_state_changes_fee_payer() {
         mut genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_SOL, &Pubkey::new_unique(), 42);
+    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_TRZ, &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
     genesis_config.fee_rate_governor = FeeRateGovernor::new(
         trezoa_fee_calculator::DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE,
@@ -9953,7 +9953,7 @@ fn test_invalid_rent_state_changes_fee_payer() {
         &[system_instruction::transfer(
             &rent_exempt_fee_payer.pubkey(),
             &recipient,
-            LAMPORTS_PER_SOL,
+            LAMPORTS_PER_TRZ,
         )],
         Some(&rent_exempt_fee_payer.pubkey()),
         &recent_blockhash,
@@ -10093,7 +10093,7 @@ fn test_rent_state_incinerator() {
         mut genesis_config,
         mint_keypair,
         ..
-    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_SOL, &Pubkey::new_unique(), 42);
+    } = create_genesis_config_with_leader(100 * LAMPORTS_PER_TRZ, &Pubkey::new_unique(), 42);
     genesis_config.rent = Rent::default();
     let rent_exempt_minimum = genesis_config.rent.minimum_balance(0);
 
@@ -10445,7 +10445,7 @@ fn test_accounts_data_size_and_resize_transactions() {
         genesis_config,
         mint_keypair,
         ..
-    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_SOL);
+    } = genesis_utils::create_genesis_config(100 * LAMPORTS_PER_TRZ);
     let mock_program_id = Pubkey::new_unique();
     let (bank, _bank_forks) = Bank::new_with_mockup_builtin_for_tests(
         &genesis_config,
@@ -10458,7 +10458,7 @@ fn test_accounts_data_size_and_resize_transactions() {
     let funding_keypair = Keypair::new();
     bank.store_account(
         &funding_keypair.pubkey(),
-        &AccountSharedData::new(10 * LAMPORTS_PER_SOL, 0, &mock_program_id),
+        &AccountSharedData::new(10 * LAMPORTS_PER_TRZ, 0, &mock_program_id),
     );
 
     let mut rng = rand::rng();
@@ -10466,7 +10466,7 @@ fn test_accounts_data_size_and_resize_transactions() {
     // Test case: Grow account
     {
         let account_pubkey = Pubkey::new_unique();
-        let account_balance = LAMPORTS_PER_SOL;
+        let account_balance = LAMPORTS_PER_TRZ;
         let account_size =
             rng.random_range(1..MAX_PERMITTED_DATA_LENGTH as usize - MAX_PERMITTED_DATA_INCREASE);
         let account_data = AccountSharedData::new(account_balance, account_size, &mock_program_id);
@@ -10495,7 +10495,7 @@ fn test_accounts_data_size_and_resize_transactions() {
     // Test case: Shrink account
     {
         let account_pubkey = Pubkey::new_unique();
-        let account_balance = LAMPORTS_PER_SOL;
+        let account_balance = LAMPORTS_PER_TRZ;
         let account_size =
             rng.random_range(MAX_PERMITTED_DATA_LENGTH / 2..MAX_PERMITTED_DATA_LENGTH) as usize;
         let account_data = AccountSharedData::new(account_balance, account_size, &mock_program_id);
@@ -10538,9 +10538,9 @@ fn test_accounts_data_size_from_genesis() {
         mint_keypair,
         ..
     } = genesis_utils::create_genesis_config_with_leader(
-        1_000_000 * LAMPORTS_PER_SOL,
+        1_000_000 * LAMPORTS_PER_TRZ,
         &Pubkey::new_unique(),
-        100 * LAMPORTS_PER_SOL,
+        100 * LAMPORTS_PER_TRZ,
     );
     genesis_config.rent = Rent::default();
     genesis_config.ticks_per_slot = 3;
@@ -10590,7 +10590,7 @@ fn test_cap_accounts_data_allocations_per_transaction() {
         MAX_PERMITTED_ACCOUNTS_DATA_ALLOCATIONS_PER_TRANSACTION as usize
             / MAX_PERMITTED_DATA_LENGTH as usize;
 
-    let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
 
     let mut instructions = Vec::new();
@@ -10714,7 +10714,7 @@ fn test_feature_activation_loaded_programs_cache_preparation_phase() {
     trezoa_logger::setup();
 
     // Bank Setup
-    let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
     let mut bank = Bank::new_for_tests(&genesis_config);
     let mut feature_set = FeatureSet::all_enabled();
     feature_set.deactivate(&feature_set::disable_sbpf_v0_execution::id());
@@ -10824,7 +10824,7 @@ fn test_feature_activation_loaded_programs_epoch_transition() {
     trezoa_logger::setup();
 
     // Bank Setup
-    let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+    let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
     genesis_config
         .accounts
         .remove(&feature_set::disable_fees_sysvar::id());
@@ -10913,9 +10913,9 @@ fn test_verify_accounts() {
         mint_keypair: mint,
         ..
     } = genesis_utils::create_genesis_config_with_leader(
-        1_000_000 * LAMPORTS_PER_SOL,
+        1_000_000 * LAMPORTS_PER_TRZ,
         &Pubkey::new_unique(),
-        100 * LAMPORTS_PER_SOL,
+        100 * LAMPORTS_PER_TRZ,
     );
     genesis_config.rent = Rent::default();
     genesis_config.ticks_per_slot = 3;
@@ -10988,7 +10988,7 @@ fn test_squash_timing_add_assign() {
 
 #[test]
 fn test_system_instruction_allocate() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let bank_client = BankClient::new_shared(bank);
     let data_len = 2;
@@ -11041,7 +11041,7 @@ where
     let program = Pubkey::new_unique();
     let collector = Pubkey::new_unique();
 
-    let mint_lamports = LAMPORTS_PER_SOL;
+    let mint_lamports = LAMPORTS_PER_TRZ;
     let len1 = 123;
     let len2 = 456;
 
@@ -11134,7 +11134,7 @@ fn test_create_zero_lamport_without_clean() {
 
 #[test]
 fn test_system_instruction_assign_with_seed() {
-    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let (bank, _bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
     let bank_client = BankClient::new_shared(bank);
 
@@ -11169,7 +11169,7 @@ fn test_system_instruction_assign_with_seed() {
 
 #[test]
 fn test_system_instruction_unsigned_transaction() {
-    let (genesis_config, alice_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_SOL);
+    let (genesis_config, alice_keypair) = create_genesis_config_no_tx_fee(LAMPORTS_PER_TRZ);
     let alice_pubkey = alice_keypair.pubkey();
     let mallory_keypair = Keypair::new();
     let mallory_pubkey = mallory_keypair.pubkey();
@@ -11202,7 +11202,7 @@ fn test_system_instruction_unsigned_transaction() {
     );
     assert_eq!(
         bank_client.get_balance(&alice_pubkey).unwrap(),
-        LAMPORTS_PER_SOL - amount
+        LAMPORTS_PER_TRZ - amount
     );
     assert_eq!(bank_client.get_balance(&mallory_pubkey).unwrap(), amount);
 }
@@ -11380,7 +11380,7 @@ fn test_last_restart_slot() {
 /// Test that simulations report the compute units of failed transactions
 #[test]
 fn test_failed_simulation_compute_units() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let program_id = Pubkey::new_unique();
     let (bank, _bank_forks) =
         Bank::new_with_mockup_builtin_for_tests(&genesis_config, program_id, MockBuiltin::vm);
@@ -11416,7 +11416,7 @@ fn test_failed_simulation_compute_units() {
 /// Test that simulations report the load error of fees-only transactions
 #[test]
 fn test_failed_simulation_load_error() {
-    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+    let (genesis_config, mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
     let bank = Bank::new_for_tests(&genesis_config);
     let (bank, _bank_forks) = bank.wrap_with_bank_forks_for_tests();
     let missing_program_id = Pubkey::new_unique();
@@ -11515,7 +11515,7 @@ fn test_deploy_last_epoch_slot() {
     trezoa_logger::setup();
 
     // Bank Setup
-    let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+    let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
     activate_feature(
         &mut genesis_config,
         trezoa_feature_set::enable_loader_v4::id(),
@@ -11568,7 +11568,7 @@ fn test_deploy_last_epoch_slot() {
         .unwrap()
         .copy_from_slice(&elf);
 
-    let payer_base_balance = LAMPORTS_PER_SOL;
+    let payer_base_balance = LAMPORTS_PER_TRZ;
     let deploy_fees = {
         let fee_calculator = genesis_config.fee_rate_governor.create_fee_calculator();
         3 * fee_calculator.lamports_per_signature
@@ -11619,7 +11619,7 @@ fn test_loader_v3_to_v4_migration() {
     trezoa_logger::setup();
 
     // Bank Setup
-    let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+    let (mut genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
     activate_feature(
         &mut genesis_config,
         trezoa_feature_set::enable_loader_v4::id(),
@@ -11732,7 +11732,7 @@ fn test_loader_v3_to_v4_migration() {
     let upgradeable_migration_transaction =
         Transaction::new(signers, message.clone(), bank.last_blockhash());
 
-    let payer_account = AccountSharedData::new(LAMPORTS_PER_SOL, 0, &system_program::id());
+    let payer_account = AccountSharedData::new(LAMPORTS_PER_TRZ, 0, &system_program::id());
     bank.store_account(
         &programdata_address,
         &upgradeable_programdata_account.clone(),
@@ -11900,7 +11900,7 @@ fn test_loader_v3_to_v4_migration() {
         programdata_account.set_lamports(min_programdata_balance);
         let payer_balance = min_program_balance
             .saturating_add(min_programdata_balance)
-            .saturating_add(LAMPORTS_PER_SOL)
+            .saturating_add(LAMPORTS_PER_TRZ)
             .saturating_add(fee_calculator.lamports_per_signature);
         let payer_account = AccountSharedData::new(payer_balance, 0, &system_program::id());
         bank.store_account(&programdata_address, &programdata_account);
@@ -12136,7 +12136,7 @@ fn test_bank_epoch_stakes() {
 /// Ensure rehash() does *not* change the bank hash if accounts are unmodified
 #[test]
 fn test_rehash_accounts_unmodified() {
-    let ten_sol = 10 * LAMPORTS_PER_SOL;
+    let ten_sol = 10 * LAMPORTS_PER_TRZ;
     let genesis_config_info = genesis_utils::create_genesis_config(ten_sol);
     let bank = Bank::new_for_tests(&genesis_config_info.genesis_config);
 
@@ -12317,7 +12317,7 @@ fn test_bpf_loader_upgradeable_deploy_with_more_than_255_accounts() {
     };
 
     // Test successful deploy
-    let payer_base_balance = LAMPORTS_PER_SOL;
+    let payer_base_balance = LAMPORTS_PER_TRZ;
     let deploy_fees = {
         let fee_calculator = genesis_config.fee_rate_governor.create_fee_calculator();
         3 * fee_calculator.lamports_per_signature

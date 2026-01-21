@@ -499,7 +499,7 @@ async fn test_cli_program_deploy_feature(enable_feature: bool, skip_preflight: b
         expect_command_failure(
             &config,
             "Program contains a syscall from a deactivated feature",
-            "ELF error: ELF error: Unresolved symbol (sol_alt_bn128_group_op) at instruction #49 \
+            "ELF error: ELF error: Unresolved symbol (trz_alt_bn128_group_op) at instruction #49 \
              (ELF file offset 0x188)",
         )
         .await;
@@ -682,7 +682,7 @@ async fn test_cli_program_upgrade_with_feature(enable_feature: bool) {
             "Program contains a syscall to a disabled feature",
             format!(
                 "Buffer account {} has invalid program data: \"ELF error: ELF error: Unresolved \
-                 symbol (sol_alt_bn128_group_op) at instruction #49 (ELF file offset 0x188)\"",
+                 symbol (trz_alt_bn128_group_op) at instruction #49 (ELF file offset 0x188)\"",
                 buffer_signer.pubkey()
             )
             .as_str(),
@@ -2137,7 +2137,7 @@ async fn test_cli_program_write_buffer_feature(enable_feature: bool) {
         expect_command_failure(
             &config,
             "Program contains a syscall from a deactivated feature",
-            "ELF error: ELF error: Unresolved symbol (sol_alt_bn128_group_op) at instruction #49 \
+            "ELF error: ELF error: Unresolved symbol (trz_alt_bn128_group_op) at instruction #49 \
              (ELF file offset 0x188)",
         )
         .await;

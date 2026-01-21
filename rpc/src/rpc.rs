@@ -92,8 +92,8 @@ use {
     },
     trezoa_validator_exit::Exit,
     trezoa_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
-    spl_generic_token::{
-        token::{SPL_TOKEN_ACCOUNT_MINT_OFFSET, SPL_TOKEN_ACCOUNT_OWNER_OFFSET},
+    trz_generic_token::{
+        token::{TPL_TOKEN_ACCOUNT_MINT_OFFSET, TPL_TOKEN_ACCOUNT_OWNER_OFFSET},
         token_2022::{self, ACCOUNTTYPE_ACCOUNT},
     },
     tpl_token_2022_interface::{
@@ -2268,7 +2268,7 @@ impl JsonRpcRequestProcessor {
         filters.push(RpcFilterType::TokenAccountState);
         // Filter on Owner address
         filters.push(RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-            SPL_TOKEN_ACCOUNT_OWNER_OFFSET,
+            TPL_TOKEN_ACCOUNT_OWNER_OFFSET,
             owner_key.to_bytes().into(),
         )));
 
@@ -2317,7 +2317,7 @@ impl JsonRpcRequestProcessor {
         filters.push(RpcFilterType::TokenAccountState);
         // Filter on Mint address
         filters.push(RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-            SPL_TOKEN_ACCOUNT_MINT_OFFSET,
+            TPL_TOKEN_ACCOUNT_MINT_OFFSET,
             mint_key.to_bytes().into(),
         )));
         if self
@@ -2568,12 +2568,12 @@ fn get_tpl_token_owner_filter(
                 if let Some(bytes) = memcmp.raw_bytes_as_ref() {
                     if offset == account_packed_len && *program_id == token_2022::id() {
                         memcmp_filter = Some(bytes);
-                    } else if offset == SPL_TOKEN_ACCOUNT_OWNER_OFFSET {
+                    } else if offset == TPL_TOKEN_ACCOUNT_OWNER_OFFSET {
                         if bytes.len() == PUBKEY_BYTES {
                             owner_key = Pubkey::try_from(bytes).ok();
                         } else {
                             return Err(Error::invalid_params(format!(
-                                "Incorrect byte length {} for SPL token owner filter, expected {}",
+                                "Incorrect byte length {} for TPL token owner filter, expected {}",
                                 bytes.len(),
                                 PUBKEY_BYTES
                             )));
@@ -2619,12 +2619,12 @@ fn get_tpl_token_mint_filter(
                 if let Some(bytes) = memcmp.raw_bytes_as_ref() {
                     if offset == account_packed_len && *program_id == token_2022::id() {
                         memcmp_filter = Some(bytes);
-                    } else if offset == SPL_TOKEN_ACCOUNT_MINT_OFFSET {
+                    } else if offset == TPL_TOKEN_ACCOUNT_MINT_OFFSET {
                         if bytes.len() == PUBKEY_BYTES {
                             mint = Pubkey::try_from(bytes).ok();
                         } else {
                             return Err(Error::invalid_params(format!(
-                                "Incorrect byte length {} for SPL token mint filter, expected {}",
+                                "Incorrect byte length {} for TPL token mint filter, expected {}",
                                 bytes.len(),
                                 PUBKEY_BYTES
                             )));
@@ -4593,7 +4593,7 @@ pub mod tests {
             vote_instruction,
             vote_state::{TowerSync, VoteInit, VoteStateVersions, MAX_LOCKOUT_HISTORY},
         },
-        spl_pod::optional_keys::OptionalNonZeroPubkey,
+        trz_pod::optional_keys::OptionalNonZeroPubkey,
         tpl_token_2022_interface::{
             extension::{
                 immutable_owner::ImmutableOwner, memo_transfer::MemoTransfer,
@@ -7944,7 +7944,7 @@ pub mod tests {
             let token_account_pubkey = trezoa_pubkey::new_rand();
             let token_with_different_mint_pubkey = trezoa_pubkey::new_rand();
             let new_mint = Pubkey::new_from_array([5; 32]);
-            if program_id == spl_generic_token::token_2022::id() {
+            if program_id == trz_generic_token::token_2022::id() {
                 // Add the token account
                 let account_base = TokenAccount {
                     mint,
@@ -8201,7 +8201,7 @@ pub mod tests {
                 .expect("actual response deserialization");
             let accounts: Vec<RpcKeyedAccount> =
                 serde_json::from_value(result["result"].clone()).unwrap();
-            if program_id == spl_generic_token::token::id() {
+            if program_id == trz_generic_token::token::id() {
                 // native mint is included for token-v3
                 assert_eq!(accounts.len(), 4);
             } else {
@@ -8449,7 +8449,7 @@ pub mod tests {
         let supply = 500;
         let decimals = 2;
         let (program_name, account_size, mint_size, additional_data) = if program_id
-            == spl_generic_token::token_2022::id()
+            == trz_generic_token::token_2022::id()
         {
             let account_base = TokenAccount {
                 mint,
@@ -8620,7 +8620,7 @@ pub mod tests {
                 }
             }
         });
-        if program_id == spl_generic_token::token_2022::id() {
+        if program_id == trz_generic_token::token_2022::id() {
             expected_value["parsed"]["info"]["extensions"] = json!([
                 {
                     "extension": "immutableOwner"
@@ -8656,7 +8656,7 @@ pub mod tests {
                 }
             }
         });
-        if program_id == spl_generic_token::token_2022::id() {
+        if program_id == trz_generic_token::token_2022::id() {
             if interest_bearing_config.is_some() {
                 expected_value["parsed"]["info"]["extensions"] = json!([
                     {
@@ -8747,7 +8747,7 @@ pub mod tests {
 
         // Can't filter on account type for token-v3
         assert!(get_tpl_token_owner_filter(
-            &spl_generic_token::token::id(),
+            &trz_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8758,7 +8758,7 @@ pub mod tests {
 
         // Filtering on mint instead of owner
         assert!(get_tpl_token_owner_filter(
-            &spl_generic_token::token::id(),
+            &trz_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, owner.to_bytes().to_vec())),
                 RpcFilterType::DataSize(165)
@@ -8794,14 +8794,14 @@ pub mod tests {
         let mut first_half_bytes = owner.to_bytes().to_vec();
         first_half_bytes.resize(16, 0);
         assert!(get_tpl_token_owner_filter(
-            &spl_generic_token::token::id(),
+            &trz_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, first_half_bytes)),
                 RpcFilterType::DataSize(165)
             ],
         )
         .is_err_and(|err| err.code == ErrorCode::InvalidParams
-            && err.message == "Incorrect byte length 16 for SPL token owner filter, expected 32"));
+            && err.message == "Incorrect byte length 16 for TPL token owner filter, expected 32"));
     }
 
     #[test]
@@ -8810,7 +8810,7 @@ pub mod tests {
         let mint = Pubkey::new_unique();
         assert_eq!(
             get_tpl_token_mint_filter(
-                &spl_generic_token::token::id(),
+                &trz_generic_token::token::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                     RpcFilterType::DataSize(165)
@@ -8824,7 +8824,7 @@ pub mod tests {
         // Filtering on token-2022 account type
         assert_eq!(
             get_tpl_token_mint_filter(
-                &spl_generic_token::token_2022::id(),
+                &trz_generic_token::token_2022::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8838,7 +8838,7 @@ pub mod tests {
         // Filtering on token account state
         assert_eq!(
             get_tpl_token_mint_filter(
-                &spl_generic_token::token::id(),
+                &trz_generic_token::token::id(),
                 &[
                     RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                     RpcFilterType::TokenAccountState,
@@ -8851,7 +8851,7 @@ pub mod tests {
 
         // Can't filter on account type for token-v3
         assert!(get_tpl_token_mint_filter(
-            &spl_generic_token::token::id(),
+            &trz_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint.to_bytes().to_vec())),
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(165, vec![ACCOUNTTYPE_ACCOUNT])),
@@ -8862,7 +8862,7 @@ pub mod tests {
 
         // Filtering on owner instead of mint
         assert!(get_tpl_token_mint_filter(
-            &spl_generic_token::token::id(),
+            &trz_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, mint.to_bytes().to_vec())),
                 RpcFilterType::DataSize(165)
@@ -8898,7 +8898,7 @@ pub mod tests {
         let mut first_half_bytes = owner.to_bytes().to_vec();
         first_half_bytes.resize(16, 0);
         assert!(get_tpl_token_mint_filter(
-            &spl_generic_token::token::id(),
+            &trz_generic_token::token::id(),
             &[
                 RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, first_half_bytes)),
                 RpcFilterType::DataSize(165)
@@ -8907,7 +8907,7 @@ pub mod tests {
         .is_err_and(|err| {
             print!("{err:?}");
             err.code == ErrorCode::InvalidParams
-                && err.message == "Incorrect byte length 16 for SPL token mint filter, expected 32"
+                && err.message == "Incorrect byte length 16 for TPL token mint filter, expected 32"
         }));
     }
 

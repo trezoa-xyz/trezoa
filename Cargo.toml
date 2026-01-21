@@ -583,10 +583,10 @@ trezoa-wen-restart = { path = "wen-restart", version = "=4.0.0-alpha.0", feature
 trezoa-zk-elgamal-proof-program = { path = "programs/zk-elgamal-proof", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
 trezoa-zk-sdk = "4.0.0"
 trezoa-zk-token-proof-program = { path = "programs/zk-token-proof", version = "=4.0.0-alpha.0", features = ["trezoa-unstable-api"] }
-spl-associated-token-account-interface = "2.0.0"
-spl-generic-token = "2.0.0"
-spl-memo-interface = "2.0.0"
-spl-pod = "0.7.0"
+trz-associated-token-account-interface = "2.0.0"
+trz-generic-token = "2.0.0"
+trz-memo-interface = "2.0.0"
+trz-pod = "0.7.0"
 tpl-token-2022-interface = "2.1.0"
 tpl-token-confidential-transfer-proof-extraction = "0.5.1"
 tpl-token-group-interface = "0.7.0"

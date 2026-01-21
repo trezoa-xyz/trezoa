@@ -27,7 +27,7 @@ use {
     },
     trezoa_clock::{Epoch, Slot},
     trezoa_measure::{measure::Measure, measure_us},
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_pubkey::Pubkey,
     trezoa_stake_interface::{stake_history::StakeHistory, state::Delegation},
     trezoa_sysvar::epoch_rewards::EpochRewards,
@@ -388,7 +388,7 @@ impl Bank {
                 self.feature_set
                     .is_active(&trezoa_feature_set::stake_raise_minimum_delegation_to_1_sol::id()),
             )
-            .max(LAMPORTS_PER_SOL);
+            .max(LAMPORTS_PER_TRZ);
             Some(min_stake_delegation)
         } else {
             None
@@ -782,7 +782,7 @@ mod tests {
         },
         trezoa_accounts_db::partitioned_rewards::PartitionedEpochRewardsConfig,
         trezoa_epoch_schedule::EpochSchedule,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_reward_info::RewardType,
         trezoa_signer::Signer,
         trezoa_stake_interface::{
@@ -800,7 +800,7 @@ mod tests {
 
     #[test]
     fn test_store_vote_accounts_partitioned() {
-        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let bank = Bank::new_for_tests(&genesis_config);
 
         let expected_vote_rewards_num = 100;
@@ -859,7 +859,7 @@ mod tests {
 
     #[test]
     fn test_store_vote_accounts_partitioned_empty() {
-        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let bank = Bank::new_for_tests(&genesis_config);
 
         let expected = 0;
@@ -980,7 +980,7 @@ mod tests {
         trezoa_logger::setup();
 
         // bank with no rewards to distribute
-        let (genesis_config, _mint_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+        let (genesis_config, _mint_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
         let bank = Bank::new_for_tests(&genesis_config);
 
         let thread_pool = ThreadPoolBuilder::new().num_threads(1).build().unwrap();
@@ -1193,9 +1193,9 @@ mod tests {
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = genesis_utils::create_genesis_config_with_leader(
-            1_000_000 * LAMPORTS_PER_SOL,
+            1_000_000 * LAMPORTS_PER_TRZ,
             &Pubkey::new_unique(),
-            42 * LAMPORTS_PER_SOL,
+            42 * LAMPORTS_PER_TRZ,
         );
 
         genesis_config.epoch_schedule = EpochSchedule::new(SLOTS_PER_EPOCH);
@@ -1215,10 +1215,10 @@ mod tests {
                 vote_operations: vec![(
                     vote_address,
                     VoteOperations {
-                        create_with_balance: Some(LAMPORTS_PER_SOL),
+                        create_with_balance: Some(LAMPORTS_PER_TRZ),
                         new_commission: Some(1),
                         earned_credits: Some(1000),
-                        delegate_stake_amount: Some(LAMPORTS_PER_SOL),
+                        delegate_stake_amount: Some(LAMPORTS_PER_TRZ),
                         ..VoteOperations::default()
                     },
                 )],
@@ -1270,9 +1270,9 @@ mod tests {
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = genesis_utils::create_genesis_config_with_leader(
-            1_000_000 * LAMPORTS_PER_SOL,
+            1_000_000 * LAMPORTS_PER_TRZ,
             &Pubkey::new_unique(),
-            42 * LAMPORTS_PER_SOL,
+            42 * LAMPORTS_PER_TRZ,
         );
 
         genesis_config.epoch_schedule = EpochSchedule::new(SLOTS_PER_EPOCH);
@@ -1287,7 +1287,7 @@ mod tests {
                 vote_operations: vec![(
                     vote_address,
                     VoteOperations {
-                        delegate_stake_amount: Some(LAMPORTS_PER_SOL),
+                        delegate_stake_amount: Some(LAMPORTS_PER_TRZ),
                         ..VoteOperations::default()
                     },
                 )],
@@ -1304,7 +1304,7 @@ mod tests {
                 vote_operations: vec![(
                     vote_address,
                     VoteOperations {
-                        create_with_balance: Some(LAMPORTS_PER_SOL),
+                        create_with_balance: Some(LAMPORTS_PER_TRZ),
                         new_commission: Some(1),
                         earned_credits: Some(1000),
                         expected_reward_commission: Some(1),
@@ -1357,9 +1357,9 @@ mod tests {
             voting_keypair,
             ..
         } = genesis_utils::create_genesis_config_with_leader(
-            1_000_000 * LAMPORTS_PER_SOL,
+            1_000_000 * LAMPORTS_PER_TRZ,
             &Pubkey::new_unique(),
-            42 * LAMPORTS_PER_SOL,
+            42 * LAMPORTS_PER_TRZ,
         );
 
         genesis_config.epoch_schedule = EpochSchedule::new(SLOTS_PER_EPOCH);
@@ -2021,7 +2021,7 @@ mod tests {
     #[test]
     fn test_epoch_rewards_cache_multiple_forks() {
         let (mut genesis_config, _mint_keypair) =
-            create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+            create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
 
         const NUM_STAKES: usize = 1000;
 

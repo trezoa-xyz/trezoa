@@ -640,7 +640,7 @@ var _cramp = [Dc, Dc, Tc, Tc, Sc, Sc, SSc, SSc];
 var _text = [D, Dc, T, Tc, T, Tc, T, Tc]; // We only export some of the styles.
 
 /* harmony default export */ var src_Style = ({
-  DISPLAY: Style_styles[D],
+  DITPLAY: Style_styles[D],
   TEXT: Style_styles[T],
   SCRIPT: Style_styles[S],
   SCRIPTSCRIPT: Style_styles[SS]
@@ -6209,7 +6209,7 @@ var buildHTML_makeSpan = buildCommon.makeSpan; // Binary atoms (first class `mbi
 var binLeftCanceller = ["leftmost", "mbin", "mopen", "mrel", "mop", "mpunct"];
 var binRightCanceller = ["rightmost", "mrel", "mclose", "mpunct"];
 var styleMap = {
-  "display": src_Style.DISPLAY,
+  "display": src_Style.DITPLAY,
   "text": src_Style.TEXT,
   "script": src_Style.SCRIPT,
   "scriptscript": src_Style.SCRIPTSCRIPT
@@ -7048,7 +7048,7 @@ function buildMathML(tree, texExpression, options, isDisplayMode, forMathmlOnly)
 
 var buildTree_optionsFromSettings = function optionsFromSettings(settings) {
   return new src_Options({
-    style: settings.displayMode ? src_Style.DISPLAY : src_Style.TEXT,
+    style: settings.displayMode ? src_Style.DITPLAY : src_Style.TEXT,
     maxSize: settings.maxSize,
     minRuleThickness: settings.minRuleThickness
   });
@@ -10857,8 +10857,8 @@ var genfrac_adjustStyle = function adjustStyle(size, originalStyle) {
   if (size === "display") {
     // Get display style as a default.
     // If incoming style is sub/sup, use style.text() to get correct size.
-    style = style.id >= src_Style.SCRIPT.id ? style.text() : src_Style.DISPLAY;
-  } else if (size === "text" && style.size === src_Style.DISPLAY.size) {
+    style = style.id >= src_Style.SCRIPT.id ? style.text() : src_Style.DITPLAY;
+  } else if (size === "text" && style.size === src_Style.DITPLAY.size) {
     // We're in a \tfrac but incoming style is displaystyle, so:
     style = src_Style.TEXT;
   } else if (size === "script") {
@@ -10915,7 +10915,7 @@ var genfrac_htmlBuilder = function htmlBuilder(group, options) {
   var clearance;
   var denomShift;
 
-  if (style.size === src_Style.DISPLAY.size || group.size === "display") {
+  if (style.size === src_Style.DITPLAY.size || group.size === "display") {
     numShift = options.fontMetrics().num1;
 
     if (ruleWidth > 0) {
@@ -10999,7 +10999,7 @@ var genfrac_htmlBuilder = function htmlBuilder(group, options) {
 
   var delimSize;
 
-  if (style.size === src_Style.DISPLAY.size) {
+  if (style.size === src_Style.DITPLAY.size) {
     delimSize = options.fontMetrics().delim1;
   } else {
     delimSize = options.fontMetrics().delim2;
@@ -11039,7 +11039,7 @@ var genfrac_mathmlBuilder = function mathmlBuilder(group, options) {
 
   if (style.size !== options.style.size) {
     node = new mathMLTree.MathNode("mstyle", [node]);
-    var isDisplay = style.size === src_Style.DISPLAY.size ? "true" : "false";
+    var isDisplay = style.size === src_Style.DITPLAY.size ? "true" : "false";
     node.setAttribute("displaystyle", isDisplay);
     node.setAttribute("scriptlevel", "0");
   }
@@ -11349,7 +11349,7 @@ var horizBrace_htmlBuilder = function htmlBuilder(grp, options) {
   } // Build the base group
 
 
-  var body = buildHTML_buildGroup(group.base, options.havingBaseStyle(src_Style.DISPLAY)); // Create the stretchy element
+  var body = buildHTML_buildGroup(group.base, options.havingBaseStyle(src_Style.DITPLAY)); // Create the stretchy element
 
   var braceBody = stretchy.svgSpan(group, options); // Generate the vlist, with the appropriate kerns        ┏━━━━━━━━┓
   // This first vlist contains the content and the brace:   equation
@@ -12055,7 +12055,7 @@ defineFunction({
 
 var mathchoice_chooseMathStyle = function chooseMathStyle(group, options) {
   switch (options.style.size) {
-    case src_Style.DISPLAY.size:
+    case src_Style.DITPLAY.size:
       return group.display;
 
     case src_Style.TEXT.size:
@@ -12252,7 +12252,7 @@ var op_htmlBuilder = function htmlBuilder(grp, options) {
   var style = options.style;
   var large = false;
 
-  if (style.size === src_Style.DISPLAY.size && group.symbol && !utils.contains(noSuccessor, group.name)) {
+  if (style.size === src_Style.DITPLAY.size && group.symbol && !utils.contains(noSuccessor, group.name)) {
     // Most symbol operators get larger in displaystyle (rule 13)
     large = true;
   }
@@ -13293,7 +13293,7 @@ defineFunction({
 
 
 var styling_styleMap = {
-  "display": src_Style.DISPLAY,
+  "display": src_Style.DITPLAY,
   "text": src_Style.TEXT,
   "script": src_Style.SCRIPT,
   "scriptscript": src_Style.SCRIPTSCRIPT
@@ -13377,10 +13377,10 @@ var supsub_htmlBuilderDelegate = function htmlBuilderDelegate(group, options) {
   } else if (base.type === "op") {
     // Operators handle supsubs differently when they have limits
     // (e.g. `\displaystyle\sum_2^3`)
-    var delegate = base.limits && (options.style.size === src_Style.DISPLAY.size || base.alwaysHandleSupSub);
+    var delegate = base.limits && (options.style.size === src_Style.DITPLAY.size || base.alwaysHandleSupSub);
     return delegate ? op_htmlBuilder : null;
   } else if (base.type === "operatorname") {
-    var _delegate = base.alwaysHandleSupSub && (options.style.size === src_Style.DISPLAY.size || base.limits);
+    var _delegate = base.alwaysHandleSupSub && (options.style.size === src_Style.DITPLAY.size || base.limits);
 
     return _delegate ? operatorname_htmlBuilder : null;
   } else if (base.type === "accent") {
@@ -13442,7 +13442,7 @@ defineFunctionBuilders({
 
     var minSupShift;
 
-    if (options.style === src_Style.DISPLAY) {
+    if (options.style === src_Style.DITPLAY) {
       minSupShift = metrics.sup1;
     } else if (options.style.cramped) {
       minSupShift = metrics.sup3;
@@ -13573,9 +13573,9 @@ defineFunctionBuilders({
     } else if (!group.sub) {
       var base = group.base;
 
-      if (base && base.type === "op" && base.limits && (options.style === src_Style.DISPLAY || base.alwaysHandleSupSub)) {
+      if (base && base.type === "op" && base.limits && (options.style === src_Style.DITPLAY || base.alwaysHandleSupSub)) {
         nodeType = "mover";
-      } else if (base && base.type === "operatorname" && base.alwaysHandleSupSub && (base.limits || options.style === src_Style.DISPLAY)) {
+      } else if (base && base.type === "operatorname" && base.alwaysHandleSupSub && (base.limits || options.style === src_Style.DITPLAY)) {
         nodeType = "mover";
       } else {
         nodeType = "msup";
@@ -13583,9 +13583,9 @@ defineFunctionBuilders({
     } else if (!group.sup) {
       var _base = group.base;
 
-      if (_base && _base.type === "op" && _base.limits && (options.style === src_Style.DISPLAY || _base.alwaysHandleSupSub)) {
+      if (_base && _base.type === "op" && _base.limits && (options.style === src_Style.DITPLAY || _base.alwaysHandleSupSub)) {
         nodeType = "munder";
-      } else if (_base && _base.type === "operatorname" && _base.alwaysHandleSupSub && (_base.limits || options.style === src_Style.DISPLAY)) {
+      } else if (_base && _base.type === "operatorname" && _base.alwaysHandleSupSub && (_base.limits || options.style === src_Style.DITPLAY)) {
         nodeType = "munder";
       } else {
         nodeType = "msub";
@@ -13593,9 +13593,9 @@ defineFunctionBuilders({
     } else {
       var _base2 = group.base;
 
-      if (_base2 && _base2.type === "op" && _base2.limits && options.style === src_Style.DISPLAY) {
+      if (_base2 && _base2.type === "op" && _base2.limits && options.style === src_Style.DITPLAY) {
         nodeType = "munderover";
-      } else if (_base2 && _base2.type === "operatorname" && _base2.alwaysHandleSupSub && (options.style === src_Style.DISPLAY || _base2.limits)) {
+      } else if (_base2 && _base2.type === "operatorname" && _base2.alwaysHandleSupSub && (options.style === src_Style.DITPLAY || _base2.limits)) {
         nodeType = "munderover";
       } else {
         nodeType = "msubsup";

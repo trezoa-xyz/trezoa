@@ -9,7 +9,7 @@ interact with Trezoa using the command line tools.
 
 ## Before You Begin
 
-- [Set up a Nano with the Trezoa App](https://support.ledger.com/hc/en-us/articles/360016265659-Trezoa-SOL-?docs=true)
+- [Set up a Nano with the Trezoa App](https://support.ledger.com/hc/en-us/articles/360016265659-Trezoa-TRZ-?docs=true)
 - [Install the Trezoa command-line tools](../../install.md)
 
 ## Use Ledger Nano with Trezoa CLI

@@ -51,7 +51,7 @@ module.exports = {
           items: [
             { label: "Proposals", to: "proposals" },
             {
-              href: "https://spl.trezoa.com",
+              href: "https://tpl.trezoa.com",
               label: "Trezoa Program Library",
             },
           ],
@@ -140,7 +140,7 @@ module.exports = {
               to: "proposals",
             },
             {
-              href: "https://spl.trezoa.com",
+              href: "https://tpl.trezoa.com",
               label: "Trezoa Program Library »",
             },
           ],

@@ -57,7 +57,7 @@ use {
     },
     trezoa_measure::{measure::Measure, measure_time},
     trezoa_message::SimpleAddressLoader,
-    trezoa_native_token::{Sol, LAMPORTS_PER_SOL},
+    trezoa_native_token::{Sol, LAMPORTS_PER_TRZ},
     trezoa_pubkey::Pubkey,
     trezoa_rent::Rent,
     trezoa_runtime::{
@@ -937,10 +937,10 @@ fn main() {
         .help("Print account data in specified format when printing account contents.");
 
     let rent = Rent::default();
-    let default_bootstrap_validator_lamports = &(500 * LAMPORTS_PER_SOL)
+    let default_bootstrap_validator_lamports = &(500 * LAMPORTS_PER_TRZ)
         .max(rent.minimum_balance(VoteStateV4::size_of()))
         .to_string();
-    let default_bootstrap_validator_stake_lamports = &(LAMPORTS_PER_SOL / 2)
+    let default_bootstrap_validator_stake_lamports = &(LAMPORTS_PER_TRZ / 2)
         .max(rent.minimum_balance(StakeStateV2::size_of()))
         .to_string();
     let default_graph_vote_account_mode = GraphVoteAccountMode::default();

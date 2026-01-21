@@ -8,7 +8,7 @@ use {
 };
 
 pub const NUM_BAD_SLOTS: u64 = 10;
-pub const SLOT_TO_RESOLVE: u64 = 32;
+pub const SLOT_TO_RETRZVE: u64 = 32;
 
 #[derive(Clone)]
 pub(super) struct FailEntryVerificationBroadcastRun {
@@ -71,9 +71,9 @@ impl BroadcastRun for FailEntryVerificationBroadcastRun {
             self.current_slot = bank.slot();
         }
 
-        // 2) If we're past SLOT_TO_RESOLVE, insert the correct shreds so validators can repair
+        // 2) If we're past SLOT_TO_RETRZVE, insert the correct shreds so validators can repair
         // and make progress
-        if bank.slot() > SLOT_TO_RESOLVE && !self.good_shreds.is_empty() {
+        if bank.slot() > SLOT_TO_RETRZVE && !self.good_shreds.is_empty() {
             info!("Resolving bad shreds");
             let shreds = std::mem::take(&mut self.good_shreds);
             blockstore_sender.send((Arc::new(shreds), None))?;

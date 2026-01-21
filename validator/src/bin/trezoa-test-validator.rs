@@ -317,7 +317,7 @@ fn main() {
 
     let faucet_lamports = matches
         .value_of("faucet_trz")
-        .and_then(sol_str_to_lamports)
+        .and_then(trz_str_to_lamports)
         .unwrap();
     let faucet_keypair_file = ledger_path.join("faucet-keypair.json");
     if !faucet_keypair_file.exists() {
@@ -347,10 +347,10 @@ fn main() {
     let faucet_time_slice_secs = value_t_or_exit!(matches, "faucet_time_slice_secs", u64);
     let faucet_per_time_cap = matches
         .value_of("faucet_per_time_sol_cap")
-        .and_then(sol_str_to_lamports);
+        .and_then(trz_str_to_lamports);
     let faucet_per_request_cap = matches
         .value_of("faucet_per_request_sol_cap")
-        .and_then(sol_str_to_lamports);
+        .and_then(trz_str_to_lamports);
 
     let (sender, receiver) = unbounded();
     thread::spawn(move || {

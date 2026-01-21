@@ -169,7 +169,7 @@ impl Faucet {
 
     /// Checks per-request and per-time-ip limits; if both pass, this method returns a signed
     /// SystemProgram::Transfer transaction from the faucet keypair to the requested recipient. If
-    /// the request exceeds this per-request limit, this method returns a signed SPL Memo
+    /// the request exceeds this per-request limit, this method returns a signed TPL Memo
     /// transaction with the memo: `"request too large; req: <REQUEST> TRZ cap: <CAP> TRZ"`
     pub fn build_airdrop_transaction(
         &mut self,
@@ -200,7 +200,7 @@ impl Faucet {
                             )
                         );
                         let memo_instruction = Instruction {
-                            program_id: spl_memo_interface::v3::id(),
+                            program_id: trz_memo_interface::v3::id(),
                             accounts: vec![],
                             data: memo.as_bytes().to_vec(),
                         };
@@ -670,7 +670,7 @@ mod tests {
             assert_eq!(tx.signatures.len(), 1);
             assert_eq!(
                 message.account_keys,
-                vec![mint_pubkey, spl_memo_interface::v3::id()]
+                vec![mint_pubkey, trz_memo_interface::v3::id()]
             );
             assert_eq!(message.recent_blockhash, blockhash);
 

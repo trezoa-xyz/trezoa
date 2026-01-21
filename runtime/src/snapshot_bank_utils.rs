@@ -811,7 +811,7 @@ mod tests {
         },
         trezoa_genesis_config::create_genesis_config,
         trezoa_keypair::Keypair,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_signer::Signer,
         trezoa_system_transaction as system_transaction,
         trezoa_transaction::sanitized::SanitizedTransaction,
@@ -939,7 +939,7 @@ mod tests {
         let key3 = Keypair::new();
 
         // Create a few accounts
-        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
 
         let bank_test_config = BankTestConfig {
             accounts_db_config: AccountsDbConfig {
@@ -952,13 +952,13 @@ mod tests {
 
         let (bank0, bank_forks) = Bank::wrap_with_bank_forks_for_tests(bank);
         bank0
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank0
-            .transfer(2 * LAMPORTS_PER_SOL, &mint_keypair, &key2.pubkey())
+            .transfer(2 * LAMPORTS_PER_TRZ, &mint_keypair, &key2.pubkey())
             .unwrap();
         bank0
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank0.fill_bank_with_ticks_for_tests();
 
@@ -971,7 +971,7 @@ mod tests {
         let bank1 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank0, &collector, slot);
         bank1
-            .transfer(LAMPORTS_PER_SOL, &key3, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &key3, &key1.pubkey())
             .unwrap();
 
         bank1.fill_bank_with_ticks_for_tests();
@@ -1023,16 +1023,16 @@ mod tests {
         let key4 = Keypair::new();
         let key5 = Keypair::new();
 
-        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         bank0
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank0
-            .transfer(2 * LAMPORTS_PER_SOL, &mint_keypair, &key2.pubkey())
+            .transfer(2 * LAMPORTS_PER_TRZ, &mint_keypair, &key2.pubkey())
             .unwrap();
         bank0
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank0.fill_bank_with_ticks_for_tests();
 
@@ -1040,13 +1040,13 @@ mod tests {
         let bank1 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank0, &collector, slot);
         bank1
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank1
-            .transfer(4 * LAMPORTS_PER_SOL, &mint_keypair, &key4.pubkey())
+            .transfer(4 * LAMPORTS_PER_TRZ, &mint_keypair, &key4.pubkey())
             .unwrap();
         bank1
-            .transfer(5 * LAMPORTS_PER_SOL, &mint_keypair, &key5.pubkey())
+            .transfer(5 * LAMPORTS_PER_TRZ, &mint_keypair, &key5.pubkey())
             .unwrap();
         bank1.fill_bank_with_ticks_for_tests();
 
@@ -1054,7 +1054,7 @@ mod tests {
         let bank2 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank1, &collector, slot);
         bank2
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank2.fill_bank_with_ticks_for_tests();
 
@@ -1062,7 +1062,7 @@ mod tests {
         let bank3 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank2, &collector, slot);
         bank3
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank3.fill_bank_with_ticks_for_tests();
 
@@ -1070,7 +1070,7 @@ mod tests {
         let bank4 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank3, &collector, slot);
         bank4
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank4.fill_bank_with_ticks_for_tests();
 
@@ -1128,16 +1128,16 @@ mod tests {
         let key4 = Keypair::new();
         let key5 = Keypair::new();
 
-        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         bank0
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank0
-            .transfer(2 * LAMPORTS_PER_SOL, &mint_keypair, &key2.pubkey())
+            .transfer(2 * LAMPORTS_PER_TRZ, &mint_keypair, &key2.pubkey())
             .unwrap();
         bank0
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank0.fill_bank_with_ticks_for_tests();
 
@@ -1145,13 +1145,13 @@ mod tests {
         let bank1 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank0, &collector, slot);
         bank1
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank1
-            .transfer(4 * LAMPORTS_PER_SOL, &mint_keypair, &key4.pubkey())
+            .transfer(4 * LAMPORTS_PER_TRZ, &mint_keypair, &key4.pubkey())
             .unwrap();
         bank1
-            .transfer(5 * LAMPORTS_PER_SOL, &mint_keypair, &key5.pubkey())
+            .transfer(5 * LAMPORTS_PER_TRZ, &mint_keypair, &key5.pubkey())
             .unwrap();
         bank1.fill_bank_with_ticks_for_tests();
 
@@ -1176,7 +1176,7 @@ mod tests {
         let bank2 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank1, &collector, slot);
         bank2
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank2.fill_bank_with_ticks_for_tests();
 
@@ -1184,7 +1184,7 @@ mod tests {
         let bank3 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank2, &collector, slot);
         bank3
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank3.fill_bank_with_ticks_for_tests();
 
@@ -1192,7 +1192,7 @@ mod tests {
         let bank4 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank3, &collector, slot);
         bank4
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank4.fill_bank_with_ticks_for_tests();
 
@@ -1235,16 +1235,16 @@ mod tests {
         let key2 = Keypair::new();
         let key3 = Keypair::new();
 
-        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         bank0
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank0
-            .transfer(2 * LAMPORTS_PER_SOL, &mint_keypair, &key2.pubkey())
+            .transfer(2 * LAMPORTS_PER_TRZ, &mint_keypair, &key2.pubkey())
             .unwrap();
         bank0
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank0.fill_bank_with_ticks_for_tests();
 
@@ -1252,13 +1252,13 @@ mod tests {
         let bank1 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank0, &collector, slot);
         bank1
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank1
-            .transfer(2 * LAMPORTS_PER_SOL, &mint_keypair, &key2.pubkey())
+            .transfer(2 * LAMPORTS_PER_TRZ, &mint_keypair, &key2.pubkey())
             .unwrap();
         bank1
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank1.fill_bank_with_ticks_for_tests();
 
@@ -1283,7 +1283,7 @@ mod tests {
         let bank2 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank1, &collector, slot);
         bank2
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank2.fill_bank_with_ticks_for_tests();
 
@@ -1291,7 +1291,7 @@ mod tests {
         let bank3 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank2, &collector, slot);
         bank3
-            .transfer(2 * LAMPORTS_PER_SOL, &mint_keypair, &key2.pubkey())
+            .transfer(2 * LAMPORTS_PER_TRZ, &mint_keypair, &key2.pubkey())
             .unwrap();
         bank3.fill_bank_with_ticks_for_tests();
 
@@ -1299,7 +1299,7 @@ mod tests {
         let bank4 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank3, &collector, slot);
         bank4
-            .transfer(3 * LAMPORTS_PER_SOL, &mint_keypair, &key3.pubkey())
+            .transfer(3 * LAMPORTS_PER_TRZ, &mint_keypair, &key3.pubkey())
             .unwrap();
         bank4.fill_bank_with_ticks_for_tests();
 
@@ -1369,11 +1369,11 @@ mod tests {
         let snapshot_archive_format = SnapshotConfig::default().archive_format;
 
         let (mut genesis_config, mint_keypair) =
-            create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+            create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         // test expects 0 transaction fee
         genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
 
-        let lamports_to_transfer = 123_456 * LAMPORTS_PER_SOL;
+        let lamports_to_transfer = 123_456 * LAMPORTS_PER_TRZ;
         let (bank0, bank_forks) = Bank::new_with_paths_for_tests(
             &genesis_config,
             Arc::<RuntimeConfig>::default(),
@@ -1534,7 +1534,7 @@ mod tests {
         let collector = Pubkey::new_unique();
         let key1 = Keypair::new();
 
-        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let (bank0, bank_forks) = Bank::new_with_bank_forks_for_tests(&genesis_config);
         bank0.fill_bank_with_ticks_for_tests();
 
@@ -1561,7 +1561,7 @@ mod tests {
         let bank2 =
             Bank::new_from_parent_with_bank_forks(bank_forks.as_ref(), bank1, &collector, slot);
         bank2
-            .transfer(LAMPORTS_PER_SOL, &mint_keypair, &key1.pubkey())
+            .transfer(LAMPORTS_PER_TRZ, &mint_keypair, &key1.pubkey())
             .unwrap();
         bank2.fill_bank_with_ticks_for_tests();
 
@@ -1835,9 +1835,9 @@ mod tests {
         let full_snapshot_archives_dir = tempfile::TempDir::new().unwrap();
         let snapshot_archive_format = SnapshotConfig::default().archive_format;
 
-        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
 
-        let lamports_to_transfer = 123_456 * LAMPORTS_PER_SOL;
+        let lamports_to_transfer = 123_456 * LAMPORTS_PER_TRZ;
         let bank_test_config = BankTestConfig {
             accounts_db_config: AccountsDbConfig {
                 storage_access,
@@ -1972,12 +1972,12 @@ mod tests {
         let key2 = Keypair::new();
 
         let bank_snapshots_dir = tempfile::TempDir::new().unwrap();
-        let (mut genesis_config, mint) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (mut genesis_config, mint) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
 
         // Disable fees so fees don't need to be calculated
         genesis_config.fee_rate_governor = trezoa_fee_calculator::FeeRateGovernor::new(0, 0);
 
-        let lamports = 123_456 * LAMPORTS_PER_SOL;
+        let lamports = 123_456 * LAMPORTS_PER_TRZ;
         let bank_test_config = BankTestConfig {
             accounts_db_config: AccountsDbConfig {
                 mark_obsolete_accounts,
@@ -2062,7 +2062,7 @@ mod tests {
         // Remove the obsolete account file
         let obsolete_accounts_file = bank_snapshot
             .snapshot_dir
-            .join(snapshot_paths::SNAPSHOT_OBSOLETE_ACCOUNTS_FILENAME);
+            .join(snapshot_paths::SNAPSHOT_OBTRZETE_ACCOUNTS_FILENAME);
         fs::remove_file(obsolete_accounts_file).unwrap();
 
         bank_from_snapshot_dir(
@@ -2408,13 +2408,13 @@ mod tests {
 
     #[test]
     fn test_verify_epoch_stakes_good() {
-        let bank = create_simple_test_bank(100 * LAMPORTS_PER_SOL);
+        let bank = create_simple_test_bank(100 * LAMPORTS_PER_TRZ);
         assert_eq!(verify_epoch_stakes(&bank), Ok(()));
     }
 
     #[test]
     fn test_verify_epoch_stakes_bad() {
-        let bank = create_simple_test_bank(100 * LAMPORTS_PER_SOL);
+        let bank = create_simple_test_bank(100 * LAMPORTS_PER_TRZ);
         let current_epoch = bank.epoch();
         let leader_schedule_epoch = bank.get_leader_schedule_epoch(bank.slot());
         let required_epochs = current_epoch..=leader_schedule_epoch;

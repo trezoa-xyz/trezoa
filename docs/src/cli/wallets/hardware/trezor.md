@@ -77,9 +77,9 @@ associated keypair URL as the signer for transactions from that address.
 ### Wallet Operations
 
 To use the device for wallet operations, such as balance fetching or
-transferring SOL, follow the guides for
+transferring TRZ, follow the guides for
 [viewing balance](./ledger.md#view-your-balance) or
-[sending TRZ](./ledger.md#send-sol-from-a-nano), substituting `ledger` with
+[sending TRZ](./ledger.md#send-trz-from-a-nano), substituting `ledger` with
 `trezor` and your key path.
 
 ## Troubleshooting

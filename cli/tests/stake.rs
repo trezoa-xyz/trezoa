@@ -17,7 +17,7 @@ use {
     trezoa_fee_calculator::FeeRateGovernor,
     trezoa_fee_structure::FeeStructure,
     trezoa_keypair::{keypair_from_seed, Keypair},
-    trezoa_native_token::LAMPORTS_PER_SOL,
+    trezoa_native_token::LAMPORTS_PER_TRZ,
     trezoa_net_utils::SocketAddrSpace,
     trezoa_nonce::state::State as NonceState,
     trezoa_pubkey::Pubkey,
@@ -327,7 +327,7 @@ async fn test_stake_delegation_and_withdraw_available() {
         &rpc_client,
         &config_validator,
         &config_validator.signers[0].pubkey(),
-        100 * LAMPORTS_PER_SOL,
+        100 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
@@ -346,7 +346,7 @@ async fn test_stake_delegation_and_withdraw_available() {
         withdrawer: None,
         withdrawer_signer: None,
         lockup: Lockup::default(),
-        amount: SpendAmount::Some(50 * LAMPORTS_PER_SOL),
+        amount: SpendAmount::Some(50 * LAMPORTS_PER_TRZ),
         sign_only: false,
         dump_transaction_message: false,
         blockhash_query: BlockhashQuery::Rpc(Source::Cluster),
@@ -405,11 +405,11 @@ async fn test_stake_delegation_and_withdraw_available() {
         &rpc_client,
         &config_validator,
         &stake_keypair.pubkey(),
-        5 * LAMPORTS_PER_SOL,
+        5 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
-    check_balance!(55 * LAMPORTS_PER_SOL, &rpc_client, &stake_keypair.pubkey());
+    check_balance!(55 * LAMPORTS_PER_TRZ, &rpc_client, &stake_keypair.pubkey());
 
     // Withdraw available stake
     config_validator.signers = vec![&validator_keypair];
@@ -431,7 +431,7 @@ async fn test_stake_delegation_and_withdraw_available() {
     };
     process_command(&config_validator).await.unwrap();
     // Extra (inactive) TRZ is withdrawn
-    check_balance!(5 * LAMPORTS_PER_SOL, &rpc_client, &recipient_pubkey);
+    check_balance!(5 * LAMPORTS_PER_TRZ, &rpc_client, &recipient_pubkey);
 
     // Deactivate stake
     config_validator.command = CliCommand::DeactivateStake {
@@ -470,7 +470,7 @@ async fn test_stake_delegation_and_withdraw_available() {
     };
     process_command(&config_validator).await.unwrap();
     // Complete balance is withdrawn because all stake is inactive
-    check_balance!(55 * LAMPORTS_PER_SOL, &rpc_client, &recipient_pubkey);
+    check_balance!(55 * LAMPORTS_PER_TRZ, &rpc_client, &recipient_pubkey);
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
@@ -501,7 +501,7 @@ async fn test_stake_delegation_and_withdraw_all() {
         &rpc_client,
         &config_validator,
         &config_validator.signers[0].pubkey(),
-        100 * LAMPORTS_PER_SOL,
+        100 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
@@ -520,7 +520,7 @@ async fn test_stake_delegation_and_withdraw_all() {
         withdrawer: None,
         withdrawer_signer: None,
         lockup: Lockup::default(),
-        amount: SpendAmount::Some(50 * LAMPORTS_PER_SOL),
+        amount: SpendAmount::Some(50 * LAMPORTS_PER_TRZ),
         sign_only: false,
         dump_transaction_message: false,
         blockhash_query: BlockhashQuery::Rpc(Source::Cluster),
@@ -576,11 +576,11 @@ async fn test_stake_delegation_and_withdraw_all() {
         &rpc_client,
         &config_validator,
         &stake_keypair.pubkey(),
-        5 * LAMPORTS_PER_SOL,
+        5 * LAMPORTS_PER_TRZ,
     )
     .await
     .unwrap();
-    check_balance!(55 * LAMPORTS_PER_SOL, &rpc_client, &stake_keypair.pubkey());
+    check_balance!(55 * LAMPORTS_PER_TRZ, &rpc_client, &stake_keypair.pubkey());
 
     // Withdraw all stake still fails, because it attempts to withdraw both
     // activating and inactive stake
@@ -639,7 +639,7 @@ async fn test_stake_delegation_and_withdraw_all() {
         compute_unit_price: None,
     };
     process_command(&config_validator).await.unwrap();
-    check_balance!(55 * LAMPORTS_PER_SOL, &rpc_client, &recipient_pubkey);
+    check_balance!(55 * LAMPORTS_PER_TRZ, &rpc_client, &recipient_pubkey);
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]

@@ -18,7 +18,7 @@ use {
         Rewards, UiReturnDataEncoding, UiTransactionReturnData, UiTransactionStatusMeta,
     },
     trezoa_transaction_status_client_types::UiTransactionError,
-    spl_memo_interface::{v1::id as spl_memo_v1_id, v3::id as spl_memo_v3_id},
+    trz_memo_interface::{v1::id as trz_memo_v1_id, v3::id as trz_memo_v3_id},
     std::{collections::HashMap, fmt, io, time::Duration},
 };
 
@@ -40,7 +40,7 @@ impl Default for BuildBalanceMessageConfig {
 }
 
 fn is_memo_program(k: &Pubkey) -> bool {
-    *k == spl_memo_v1_id() || *k == spl_memo_v3_id()
+    *k == trz_memo_v1_id() || *k == trz_memo_v3_id()
 }
 
 pub fn build_balance_message_with_config(
@@ -50,9 +50,9 @@ pub fn build_balance_message_with_config(
     let value = if config.use_lamports_unit {
         lamports.to_string()
     } else {
-        const LAMPORTS_PER_SOL_F64: f64 = 1_000_000_000.;
-        let trz = lamports as f64 / LAMPORTS_PER_SOL_F64;
-        let sol_str = format!("{sol:.9}");
+        const LAMPORTS_PER_TRZ_F64: f64 = 1_000_000_000.;
+        let trz = lamports as f64 / LAMPORTS_PER_TRZ_F64;
+        let trz_str = format!("{trz:.9}");
         if config.trim_trailing_zeros {
             sol_str
                 .trim_end_matches('0')

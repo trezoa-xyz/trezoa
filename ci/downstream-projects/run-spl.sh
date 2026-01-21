@@ -9,4 +9,4 @@ source "$here"/func-spl.sh
 #shellcheck source=ci/downstream-projects/common.sh
 source "$here"/common.sh
 
-_ spl
+_ tpl

@@ -1,4 +1,4 @@
-name: Downstream Project - SPL
+name: Downstream Project - TPL
 
 on:
   push:
@@ -71,7 +71,7 @@ jobs:
         run: |
           source .github/scripts/downstream-project-spl-install-deps.sh
           source .github/scripts/downstream-project-spl-common.sh "${{ matrix.programs }}"
-          if [ -n "$SKIP_SPL_DOWNSTREAM_PROJECT_TEST" ]; then
+          if [ -n "$SKIP_TPL_DOWNSTREAM_PROJECT_TEST" ]; then
             exit 0
           fi
           cargo check
@@ -101,7 +101,7 @@ jobs:
         run: |
           source .github/scripts/downstream-project-spl-install-deps.sh
           source .github/scripts/downstream-project-spl-common.sh "${{ matrix.programs }}"
-          if [ -n "$SKIP_SPL_DOWNSTREAM_PROJECT_TEST" ]; then
+          if [ -n "$SKIP_TPL_DOWNSTREAM_PROJECT_TEST" ]; then
             exit 0
           fi
           $CARGO_BUILD_SBF --manifest-path program/Cargo.toml
@@ -142,7 +142,7 @@ jobs:
         run: |
           source .github/scripts/downstream-project-spl-install-deps.sh
           source .github/scripts/downstream-project-spl-common.sh "${{ matrix.programs }}"
-          if [ -n "$SKIP_SPL_DOWNSTREAM_PROJECT_TEST" ]; then
+          if [ -n "$SKIP_TPL_DOWNSTREAM_PROJECT_TEST" ]; then
             exit 0
           fi
 

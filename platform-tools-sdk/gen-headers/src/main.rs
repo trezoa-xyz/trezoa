@@ -75,7 +75,7 @@ fn transform(inc: &PathBuf) {
     };
     let mut output_writer = BufWriter::new(output);
     let decl_re =
-        Regex::new(r"@SYSCALL ([0-9A-Za-z_*]+)[[:space:]]+(sol_[0-9A-Za-z_]+)\(([^);]*)\);")
+        Regex::new(r"@SYSCALL ([0-9A-Za-z_*]+)[[:space:]]+(trz_[0-9A-Za-z_]+)\(([^);]*)\);")
             .unwrap();
     let comm_re = Regex::new(r",").unwrap();
     let output_content = decl_re.replace_all(input_content, |caps: &Captures| {

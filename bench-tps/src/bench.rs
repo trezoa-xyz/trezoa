@@ -28,7 +28,7 @@ use {
     trezoa_time_utils::timestamp,
     trezoa_tps_client::*,
     trezoa_transaction::Transaction,
-    spl_instruction_padding_interface::instruction::wrap_instruction,
+    trz_instruction_padding_interface::instruction::wrap_instruction,
     std::{
         collections::{HashSet, VecDeque},
         process::exit,
@@ -1227,7 +1227,7 @@ mod tests {
         trezoa_commitment_config::CommitmentConfig,
         trezoa_fee_calculator::FeeRateGovernor,
         trezoa_genesis_config::{create_genesis_config, GenesisConfig},
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_nonce::state::State,
         trezoa_runtime::{bank::Bank, bank_client::BankClient, bank_forks::BankForks},
     };
@@ -1242,7 +1242,7 @@ mod tests {
 
     #[test]
     fn test_bench_tps_bank_client() {
-        let (genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_TRZ);
         let (bank, _bank_forks) = bank_with_all_features(&genesis_config);
         let client = Arc::new(BankClient::new_shared(bank));
 
@@ -1263,7 +1263,7 @@ mod tests {
 
     #[test]
     fn test_bench_tps_fund_keys() {
-        let (genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_TRZ);
         let (bank, _bank_forks) = bank_with_all_features(&genesis_config);
         let client = Arc::new(BankClient::new_shared(bank));
         let keypair_count = 20;
@@ -1286,7 +1286,7 @@ mod tests {
 
     #[test]
     fn test_bench_tps_fund_keys_with_fees() {
-        let (mut genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_SOL);
+        let (mut genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_TRZ);
         let fee_rate_governor = FeeRateGovernor::new(11, 0);
         genesis_config.fee_rate_governor = fee_rate_governor;
         let (bank, _bank_forks) = bank_with_all_features(&genesis_config);
@@ -1306,7 +1306,7 @@ mod tests {
 
     #[test]
     fn test_bench_tps_create_durable_nonce() {
-        let (genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, id) = create_genesis_config(10_000 * LAMPORTS_PER_TRZ);
         let (bank, _bank_forks) = bank_with_all_features(&genesis_config);
         let client = Arc::new(BankClient::new_shared(bank));
         let keypair_count = 10;

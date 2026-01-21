@@ -36,7 +36,7 @@ OPTIONS:
   --init-complete-file FILE - create this file, if it doesn't already exist, once node initialization is complete
   --label LABEL             - Append the given label to the configuration files, useful when running
                               multiple validators in the same workspace
-  --node-sol SOL            - Number of SOL this node has been funded from the genesis config (default: $node_sol)
+  --node-trz TRZ            - Number of TRZ this node has been funded from the genesis config (default: $node_sol)
   --no-voting               - start node without vote signer
   --rpc-port port           - custom RPC port for this node
   --no-restart              - do not restart the node if it exits
@@ -58,7 +58,7 @@ while [[ -n $1 ]]; do
     elif [[ $1 = --no-restart ]]; then
       no_restart=1
       shift
-    elif [[ $1 = --node-sol ]]; then
+    elif [[ $1 = --node-trz ]]; then
       node_sol="$2"
       shift 2
     elif [[ $1 = --no-airdrop ]]; then

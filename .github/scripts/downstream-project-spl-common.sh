@@ -20,7 +20,7 @@ project_used_trezoa_version=$(sed -nE 's/trezoa = \"(.*)\"/\1/p' <"Cargo.toml")
 echo "used trezoa version: $project_used_trezoa_version"
 if semverGT "$project_used_trezoa_version" "$TREZOA_VER"; then
   echo "skip"
-  export SKIP_SPL_DOWNSTREAM_PROJECT_TEST=1
+  export SKIP_TRZ_DOWNSTREAM_PROJECT_TEST=1
   return
 fi
 

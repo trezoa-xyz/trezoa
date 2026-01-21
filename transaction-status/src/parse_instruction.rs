@@ -31,11 +31,11 @@ static PARSABLE_PROGRAM_IDS: std::sync::LazyLock<HashMap<Pubkey, ParsableProgram
                 ParsableProgram::AddressLookupTable,
             ),
             (
-                spl_associated_token_account_interface::program::id(),
+                trz_associated_token_account_interface::program::id(),
                 ParsableProgram::SplAssociatedTokenAccount,
             ),
-            (spl_memo_interface::v1::id(), ParsableProgram::SplMemo),
-            (spl_memo_interface::v3::id(), ParsableProgram::SplMemo),
+            (trz_memo_interface::v1::id(), ParsableProgram::SplMemo),
+            (trz_memo_interface::v3::id(), ParsableProgram::SplMemo),
             (trezoa_sdk_ids::bpf_loader::id(), ParsableProgram::BpfLoader),
             (
                 trezoa_sdk_ids::bpf_loader_upgradeable::id(),
@@ -166,30 +166,30 @@ mod test {
         };
         assert_eq!(
             parse(
-                &spl_memo_interface::v1::id(),
+                &trz_memo_interface::v1::id(),
                 &memo_instruction,
                 &no_keys,
                 None
             )
             .unwrap(),
             ParsedInstruction {
-                program: "spl-memo".to_string(),
-                program_id: spl_memo_interface::v1::id().to_string(),
+                program: "trz-memo".to_string(),
+                program_id: trz_memo_interface::v1::id().to_string(),
                 parsed: json!("🦖"),
                 stack_height: None,
             }
         );
         assert_eq!(
             parse(
-                &spl_memo_interface::v3::id(),
+                &trz_memo_interface::v3::id(),
                 &memo_instruction,
                 &no_keys,
                 Some(1)
             )
             .unwrap(),
             ParsedInstruction {
-                program: "spl-memo".to_string(),
-                program_id: spl_memo_interface::v3::id().to_string(),
+                program: "trz-memo".to_string(),
+                program_id: trz_memo_interface::v3::id().to_string(),
                 parsed: json!("🦖"),
                 stack_height: Some(1),
             }

@@ -428,7 +428,7 @@ mod tests {
         trezoa_epoch_schedule::EpochSchedule,
         trezoa_hash::Hash,
         trezoa_keypair::Keypair,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
         trezoa_reward_info::RewardType,
         trezoa_signer::Signer,
         trezoa_stake_interface::state::StakeStateV2,
@@ -664,7 +664,7 @@ mod tests {
 
     #[test]
     fn test_force_reward_interval_end() {
-        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
         let expected_num = 100;
@@ -691,7 +691,7 @@ mod tests {
     #[test]
     fn test_get_reward_distribution_num_blocks_cap() {
         let (mut genesis_config, _mint_keypair) =
-            create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+            create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         genesis_config.epoch_schedule = EpochSchedule::custom(32, 32, false);
 
         // Config stake reward distribution to be 10 per block
@@ -750,7 +750,7 @@ mod tests {
     fn test_get_reward_distribution_num_blocks_normal() {
         trezoa_logger::setup();
         let (mut genesis_config, _mint_keypair) =
-            create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+            create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         genesis_config.epoch_schedule = EpochSchedule::custom(432000, 432000, false);
 
         let bank = Bank::new_for_tests(&genesis_config);
@@ -768,7 +768,7 @@ mod tests {
     /// The num_credit_blocks should be 1 during warm up epoch.
     #[test]
     fn test_get_reward_distribution_num_blocks_warmup() {
-        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
 
         let bank = Bank::new_for_tests(&genesis_config);
         let rewards = PartitionedStakeRewards::default();
@@ -796,7 +796,7 @@ mod tests {
         assert_eq!(rewards.rewards.len(), rewards_all);
         assert_eq!(rewards.num_rewards(), expected_rewards_some);
 
-        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_SOL);
+        let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000 * LAMPORTS_PER_TRZ);
         let bank = Bank::new_for_tests(&genesis_config);
         assert_eq!(bank.get_reward_distribution_num_blocks(&rewards), 1);
     }

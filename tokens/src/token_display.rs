@@ -26,7 +26,7 @@ impl Token {
         match &self.token_type {
             TokenType::Sol => {
                 let amount = build_balance_message(self.amount, false, false);
-                write!(f, "{SOL_SYMBOL}{amount}")
+                write!(f, "{TRZ_SYMBOL}{amount}")
             }
             TokenType::SplToken => {
                 let amount = real_number_string_trimmed(self.amount, self.decimals);
@@ -35,7 +35,7 @@ impl Token {
         }
     }
 
-    pub fn sol(amount: u64) -> Self {
+    pub fn trz(amount: u64) -> Self {
         Self {
             amount,
             decimals: 9,

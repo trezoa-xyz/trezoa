@@ -305,12 +305,12 @@ impl BankClient {
 mod tests {
     use {
         super::*, trezoa_genesis_config::create_genesis_config, trezoa_instruction::AccountMeta,
-        trezoa_native_token::LAMPORTS_PER_SOL,
+        trezoa_native_token::LAMPORTS_PER_TRZ,
     };
 
     #[test]
     fn test_bank_client_new_with_keypairs() {
-        let (genesis_config, john_doe_keypair) = create_genesis_config(LAMPORTS_PER_SOL);
+        let (genesis_config, john_doe_keypair) = create_genesis_config(LAMPORTS_PER_TRZ);
         let john_pubkey = john_doe_keypair.pubkey();
         let jane_doe_keypair = Keypair::new();
         let jane_pubkey = jane_doe_keypair.pubkey();

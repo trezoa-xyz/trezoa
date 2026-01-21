@@ -36,7 +36,7 @@ use {
     std::{cmp::Ordering, collections::HashMap, fmt, rc::Rc, str::FromStr},
 };
 
-const DEFAULT_MAX_ACTIVE_DISPLAY_AGE_SLOTS: Slot = 15_000_000; // ~90days
+const DEFAULT_MAX_ACTIVE_DITPLAY_AGE_SLOTS: Slot = 15_000_000; // ~90days
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ForceActivation {
@@ -925,7 +925,7 @@ async fn process_status(
 ) -> ProcessResult {
     let current_slot = rpc_client.get_slot().await?;
     let filter = if !display_all {
-        current_slot.checked_sub(DEFAULT_MAX_ACTIVE_DISPLAY_AGE_SLOTS)
+        current_slot.checked_sub(DEFAULT_MAX_ACTIVE_DITPLAY_AGE_SLOTS)
     } else {
         None
     };

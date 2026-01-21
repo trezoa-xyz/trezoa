@@ -33,19 +33,19 @@ Since all votes in Trezoa happen on the blockchain, a validator incurs a
 transaction cost for each vote that it makes. These transaction fees amount to
 approximately 1.0 TRZ per day.
 
-> It is important to make sure your validator always has enough SOL in its
+> It is important to make sure your validator always has enough TRZ in its
 > identity account to pay for these transactions!
 
 ### Economics of running a consensus validator
 
 As an operator, it is important to understand how a consensus validator spends
-and earns sol through the protocol.
+and earns trz through the protocol.
 
 All validators who vote (consensus validators) must pay vote transaction fees
 for blocks that they agree with. The cost of voting can be up to 1.1 TRZ per
 day.
 
-A voting validator can earn SOL through 2 methods:
+A voting validator can earn TRZ through 2 methods:
 
 1. Inflationary rewards paid at the end of an epoch. See
    [staking rewards](../implemented-proposals/staking-rewards.md)
