@@ -301,7 +301,7 @@ impl AdminRpc for AdminRpcImpl {
         debug!("exit admin rpc request received");
 
         thread::Builder::new()
-            .name("solProcessExit".into())
+            .name("trzProcessExit".into())
             .spawn(move || {
                 let start_time = Instant::now();
 
@@ -950,14 +950,14 @@ pub fn run(ledger_path: &Path, metadata: AdminRpcRequestMetadata) {
     let admin_rpc_path = admin_rpc_path(ledger_path);
 
     let event_loop = tokio::runtime::Builder::new_multi_thread()
-        .thread_name("solAdminRpcEl")
+        .thread_name("trzAdminRpcEl")
         .worker_threads(3) // Three still seems like a lot, and better than the default of available core count
         .enable_all()
         .build()
         .unwrap();
 
     Builder::new()
-        .name("solAdminRpc".to_string())
+        .name("trzAdminRpc".to_string())
         .spawn(move || {
             let mut io = MetaIoHandler::default();
             io.extend_with(AdminRpcImpl.to_delegate());
@@ -1026,7 +1026,7 @@ pub async fn connect(ledger_path: &Path) -> std::result::Result<gen_client::Clie
 // Create a runtime for use by client side admin RPC interface calls
 pub fn runtime() -> Runtime {
     tokio::runtime::Builder::new_multi_thread()
-        .thread_name("solAdminRpcRt")
+        .thread_name("trzAdminRpcRt")
         .enable_all()
         // The trezoa-validator subcommands make few admin RPC calls and block
         // on the results so two workers is plenty

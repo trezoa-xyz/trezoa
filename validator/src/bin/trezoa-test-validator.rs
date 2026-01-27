@@ -19,7 +19,7 @@ use {
     trezoa_faucet::faucet::{run_faucet, Faucet},
     trezoa_inflation::Inflation,
     trezoa_keypair::{read_keypair_file, write_keypair_file, Keypair},
-    trezoa_native_token::sol_str_to_lamports,
+    trezoa_native_token::trz_str_to_lamports,
     trezoa_net_utils::SocketAddrSpace,
     trezoa_pubkey::Pubkey,
     trezoa_rent::Rent,
@@ -346,10 +346,10 @@ fn main() {
 
     let faucet_time_slice_secs = value_t_or_exit!(matches, "faucet_time_slice_secs", u64);
     let faucet_per_time_cap = matches
-        .value_of("faucet_per_time_sol_cap")
+        .value_of("faucet_per_time_trz_cap")
         .and_then(trz_str_to_lamports);
     let faucet_per_request_cap = matches
-        .value_of("faucet_per_request_sol_cap")
+        .value_of("faucet_per_request_trz_cap")
         .and_then(trz_str_to_lamports);
 
     let (sender, receiver) = unbounded();

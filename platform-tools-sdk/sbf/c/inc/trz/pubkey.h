@@ -27,7 +27,7 @@ typedef struct {
  * @param key The public key to print
  */
 /* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE platform-tools-sdk/sbf/c/inc/trz/inc/pubkey.inc AND RUN `cargo run --bin gen-headers` */
-#ifndef SOL_SBPFV3
+#ifndef TRZ_SBPFV3
 void sol_log_pubkey(const SolPubkey *);
 #else
 typedef void(*sol_log_pubkey_pointer_type)(const SolPubkey *);
@@ -79,7 +79,7 @@ typedef struct {
  * @param program_address Program address created, filled on return
  */
 /* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE platform-tools-sdk/sbf/c/inc/trz/inc/pubkey.inc AND RUN `cargo run --bin gen-headers` */
-#ifndef SOL_SBPFV3
+#ifndef TRZ_SBPFV3
 uint64_t sol_create_program_address(const SolSignerSeed *, int, const SolPubkey *, SolPubkey *);
 #else
 typedef uint64_t(*sol_create_program_address_pointer_type)(const SolSignerSeed *, int, const SolPubkey *, SolPubkey *);
@@ -99,7 +99,7 @@ static uint64_t sol_create_program_address(const SolSignerSeed * arg1, int arg2,
  * @param bump_seed Bump seed required to create a valid program address
  */
 /* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE platform-tools-sdk/sbf/c/inc/trz/inc/pubkey.inc AND RUN `cargo run --bin gen-headers` */
-#ifndef SOL_SBPFV3
+#ifndef TRZ_SBPFV3
 uint64_t sol_try_find_program_address(const SolSignerSeed *, int, const SolPubkey *, SolPubkey *, uint8_t *);
 #else
 typedef uint64_t(*sol_try_find_program_address_pointer_type)(const SolSignerSeed *, int, const SolPubkey *, SolPubkey *, uint8_t *);
@@ -109,7 +109,7 @@ static uint64_t sol_try_find_program_address(const SolSignerSeed * arg1, int arg
 }
 #endif
 
-#ifdef SOL_TEST
+#ifdef TRZ_TEST
 /**
  * Stub functions when building tests
  */

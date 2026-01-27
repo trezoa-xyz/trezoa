@@ -82,7 +82,7 @@ typedef struct {
  */
 @SYSCALL uint64_t sol_try_find_program_address(const SolSignerSeed *, int, const SolPubkey *, SolPubkey *, uint8_t *);
 
-#ifdef SOL_TEST
+#ifdef TRZ_TEST
 /**
  * Stub functions when building tests
  */

@@ -1,6 +1,6 @@
 use {
     crate::{
-        args::{DistributeTokensArgs, SplTokenArgs},
+        args::{DistributeTokensArgs, TplTokenArgs},
         commands::{get_fee_estimate_for_messages, Error, FundingSource, TypedAllocation},
     },
     console::style,
@@ -13,21 +13,21 @@ use {
     trz_associated_token_account_interface::{
         address::get_associated_token_address, instruction::create_associated_token_account,
     },
-    tpl_token_interface::state::{Account as SplTokenAccount, Mint},
+    tpl_token_interface::state::{Account as TplTokenAccount, Mint},
 };
 
-pub fn update_token_args(client: &RpcClient, args: &mut Option<SplTokenArgs>) -> Result<(), Error> {
+pub fn update_token_args(client: &RpcClient, args: &mut Option<TplTokenArgs>) -> Result<(), Error> {
     if let Some(tpl_token_args) = args {
         let sender_account = client
             .get_account(&tpl_token_args.token_account_address)
             .unwrap_or_default();
-        tpl_token_args.mint = SplTokenAccount::unpack(&sender_account.data)?.mint;
+        tpl_token_args.mint = TplTokenAccount::unpack(&sender_account.data)?.mint;
         update_decimals(client, args)?;
     }
     Ok(())
 }
 
-pub fn update_decimals(client: &RpcClient, args: &mut Option<SplTokenArgs>) -> Result<(), Error> {
+pub fn update_decimals(client: &RpcClient, args: &mut Option<TplTokenArgs>) -> Result<(), Error> {
     if let Some(tpl_token_args) = args {
         let mint_account = client.get_account(&tpl_token_args.mint).unwrap_or_default();
         let mint = Mint::unpack(&mint_account.data)?;
@@ -88,7 +88,7 @@ pub(crate) fn check_tpl_token_balances(
     let fees = get_fee_estimate_for_messages(messages, client)?;
 
     let token_account_rent_exempt_balance =
-        client.get_minimum_balance_for_rent_exemption(SplTokenAccount::LEN)?;
+        client.get_minimum_balance_for_rent_exemption(TplTokenAccount::LEN)?;
     let account_creation_amount = created_accounts * token_account_rent_exempt_balance;
     let fee_payer_balance = client.get_balance(&args.fee_payer.pubkey())?;
     if fee_payer_balance < fees + account_creation_amount {
@@ -100,10 +100,10 @@ pub(crate) fn check_tpl_token_balances(
     let source_token_account = client
         .get_account(&tpl_token_args.token_account_address)
         .unwrap_or_default();
-    let source_token = SplTokenAccount::unpack(&source_token_account.data)?;
+    let source_token = TplTokenAccount::unpack(&source_token_account.data)?;
     if source_token.amount < allocation_amount {
         return Err(Error::InsufficientFunds(
-            vec![FundingSource::SplTokenAccount].into(),
+            vec![FundingSource::TplTokenAccount].into(),
             real_number_string_trimmed(allocation_amount, tpl_token_args.decimals),
         ));
     }
@@ -113,7 +113,7 @@ pub(crate) fn check_tpl_token_balances(
 pub(crate) fn print_token_balances(
     client: &RpcClient,
     allocation: &TypedAllocation,
-    tpl_token_args: &SplTokenArgs,
+    tpl_token_args: &TplTokenArgs,
 ) -> Result<(), Error> {
     let address = allocation.recipient;
     let expected = allocation.amount;
@@ -122,7 +122,7 @@ pub(crate) fn print_token_balances(
         .get_account(&associated_token_address)
         .unwrap_or_default();
     let (actual, difference) = if let Ok(recipient_token) =
-        SplTokenAccount::unpack(&recipient_account.data)
+        TplTokenAccount::unpack(&recipient_account.data)
     {
         let actual_ui_amount = real_number_string(recipient_token.amount, tpl_token_args.decimals);
         let delta_string =

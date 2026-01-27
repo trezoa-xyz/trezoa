@@ -754,7 +754,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .help("Time slice (in secs) over which to limit faucet requests"),
         )
         .arg(
-            Arg::with_name("faucet_per_time_sol_cap")
+            Arg::with_name("faucet_per_time_trz_cap")
                 .long("faucet-per-time-trz-cap")
                 .takes_value(true)
                 .value_name("TRZ")
@@ -763,7 +763,7 @@ pub fn test_app<'a>(version: &'a str, default_args: &'a DefaultTestArgs) -> App<
                 .help("Per-time slice limit for faucet requests, in TRZ"),
         )
         .arg(
-            Arg::with_name("faucet_per_request_sol_cap")
+            Arg::with_name("faucet_per_request_trz_cap")
                 .long("faucet-per-request-trz-cap")
                 .takes_value(true)
                 .value_name("TRZ")

@@ -1,6 +1,6 @@
 use {
     trezoa_account_decoder::{
-        parse_account_data::SplTokenAdditionalDataV2, parse_token::token_amount_to_ui_amount_v3,
+        parse_account_data::TplTokenAdditionalDataV2, parse_token::token_amount_to_ui_amount_v3,
     },
     trezoa_runtime::bank::TransactionBalancesSet,
     trezoa_svm::transaction_balances::{BalanceCollector, SvmTokenInfo},
@@ -55,7 +55,7 @@ pub fn svm_token_info_to_token_balance(svm_info: SvmTokenInfo) -> TransactionTok
             // NOTE: Same as parsed instruction data, ledger data always uses
             // the raw token amount, and does not calculate the UI amount with
             // any consideration for interest.
-            &SplTokenAdditionalDataV2::with_decimals(decimals),
+            &TplTokenAdditionalDataV2::with_decimals(decimals),
         ),
         owner: owner.to_string(),
         program_id: program_id.to_string(),

@@ -36,9 +36,9 @@ pub static PARSABLE_PROGRAM_IDS: std::sync::LazyLock<HashMap<Pubkey, ParsableAcc
         m.insert(system_program::id(), ParsableAccount::Nonce);
         m.insert(
             tpl_token_2022_interface::id(),
-            ParsableAccount::SplToken2022,
+            ParsableAccount::TplToken2022,
         );
-        m.insert(tpl_token_interface::id(), ParsableAccount::SplToken);
+        m.insert(tpl_token_interface::id(), ParsableAccount::TplToken);
         m.insert(stake::id(), ParsableAccount::Stake);
         m.insert(sysvar::id(), ParsableAccount::Sysvar);
         m.insert(vote::id(), ParsableAccount::Vote);
@@ -79,16 +79,16 @@ pub enum ParsableAccount {
 
 #[derive(Clone, Copy, Default)]
 pub struct AccountAdditionalDataV3 {
-    pub tpl_token_additional_data: Option<SplTokenAdditionalDataV2>,
+    pub tpl_token_additional_data: Option<TplTokenAdditionalDataV2>,
 }
 
 #[derive(Clone, Copy, Default)]
-pub struct SplTokenAdditionalData {
+pub struct TplTokenAdditionalData {
     pub decimals: u8,
     pub interest_bearing_config: Option<(InterestBearingConfig, UnixTimestamp)>,
 }
 
-impl SplTokenAdditionalData {
+impl TplTokenAdditionalData {
     pub fn with_decimals(decimals: u8) -> Self {
         Self {
             decimals,
@@ -98,14 +98,14 @@ impl SplTokenAdditionalData {
 }
 
 #[derive(Clone, Copy, Default)]
-pub struct SplTokenAdditionalDataV2 {
+pub struct TplTokenAdditionalDataV2 {
     pub decimals: u8,
     pub interest_bearing_config: Option<(InterestBearingConfig, UnixTimestamp)>,
     pub scaled_ui_amount_config: Option<(ScaledUiAmountConfig, UnixTimestamp)>,
 }
 
-impl From<SplTokenAdditionalData> for SplTokenAdditionalDataV2 {
-    fn from(v: SplTokenAdditionalData) -> Self {
+impl From<TplTokenAdditionalData> for TplTokenAdditionalDataV2 {
+    fn from(v: TplTokenAdditionalData) -> Self {
         Self {
             decimals: v.decimals,
             interest_bearing_config: v.interest_bearing_config,
@@ -114,7 +114,7 @@ impl From<SplTokenAdditionalData> for SplTokenAdditionalDataV2 {
     }
 }
 
-impl SplTokenAdditionalDataV2 {
+impl TplTokenAdditionalDataV2 {
     pub fn with_decimals(decimals: u8) -> Self {
         Self {
             decimals,
@@ -142,7 +142,7 @@ pub fn parse_account_data_v3(
         }
         ParsableAccount::Config => serde_json::to_value(parse_config(data, pubkey)?)?,
         ParsableAccount::Nonce => serde_json::to_value(parse_nonce(data)?)?,
-        ParsableAccount::SplToken | ParsableAccount::SplToken2022 => serde_json::to_value(
+        ParsableAccount::TplToken | ParsableAccount::TplToken2022 => serde_json::to_value(
             parse_token_v3(data, additional_data.tpl_token_additional_data.as_ref())?,
         )?,
         ParsableAccount::Stake => serde_json::to_value(parse_stake(data)?)?,

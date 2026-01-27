@@ -10,7 +10,7 @@ extern uint64_t entrypoint(const uint8_t *input) {
   SolParameters params = (SolParameters) { .ka = ka };
   SolBytes fields[2];
 
-  if (!sol_deserialize(input, &params, SOL_ARRAY_SIZE(ka))) {
+  if (!sol_deserialize(input, &params, TRZ_ARRAY_SIZE(ka))) {
     return ERROR_INVALID_ARGUMENT;
   }
 

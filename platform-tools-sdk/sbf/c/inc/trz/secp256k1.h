@@ -33,7 +33,7 @@ extern "C" {
  * @return 0 if executed successfully
  */
 /* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE platform-tools-sdk/sbf/c/inc/trz/inc/secp256k1.inc AND RUN `cargo run --bin gen-headers` */
-#ifndef SOL_SBPFV3
+#ifndef TRZ_SBPFV3
 uint64_t sol_secp256k1_recover(const uint8_t *, uint64_t, const uint8_t *, uint8_t *);
 #else
 typedef uint64_t(*sol_secp256k1_recover_pointer_type)(const uint8_t *, uint64_t, const uint8_t *, uint8_t *);

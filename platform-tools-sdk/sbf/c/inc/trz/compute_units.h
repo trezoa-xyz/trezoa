@@ -15,7 +15,7 @@ extern "C" {
  * Prints a string to stdout
  */
 /* DO NOT MODIFY THIS GENERATED FILE. INSTEAD CHANGE platform-tools-sdk/sbf/c/inc/trz/inc/compute_units.inc AND RUN `cargo run --bin gen-headers` */
-#ifndef SOL_SBPFV3
+#ifndef TRZ_SBPFV3
 uint64_t sol_remaining_compute_units();
 #else
 typedef uint64_t(*sol_remaining_compute_units_pointer_type)();
@@ -25,7 +25,7 @@ static uint64_t sol_remaining_compute_units() {
 }
 #endif
 
-#ifdef SOL_TEST
+#ifdef TRZ_TEST
 /**
  * Stub functions when building tests
  */

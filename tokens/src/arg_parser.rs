@@ -1,6 +1,6 @@
 use {
     crate::args::{
-        Args, BalancesArgs, Command, DistributeTokensArgs, SenderStakeArgs, SplTokenArgs,
+        Args, BalancesArgs, Command, DistributeTokensArgs, SenderStakeArgs, TplTokenArgs,
         StakeArgs, TransactionLogArgs,
     },
     clap::{
@@ -12,7 +12,7 @@ use {
         keypair::{pubkey_from_path, signer_from_path},
     },
     trezoa_cli_config::CONFIG_FILE,
-    trezoa_native_token::sol_str_to_lamports,
+    trezoa_native_token::trz_str_to_lamports,
     trezoa_remote_wallet::remote_wallet::maybe_wallet_manager,
     std::{error::Error, ffi::OsString, process::exit},
 };
@@ -157,7 +157,7 @@ where
                         .help("Keypair to fund accounts"),
                 )
                 .arg(
-                    Arg::with_name("unlocked_sol")
+                    Arg::with_name("unlocked_trz")
                         .default_value("1.0")
                         .long("unlocked-trz")
                         .takes_value(true)
@@ -237,7 +237,7 @@ where
                         .help("Stake Account Address"),
                 )
                 .arg(
-                    Arg::with_name("unlocked_sol")
+                    Arg::with_name("unlocked_trz")
                         .default_value("1.0")
                         .long("unlocked-trz")
                         .takes_value(true)
@@ -480,8 +480,8 @@ fn parse_create_stake_args(
         .transpose()?;
 
     let stake_args = StakeArgs {
-        unlocked_sol: matches
-            .value_of("unlocked_sol")
+        unlocked_trz: matches
+            .value_of("unlocked_trz")
             .and_then(trz_str_to_lamports)
             .unwrap(),
         lockup_authority,
@@ -567,8 +567,8 @@ fn parse_distribute_stake_args(
         rent_exempt_reserve: None,
     };
     let stake_args = StakeArgs {
-        unlocked_sol: matches
-            .value_of("unlocked_sol")
+        unlocked_trz: matches
+            .value_of("unlocked_trz")
             .and_then(trz_str_to_lamports)
             .unwrap(),
         lockup_authority: lockup_authority_address,
@@ -625,9 +625,9 @@ fn parse_distribute_tpl_tokens_args(
         sender_keypair: token_owner,
         fee_payer,
         stake_args: None,
-        tpl_token_args: Some(SplTokenArgs {
+        tpl_token_args: Some(TplTokenArgs {
             token_account_address,
-            ..SplTokenArgs::default()
+            ..TplTokenArgs::default()
         }),
         transfer_amount: value_of(matches, "transfer_amount"),
     })
@@ -636,9 +636,9 @@ fn parse_distribute_tpl_tokens_args(
 fn parse_balances_args(matches: &ArgMatches<'_>) -> Result<BalancesArgs, Box<dyn Error>> {
     let mut wallet_manager = maybe_wallet_manager()?;
     let tpl_token_args =
-        pubkey_of_signer(matches, "mint_address", &mut wallet_manager)?.map(|mint| SplTokenArgs {
+        pubkey_of_signer(matches, "mint_address", &mut wallet_manager)?.map(|mint| TplTokenArgs {
             mint,
-            ..SplTokenArgs::default()
+            ..TplTokenArgs::default()
         });
     Ok(BalancesArgs {
         input_csv: value_t_or_exit!(matches, "input_csv", String),

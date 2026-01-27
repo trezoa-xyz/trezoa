@@ -27,7 +27,7 @@ if (!(expr)) {          \
   sol_panic(); \
 }
 
-#ifdef SOL_TEST
+#ifdef TRZ_TEST
 /**
  * Stub functions when building tests
  */

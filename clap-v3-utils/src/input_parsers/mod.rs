@@ -9,7 +9,7 @@ use {
     trezoa_cluster_type::ClusterType,
     trezoa_commitment_config::CommitmentConfig,
     trezoa_keypair::{read_keypair_file, Keypair},
-    trezoa_native_token::sol_str_to_lamports,
+    trezoa_native_token::trz_str_to_lamports,
     trezoa_pubkey::{Pubkey, MAX_SEED_LEN},
     trezoa_signer::Signer,
     std::str::FromStr,

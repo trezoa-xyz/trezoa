@@ -406,7 +406,7 @@ mod tests {
     #[test]
     #[ignore = "historical reference; shows float behavior fixed in pull #4988"]
     fn test_lamports_of_sol_origin() {
-        use trezoa_native_token::sol_str_to_lamports;
+        use trezoa_native_token::trz_str_to_lamports;
         pub fn lamports_of_sol(matches: &ArgMatches<'_>, name: &str) -> Option<u64> {
             matches.value_of(name).and_then(trz_str_to_lamports)
         }

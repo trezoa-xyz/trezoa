@@ -12,7 +12,7 @@ extern uint64_t entrypoint(const uint8_t *input) {
   SolAccountInfo accounts[5];
   SolParameters params = (SolParameters){.ka = accounts};
 
-  if (!sol_deserialize(input, &params, SOL_ARRAY_SIZE(accounts))) {
+  if (!sol_deserialize(input, &params, TRZ_ARRAY_SIZE(accounts))) {
     return ERROR_INVALID_ARGUMENT;
   }
 
@@ -67,7 +67,7 @@ extern uint64_t entrypoint(const uint8_t *input) {
         uint8_t data[] = {7};
         const SolInstruction instruction = {
             (SolPubkey *)params.program_id, arguments,
-            SOL_ARRAY_SIZE(arguments), data, SOL_ARRAY_SIZE(data)};
+            TRZ_ARRAY_SIZE(arguments), data, TRZ_ARRAY_SIZE(data)};
         sol_assert(SUCCESS ==
                    sol_invoke(&instruction, accounts, params.ka_num));
       }
@@ -79,7 +79,7 @@ extern uint64_t entrypoint(const uint8_t *input) {
         uint8_t data[] = {3};
         const SolInstruction instruction = {
             (SolPubkey *)params.program_id, arguments,
-            SOL_ARRAY_SIZE(arguments), data, SOL_ARRAY_SIZE(data)};
+            TRZ_ARRAY_SIZE(arguments), data, TRZ_ARRAY_SIZE(data)};
         sol_assert(SUCCESS ==
                    sol_invoke(&instruction, accounts, params.ka_num));
       }

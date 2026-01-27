@@ -52,10 +52,10 @@ C_FLAGS := \
   $(addprefix -I,$(STD_INC_DIRS)) \
   $(addprefix -I,$(INC_DIRS)) \
 
-ifeq ($(SOL_SBPFV3),1)
+ifeq ($(TRZ_SBPFV3),1)
 C_FLAGS := \
   $(C_FLAGS) \
-  -DSOL_SBPFV3=1
+  -DTRZ_SBPFV3=1
 endif
 
 CXX_FLAGS := \
@@ -113,7 +113,7 @@ READ_ELF_FLAGS := \
 
 TESTFRAMEWORK_RPATH := $(abspath $(LOCAL_PATH)../dependencies/criterion/lib)
 TESTFRAMEWORK_FLAGS := \
-  -DSOL_TEST \
+  -DTRZ_TEST \
   -isystem $(LOCAL_PATH)../dependencies/criterion/include \
   -L $(LOCAL_PATH)../dependencies/criterion/lib \
   -rpath $(TESTFRAMEWORK_RPATH) \

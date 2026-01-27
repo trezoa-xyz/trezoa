@@ -54,12 +54,12 @@ pub fn build_balance_message_with_config(
         let trz = lamports as f64 / LAMPORTS_PER_TRZ_F64;
         let trz_str = format!("{trz:.9}");
         if config.trim_trailing_zeros {
-            sol_str
+            trz_str
                 .trim_end_matches('0')
                 .trim_end_matches('.')
                 .to_string()
         } else {
-            sol_str
+            trz_str
         }
     };
     let unit = if config.show_unit {

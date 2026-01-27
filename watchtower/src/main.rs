@@ -12,7 +12,7 @@ use {
     trezoa_cli_output::display::format_labeled_address,
     trezoa_hash::Hash,
     trezoa_metrics::{datapoint_error, datapoint_info},
-    trezoa_native_token::{sol_str_to_lamports, Sol},
+    trezoa_native_token::{trz_str_to_lamports, Sol},
     trezoa_notifier::{NotificationType, Notifier},
     trezoa_pubkey::Pubkey,
     trezoa_rpc_client::rpc_client::RpcClient,

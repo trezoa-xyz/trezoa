@@ -13,7 +13,7 @@
 extern uint64_t entrypoint(const uint8_t *input) {
   SolAccountInfo ka[NUM_KA];
   SolParameters params = (SolParameters){.ka = ka};
-  if (!sol_deserialize(input, &params, SOL_ARRAY_SIZE(ka))) {
+  if (!sol_deserialize(input, &params, TRZ_ARRAY_SIZE(ka))) {
     return ERROR_INVALID_ARGUMENT;
   }
   uint8_t *val = (uint8_t *)ka[0].data;
@@ -30,9 +30,9 @@ extern uint64_t entrypoint(const uint8_t *input) {
     // {
     //   uint8_t result[SHA256_RESULT_LENGTH];
     //   uint8_t bytes1[1024];
-    //   const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)}};
+    //   const SolBytes bytes[] = {{bytes1, TRZ_ARRAY_SIZE(bytes1)}};
 
-    //   sol_sha256(bytes, SOL_ARRAY_SIZE(bytes), result);
+    //   sol_sha256(bytes, TRZ_ARRAY_SIZE(bytes), result);
     //   *val = result[0];
     // }
 

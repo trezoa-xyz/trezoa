@@ -78,7 +78,7 @@ static void sol_log_params(const SolParameters *params) {
   sol_log_array(params->data, params->data_len);
 }
 
-#ifdef SOL_TEST
+#ifdef TRZ_TEST
 /**
  * Stub functions when building tests
  */

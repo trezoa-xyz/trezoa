@@ -20,7 +20,7 @@ use {
     trezoa_account::{AccountSharedData, ReadableAccount},
     trezoa_account_decoder::{
         encode_ui_account,
-        parse_account_data::SplTokenAdditionalDataV2,
+        parse_account_data::TplTokenAdditionalDataV2,
         parse_token::{is_known_tpl_token_id, token_amount_to_ui_amount_v3, UiTokenAmount},
         UiAccount, UiAccountEncoding, UiDataSliceConfig, MAX_BASE58_BYTES,
     },
@@ -2008,7 +2008,7 @@ impl JsonRpcRequestProcessor {
 
         let supply = token_amount_to_ui_amount_v3(
             mint.base.supply,
-            &SplTokenAdditionalDataV2 {
+            &TplTokenAdditionalDataV2 {
                 decimals: mint.base.decimals,
                 interest_bearing_config,
                 scaled_ui_amount_config,
@@ -8532,7 +8532,7 @@ pub mod tests {
                 *extension = *scaled_ui_amount_config;
             }
 
-            let additional_data = SplTokenAdditionalDataV2 {
+            let additional_data = TplTokenAdditionalDataV2 {
                 decimals,
                 interest_bearing_config: interest_bearing_config
                     .map(|v| (v, bank.clock().unix_timestamp)),
@@ -8588,7 +8588,7 @@ pub mod tests {
                 ..Account::default()
             });
             bank.store_account(&Pubkey::from_str(&mint.to_string()).unwrap(), &mint_account);
-            let additional_data = SplTokenAdditionalDataV2::with_decimals(decimals);
+            let additional_data = TplTokenAdditionalDataV2::with_decimals(decimals);
             ("tpl-token", account_size, mint_size, additional_data)
         };
 

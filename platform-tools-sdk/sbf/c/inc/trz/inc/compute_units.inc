@@ -16,7 +16,7 @@ extern "C" {
  */
 @SYSCALL uint64_t sol_remaining_compute_units();
 
-#ifdef SOL_TEST
+#ifdef TRZ_TEST
 /**
  * Stub functions when building tests
  */

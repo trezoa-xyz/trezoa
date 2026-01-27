@@ -11,7 +11,7 @@ use {
         input_validators::{is_amount, is_rfc3339_datetime, is_valid_pubkey, is_valid_signer},
     },
     trezoa_cli_config::CONFIG_FILE,
-    trezoa_native_token::sol_str_to_lamports,
+    trezoa_native_token::trz_str_to_lamports,
     std::{ffi::OsString, process::exit},
 };
 
