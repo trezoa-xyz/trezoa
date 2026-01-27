@@ -1206,7 +1206,7 @@ pub mod replace_tpl_token_with_p_token {
     trezoa_pubkey::declare_id!("ptokSWRqZz5u2xdqMdstkMKpFurauUpVen7TZXgDpkQ");
 
     pub const TPL_TOKEN_PROGRAM_ID: Pubkey =
-        Pubkey::from_str_const("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+        Pubkey::from_str_const("4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic");
 
     pub const PTOKEN_PROGRAM_BUFFER: Pubkey =
         Pubkey::from_str_const("ptokNfvuU7terQ2r2452RzVXB3o4GT33yPWo1fUkkZ2");

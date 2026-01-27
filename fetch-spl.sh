@@ -26,7 +26,7 @@ add_trz_program_to_fetch() {
   programs+=("$name $version $address $loader $download_url")
 }
 
-add_trz_program_to_fetch token 3.5.0 TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA BPFLoader2111111111111111111111111111111111
+add_trz_program_to_fetch token 3.5.0 4JkrrPuuQPxDZuBW1bgrM1GBa8oYg1LxcuX9szBPh3ic BPFLoader2111111111111111111111111111111111
 add_trz_program_to_fetch token-2022 10.0.0 TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb BPFLoaderUpgradeab1e11111111111111111111111
 add_trz_program_to_fetch memo  1.0.0 Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo BPFLoader1111111111111111111111111111111111
 add_trz_program_to_fetch memo  3.0.0 MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr BPFLoader2111111111111111111111111111111111
