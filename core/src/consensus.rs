@@ -1263,7 +1263,7 @@ impl Tower {
                 // Normally, we goes into this clause with possible help of
                 // reconcile_blockstore_roots_with_external_source()
                 if slot_history.check(last_voted_slot) == Check::TooOld {
-                    // We could try hard to anchor with other older votes, but opt to simplify the
+                    // We could try hard to trezoaanchor with other older votes, but opt to simplify the
                     // following logic
                     return Err(TowerError::TooOldTower(
                         last_voted_slot,
@@ -1292,7 +1292,7 @@ impl Tower {
                 // Blockstore doesn't have the tower_root slot because of
                 // (replayed_root < tower_root) in this else clause, meaning the tower is from
                 // the future from the view of blockstore.
-                // Pretend the blockstore has the future tower_root to anchor exactly with that
+                // Pretend the blockstore has the future tower_root to trezoaanchor exactly with that
                 // slot by adding tower_root to a slot history. The added slot will be newer
                 // than all slots in the slot history (remember tower_root > replayed_root),
                 // satisfying the slot history invariant.

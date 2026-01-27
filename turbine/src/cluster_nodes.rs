@@ -403,9 +403,9 @@ fn get_retransmit_peers<T: Copy>(
     // Node's index within its neighborhood.
     let offset = index.saturating_sub(1) % fanout;
     // First node in the neighborhood.
-    let anchor = index - offset;
+    let trezoaanchor = index - offset;
     let step = if index == 0 { 1 } else { fanout };
-    (anchor * fanout + offset + 1..)
+    (trezoaanchor * fanout + offset + 1..)
         .step_by(step)
         .take(fanout)
         .map(|i| nodes.get(i))

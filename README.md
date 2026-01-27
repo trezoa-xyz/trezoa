@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://trezoa.com">
-    <img alt="Trezoa" src="https://i.imgur.com/0vfIMHo.png" width="250" />
+    <img alt="Trezoa" src="https://i.imgur.com/0vfIMHd.png" width="250" />
   </a>
 </p>
 
