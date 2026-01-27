@@ -12,7 +12,7 @@ const UNLOCKS_ALL_AT_9_MONTHS: UnlockInfo = UnlockInfo {
     cliff_years: 0.75,
     unlocks: 0,
     unlock_years: 0.0,
-    custodian: "A2LZoYq94bySye8Qa4TnZspvJQnrgQd7NiPuMEieYBkD",
+    custodian: "EAqG8MyX3ajBFifbHMkahRzk7oP7hVdUKSfzoa3gdMN5",
 };
 
 // 9 month schedule is 50% after 9 months, then monthly for 2 years
@@ -21,7 +21,7 @@ const UNLOCKS_HALF_AT_9_MONTHS: UnlockInfo = UnlockInfo {
     cliff_years: 0.75,
     unlocks: 24,
     unlock_years: 2.0,
-    custodian: "8r6iJbRw7ULWcjes2gF6VZQQaXjhawNrb6Kd5x6eo1TH",
+    custodian: "EAqG8MyX3ajBFifbHMkahRzk7oP7hVdUKSfzoa3gdMN5",
 };
 
 // no lockups
