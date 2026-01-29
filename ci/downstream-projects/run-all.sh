@@ -3,8 +3,8 @@ set -e
 
 here="$(dirname "$0")"
 
-#shellcheck source=ci/downstream-projects/func-spl.sh
-source "$here"/func-spl.sh
+#shellcheck source=ci/downstream-projects/func-tpl.sh
+source "$here"/func-tpl.sh
 
 #shellcheck source=ci/downstream-projects/func-openbook-dex.sh
 source "$here"/func-openbook-dex.sh

@@ -15,11 +15,11 @@ on:
       - "Cargo.lock"
       - "cargo-build-sbf"
       - "cargo-test-sbf"
-      - "scripts/build-downstream-anchor-projects.sh"
-      - "scripts/patch-spl-crates-for-anchor.sh"
+      - "scripts/build-downstream-trezoaanchor-projects.sh"
+      - "scripts/patch-tpl-crates-for-trezoaanchor.sh"
       - ".github/scripts/purge-ubuntu-runner.sh"
-      - ".github/scripts/downstream-project-spl-install-deps.sh"
-      - ".github/workflows/downstream-project-anchor.yml"
+      - ".github/scripts/downstream-project-tpl-install-deps.sh"
+      - ".github/workflows/downstream-project-trezoaanchor.yml"
   workflow_call:
     inputs:
       branch:
@@ -57,5 +57,5 @@ jobs:
 
       - shell: bash
         run: |
-          source .github/scripts/downstream-project-spl-install-deps.sh
-          ./scripts/build-downstream-anchor-projects.sh ${{ matrix.version }}
+          source .github/scripts/downstream-project-tpl-install-deps.sh
+          ./scripts/build-downstream-trezoaanchor-projects.sh ${{ matrix.version }}

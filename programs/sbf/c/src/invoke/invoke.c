@@ -2,13 +2,13 @@
  * @brief Example C-based SBF program that tests cross-program invocations
  */
 #include "../invoked/instruction.h"
-#include <sol/entrypoint.h>
-#include <sol/cpi.h>
-#include <sol/pubkey.h>
-#include <sol/log.h>
-#include <sol/assert.h>
-#include <sol/deserialize.h>
-#include <sol/return_data.h>
+#include <trz/entrypoint.h>
+#include <trz/cpi.h>
+#include <trz/pubkey.h>
+#include <trz/log.h>
+#include <trz/assert.h>
+#include <trz/deserialize.h>
+#include <trz/return_data.h>
 #include <trezoa_sdk.h>
 
 static const uint8_t TEST_SUCCESS = 1;

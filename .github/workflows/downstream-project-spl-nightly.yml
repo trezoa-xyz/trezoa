@@ -12,7 +12,7 @@ jobs:
       matrix:
         branch:
           - master
-    uses: ./.github/workflows/downstream-project-spl.yml
+    uses: ./.github/workflows/downstream-project-tpl.yml
     with:
       branch: ${{ matrix.branch }}
 
