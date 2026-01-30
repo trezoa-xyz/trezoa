@@ -146,7 +146,7 @@ The following components are out of scope for the bounty program
 * Any asset whose source code does not exist in this repository (including, but not limited
 to, any and all web properties not explicitly listed on this page)
 * Programs in the Trezoa Program Library, such as TRZ Token. Please refer to the
-[TPL security policy](https://github.com/trezoa-labs/trezoa-program-library/security/policy).
+[TPL security policy](https://github.com/trezoa-team/trezoa-program-library/security/policy).
 
 ### Eligibility:
 * Submissions _MUST_ include an exploit proof-of-concept to be considered eligible

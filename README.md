@@ -81,7 +81,7 @@ $ cargo +nightly bench
 
 # Release Process
 
-The release process for this project is described [here](RELEASE.md).
+The release process for this trezoa is described [here](RELEASE.md).
 
 # Code coverage
 

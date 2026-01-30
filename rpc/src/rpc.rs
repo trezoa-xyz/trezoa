@@ -385,7 +385,7 @@ impl JsonRpcRequestProcessor {
             // BlockCommitmentCache should hold an `Arc<Bank>` everywhere it currently holds
             // a slot.
             //
-            // For more information, see https://github.com/trezoa-labs/trezoa/issues/11078
+            // For more information, see https://github.com/trezoa-team/trezoa/issues/11078
             warn!(
                 "Bank with {:?} not found at slot: {:?}",
                 commitment.commitment, slot
@@ -3180,7 +3180,7 @@ pub mod rpc_accounts {
         ) -> Result<RpcBlockCommitment<BlockCommitmentArray>>;
 
         // TRZ Token-specific RPC endpoints
-        // See https://github.com/trezoa-labs/trezoa-program-library/releases/tag/token-v2.0.0 for
+        // See https://github.com/trezoa-team/trezoa-program-library/releases/tag/token-v2.0.0 for
         // program details
 
         #[rpc(meta, name = "getTokenAccountBalance")]
@@ -3312,7 +3312,7 @@ pub mod rpc_accounts_scan {
         ) -> BoxFuture<Result<RpcResponse<RpcSupply>>>;
 
         // TRZ Token-specific RPC endpoints
-        // See https://github.com/trezoa-labs/trezoa-program-library/releases/tag/token-v2.0.0 for
+        // See https://github.com/trezoa-team/trezoa-program-library/releases/tag/token-v2.0.0 for
         // program details
 
         #[rpc(meta, name = "getTokenLargestAccounts")]

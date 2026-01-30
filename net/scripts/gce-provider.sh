@@ -168,7 +168,7 @@ cloud_CreateInstances() {
   declare optionalAdditionalDiskSize="${10}"
   declare optionalPreemptible="${11}"
 
-  imageName="ubuntu-2404-noble-amd64-v20250709 --image-project ubuntu-os-cloud"
+  imageName="ubuntu-2404-noble-amd64-v20250709 --image-trezoa ubuntu-os-cloud"
 
   declare -a nodes
   if [[ $numNodes = 1 ]]; then
